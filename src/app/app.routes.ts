@@ -18,6 +18,10 @@ export const routes: Routes & {
         },
       },
       {
+        path: 'establishment',
+        loadChildren: () => import('./features/configuration/establecimientos/routes'),
+      },
+      {
         path: '**',
         redirectTo: 'applications',
         pathMatch: 'full',
