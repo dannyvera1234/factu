@@ -1,0 +1,62 @@
+<label
+  [for]="'file-picker-' + seed"
+  class="bg-gray-50 border border-dashed border-neutral-400 block p-4 rounded-lg text-center mb-4 cursor-pointer"
+  [ngClass]="{ 'cursor-not-allowed': !selectedType && withType && manualHandled }"
+>
+  <div class="flex gap-2 flex-col" dropArea (files)="pickFile($event)">
+    @if (maxFiles > 1) {
+      <input
+        type="file"
+        #filePicker
+        [id]="'file-picker-' + seed"
+        (change)="pickFile($event)"
+        class="hidden"
+        [accept]="validExtensions.join(', ')"
+        multiple
+        [disabled]="!selectedType && manualHandled && withType"
+      />
+    } @else {
+      <input
+        type="file"
+        #filePicker
+        [id]="'file-picker-' + seed"
+        (change)="pickFile($event)"
+        class="hidden"
+        [accept]="validExtensions.join(', ')"
+        [disabled]="!selectedType && manualHandled && withType"
+      />
+    }
+    <div class="size-14 mx-auto bg-blue-300 rounded-full flex items-center justify-center">
+      <img ngSrc="/assets/icon/drag_and_drop.svg" alt="Upload" width="35" height="30" />
+    </div>
+    <p class="text-balance">Arrastre y suelte el archivo aquí o seleccione el archivo</p>
+    @if (!hideDescription) {
+      <p class="text-sm text-neutral-400 text-balance">
+        Formato del archivo: permitido ".p12"
+      </p>
+    }
+  </div>
+</label>
+@for (error of errors(); track $index) {
+  <small [title]="errorLocator.locate(error)" class="block text-truncate text-red-500 w-100 mt-1">
+    {{ errorLocator.locate(error) }}
+  </small>
+}
+
+@if (!manualHandled) {
+  <div class="flex flex-col gap-3">
+    @defer {
+      @for (file of files; track $index) {
+        <app-file-handler
+          [name]="file.name"
+          [type]="file.type"
+          [sizeInKb]="file.size"
+          (removeFile)="removeFile($index)"
+
+          [withType]="withType"
+          [source]="file"
+        />
+      }
+    }
+  </div>
+}

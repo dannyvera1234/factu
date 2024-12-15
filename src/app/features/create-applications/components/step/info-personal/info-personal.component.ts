@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CustomInputComponent } from '@/components/inputs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { CustomInputComponent, CustomSelectComponent } from '@/components/inputs';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgOptimizedImage } from '@angular/common';
+import { AccountingControlSystemService, ConfigFacturacionService } from '@/utils/services';
+import { IdentificationType } from '@/interfaces';
 import { CreateApplicationService } from '../../../create-applications.service';
-import { ConfigFacturacionService } from '@/utils/services';
-import { emailValidator, onlyNumbersValidator } from '@/utils/validators';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-info-personal',
-  imports: [CustomInputComponent, ReactiveFormsModule, NgOptimizedImage],
+  imports: [CustomInputComponent, ReactiveFormsModule, NgOptimizedImage, CustomSelectComponent, RouterLink],
   templateUrl: './info-personal.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,37 +17,57 @@ import { emailValidator, onlyNumbersValidator } from '@/utils/validators';
 export class InfoPersonalComponent {
   public readonly form = this.formService.form.controls.step_1;
 
+  public readonly typeDocument = signal<IdentificationType[]>([]);
+
+  public readonly identificationLabel = signal<string>('Identificación');
+
+  public readonly transformedTypeDocument = computed<{ values: string[]; labels: string[] }>(() =>
+    this.typeDocument().reduce(
+      (acc, item) => {
+        acc.values.push(item.code);
+        acc.labels.push(item.description);
+        return acc;
+      },
+      { values: [], labels: [] } as { values: string[]; labels: string[] },
+    ),
+  );
+
+  public readonly maxDate = computed(() => {
+    const today = new Date();
+    const maxDate = today.toISOString().split('T')[0];
+    return maxDate;
+  });
+
   constructor(
     private readonly formService: CreateApplicationService,
-    private readonly _fb: FormBuilder,
-    public readonly config: ConfigFacturacionService
-  ) {}
+    public readonly config: ConfigFacturacionService,
+    public readonly controlService: AccountingControlSystemService,
+  ) {
+    this.getIdentificationTypes();
 
-  removeEmail(index: number): void {
-    if (index > 0) {
-      this.form.controls.emails.removeAt(index);
+    this.form.controls.typeDocument.valueChanges.subscribe((value: any) => {
+      this.identificationNumberValidators(value);
+    });
+  }
+
+  private identificationNumberValidators(typeCode: string): void {
+    const selectedType = this.typeDocument().find((type) => type.code === typeCode);
+
+    if (selectedType) {
+      const length = selectedType.length;
+      this.identificationLabel.set(selectedType.description);
+      const identificationControl = this.form.controls.identificationNumber;
+      identificationControl?.setValidators([
+        Validators.required,
+        Validators.minLength(length),
+        Validators.maxLength(length),
+      ]);
+      identificationControl?.updateValueAndValidity();
     }
   }
 
-  public addEmail(): void {
-    this.form.controls.emails.push(
-      this._fb.group({
-        email: ['', [Validators.required, Validators.maxLength(50), emailValidator()]],
-      }),
-    );
-  }
-
-  public addPhone(): void {
-    this.form.controls.phones.push(
-      this._fb.group({
-        phone: ['', [Validators.required, Validators.maxLength(10), onlyNumbersValidator()]],
-      }),
-    );
-  }
-  removePhone(index: number): void {
-    if (index > 0) {
-      this.form.controls.phones.removeAt(index);
-    }
+  private getIdentificationTypes() {
+    this.controlService.getIdentificationTypes().subscribe((res) => this.typeDocument.set(res.data));
   }
 
   public submit(): void {

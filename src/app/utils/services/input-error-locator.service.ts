@@ -5,20 +5,19 @@ const DEFAULT_ERRORS = {
   required: () => 'Este campo es obligatorio.',
 
   email: () => 'Correo electrónico inválido.',
-  minlength: (error: any) => `This field must be at least ${error.requiredLength} characters long.`,
-  maxlength: (error: any) => `This field must be at most ${error.requiredLength} characters long.`,
-  minArrayLength: (minArrayLength: any) => `This field must contain at least ${minArrayLength} elements.`,
-  maxArrayLength: (maxArrayLength: any) => `This field should not have more than ${maxArrayLength} elements.`,
-  min: (error: any) => `This field must be at least ${error.min}.`,
-  max: (error: any) => `This field must be at most ${error.max}.`,
-  pattern: () => 'Invalid characters.',
-  ONLY_LETTERS: () => 'Only letters allowed.',
+  minlength: (error: any) => `Este campo debe tener al menos ${error.requiredLength} caracteres.`,
+  maxlength: (error: any) => `Este campo no debe tener más de ${error.requiredLength} caracteres.`,
+  minArrayLength: (minArrayLength: any) => `Este campo debe tener al menos ${minArrayLength} elementos.`,
+  maxArrayLength: (maxArrayLength: any) => `Este campo no debe tener más de ${maxArrayLength} elementos.`,
+  min: (error: any) => `Este campo debe ser al menos ${error.min}.`,
+  max: (error: any) => `Este campo no debe ser mayor a ${error.max}.`,
+  pattern: () => 'El formato es inválido.',
+  ONLY_LETTERS: () => 'Solo se permiten letras.',
   ONLY_NUMBERS: () => 'Solo se permiten números.',
   ONLY_NUMBERS_DECIMALS: () => 'Only numbers and up to 2 decimals are allowed.',
   INVALID_EMAIL: () => 'Invalid email.',
   INVALID_DATE: () => 'Invalid date.',
-  DATE_AFTER: (date: any) => `The date must be after ${date}`,
-  DATE_BEFORE: (date: any) => `The date must be before ${date}`,
+  INVALID_AGE: () => 'Debes ser mayor de 18 años.',
 
   // Related to phone number
   PHONE_NOT_VALID: () => 'Invalid phone number.',
@@ -29,7 +28,7 @@ const DEFAULT_ERRORS = {
   PHONE_INVALID_COUNTRY: () => 'Invalid country.',
 
   // Errors related to files
-  FILE_INVALID_FORMAT: (fileName: string) => `The file "${fileName}" has an invalid format.`,
+  FILE_INVALID_FORMAT: (fileName: string) => `el archivo "${fileName}" no es un formato válido`,
   FILE_MAX_FILES: (files: string) => `The maximum number of files allowed is ${files}`,
   FILE_INVALID_SIZE: ([fileName, maxSize]: string[]) =>
     `The file "${fileName}" exceeds the maximum allowed size of ${maxSize}.`,

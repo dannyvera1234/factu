@@ -48,7 +48,7 @@ import { InputErrorLocatorService } from '@/utils/services';
         >
           {{ label }}</label
         >
-        <span class="label-text-alt text-gray-400">
+        <span class="label-text-alt text-gray-400 text-xs">
           {{ subLabel }}
         </span>
       }

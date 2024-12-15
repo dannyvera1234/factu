@@ -1,90 +1,49 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
-      <app-custom-input label="Nombres" formControlName="nombres" subLabel="Por favor escribe tus nombres completos" />
+      <app-custom-input label="Nombres" formControlName="names" subLabel="Por favor escribe tus nombres completos" />
     </div>
 
     <div>
       <app-custom-input
         label="Apellidos"
-        formControlName="apellidos"
+        formControlName="lastName"
         subLabel="Por favor escribe tus apellidos completos"
       />
     </div>
     <div>
-      <app-custom-input
-        label="Tipo de documentos"
-        formControlName="tipo_documento"
-        subLabel="
-    Por favor selecciona tu tipo de documento"
+      <app-custom-select
+        formControlName="typeDocument"
+        placeholder="Tipo de documento"
+        [options]="transformedTypeDocument().values"
+        [labels]="transformedTypeDocument().labels"
       />
     </div>
 
     <div>
-      <app-custom-input label="Identificación" formControlName="identificacion" />
+      <app-custom-input [label]="identificationLabel()" formControlName="identificationNumber" />
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-    <div formArrayName="emails">
-      @for (control of form.controls.emails.controls; track $index) {
-        <div [formGroup]="control" class="mb-5">
-          <div class="flex gap-2">
-            <app-custom-input type="email" label="Email" formControlName="email" class="grow" />
-            @if (!$first) {
-              <button (click)="removeEmail($index)" type="button">
-                <img ngSrc="/assets/icon/trash-icon.svg" width="14" height="16" alt="Delete" />
-              </button>
-            }
-          </div>
-        </div>
-      }
-      @if (config.maxEmails > form.controls.emails.controls.length) {
-        <button
-          type="button"
-          (click)="addEmail()"
-          class="px-2 text-sky-600 flex items-center justify-center border border-sky-600 rounded-md text-sm"
-        >
-          Add Email
-        </button>
-      }
+    <div>
+      <app-custom-input type="email" label="Email" formControlName="email" class="grow" />
     </div>
-    <div formArrayName="phones">
-      @for (control of form.controls.phones.controls; track $index) {
-        <div [formGroup]="control" class="mb-5">
-          <div class="flex gap-2">
-            <app-custom-input label="Telefono" formControlName="phone" class="grow" />
-            @if (!$first) {
-              <button (click)="removePhone($index)" type="button">
-                <img ngSrc="/assets/icon/trash-icon.svg" width="14" height="16" alt="Delete" />
-              </button>
-            }
-          </div>
-        </div>
-      }
-      @if (config.maxPhones > form.controls.phones.controls.length) {
-        <div class="flex gap-2">
-          <button
-            type="button"
-            (click)="addPhone()"
-            class="px-2 text-sky-600 flex items-center justify-center border border-sky-600 rounded-md text-sm"
-          >
-            Add Telefono
-          </button>
-        </div>
-      }
+    <div>
+      <app-custom-input label="Telefono" formControlName="cellPhone" class="grow" />
     </div>
 
     <div>
-      <app-custom-input label="Fecha de nacimiento" formControlName="fecha_nacimiento" type="date" />
+      <app-custom-input label="Fecha de nacimiento" formControlName="dateBirth" type="date" [max]="maxDate()" />
     </div>
   </div>
 
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
-    <button class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600" type="button">
-      <div class="relative size-5 shrink-0 hidden md:block">
-        <img ngSrc="/assets/icon/arrow-left.svg" alt="Back" fill />
-      </div>
+    <button
+      class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+      type="button"
+      routerLink="/Applications"
+    >
       Salir
     </button>
     <button class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex" type="submit">

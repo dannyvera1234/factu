@@ -2,7 +2,8 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withRouterConfig, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptorsFromDi, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './utils/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,9 +14,8 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withViewTransitions(),
     ),
-
-
-
-    provideHttpClient(withInterceptorsFromDi(), withInterceptors([])),
+    provideHttpClient( withInterceptors([authInterceptor])),
   ],
 };
+
+

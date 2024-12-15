@@ -1,16 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigFacturacionService {
-
   public readonly maxEmails = 2;
 
   public readonly maxPhones = 2;
 
-constructor() { }
+  public readonly maxBankFiles = 1;
+
+  constructor() {}
 
 
+  public typePerson = signal<Record<string, string>>({
+    N: 'Persona Natural',
+    J: 'Persona Jurídica',
+  });
 
 }
