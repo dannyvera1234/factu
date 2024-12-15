@@ -1,4 +1,4 @@
-<div class="p-5">
+<div class="p-7">
   <div class="rounded-2xl shadow bg-white p-6">
     <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col mb-4">
       <!-- Search -->
@@ -14,91 +14,109 @@
         </a>
       </div>
     </nav>
-
+    <hr class="my-4" />
     <section>
-      <div class="w-full overflow-x-auto">
-        <table class="table-striped table">
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-left">
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th scope="col">Name</th>
+              <th scope="col">Country</th>
+              <th scope="col">Phones</th>
+              <th scope="col">Emails</th>
+              <th scope="col" class="text-end">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="text-nowrap">John Doe</td>
-              <td>johndoeexample.com</td>
-              <td><span class="badge badge-soft badge-success text-xs">Professional</span></td>
-              <td class="text-nowrap">March 1, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
+          @if (loading()) {
+            <tbody>
+              <td colspan="100%">
+                <div class="text-center py-9">
+                  <div class="loader"></div>
+                </div>
               </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Jane Smith</td>
-              <td>janesmithxample.com</td>
-              <td><span class="badge badge-soft badge-error text-xs">Rejected</span></td>
-              <td class="text-nowrap">March 2, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Alice Johnson</td>
-              <td>alicejohnsonexample.com</td>
-              <td><span class="badge badge-soft badge-info text-xs">Applied</span></td>
-              <td class="text-nowrap">March 3, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Bob Brown</td>
-              <td>bobrownexample.com</td>
-              <td><span class="badge badge-soft badge-primary text-xs">Current</span></td>
-              <td class="text-nowrap">March 4, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
+            </tbody>
+          } @else {
+            <!-- @if (contacts() && contacts()!.data!.length > 0) {
+              <tbody>
+                @for (contact of contacts()?.data; track contact.id) {
+                  <tr
+                    class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
+                  >
+                    <th scope="row" [routerLink]="[contact.id]" class="font-normal">
+                      <a [routerLink]="[contact.id]">
+                        <div class="flex gap-4 items-center">
+                          <div
+                            class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
+                          >
+                            {{ contact.first_name + ' ' + contact.last_name | initials }}
+                          </div>
+                          <div>
+                            <p class="font-semibold">{{ contact.first_name }} {{ contact.last_name }}</p>
+                          </div>
+                        </div>
+                      </a>
+                    </th>
+                    <td>
+                      <div class="flex items-center gap-1">
+                        <div class="relative size-5">
+                          <img
+                            [ngSrc]="
+                              'https://raw.githubusercontent.com/hampusborgos/country-flags/main/svg/' +
+                              contact.country_iso_code_2.toLowerCase() +
+                              '.svg'
+                            "
+                            [alt]="contact.country_iso_code_2"
+                            fill
+                          />
+                        </div>
+                        <p>{{ demographics.allCountries()?.[contact.country_iso_code_2] }}</p>
+                      </div>
+                    </td>
+                    <td>
+                      @for (phone of contact.phones; track $index) {
+                        <app-callable-phone
+                          [callInfo]="{
+                            entity_type: 'CONTACT',
+                            entity_id: contact.id,
+                            phone_index: $index,
+                            phone_hint: phone | formatPhone,
+                          }"
+                        />
+                      }
+                    </td>
+                    <td>
+                      @for (email of contact.emails; track $index) {
+                        <p>{{ email }}</p>
+                      }
+                    </td>
+                    <td>
+                      <button class="size-8 relative ml-auto block">
+                        <img ngSrc="/assets/icons/ellipsis.svg" alt="options" fill />
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            } @else {
+              @defer {
+                <tbody>
+                  <td colspan="100%">
+                    <app-contacts-not-found />
+                  </td>
+                </tbody>
+              } -->
+            <!-- } -->
+          }
         </table>
       </div>
+
+      @defer {
+        <!-- @if (contacts()?.pagination) {
+          <div class="mt-4">
+            <app-pagination />
+          </div>
+        } -->
+      }
     </section>
   </div>
 </div>

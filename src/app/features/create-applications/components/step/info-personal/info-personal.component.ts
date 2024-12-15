@@ -6,6 +6,7 @@ import { AccountingControlSystemService, ConfigFacturacionService } from '@/util
 import { IdentificationType } from '@/interfaces';
 import { CreateApplicationService } from '../../../create-applications.service';
 import { RouterLink } from '@angular/router';
+import { cedulaValidator, rucValidator } from '@/utils/validators';
 
 @Component({
   selector: 'app-info-personal',
@@ -57,17 +58,41 @@ export class InfoPersonalComponent {
       const length = selectedType.length;
       this.identificationLabel.set(selectedType.description);
       const identificationControl = this.form.controls.identificationNumber;
-      identificationControl?.setValidators([
-        Validators.required,
-        Validators.minLength(length),
-        Validators.maxLength(length),
-      ]);
+
+      switch (typeCode) {
+        case '04':
+          identificationControl?.setValidators([
+            Validators.required,
+            rucValidator(),
+            Validators.minLength(length),
+            Validators.maxLength(length),
+          ]);
+          break;
+        case '05':
+          identificationControl?.setValidators([
+            Validators.required,
+            cedulaValidator(),
+            Validators.minLength(length),
+            Validators.maxLength(length),
+          ]);
+          break;
+        default:
+          identificationControl?.setValidators([
+            Validators.required,
+            Validators.minLength(length),
+            Validators.maxLength(length),
+          ]);
+          break;
+      }
+
       identificationControl?.updateValueAndValidity();
     }
   }
 
   private getIdentificationTypes() {
-    this.controlService.getIdentificationTypes().subscribe((res) => this.typeDocument.set(res.data));
+    this.controlService.getIdentificationTypes().subscribe((res) => {
+      this.typeDocument.set(res.data), console.log(res.data);
+    });
   }
 
   public submit(): void {

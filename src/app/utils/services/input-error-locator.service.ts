@@ -18,6 +18,7 @@ const DEFAULT_ERRORS = {
   INVALID_EMAIL: () => 'Invalid email.',
   INVALID_DATE: () => 'Invalid date.',
   INVALID_AGE: () => 'Debes ser mayor de 18 años.',
+  INVALID_PROVINCE_CODE: ()=> 'Indetificador inválido.',
 
   // Related to phone number
   PHONE_NOT_VALID: () => 'Invalid phone number.',

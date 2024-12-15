@@ -1,14 +1,9 @@
-import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { ModalComponent } from '@/components/modal';
-
-
-
 @Component({
   selector: 'app-file-handler',
-  imports: [ NgClass, FormsModule],
+  imports: [FormsModule],
   templateUrl: './file-handler.component.html',
 })
 export class FileHandlerComponent {

@@ -1,15 +1,9 @@
 import { Injectable, signal } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  ageValidator,
-  appDocumentValidator,
-  emailValidator,
-  onlyLettersValidator,
-  onlyNumbersValidator,
-} from '@/utils/validators';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ageValidator, emailValidator, onlyLettersValidator, onlyNumbersValidator } from '@/utils/validators';
 import { ApplicationService } from '@/services';
 import { CreateApplication } from '@/interfaces';
-import { finalize, map } from 'rxjs';
+import { finalize } from 'rxjs';
 
 type StatementType = {
   certificatePassword?: string;
@@ -22,7 +16,7 @@ type StatementType = {
 export class CreateApplicationService {
   public readonly steps: string[] = ['Información Personal', 'Información Tributaria', 'Planes'];
 
-  public readonly currentStep = signal(1);
+  public readonly currentStep = signal(0);
 
   public readonly submitting = signal(false);
 
@@ -138,7 +132,7 @@ export class CreateApplicationService {
       .createApplication(this.mapFormToApplication(), this.files())
       .pipe(finalize(() => this.submitting.set(false)))
       .subscribe(() => {
-        this.created.set(true)
+        this.created.set(true);
       });
   }
 

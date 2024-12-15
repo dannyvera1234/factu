@@ -23,12 +23,7 @@
     <div>
       <app-custom-input [label]="identificationLabel()" formControlName="identificationNumber" />
     </div>
-  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-    <div>
-      <app-custom-input type="email" label="Email" formControlName="email" class="grow" />
-    </div>
     <div>
       <app-custom-input label="Telefono" formControlName="cellPhone" class="grow" />
     </div>
@@ -37,7 +32,11 @@
       <app-custom-input label="Fecha de nacimiento" formControlName="dateBirth" type="date" [max]="maxDate()" />
     </div>
   </div>
-
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
+  <div>
+    <app-custom-input type="email" label="Email" formControlName="email" class="grow" />
+  </div>
+  </div>
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     <button
       class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
