@@ -1,11 +1,12 @@
-import { DOCUMENT, NgClass} from '@angular/common';
+import { DOCUMENT, NgClass, NgOptimizedImage} from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, Inject, signal } from '@angular/core';
 import { SidebarService } from '../../utils/services';
 import { RouterLink } from '@angular/router';
+import { UserService } from '../../services';
 
 @Component({
   selector: 'app-header',
-  imports: [NgClass, RouterLink],
+  imports: [NgClass, RouterLink, NgOptimizedImage],
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -27,7 +28,8 @@ export class HeaderComponent {
   constructor(
     private readonly sidebar: SidebarService,
     @Inject(DOCUMENT) public document: Document,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private userService: UserService,
   ) {}
 
   public toggle(): void {
@@ -36,6 +38,11 @@ export class HeaderComponent {
 
   toggleDropdown() {
     this.isDropdownOpen.set(!this.isDropdownOpen());
+  }
+
+  public logout(): void {
+    this.userService.logout();
+
   }
 
 

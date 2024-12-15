@@ -1,20 +1,29 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes & {
   data?: any & { icon?: string; name?: string; permissions?: string };
 } = [
-  {
-    path: '',
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
+  {
+    path: 'login',
+    loadChildren: () => import('./features/login/routes'),
+  },
+
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadComponent() {
+      return import('./layout/layout.component').then((m) => m.LayoutComponent);
+    },
     children: [
       {
-        path: 'Applications',
+        path: 'applications',
         loadChildren: () => import('./features/aplicaciones/routes'),
-
         data: {
           icon: '/assets/icons/menu_applications.svg',
           name: 'Aplicaciones',
-
         },
       },
       {
@@ -26,7 +35,6 @@ export const routes: Routes & {
         redirectTo: 'applications',
         pathMatch: 'full',
       },
-    ]
-  }
-
-]
+    ],
+  },
+];
