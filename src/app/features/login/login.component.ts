@@ -4,6 +4,7 @@ import { FooterComponent } from '@/layout/footer';
 import { UserService } from '@/services';
 import { Router } from '@angular/router';
 import { finalize, mergeMap, of } from 'rxjs';
+import { NotificationService } from '../../utils/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent {
     public _fb: FormBuilder,
     public readonly userService: UserService,
     private router: Router,
+    private toastService: NotificationService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -31,6 +33,17 @@ export class LoginComponent {
   public togglePasswordVisibility() {
     this.showPassword.set(!this.showPassword());
   }
+
+  onUsernameInput(event: any): void {
+    const inputValue = event.target.value;
+
+    const newValue = inputValue.replace(/[^0-9]/g, '');
+
+    event.target.value = newValue;
+
+    this.form.controls.username.setValue(newValue);
+  }
+
   public submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -47,10 +60,18 @@ export class LoginComponent {
         mergeMap(() => this.userService.login(login)),
         finalize(() => this.loanding.set(false)),
       )
-      .subscribe((response) => {
-        if (response.status === 'ERROR') {
-          this.router.navigate(['dashboard']);
-        }
-      });
+      .subscribe(
+        (response) => {
+          if (response.status === 'ERROR') {
+            this.router.navigate(['dashboard']);
+          }
+        },
+        (error) => {
+          this.toastService.push({
+            message: error.error.message,
+            type: 'error',
+          });
+        },
+      );
   }
 }

@@ -22,7 +22,7 @@ export const routes: Routes & {
         path: 'applications',
         loadChildren: () => import('./features/aplicaciones/routes'),
         data: {
-          icon: '/assets/icons/menu_applications.svg',
+          icon: '/assets/icon/menu_applications.svg',
           name: 'Aplicaciones',
         },
       },

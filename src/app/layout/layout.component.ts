@@ -5,8 +5,6 @@ import { FooterComponent } from './footer';
 import { HeaderComponent } from './header';
 import { SidebarComponent } from './sidebar';
 import { ModalOutletComponent } from '../components';
-import { UserService } from '../services';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-layout',

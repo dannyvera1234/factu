@@ -1,0 +1,7 @@
+<div class="fixed bottom-4 right-5 flex justify-end gap-2 flex-col z-50">
+  @defer (when notificationService.notifications().length > 0) {
+    @for (notification of notificationService.notifications(); track notification.id) {
+      <app-toast [notification]="notification" />
+    }
+  }
+</div>
