@@ -41,6 +41,8 @@
                   id="password"
                   formControlName="password"
                   class="block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                  (copy)="onCopy($event)"
+                  (paste)="onPaste($event)"
                   required
                 />
                 <button

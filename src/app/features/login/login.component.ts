@@ -34,6 +34,16 @@ export class LoginComponent {
     this.showPassword.set(!this.showPassword());
   }
 
+
+  onCopy(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  onPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+
   onUsernameInput(event: any): void {
     const inputValue = event.target.value;
 
@@ -62,7 +72,7 @@ export class LoginComponent {
       )
       .subscribe(
         (response) => {
-          if (response.status === 'ERROR') {
+          if (response.status === 'OK') {
             this.router.navigate(['dashboard']);
           }
         },
