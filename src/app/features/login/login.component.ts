@@ -34,7 +34,6 @@ export class LoginComponent {
     this.showPassword.set(!this.showPassword());
   }
 
-
   onCopy(event: ClipboardEvent): void {
     event.preventDefault();
   }
@@ -42,7 +41,6 @@ export class LoginComponent {
   onPaste(event: ClipboardEvent): void {
     event.preventDefault();
   }
-
 
   onUsernameInput(event: any): void {
     const inputValue = event.target.value;

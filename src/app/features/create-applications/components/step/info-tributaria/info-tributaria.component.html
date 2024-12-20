@@ -26,7 +26,7 @@
       <app-custom-input label="Agente de Retención" formControlName="retentionAgent" />
     </div>
     <div>
-      <app-custom-input label="Codigo de Establecimiento" formControlName="code" />
+      <app-custom-input label="Codigo de Establecimiento" formControlName="code" (input)="formService.onUsernameInput($event,'step_2', 'code')" />
     </div>
   </div>
 

@@ -12,7 +12,7 @@ export const routes: Routes & {
   },
 
   {
-    path: 'dashboard',
+    path: '',
     canActivate: [authGuard],
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
@@ -24,11 +24,49 @@ export const routes: Routes & {
         data: {
           icon: '/assets/icon/menu_applications.svg',
           name: 'Aplicaciones',
+          permissions: 'APLICACIONES'
+        },
+      },
+      {
+        path: 'inventory',
+        loadChildren: () => import('./features/inventario/routes'),
+        data: {
+          icon: '/assets/icon/inventory.svg',
+          name: 'Inventario',
+          permissions: 'INVENTARIO'
+        },
+      },
+      {
+        path: 'planes',
+        loadChildren: () => import('./features/planes/routes'),
+        data: {
+          icon: '/assets/icon/plan.svg',
+          name: 'Planes',
+          permissions: 'PLANES'
+        },
+      },
+      {
+        path: 'perfiles',
+        loadChildren: () => import('./features/perfiles/routes'),
+        data: {
+          icon: '/assets/icon/perfiles.svg',
+          permissions: 'REGISTRO_USUARIOS'
+        },
+      },
+      {
+        path: 'perfilescontadores',
+        loadChildren: () => import('./features/counters/routes'),
+        data: {
+          icon: '/assets/icon/perfiles.svg',
+          permissions: 'PERFILES_CONTADORES'
         },
       },
       {
         path: 'establishment',
         loadChildren: () => import('./features/configuration/establecimientos/routes'),
+        data: {
+          permissions: 'ESTABLECIMIENTOS'
+        },
       },
       {
         path: '**',

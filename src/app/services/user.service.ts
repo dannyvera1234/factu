@@ -22,25 +22,30 @@ export class UserService {
       .post<LoginResponse>(`${environment.BASE_API_SISTEMA_CONTABLE}/auth/login`, { body: payload })
       .pipe(
         tap((response) => {
-          if (response.status === 'ERROR') {
-            const token = response.data.token;
-            localStorage.setItem('Bearer', token);
+          if (response.status === 'OK') {
+            const data = response.data;
+            localStorage.setItem('UserData', JSON.stringify(data));
           }
         }),
       );
   }
 
-  getAuthToken() {
-    return localStorage.getItem('Bearer') || '';
+  getAuthToken(): string {
+    const userData = this.getUserData();
+    return userData?.token || '';
   }
 
-  getRefreshToken() {
-    return localStorage.getItem('refresh_token') || '';
+  getRefreshToken(): string {
+    const userData = this.getUserData();
+    return userData?.refresh_token || '';
   }
 
-  logout() {
-    localStorage.removeItem('Bearer');
-    localStorage.removeItem('refresh_token');
+  getUserData(): any | null {
+    const userData = localStorage.getItem('UserData');
+    return userData ? JSON.parse(userData) : null;
+  }
+  logout(): void {
+    localStorage.removeItem('UserData');
     this.router.navigate(['/login']);
   }
 }

@@ -40,7 +40,7 @@ export class InfoPersonalComponent {
   });
 
   constructor(
-    private readonly formService: CreateApplicationService,
+    public readonly formService: CreateApplicationService,
     public readonly config: ConfigFacturacionService,
     public readonly controlService: AccountingControlSystemService,
   ) {
@@ -90,9 +90,7 @@ export class InfoPersonalComponent {
   }
 
   private getIdentificationTypes() {
-    this.controlService.getIdentificationTypes().subscribe((res) => {
-      this.typeDocument.set(res.data), console.log(res.data);
-    });
+    this.controlService.getIdentificationTypes().subscribe((res) => this.typeDocument.set(res.data));
   }
 
   public submit(): void {

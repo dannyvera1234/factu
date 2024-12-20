@@ -13,6 +13,8 @@ export class ConfigFacturacionService {
   constructor() {}
 
 
+
+
   public typePerson = signal<Record<string, string>>({
     N: 'Persona Natural',
     J: 'Persona Jurídica',

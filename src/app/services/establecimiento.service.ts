@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { delay, map, Observable, of } from 'rxjs';
 import { CreateEstablecimiento } from '@/interfaces/establecimiento';
+import { environment } from '../../environments/environment.development';
+import { HttpService } from '../utils/services';
+import { PayloadService } from '../utils/services/payload.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EstablecimientoService {
-  constructor() {}
-
+  constructor(
+    private readonly _http: HttpService,
+    private genericPayloadService: PayloadService,
+  ) {}
 
   createEstablecimiento(createEstablecimiento: Partial<CreateEstablecimiento>): Observable<void> {
-    return of({}).pipe(
-      delay(1000),
-      map(() => {
-        console.log('createEstablecimiento', createEstablecimiento);
-      }),
-    );
+    const payload = this.genericPayloadService.createPayload({ ...createEstablecimiento });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/sender/createSubsidiary`, { body: payload });
   }
-
 }

@@ -1,0 +1,2 @@
+export * from './perfiles.component';
+

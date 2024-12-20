@@ -11,45 +11,59 @@
     </button>
 
     <div class="hidden lg:block">
-      <p class="text-neutral-400">Realice un seguimiento de su actividad de ventas, clientes potenciales y acuerdos aquí.</p>
+      <p class="text-neutral-400">
+        Realice un seguimiento de su actividad de ventas, clientes potenciales y acuerdos aquí.
+      </p>
     </div>
   </div>
 
-  <div class="flex items-center justify-between gap-4">
-    <div class="relative">
-      <button
-        (click)="toggleDropdown()"
-        type="button"
-        class="flex items-center justify-center w-10 h-10 rounded-full focus:outline-none"
-      >
-        <img src="assets/icon/config.svg" alt="Config" class="w-6 h-6" />
-      </button>
-      <ul
-        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg"
-        [class.hidden]="!isDropdownOpen()"
-      >
-        <li>
-          <a routerLink="/dashboard/establishment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <img src="assets/icon/establecimiento.svg" alt="User" class="inline-block w-4 h-4 mr-2" />
-            Establecimiento
-          </a>
-        </li>
-        <li>
-          <a  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <img src="assets/icon/config.svg" alt="Config" class="inline-block w-4 h-4 mr-2" />
-            Configuración
-          </a>
-        </li>
-        <li>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-            <img src="assets/icon/perfil.svg" alt="User" class="inline-block w-4 h-4 mr-2" />
-            Perfil
-          </a>
-        </li>
-        <li>
-          <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Salir</a>
-        </li>
-      </ul>
-    </div>
+  <div class="relative hidden lg:flex items-center space-x-3">
+    @if (userData(); as user) {
+      <div class="relative">
+        <button
+          type="button"
+          class="text-white text-center avatar rounded bg-red-600"
+          role="button"
+          style="width: 30px; height: 30px; line-height: 30px"
+        >
+          {{ user.fullName | initials }}
+        </button>
+      </div>
+
+      <div class="relative">
+        <button class="flex items-center rounded p-1 hover:bg-gray-100" (click)="toggleDropdown()">
+          {{ user.fullName }}
+        </button>
+
+        <ul
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
+          [class.hidden]="!isDropdownOpen()"
+        >
+          <li>
+            <a routerLink="/establishment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/establecimiento.svg" alt="User" class="inline-block w-4 h-4 mr-2" />
+              Establecimiento
+            </a>
+          </li>
+          <li>
+            <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/config.svg" alt="Config" class="inline-block w-4 h-4 mr-2" />
+              Configuración
+            </a>
+          </li>
+          <li>
+            <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/perfil.svg" alt="Perfil" class="inline-block w-4 h-4 mr-2" />
+              Perfil
+            </a>
+          </li>
+          <li>
+            <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+              Salir
+            </a>
+          </li>
+        </ul>
+      </div>
+    }
   </div>
 </header>

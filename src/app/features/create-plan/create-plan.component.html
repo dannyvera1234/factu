@@ -1,0 +1,89 @@
+<form [formGroup]="form">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+    <app-custom-input label="Nombre" formControlName="title" />
+
+    <div>
+      <app-custom-input label="Precio" formControlName="price" />
+    </div>
+    <div>
+      <app-custom-input
+        label="Cantidad de documentos"
+        formControlName="amount"
+        (input)="onUsernameInput($event, 'amount')"
+      />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+    <app-custom-input
+      label="Descripcion"
+      formControlName="description"
+      subLabel="Escribe una descripción corta del plan"
+    />
+
+    <div>
+      <app-custom-input label="Periodo" formControlName="period" />
+    </div>
+  </div>
+
+  <div class="gap-6 m-4">
+    <div formArrayName="characteristic">
+      @for (item of form.controls.characteristic.controls; track $index) {
+        <div [formGroupName]="$index" class="flex items-center gap-2 mt-6">
+          <app-custom-input
+            label="Característica"
+            formControlName="description"
+            [id]="'descriptions-' + $index"
+            class="flex-grow"
+          ></app-custom-input>
+
+          <app-custom-input
+            label="Orden de visualización"
+            formControlName="order"
+            [id]="'order-' + $index"
+            class="flex-grow"
+            type="number"
+          ></app-custom-input>
+
+          @if ($last) {
+            <button
+              class="p-2 bg-red-500 rounded-md flex items-center justify-center"
+              type="button"
+              (click)="addCharacteristic()"
+            >
+              <img src="assets/icon/add.svg" alt="Agregar" class="size-4" />
+            </button>
+          }
+
+          @if (!$first) {
+            <button
+              class="p-2 rounded-md flex items-center justify-center"
+              type="button"
+              (click)="removeCharacteristic($index)"
+            >
+              <img src="assets/icon/trash-icon.svg" alt="Eliminar" class="size-4" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+    @if (!loading()) {
+      <button
+        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+        type="button"
+        (click)="createPlan.emit(null)"
+      >
+        Cancelar
+      </button>
+      <button class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex" (click)="submit()">
+        Guardar
+      </button>
+    } @else {
+      <div class="flex justify-center items-center h-full mt-4">
+        <div class="loader"></div>
+      </div>
+    }
+  </div>
+</form>

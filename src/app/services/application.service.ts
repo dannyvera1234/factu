@@ -15,6 +15,7 @@ export class ApplicationService {
   ) {}
 
   createApplication(createApplication: Partial<CreateApplication>, files: File | null): Observable<void> {
+    console.log('createApplication', createApplication);
     const form = new FormData();
 
     if (files) {
@@ -23,9 +24,9 @@ export class ApplicationService {
 
     const payload = this.genericPayloadService.createPayload({ ...createApplication });
     form.append('reqDTO', JSON.stringify(payload));
-
-    return this._http
-      .post<void>(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/createEmisor`, { body: form })
-      .pipe(map(() => void 0));
-  }
+return of(void 0);
+  //   return this._http
+  //     .post<void>(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/createEmisor`, { body: form })
+  //     .pipe(map(() => void 0));
+   }
 }

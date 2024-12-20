@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarService } from '@/utils/services';
 
 import { routes } from '@/app.routes';
+import { UserService } from '../../services';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,13 +15,14 @@ import { routes } from '@/app.routes';
 export class SidebarComponent {
   public readonly closeSidebar = computed(() => this.sidebar.closeSidebar());
 
-  constructor(private readonly sidebar: SidebarService) {}
+  constructor(
+    private readonly sidebar: SidebarService,
+    public userService: UserService,
+  ) {}
 
-  public readonly routes = routes[2].children!.filter((route) => {
-    return (
-      route?.data && route?.data['name'] && route?.data['icon']
-      // (route?.data?.['permissions'] ? hasPermission(route?.data['permissions']) : true)
-    );
+  public readonly userData = computed(() => {
+    const data = this.userService.getUserData();
+    return data && data.permission.length > 0 ? data.permission[0].modules : [];
   });
 
   public toggle(): void {

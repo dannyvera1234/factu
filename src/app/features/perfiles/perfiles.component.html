@@ -1,0 +1,154 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <div>
+      <!-- Barra de acciones superior -->
+      <div class="flex items-center justify-between mb-4 gap-4 flex-wrap">
+        <div class="flex flex-col items-start gap-1">
+          <h3 class="text-2xl font-semibold">Lista de perfiles</h3>
+          <span class="text-xs text-gray-500">
+            Aquí puedes ver y administrar los perfiles de ventas y administración de tu empresa.
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4 mt-2 md:mt-0">
+          <div>
+            <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-full md:w-[200px] border rounded" />
+          </div>
+
+          <button
+            class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
+            (click)="createPerfil.open()"
+          >
+            <div class="relative size-5 shrink-0 mr-2">
+              <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
+            </div>
+
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="border rounded-lg overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b bg-gray-50">
+              <th class="text-left p-3 text-sm font-medium">Nombres</th>
+              <th class="text-left p-3 text-sm font-medium">Telefono</th>
+              <th class="text-left p-3 text-sm font-medium">Estado</th>
+              <th class="text-left p-3 text-sm font-medium">Email</th>
+              <th class="text-left p-3 text-sm font-medium">Perfil</th>
+              <th class="text-left p-3 text-sm font-medium">Acción</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+            <tbody>
+              <td colspan="100%">
+                <div class="text-center py-9">
+                  <div class="loader"></div>
+                </div>
+              </td>
+            </tbody>
+          } @else {
+            @if (perfiles() && perfiles()!.data.length > 0) {
+              <tbody>
+                @for (perfil of perfiles()?.data; track $index) {
+                  <tr class="border-b" class="hover:bg-gray-100">
+                    <td scope="row" class="p-3">
+                      <a>
+                        <div class="flex gap-4 items-center">
+                          <div
+                            class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
+                          >
+                            {{ perfil.names + ' ' + perfil.lastName | initials }}
+                          </div>
+                          <div>
+                            <p class="font-semibold">{{ perfil.names }} {{ perfil.lastName }}</p>
+                          </div>
+                        </div>
+                      </a>
+                    </td>
+                    <td>
+                      {{ perfil.cellPhone }}
+                    </td>
+                    <td>
+                      <span
+                        class="px-2 py-1 text-xs text-white rounded-full"
+                        [ngClass]="{
+                          'bg-green-500': perfil.statusRecord === 'Activo',
+                          'bg-red-500': perfil.statusRecord === 'Inactivo',
+                        }"
+                      >
+                        {{ perfil.statusRecord }}
+                      </span>
+                    </td>
+                    <td>
+                      {{ perfil.email }}
+                    </td>
+                    <td>
+                      {{ perfil.profile }}
+                    </td>
+                    <td>
+                      <div class="flex gap-1">
+                        <button class="px-3 flex items-center">
+                          <div class="relative size-5 shrink-0">
+                            <img ngSrc="/assets/icon/edit.svg" alt="Edit" fill />
+                          </div>
+                        </button>
+                        <button
+                          class="px-3 flex items-center"
+                          (click)="deletePerfil.open(); viewing.set(perfil.idePersonaRol)"
+                        >
+                          <div class="relative size-4 shrink-0">
+                            <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
+                          </div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            }
+          }
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal #createPerfil>
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Crear perfil</h2>
+        <button (click)="createPerfil.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icon/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      @defer {
+        <section class="p-4">
+          <app-create-perfil (createPerfil)="createPerfil.close()" (createPerfil)="($event)" />
+        </section>
+      }
+    </div>
+  </div>
+</app-modal>
+<app-modal #deletePerfil>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewing(); as idePersonaRol) {
+            <app-delete-perfil [idePersonaRol]="idePersonaRol" (deleted)="deletePerfil.close()" />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>

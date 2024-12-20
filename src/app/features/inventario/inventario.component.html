@@ -1,0 +1,70 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <div>
+      <!-- Barra de acciones superior -->
+      <div class="flex items-center justify-between mb-4 gap-4">
+        <div class="flex flex-col items-start gap-1">
+          <h3 class="text-2xl font-semibold">Lista de inventario</h3>
+          <span class="text-xs text-gray-500"> Aquí puedes ver y administrar el inventario de tu empresa. </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div>
+            <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-[200px] border rounded" />
+          </div>
+          <button class="flex items-center px-4 py-2 text-sm rounded border">
+            <div class="relative w-5 h-5 mr-2">
+              <img src="/assets/icon/exportar.svg" alt="Exportar" class="w-full h-full object-contain" />
+            </div>
+            Exportar
+          </button>
+
+          <button class="flex items-center px-4 py-2 text-sm rounded border">
+            <div class="relative w-5 h-5 mr-2">
+              <img src="/assets/icon/inportar.svg" alt="Importar" class="w-full h-full object-contain" />
+            </div>
+            Importar
+          </button>
+
+          <button class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center">
+            <div class="relative size-5 shrink-0 mr-2"><img ngSrc="/assets/icon/add.svg" alt="Create" fill /></div>
+
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="border rounded-lg overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b bg-gray-50">
+              <th class="text-left p-3 text-sm font-medium">Full name</th>
+              <th class="text-left p-3 text-sm font-medium">Position</th>
+              <th class="text-left p-3 text-sm font-medium">Date of birth</th>
+              <th class="text-left p-3 text-sm font-medium">Exp.</th>
+              <th class="text-left p-3 text-sm font-medium">Skills</th>
+              <th class="text-left p-3 text-sm font-medium">Rank, $</th>
+              <th class="text-left p-3 text-sm font-medium">Date of birth</th>
+              <th class="text-left p-3 text-sm font-medium">Exp.</th>
+              <th class="text-left p-3 text-sm font-medium">Skill</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b" class="hover:bg-gray-100">
+              <td class="p-3">asdasds</td>
+              <td class="p-3 text-sm">dasdads</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">ad</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

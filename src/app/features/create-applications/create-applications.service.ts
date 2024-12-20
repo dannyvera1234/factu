@@ -62,11 +62,25 @@ export class CreateApplicationService {
         environmentCode: ['1', [Validators.required]],
       }),
       step_3: this._fb.group({
-        plan: [''],
+        planIde: [null, [Validators.required]],
       }),
     });
 
     this.form.controls.step_2.controls.statement.disable();
+  }
+
+  public onUsernameInput(event: any, sourceStep: string, sourceField: string): void {
+    const inputValue = event.target.value;
+
+    const newValue = inputValue.replace(/[^0-9]/g, '');
+
+    event.target.value = newValue;
+
+    const control = this.form.get([sourceStep, sourceField]);
+
+    if (control) {
+      control.setValue(newValue);
+    }
   }
 
   public prev(): void {
@@ -94,6 +108,7 @@ export class CreateApplicationService {
   private mapFormToApplication(): CreateApplication {
     const step1 = this.form.controls.step_1;
     const step2 = this.form.controls.step_2;
+    const step3 = this.form.controls.step_3;
 
     return {
       typePerson: step2.controls.typePerson.value?.trim(),
@@ -105,6 +120,7 @@ export class CreateApplicationService {
       email: step1.controls.email.value?.trim(),
       cellPhone: step1.controls.cellPhone.value?.trim(),
       dateBirth: step1.controls.dateBirth.value?.trim(),
+      planIde: step3.controls.planIde.value,
       infoEmisor: {
         ruc: step1.controls.identificationNumber.value?.trim(),
         environmentCode: step2.controls.environmentCode.value?.trim(),
@@ -122,6 +138,7 @@ export class CreateApplicationService {
         email: step1.controls.email.value?.trim(),
         address: step2.controls.mainAddress.value?.trim(),
       },
+
     } as CreateApplication;
   }
 

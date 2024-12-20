@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
 import { CustomInputComponent } from '@/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { onlyNumbersValidator } from '@/utils/validators';
+import { emailValidator } from '@/utils/validators';
 import { finalize, mergeMap, of } from 'rxjs';
 import { EstablecimientoService } from '@/services';
 import { CreateEstablecimiento } from '@/interfaces/establecimiento';
@@ -26,16 +26,29 @@ export class CreateEstablecimientosComponent {
   ) {}
 
   public readonly form = this._fb.group({
-    establecimiento: [
-      '001',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyNumbersValidator()],
-    ],
-    direccion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    telefono: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyNumbersValidator()]],
-    nombre_empresa: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     ruc: [{ value: '', disabled: true }],
-    logo: [''],
+    address: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    code: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    email: ['', [Validators.required, emailValidator()]],
+    cellPhone: [
+      '09',
+      [Validators.required, Validators.minLength(10), Validators.maxLength(10)],
+    ],
   });
+
+  onUsernameInput(event: any, sourceField: string): void {
+    const inputValue = event.target.value;
+
+    const newValue = inputValue.replace(/[^0-9]/g, '');
+
+    event.target.value = newValue;
+
+    const control = this.form.get(sourceField);
+
+    if (control) {
+      control.setValue(newValue);
+    }
+  }
 
   public submit(): void {
     if (this.form.invalid) {
@@ -44,12 +57,11 @@ export class CreateEstablecimientosComponent {
     }
 
     const newEstablishment = {
-      establecimiento: this.form.controls.establecimiento.value?.trim(),
-      direccion: this.form.controls.direccion.value?.trim(),
-      telefono: Number(this.form.controls.telefono.value),
-      nombre_empresa: this.form.controls.nombre_empresa.value?.trim(),
-      ruc: Number(this.form.controls.ruc.value),
-      logo: this.form.controls.logo.value,
+      address: this.form.controls.address.value,
+      code: this.form.controls.code.value,
+      email: this.form.controls.email.value,
+      cellPhone: this.form.controls.cellPhone.value,
+      idSender: 2,
     } as CreateEstablecimiento;
 
     of(this.loading.set(true))
@@ -60,12 +72,11 @@ export class CreateEstablecimientosComponent {
       .subscribe(() => {
         this.establecimientoCreate.emit(), this.form.reset();
         this.form.setValue({
-          establecimiento: '001',
-          direccion: '',
-          telefono: '',
-          nombre_empresa: '',
           ruc: '',
-          logo: '',
+          address: '',
+          code: '',
+          email: '',
+          cellPhone: '09',
         });
       });
   }
