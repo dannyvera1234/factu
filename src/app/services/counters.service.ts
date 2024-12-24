@@ -69,6 +69,7 @@ export class CountersService {
   }
 
   updateCounterByEmisor(updateCounter: Partial<any>): Observable<any> {
+    console.log(updateCounter);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateCounter,
     });
@@ -119,6 +120,34 @@ export class CountersService {
 
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addCertificado`, {
       body: form,
+    });
+  }
+
+
+  createEstablecimiento(createEstablecimiento: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...createEstablecimiento,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addSubsidiary`, {
+      body: payload,
+    });
+  }
+
+  deleteEstablecimiento(ideRegister: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: ideRegister,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteSubsidiary`, {
+      body: payload,
+    });
+  }
+
+  updateEstablecimiento(updateEstablecimiento: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...updateEstablecimiento,
+    });
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/updateSubsidiary`, {
+      body: payload,
     });
   }
 }

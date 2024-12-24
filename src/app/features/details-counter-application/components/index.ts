@@ -9,3 +9,4 @@ export * from './list-cliente';
 export * from './delete-file';
 export * from './create-file';
 export * from './update-establecimiento';
+export * from './delete-establecimiento';

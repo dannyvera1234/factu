@@ -1,21 +1,22 @@
-import { ChangeDetectionStrategy, Component, Input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent } from '@/components';
 import { of, mergeMap, finalize } from 'rxjs';
 import { CreateEstablecimiento } from '@/interfaces';
-import { EstablecimientoService } from '@/services';
 import { emailValidator } from '@/utils/validators';
 import { NgClass } from '@angular/common';
+import { CountersService } from '@/services/counters.service';
 
 @Component({
   selector: 'app-update-establecimiento',
   imports: [ReactiveFormsModule, CustomInputComponent, NgClass],
   templateUrl: './update-establecimiento.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateEstablecimientoComponent {
- @Input({ required: true }) set dataEstableciemiento(value: any) {
+  @Input({ required: true }) set dataEstableciemiento(value: any) {
+    this.ideSubsidiary.set(value.ideSubsidiary);
     this.form.patchValue({
       ruc: value.ruc,
       address: value.address,
@@ -25,15 +26,17 @@ export class UpdateEstablecimientoComponent {
     });
   }
 
+  public readonly ideSubsidiary = signal<number | null>(null);
+
   public readonly loading = signal(false);
 
   public readonly logoPreview = signal<string | null>(null);
 
-  public readonly establecimientoUpdate = output<void>();
+  @Output() public readonly establecimientoUpdate = new EventEmitter<any | null>();
 
   constructor(
     private _fb: FormBuilder,
-    private readonly serviceEstablecimiento: EstablecimientoService,
+    private readonly counterService: CountersService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -65,25 +68,29 @@ export class UpdateEstablecimientoComponent {
     }
 
     const newEstablishment = {
-      address: this.form.controls.address.value,
-      code: this.form.controls.code.value,
-      email: this.form.controls.email.value,
-      cellPhone: this.form.controls.cellPhone.value,
-      idSender: 2,
-    } as CreateEstablecimiento;
+      ideSubsidiary: this.ideSubsidiary(),
+      dataToUpdate: {
+        address: this.form.controls.address.value,
+        code: this.form.get('code')?.value,
+        email: this.form.controls.email.value,
+        cellPhone: this.form.controls.cellPhone.value,
+      },
+    };
 
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.serviceEstablecimiento.createEstablecimiento(newEstablishment)),
+        mergeMap(() => this.counterService.updateEstablecimiento(newEstablishment)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
-        if(resp.status === 'OK'){
-
-          this.establecimientoUpdate.emit()
+        if (resp.status === 'OK') {
+          this.establecimientoUpdate.emit({
+            ideSubsidiary: Number(resp.data),
+            code: this.form.get('code')?.value,
+            email: this.form.controls.email.value,
+            address: this.form.controls.address.value,
+          });
         }
-
-
       });
   }
 }

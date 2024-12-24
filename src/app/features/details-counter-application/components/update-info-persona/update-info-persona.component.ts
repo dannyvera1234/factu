@@ -160,7 +160,7 @@ export class UpdateInfoPersonaComponent {
       identificationNumber: this.form.get('identificationNumber')?.value,
       email: this.form.value.email,
       cellPhone: this.form.value.cellPhone,
-      dateBirth: this.form.value.dateBirth,
+      dateBirth: this.form.value.dateBirth || null,
       },
     };
 

@@ -9,6 +9,7 @@ import { ModalComponent } from '@/components';
 import {
   CreateEstablecimientoComponent,
   CreateFileComponent,
+  DeleteEstablecimientoComponent,
   DeleteFileComponent,
   DocAutorizadosComponent,
   InfoCardComponent,
@@ -37,6 +38,7 @@ import {
     DeleteFileComponent,
     CreateFileComponent,
     UpdateEstablecimientoComponent,
+    DeleteEstablecimientoComponent,
   ],
   templateUrl: './details-counter-application.component.html',
   styles: ``,
@@ -56,6 +58,8 @@ export class DetailsCounterApplicationComponent {
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
 
   public readonly viewingFile = signal<number | null>(null);
+
+  public readonly viewingIdeSubsidiary = signal<number | null>(null);
 
   public readonly viewingPersona = signal<number | null>(null);
 
@@ -81,6 +85,64 @@ export class DetailsCounterApplicationComponent {
         data: {
           ...currentPersona.data,
           certificates: currentPersona.data.certificates.filter((item) => item.ide !== id),
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  updateEstable(infoEstablecimiento: any) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          subsidiaries: currentPersona.data.subsidiaries.map((item) => {
+            if (item.ideSubsidiary === infoEstablecimiento.ideSubsidiary) {
+              return {
+                ...item,
+                ...infoEstablecimiento,
+              };
+            }
+
+            return item;
+          }),
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  deleteEstable(id: number) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          subsidiaries: currentPersona.data.subsidiaries.filter((item) => item.ideSubsidiary !== id),
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  createEstable(infoEstablecimiento: any) {
+    console.log(infoEstablecimiento);
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          subsidiaries: [...currentPersona.data.subsidiaries, infoEstablecimiento],
         },
       };
 
@@ -142,6 +204,11 @@ export class DetailsCounterApplicationComponent {
         mergeMap(() => this.counterService.getCounterByEmisor(idePersonaRol)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) => this.counterByPersona.set(resp));
+      .subscribe((resp) => {
+        console.log(resp);
+        if (resp.status === 'OK') {
+          this.counterByPersona.set(resp);
+        }
+      });
   }
 }
