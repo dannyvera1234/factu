@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '@/environments/environment.development';
 import { PayloadService } from './payload.service';
 import { CreatePlan } from '../../interfaces';
+import { Modulos } from '../permissions';
 
 @Injectable({
   providedIn: 'root',
@@ -15,33 +16,28 @@ export class AccountingControlSystemService {
   ) {}
 
   getIdentificationTypes(): Observable<any> {
-    const specificData = {
-      listCode: [],
-    };
-    const payload = this.genericPayloadService.createPayload(specificData);
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypes`, { body: payload });
   }
 
   getEnvironments(): Observable<any> {
-    const specificData = {};
-    const payload = this.genericPayloadService.createPayload(specificData);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/environments`, { body: payload });
   }
 
   getPersonType(): Observable<any> {
-    const specificData = null;
-    const payload = this.genericPayloadService.createPayload(specificData);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, null);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/personType`, { body: payload });
   }
 
   getExtensionCertificate(): Observable<any> {
-    const specificData = null;
-    const payload = this.genericPayloadService.createPayload(specificData);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, null);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/extensionCertificate`, { body: payload });
   }
 
   getPlanes(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload({
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {
       descriptionMedia: 'SISTEMA CONTABLE',
       paginator: {},
     });
@@ -49,7 +45,7 @@ export class AccountingControlSystemService {
   }
 
   createPlanes(data: Partial<CreatePlan>): Observable<void> {
-    const payload = this.genericPayloadService.createPayload({...data});
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, { ...data });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/planes/createPlan`, { body: payload });
   }
 }

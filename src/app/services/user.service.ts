@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment.development';
 import { Observable, tap } from 'rxjs';
 import { LoginResponse } from '../interfaces';
 import { Router } from '@angular/router';
+import { Modulos } from '../utils/permissions';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class UserService {
   ) {}
 
   login(login: Partial<any>): Observable<LoginResponse> {
-    const payload = this.genericPayloadService.createPayload({ ...login });
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_LOGIN, { ...login });
     return this._http
       .post<LoginResponse>(`${environment.BASE_API_SISTEMA_CONTABLE}/auth/login`, { body: payload })
       .pipe(

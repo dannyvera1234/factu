@@ -12,20 +12,16 @@ export const routes: Routes & {
   },
 
   {
-    path: '',
+    path: 'sistema_contable',
     canActivate: [authGuard],
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
     },
     children: [
       {
-        path: 'applications',
-        loadChildren: () => import('./features/aplicaciones/routes'),
-        data: {
-          icon: '/assets/icon/menu_applications.svg',
-          name: 'Aplicaciones',
-          permissions: 'APLICACIONES'
-        },
+        path: 'aplicaciones_contadores',
+        loadChildren: () => import('./features/counter-application/routes'),
+
       },
       {
         path: 'inventory',

@@ -12,11 +12,12 @@ export class PayloadService {
 constructor() { }
 
 
-createPayload(payload: any = {}): CommonPayload {
+createPayload(module: string, payload: any = {}  ): CommonPayload {
   return {
     origin: this.origin,
     usrRequest: this.usrRequest,
     ipRequest: this.ipRequest,
+    module: module,
     payload: payload,
   };
 }

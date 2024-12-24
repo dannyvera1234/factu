@@ -2,8 +2,6 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarService } from '@/utils/services';
-
-import { routes } from '@/app.routes';
 import { UserService } from '../../services';
 
 @Component({
@@ -13,11 +11,11 @@ import { UserService } from '../../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
-  public readonly closeSidebar = computed(() => this.sidebar.closeSidebar());
+  public readonly closeSidebar = computed(() => !this.sidebar.closeSidebar());
 
   constructor(
-    private readonly sidebar: SidebarService,
     public userService: UserService,
+    private readonly sidebar: SidebarService,
   ) {}
 
   public readonly userData = computed(() => {

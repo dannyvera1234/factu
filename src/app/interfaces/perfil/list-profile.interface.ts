@@ -1,4 +1,4 @@
-interface PersonData {
+export interface PersonData {
   cellPhone: string;
   dateBirth: string | null;
   dateCreate: string;
@@ -8,15 +8,11 @@ interface PersonData {
   identificationNumber: string;
   lastName: string;
   names: string;
-  profile: string;
+  profileName: string;
   socialReason: string | null;
   statusRecord: string;
   typeDocument: string;
   typePerson: string | null;
+  freeCustomer: Number;
 }
 
-export interface ListProfile {
-  status: string;
-  message: string;
-  data: PersonData[];
-}

@@ -1,0 +1,24 @@
+@if (pagination(); as pagination) {
+  @if (pagination.total_pages > 1) {
+    <div class="flex md:flex-row flex-col gap-4 items-center justify-between">
+      <div class="text-sm">
+        Showing {{ pagination.offset + 1 }} to
+        {{ [pagination.offset + pagination.number_of_items, pagination.total_items] | min }} of
+        {{ pagination.total_items }} entries
+      </div>
+      <div class="flex gap-4 *:cursor-pointer *:size-10 *:flex *:items-center *:justify-center">
+        <a (click)="prev()">&lt; </a>
+        @for (page of pages(); track $index) {
+          <a
+            (click)="changePage(page * pagination.limit - pagination.limit)"
+            [ngClass]="{
+              'bg-black text-white rounded-lg': currentPage() === page,
+            }"
+            >{{ page }}</a
+          >
+        }
+        <a (click)="next()">&gt;</a>
+      </div>
+    </div>
+  }
+}

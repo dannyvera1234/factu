@@ -71,7 +71,7 @@ export class LoginComponent {
       .subscribe(
         (response) => {
           if (response.status === 'OK') {
-            this.router.navigate(['dashboard']);
+            this.router.navigate(['/sistema_contable']);
           }
         },
         (error) => {

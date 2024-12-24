@@ -152,18 +152,24 @@ export class CreatePerfilComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
-        console.log(resp);
-        this.createPerfil.emit(resp.data);
-        this.form.reset();
-        this.form.patchValue({
-          cellPhone: '09',
-          names: '',
-          lastName: '',
-          email: '',
-          profileName: '',
-          typeDocument: '',
-          identificationNumber: '',
-        });
+        if (resp.status === 'OK') {
+          const respData: any = {
+            idePersonaRol: resp.data,
+            statusRecord: 'Activo',
+            ...createPerfil,
+          };
+          this.createPerfil.emit(respData);
+          this.form.reset();
+          this.form.patchValue({
+            cellPhone: '09',
+            names: '',
+            lastName: '',
+            email: '',
+            profileName: '',
+            typeDocument: '',
+            identificationNumber: '',
+          });
+        }
       });
   }
 }

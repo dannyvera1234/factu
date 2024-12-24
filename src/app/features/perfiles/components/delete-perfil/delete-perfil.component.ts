@@ -24,6 +24,11 @@ export class DeletePerfilComponent {
         mergeMap(() => this.perfilService.deletePerfil(this.idePersonaRol)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) => this.deleted.emit(resp.data));
+      .subscribe((resp) => {
+
+        if (resp.status === 'OK') {
+          this.deleted.emit(resp.data);
+        }
+      });
   }
 }

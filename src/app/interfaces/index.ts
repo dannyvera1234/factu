@@ -3,3 +3,6 @@ export * from './establecimiento';
 export * from './applications';
 export * from './login';
 export * from './perfil';
+export * from './common';
+export * from './generico.interface';
+export * from './counter';

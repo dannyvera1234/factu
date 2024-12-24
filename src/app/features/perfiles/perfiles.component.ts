@@ -6,7 +6,7 @@ import { PerfilesService } from '@/services';
 import { finalize, mergeMap, of } from 'rxjs';
 import { TextInitialsPipe } from '../../pipes';
 import { DeletePerfilComponent } from './components';
-import { ListProfile } from '../../interfaces';
+import { GeneriResp, PersonData } from '@/interfaces';
 
 @Component({
   selector: 'app-perfiles',
@@ -18,7 +18,7 @@ import { ListProfile } from '../../interfaces';
 export class PerfilesComponent {
   public readonly loading = signal(false);
 
-  public readonly perfiles = signal<ListProfile | null>(null);
+  public readonly perfiles = signal<GeneriResp<PersonData[]> | null>(null);
 
   public readonly viewing = signal<number | null>(null);
 
@@ -32,14 +32,25 @@ export class PerfilesComponent {
         mergeMap(() => this.perfilService.getListPefiles()),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((data) => this.perfiles.set(data));
+      .subscribe((resp) => this.perfiles.set(resp));
   }
 
-  deleteRol(event: any) {
-    // this.perfiles.update(
-    //   this.perfiles().filter((item: any) => {
-    //     return item.ide !== event.ide;
-    //   }),
-    // );
+  updatePerfil(data: PersonData) {
+    const perfilesData = this.perfiles();
+    if (perfilesData && perfilesData.data) {
+      const updatedData = [...perfilesData.data, data];
+
+      this.perfiles.set({
+        ...perfilesData,
+        data: updatedData,
+      });
+    }
+
+    this.getListPerfiles();
+  }
+
+  deleteRol(idePersona: string) {
+    const idePerosonaRol = Number(idePersona);
+    this.perfiles()!.data = this.perfiles()!.data.filter((item) => item.idePersonaRol !== idePerosonaRol);
   }
 }

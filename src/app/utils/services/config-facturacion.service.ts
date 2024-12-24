@@ -12,12 +12,19 @@ export class ConfigFacturacionService {
 
   constructor() {}
 
+  public  rimpe = signal<Record<string, string>>({
+    'true': 'Sí',
+    'false': 'No',
+  });
 
 
+  public environmentCode = signal<Record<string, string>>({
+    '1': 'Pruebas',
+    '2': 'Producción',
+  });
 
   public typePerson = signal<Record<string, string>>({
     N: 'Persona Natural',
     J: 'Persona Jurídica',
   });
-
 }

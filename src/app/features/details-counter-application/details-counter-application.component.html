@@ -1,0 +1,212 @@
+@if (loading()) {
+  <div class="h-full text-center flex justify-center items-center">
+    <div class="loader"></div>
+  </div>
+} @else {
+  @if (counterByPersona()!.data; as byPersona) {
+    <div class="flex flex-col lg:flex-row gap-4 p-4">
+      <aside class="w-full lg:w-1/3 flex flex-col gap-4">
+        <div class="bg-white rounded-lg shadow p-4 py-6">
+          <header class="text-center mb-6">
+            <div
+              class="bg-blue-950 text-white rounded-lg size-20 flex items-center justify-center mb-8 mx-auto text-2xl"
+            >
+              {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+            </div>
+            <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
+            <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
+            <span
+              class="px-2 py-1 text-xs text-white rounded-full mt-2"
+              [ngClass]="{
+                'bg-green-500': byPersona.environmentCode === '2',
+                'bg-red-500': byPersona.environmentCode === '1',
+              }"
+            >
+              {{ config.environmentCode()[byPersona.environmentCode] }}
+            </span>
+          </header>
+
+          <div class="group open" #details>
+            <div class="flex justify-between items-center">
+              <button (click)="details.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Personal</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+
+              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded" (click)="updateInfoPersona.open()">
+                Editar
+              </button>
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div>
+                  <div class="mb-2">
+                    <h4 class="mb-2">Telefono</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.cellPhone }}
+                    </p>
+                  </div>
+                  <div class="mb-2">
+                    <h4>RUC</h4>
+
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.identificationNumber }}
+                    </p>
+                  </div>
+
+                  <div class="mb-2">
+                    <h4>Email</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.email }}
+                    </p>
+                  </div>
+
+                  <hr class="my-2" />
+                  <h4>Establecimiento</h4>
+                  @for (item of byPersona.subsidiaries; track $index) {
+                    <div class="flex items-center gap-2">
+                      <div class="bg-red-600 rounded-full size-8 flex items-center justify-center shrink-0">
+                        <img src="/assets/icon/company.svg" alt="Contact" class="size-4" />
+                      </div>
+                      <div>
+                        <p class="text-gray-700">{{ item.code }}</p>
+                        <p class="text-sm text-gray-500 truncate">{{ item.address }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="group" #filters>
+            <div class="flex justify-between items-center">
+              <button (click)="filters.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Tributaria</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+
+              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                (click)="updateInfoTributaria.open()">Editar</button>
+
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div class="*:mb-4">
+                  <div>
+                    <h4>Nombre Comercial</h4>
+                    <p class="text-neutral-500">{{ byPersona.comercialName }}</p>
+                  </div>
+                  <div>
+                    <h4>Razon Social</h4>
+                    <p class="text-neutral-500">
+                      {{ byPersona.socialReason }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4>Dirección Matriz</h4>
+                    <p class="text-neutral-500">{{ byPersona.mainAddress }}</p>
+                  </div>
+
+                  <div>
+                    <div class="text-neutral-500">
+                      <p>Rimpe: {{ config.rimpe()[byPersona.rimpe.toString()] }}</p>
+                      <p>rimpe Popular: {{ config.rimpe()[byPersona.rimpePopular.toString()] }}</p>
+                      <p>Tipo de Persona: {{ config.typePerson()[byPersona.typePerson] }}</p>
+                      @if (byPersona.retentionAgent) {
+                        <p>Agente de Retención: {{ byPersona.retentionAgent }}</p>
+                      }
+                      @if (byPersona.requiredAccounting) {
+                        <p>Contabilidad Requerida: {{ byPersona.requiredAccounting }}</p>
+                      }
+                      @if (byPersona.specialContributor) {
+                        <p>Contribuyente Especial: {{ byPersona.specialContributor }}</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow px-5 py-4">
+          <div class="mb-4">
+            <h3>Documents</h3>
+          </div>
+          <hr class="my-3" />
+          @if (uploadingDoc()) {
+            <div class="text-center p-4">
+              <div class="loader"></div>
+            </div>
+          } @else {
+            @if (files().length < config.maxBankFiles) {
+              <app-file-picker [maxFiles]="1" [manualHandled]="true" (selectFiles)="addFile($event)" />
+            }
+
+            <!-- @for (file of files(); track $index) {
+              <app-remote-file-handler
+                [source]="file.source"
+                [name]="file.name"
+                [type]="file.type"
+                (deleted)="removeFile(file.id)"
+              />
+            } -->
+          }
+        </div>
+      </aside>
+
+      <main class="flex flex-col gap-4 w-full lg:w-3/4">
+        <!-- @defer (when permissions.hasPermission(permission.READ_APPLICATION)) {
+          <app-bank-offers [bankId]="bank.id" />
+        } -->
+      </main>
+    </div>
+  }
+}
+
+<app-modal #updateInfoPersona>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Informacion Personal</h2>
+          <button (click)="updateInfoPersona.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-4">
+          <app-update-info-persona />
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+
+<app-modal #updateInfoTributaria>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Informacion Tributaria</h2>
+          <button (click)="updateInfoTributaria.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-6">
+          <app-update-info-tributario/>
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>

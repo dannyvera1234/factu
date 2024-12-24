@@ -25,7 +25,11 @@ export class DeleteCounterComponent {
         mergeMap(() => this.counterService.deleteCounter(this.idePersonaRol)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) => this.deleted.emit(resp.data));
+      .subscribe((resp) => {
+        if(resp.status === 'OK') {
+          this.deleted.emit(resp.data)
+        }
+      });
   }
 }
 

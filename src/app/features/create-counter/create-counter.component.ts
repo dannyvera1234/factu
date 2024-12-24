@@ -125,13 +125,32 @@ export class CreateCounterComponent {
       email: this.form.value.email,
       cellPhone: this.form.value.cellPhone,
       amountCustomer: Number(this.form.value.amountCustomer),
-    }
+    };
 
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.counterService.createCounter(createCounter)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) => this.createCounter.emit(resp.data));
+      .subscribe((resp) => {
+        if (resp.status === 'OK') {
+          const respData: any = {
+            idePersonaRol: resp.data,
+            statusRecord: 'Activo',
+            profileName: 'CONTADOR',
+            ...createCounter,
+          };
+          this.createCounter.emit(respData);
+          this.form.reset();
+          this.form.patchValue({
+            cellPhone: '09',
+            names: '',
+            lastName: '',
+            email: '',
+            typeDocument: '',
+            identificationNumber: '',
+          });
+        }
+      });
   }
 }

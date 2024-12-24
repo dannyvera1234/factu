@@ -16,31 +16,28 @@ export class PerfilesService {
   ) {}
 
   getListPefiles(): Observable<any> {
-    const specificData = { module: Modulos.MODULE_REGISTRO_USER };
-    const payload = this.genericPayloadService.createPayload(specificData);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/listUser`, { body: payload });
   }
 
   getListProfile(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, '');
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/listProfile`, { body: payload });
   }
 
   createPerfil(perfil: Partial<any>): Observable<any> {
-    console.log(perfil);
-    const payload = this.genericPayloadService.createPayload({ ...perfil });
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, { ...perfil });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/createUser`, { body: payload });
   }
 
   getIdentificationUser(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload({});
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypesUser`, { body: payload });
   }
 
   deletePerfil(id: Number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload({
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {
       idePersonaRol: id,
-      module: Modulos.MODULE_REGISTRO_USER,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/deleteUser`, { body: payload });
   }
