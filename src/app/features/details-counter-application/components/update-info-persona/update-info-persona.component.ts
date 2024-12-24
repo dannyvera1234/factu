@@ -24,6 +24,7 @@ import { NgClass } from '@angular/common';
 })
 export class UpdateInfoPersonaComponent {
   @Input({ required: true }) set infoPersonal(value: ByApplicationCounter) {
+    this.idePersonaRol.set(value.idePersonaRol);
     this.form.patchValue({
       names: value.names,
       lastName: value.lastName,
@@ -33,9 +34,12 @@ export class UpdateInfoPersonaComponent {
       cellPhone: value.cellPhone,
       dateBirth: value.dateBirth,
     });
+
   }
 
   @Output() public readonly updatePersonal = new EventEmitter<any | null>();
+
+  public readonly idePersonaRol = signal<number | null>(null);
 
   public readonly loading = signal(false);
 
@@ -147,15 +151,17 @@ export class UpdateInfoPersonaComponent {
       this.form.markAllAsTouched();
       return;
     }
-
     const updateByInfoPersona = {
+      personaRolIde: this.idePersonaRol(),
+      dataToUpdateVO: {
       names: this.form.value.names,
       lastName: this.form.value.lastName,
       typeDocument: this.form.value.typeDocument,
-      identificationNumber: this.form.value.identificationNumber,
+      identificationNumber: this.form.get('identificationNumber')?.value,
       email: this.form.value.email,
       cellPhone: this.form.value.cellPhone,
       dateBirth: this.form.value.dateBirth,
+      },
     };
 
     of(this.loading.set(true))
@@ -163,6 +169,23 @@ export class UpdateInfoPersonaComponent {
         mergeMap(() => this.counterService.updateCounterByEmisor(updateByInfoPersona)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe();
+      .subscribe((resp)=>
+      {
+        if (resp.status === 'OK') {
+          this.updatePersonal.emit(
+            {
+              names: this.form.value.names,
+              lastName: this.form.value.lastName,
+              typeDocument: this.form.value.typeDocument,
+              identificationNumber: this.form.get('identificationNumber')?.value,
+              email: this.form.value.email,
+              cellPhone: this.form.value.cellPhone,
+              dateBirth: this.form.value.dateBirth,
+              idePersonaRol: Number(resp.data),
+            }
+          );
+        }
+      }
+    );
   }
 }

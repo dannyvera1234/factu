@@ -77,15 +77,13 @@ export class UpdateEstablecimientoComponent {
         mergeMap(() => this.serviceEstablecimiento.createEstablecimiento(newEstablishment)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe(() => {
-        this.establecimientoUpdate.emit(), this.form.reset();
-        this.form.setValue({
-          ruc: '',
-          address: '',
-          code: '',
-          email: '',
-          cellPhone: '09',
-        });
+      .subscribe((resp) => {
+        if(resp.status === 'OK'){
+
+          this.establecimientoUpdate.emit()
+        }
+
+
       });
   }
 }

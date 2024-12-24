@@ -69,23 +69,56 @@ export class CountersService {
   }
 
   updateCounterByEmisor(updateCounter: Partial<any>): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { ...updateCounter });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor`, {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...updateCounter,
+    });
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/infoPersonal`, {
       body: payload,
     });
   }
 
-  deleteDoc(ide: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { ide: ide });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/deleteDoc`, {
+  updateInfoTributario(updateInfoTributario: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...updateInfoTributario,
+    });
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/infoTributaria`, {
       body: payload,
     });
+  }
+
+  deleteDoc(ideRegister: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: ideRegister,
+    });
+    return this._http.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteCertificado`,
+      {
+        body: payload,
+      },
+    );
   }
 
   getListClientes(): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/client/listClientes`, {
       body: payload,
+    });
+  }
+
+  createDoc(infoFile: Partial<any>, files: File | null): Observable<any> {
+    const form = new FormData();
+
+    if (files) {
+      form.append('certificate', files);
+    }
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...infoFile,
+    });
+    form.append('reqDTO', JSON.stringify(payload));
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addCertificado`, {
+      body: form,
     });
   }
 }

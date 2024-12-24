@@ -14,7 +14,7 @@ export class DeleteFileComponent {
 
 public readonly loading = signal(false);
 
-@Output() public readonly deleted = new EventEmitter<null>();
+@Output() public readonly deleted = new EventEmitter<number |null>();
 
 constructor(private readonly counterService: CountersService) {}
 
@@ -25,9 +25,11 @@ deleteDoc() {
       finalize(() => this.loading.set(false)),
     )
     .subscribe((resp) => {
-
+      console.log(resp);
       if (resp.status === 'OK') {
-        this.deleted.emit(resp.data);
+        this.deleted.emit(
+          Number(resp.data)
+        );
       }
     });
 }

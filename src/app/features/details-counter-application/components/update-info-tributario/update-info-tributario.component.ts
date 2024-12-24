@@ -21,6 +21,7 @@ type StatementType = {
 })
 export class UpdateInfoTributarioComponent {
   @Input({ required: true }) set infoTributario(value: ByApplicationCounter) {
+    this.idePersonaRol.set(value.idePersonaRol);
     this.form.patchValue({
       typePerson: value.typePerson,
       razon_social: value.socialReason,
@@ -31,11 +32,11 @@ export class UpdateInfoTributarioComponent {
       requiredAccounting: value.requiredAccounting,
       rimpe: value.rimpe,
       rimpePopular: value.rimpePopular,
-      electronicDocuments: value.electronicDocuments,
-      statement: value.statement,
       environmentCode: value.environmentCode,
     });
   }
+
+  public readonly idePersonaRol = signal<number | null>(null);
 
   @Output() public readonly updateTributaria = new EventEmitter<any | null>();
 
@@ -75,8 +76,6 @@ export class UpdateInfoTributarioComponent {
     requiredAccounting: [false],
     rimpe: [false],
     rimpePopular: [false],
-    electronicDocuments: this._fb.control({ value: false, disabled: false }),
-    statement: this._fb.control<StatementType | null>(null),
     environmentCode: ['', [Validators.required]],
   });
 
@@ -111,15 +110,6 @@ export class UpdateInfoTributarioComponent {
     this.controlService.getPersonType().subscribe((res) => this.personType.set(res.data));
   }
 
-  toggle(event: Event, control: 'electronicDocuments') {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    if (isChecked) {
-      this.form.controls[control].enable();
-    } else {
-      this.form.controls[control].disable();
-    }
-  }
-
   public submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -127,25 +117,42 @@ export class UpdateInfoTributarioComponent {
     }
 
     const updateByInfoTributaria = {
-      typePerson: this.form.value.typePerson,
-      socialReason: this.form.value.razon_social,
-      mainAddress: this.form.value.mainAddress,
-      comercialName: this.form.value.comercialName,
-      retentionAgent: this.form.value.retentionAgent,
-      specialContributor: this.form.value.specialContributor,
-      requiredAccounting: this.form.value.requiredAccounting,
-      rimpe: this.form.value.rimpe,
-      rimpePopular: this.form.value.rimpePopular,
-      electronicDocuments: this.form.value.electronicDocuments,
-      statement: this.form.value.statement,
-      environmentCode: this.form.value.environmentCode,
+      personaRolIde: this.idePersonaRol(),
+      dataToUpdateVO: {
+        typePerson: this.form.value.typePerson,
+        socialReason: this.form.value.razon_social,
+        mainAddress: this.form.value.mainAddress,
+        comercialName: this.form.value.comercialName,
+        retentionAgent: this.form.value.retentionAgent,
+        specialContributor: this.form.value.specialContributor,
+        requiredAccounting: this.form.value.requiredAccounting,
+        rimpe: this.form.value.rimpe,
+        rimpePopular: this.form.value.rimpePopular,
+        environmentCode: this.form.value.environmentCode,
+      },
     };
 
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.counterService.updateCounterByEmisor(updateByInfoTributaria)),
+        mergeMap(() => this.counterService.updateInfoTributario(updateByInfoTributaria)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe();
+      .subscribe((resp)=>{
+        if (resp.status === 'OK') {
+          this.updateTributaria.emit({
+            typePerson: this.form.value.typePerson,
+            socialReason: this.form.value.razon_social,
+            mainAddress: this.form.value.mainAddress,
+            comercialName: this.form.value.comercialName,
+            retentionAgent: this.form.value.retentionAgent,
+            specialContributor: this.form.value.specialContributor,
+            requiredAccounting: this.form.value.requiredAccounting,
+            rimpe: this.form.value.rimpe,
+            rimpePopular: this.form.value.rimpePopular,
+            environmentCode: this.form.value.environmentCode,
+            idePersonaRol: Number(resp.data),
+          });
+        }
+      });
   }
 }

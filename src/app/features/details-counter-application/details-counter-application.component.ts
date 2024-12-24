@@ -49,13 +49,15 @@ export class DetailsCounterApplicationComponent {
 
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes'>('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance'>('balance');
 
   public readonly loading = signal(false);
 
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
 
   public readonly viewingFile = signal<number | null>(null);
+
+  public readonly viewingPersona = signal<number | null>(null);
 
   public readonly viewingEstablecimiento = signal<any | null>(null);
 
@@ -66,12 +68,72 @@ export class DetailsCounterApplicationComponent {
     public readonly config: ConfigFacturacionService,
   ) {}
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes'): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'balance'): void {
     this.selectedTab.set(tab);
   }
 
-  deleteFile(id: Number) {
-    console.log(id);
+  deleteFile(id: number) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          certificates: currentPersona.data.certificates.filter((item) => item.ide !== id),
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  createFile(file: any) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          certificates: [...currentPersona.data.certificates, file],
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  updatePersona(infoPersona: Partial<any>) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          ...infoPersona,
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  updateTributaria(infoTributaria: Partial<any>) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          ...infoTributaria,
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
   }
 
   getByIdePersona(idePersonaRol: string) {
@@ -80,9 +142,6 @@ export class DetailsCounterApplicationComponent {
         mergeMap(() => this.counterService.getCounterByEmisor(idePersonaRol)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) => {
-        console.log(resp);
-        this.counterByPersona.set(resp);
-      });
+      .subscribe((resp) => this.counterByPersona.set(resp));
   }
 }

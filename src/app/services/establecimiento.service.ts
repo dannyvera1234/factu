@@ -15,7 +15,7 @@ export class EstablecimientoService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  createEstablecimiento(createEstablecimiento: Partial<CreateEstablecimiento>): Observable<void> {
+  createEstablecimiento(createEstablecimiento: Partial<CreateEstablecimiento>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER,{ ...createEstablecimiento });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/sender/createSubsidiary`, { body: payload });
   }
