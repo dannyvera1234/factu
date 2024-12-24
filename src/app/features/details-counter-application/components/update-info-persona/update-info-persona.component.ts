@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Environment, IdentificationType } from '@/interfaces';
+import { ByApplicationCounter, IdentificationType } from '@/interfaces';
 import {
   ageValidator,
   cedulaValidator,
@@ -11,17 +11,33 @@ import {
   rucValidator,
 } from '@/utils/validators';
 import { AccountingControlSystemService, ConfigFacturacionService } from '@/utils/services';
-import { NgOptimizedImage } from '@angular/common';
+import { finalize, mergeMap, of } from 'rxjs';
+import { CountersService } from '@/services/counters.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-update-info-persona',
-  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgOptimizedImage],
+  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgClass],
   templateUrl: './update-info-persona.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateInfoPersonaComponent {
-  // @Input({required: true}) dataInfoPersona!: any;
+  @Input({ required: true }) set infoPersonal(value: ByApplicationCounter) {
+    this.form.patchValue({
+      names: value.names,
+      lastName: value.lastName,
+      typeDocument: value.typeDocument,
+      identificationNumber: value.identificationNumber,
+      email: value.email,
+      cellPhone: value.cellPhone,
+      dateBirth: value.dateBirth,
+    });
+  }
+
+  @Output() public readonly updatePersonal = new EventEmitter<any | null>();
+
+  public readonly loading = signal(false);
 
   public readonly typeDocument = signal<IdentificationType[]>([]);
 
@@ -48,22 +64,20 @@ export class UpdateInfoPersonaComponent {
     private readonly _fb: FormBuilder,
     public readonly config: ConfigFacturacionService,
     public readonly controlService: AccountingControlSystemService,
+    private readonly counterService: CountersService,
   ) {
     this.getIdentificationTypes();
-
 
     this.form.controls.typeDocument.valueChanges.subscribe((value: any) => {
       this.identificationNumberValidators(value);
     });
   }
 
-
-
   public readonly form = this._fb.group({
     names: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
     lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
     typeDocument: ['', [Validators.required]],
-    identificationNumber: ['', [Validators.required]],
+    identificationNumber: [{ value: '', disabled: true }],
     email: ['', [Validators.required, emailValidator()]],
     cellPhone: [
       '09',
@@ -134,6 +148,21 @@ export class UpdateInfoPersonaComponent {
       return;
     }
 
-    console.log(this.form.value);
+    const updateByInfoPersona = {
+      names: this.form.value.names,
+      lastName: this.form.value.lastName,
+      typeDocument: this.form.value.typeDocument,
+      identificationNumber: this.form.value.identificationNumber,
+      email: this.form.value.email,
+      cellPhone: this.form.value.cellPhone,
+      dateBirth: this.form.value.dateBirth,
+    };
+
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.counterService.updateCounterByEmisor(updateByInfoPersona)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe();
   }
 }

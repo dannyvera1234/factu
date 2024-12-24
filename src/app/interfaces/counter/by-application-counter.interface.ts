@@ -49,4 +49,10 @@ export interface ByApplicationCounter {
   subsidiaries: Subsidiary[];
   typeDocument: string;
   typePerson: string;
+  electronicDocuments: boolean | null;
+  statement: StatementType | null;
 }
+type StatementType = {
+  certificatePassword?: string;
+  file?: File | null;
+};

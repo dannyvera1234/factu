@@ -15,7 +15,7 @@ type StatementType = {
 export class CreateCounterApplicationService {
   public readonly steps: string[] = ['Información Personal', 'Información Tributaria'];
 
-  public readonly currentStep = signal(1);
+  public readonly currentStep = signal(0);
 
   public readonly submitting = signal(false);
 

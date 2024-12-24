@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { CustomInputComponent, CustomSelectComponent, DocumentPickerComponent, FormErrorMessageComponent } from '@/components';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import { CustomInputComponent, CustomSelectComponent, FormErrorMessageComponent } from '@/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
-import { onlyNumbersValidator } from '@/utils/validators';
-import { Environment } from '@/interfaces';
+import { ByApplicationCounter, Environment } from '@/interfaces';
 import { AccountingControlSystemService, ConfigFacturacionService } from '@/utils/services';
+import { finalize, mergeMap, of } from 'rxjs';
+import { CountersService } from '@/services/counters.service';
 
 type StatementType = {
   certificatePassword?: string;
@@ -13,12 +14,33 @@ type StatementType = {
 
 @Component({
   selector: 'app-update-info-tributario',
-  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgClass, FormErrorMessageComponent, DocumentPickerComponent],
+  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgClass, FormErrorMessageComponent],
   templateUrl: './update-info-tributario.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateInfoTributarioComponent {
+  @Input({ required: true }) set infoTributario(value: ByApplicationCounter) {
+    this.form.patchValue({
+      typePerson: value.typePerson,
+      razon_social: value.socialReason,
+      mainAddress: value.mainAddress,
+      comercialName: value.comercialName,
+      retentionAgent: value.retentionAgent,
+      specialContributor: value.specialContributor,
+      requiredAccounting: value.requiredAccounting,
+      rimpe: value.rimpe,
+      rimpePopular: value.rimpePopular,
+      electronicDocuments: value.electronicDocuments,
+      statement: value.statement,
+      environmentCode: value.environmentCode,
+    });
+  }
+
+  @Output() public readonly updateTributaria = new EventEmitter<any | null>();
+
+  public readonly loading = signal(false);
+
   public readonly personType = signal<any[]>([]);
 
   public readonly typePerson = computed<{ values: string[]; labels: string[] }>(() =>
@@ -37,12 +59,11 @@ export class UpdateInfoTributarioComponent {
     private readonly _fb: FormBuilder,
     public readonly config: ConfigFacturacionService,
     public readonly controlService: AccountingControlSystemService,
+    public readonly counterService: CountersService,
   ) {
     this.getPersonType();
     this.getEnvironments();
   }
-
-
 
   public readonly form = this._fb.group({
     typePerson: ['', [Validators.required]],
@@ -54,10 +75,9 @@ export class UpdateInfoTributarioComponent {
     requiredAccounting: [false],
     rimpe: [false],
     rimpePopular: [false],
-    code: ['001', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyNumbersValidator()]],
-    electronicDocuments: this._fb.control({ value: false, disabled: true }),
+    electronicDocuments: this._fb.control({ value: false, disabled: false }),
     statement: this._fb.control<StatementType | null>(null),
-    environmentCode: ['1', [Validators.required]],
+    environmentCode: ['', [Validators.required]],
   });
 
   public onUsernameInput(event: any, sourceField: string): void {
@@ -100,7 +120,32 @@ export class UpdateInfoTributarioComponent {
     }
   }
 
-  public submit() {
-    console.log(this.form.value);
+  public submit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const updateByInfoTributaria = {
+      typePerson: this.form.value.typePerson,
+      socialReason: this.form.value.razon_social,
+      mainAddress: this.form.value.mainAddress,
+      comercialName: this.form.value.comercialName,
+      retentionAgent: this.form.value.retentionAgent,
+      specialContributor: this.form.value.specialContributor,
+      requiredAccounting: this.form.value.requiredAccounting,
+      rimpe: this.form.value.rimpe,
+      rimpePopular: this.form.value.rimpePopular,
+      electronicDocuments: this.form.value.electronicDocuments,
+      statement: this.form.value.statement,
+      environmentCode: this.form.value.environmentCode,
+    };
+
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.counterService.updateCounterByEmisor(updateByInfoTributaria)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe();
   }
 }

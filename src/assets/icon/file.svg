@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1080" height="1080" viewBox="0 0 1080 1080" xml:space="preserve">
+<desc>Created with Fabric.js 5.2.4</desc>
+<defs>
+</defs>
+<rect x="0" y="0" width="100%" height="100%" fill="transparent"></rect>
+<g transform="matrix(1 0 0 1 540 540)" id="9ea74b93-e5bc-474e-a4c1-d668c4569d88"  >
+<rect style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; visibility: hidden;" vector-effect="non-scaling-stroke"  x="-540" y="-540" rx="0" ry="0" width="1080" height="1080" />
+</g>
+<g transform="matrix(1 0 0 1 540 540)" id="10aad2d3-598a-49d5-8abc-75eaee021372"  >
+</g>
+<g transform="matrix(1.71 0 0 1.71 541.25 541.09)" id="34ab26bb-f9a0-4b71-bbaa-d1ae557058c1"  >
+<path style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(-192, -256)" d="M 64 0 C 28.7 0 0 28.7 0 64 L 0 448 C 0 483.3 28.7 512 64 512 L 320 512 C 355.3 512 384 483.3 384 448 L 384 160 L 256 160 C 238.3 160 224 145.7 224 128 L 224 0 L 64 0 z M 256 0 L 256 128 L 384 128 L 256 0 z M 112 256 L 272 256 C 280.8 256 288 263.2 288 272 C 288 280.8 280.8 288 272 288 L 112 288 C 103.2 288 96 280.8 96 272 C 96 263.2 103.2 256 112 256 z M 112 320 L 272 320 C 280.8 320 288 327.2 288 336 C 288 344.8 280.8 352 272 352 L 112 352 C 103.2 352 96 344.8 96 336 C 96 327.2 103.2 320 112 320 z M 112 384 L 272 384 C 280.8 384 288 391.2 288 400 C 288 408.8 280.8 416 272 416 L 112 416 C 103.2 416 96 408.8 96 400 C 96 391.2 103.2 384 112 384 z" stroke-linecap="round" />
+</g>
+</svg>

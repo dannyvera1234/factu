@@ -67,4 +67,25 @@ export class CountersService {
       body: payload,
     });
   }
+
+  updateCounterByEmisor(updateCounter: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { ...updateCounter });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor`, {
+      body: payload,
+    });
+  }
+
+  deleteDoc(ide: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { ide: ide });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/deleteDoc`, {
+      body: payload,
+    });
+  }
+
+  getListClientes(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/client/listClientes`, {
+      body: payload,
+    });
+  }
 }

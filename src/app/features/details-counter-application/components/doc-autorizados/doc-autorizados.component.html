@@ -1,0 +1,95 @@
+<nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+  <div>
+
+  </div>
+
+
+</nav>
+
+    <hr class="my-4" />
+    <section>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th scope="col">Creation</th>
+              <th scope="col">Product</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Period</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+            <tbody>
+              <tr>
+                <td colspan="100%">
+                  <div class="text-center py-9">
+                    <div class="loader"></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          } @else {
+            <tbody>
+              <!-- @for (application of applications()!.data; track $index) {
+                <tr
+                  class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
+                >
+                  <td>
+                    <a [routerLink]="['/', 'applications', application.id]" target="_blank">
+                      {{ application.created_at | customDate }}
+                      @if (application.created_by) {
+                        <br />by {{ application.created_by.first_name }} {{ application.created_by.last_name }}
+                      }
+                    </a>
+                  </td>
+                  <td>{{ application.loan_amount | currency }}</td>
+                  <td>
+                    {{ application.period }}
+                  </td>
+                  <td>
+                    {{ config.productType()[application.product] }}
+                  </td>
+                  <td>
+                    <p
+                      class="text-center rounded-lg inline-block px-3 py-1 text-white"
+                      [ngClass]="config.statusClasses()[application.status]"
+                    >
+                      {{ config.applicationStatus()[application.status] }}
+                    </p>
+                  </td>
+                </tr>
+              } -->
+            </tbody>
+          }
+        </table>
+      </div>
+      @defer {
+        <!-- @if (applications()?.pagination) {
+          <div class="mt-4">
+            <app-pagination />
+          </div>
+        } -->
+      }
+    </section>
+
+<!-- } -->
+<app-modal #createProducto>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Agregar Producto</h2>
+          <button (click)="createProducto.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <!-- @if (viewingInfo(); as ruc) { -->
+          <section class="p-6">
+
+          </section>
+        <!-- } -->
+      </div>
+    </div>
+  }
+</app-modal>

@@ -35,7 +35,10 @@
                 </div>
               </button>
 
-              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded" (click)="updateInfoPersona.open()">
+              <button
+                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                (click)="updateInfoPersona.open(); viewingInfo.set(byPersona)"
+              >
                 Editar
               </button>
             </div>
@@ -65,15 +68,37 @@
                   </div>
 
                   <hr class="my-2" />
-                  <h4>Establecimiento</h4>
+                  <div class="flex justify-between items-center">
+                    <button class="flex gap-2 items-center">
+                      <h3 class="text-black">Establecimiento</h3>
+                    </button>
+
+                    <button
+                      class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                      (click)="createEstablecimiento.open(); viewingInfo.set(byPersona)"
+                    >
+                      Agregar
+                    </button>
+                  </div>
+
                   @for (item of byPersona.subsidiaries; track $index) {
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-4">
                       <div class="bg-red-600 rounded-full size-8 flex items-center justify-center shrink-0">
-                        <img src="/assets/icon/company.svg" alt="Contact" class="size-4" />
+                        <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
                       </div>
-                      <div>
+
+                      <div class="grow truncate">
                         <p class="text-gray-700">{{ item.code }}</p>
                         <p class="text-sm text-gray-500 truncate">{{ item.address }}</p>
+                      </div>
+
+                      <div class="flex gap-2 items-center mt-2">
+                        <button
+                          class="px-2 py-1 rounded-md"
+                          (click)="updateEstablecimiento.open(); viewingEstablecimiento.set(item)"
+                        >
+                          <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                        </button>
                       </div>
                     </div>
                   }
@@ -93,9 +118,12 @@
                 </div>
               </button>
 
-              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
-                (click)="updateInfoTributaria.open()">Editar</button>
-
+              <button
+                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                (click)="updateInfoTributaria.open(); viewingInfo.set(byPersona)"
+              >
+                Editar
+              </button>
             </div>
             <hr class="my-2" />
             <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
@@ -121,12 +149,10 @@
                     <div class="text-neutral-500">
                       <p>Rimpe: {{ config.rimpe()[byPersona.rimpe.toString()] }}</p>
                       <p>rimpe Popular: {{ config.rimpe()[byPersona.rimpePopular.toString()] }}</p>
+                      <p>Lleva Contabilidad: {{ config.rimpe()[byPersona.requiredAccounting.toString()] }}</p>
                       <p>Tipo de Persona: {{ config.typePerson()[byPersona.typePerson] }}</p>
                       @if (byPersona.retentionAgent) {
                         <p>Agente de Retención: {{ byPersona.retentionAgent }}</p>
-                      }
-                      @if (byPersona.requiredAccounting) {
-                        <p>Contabilidad Requerida: {{ byPersona.requiredAccounting }}</p>
                       }
                       @if (byPersona.specialContributor) {
                         <p>Contribuyente Especial: {{ byPersona.specialContributor }}</p>
@@ -140,35 +166,114 @@
         </div>
 
         <div class="bg-white rounded-lg shadow px-5 py-4">
-          <div class="mb-4">
-            <h3>Documents</h3>
+          <div class="flex justify-between items-center">
+            <div class="flex gap-2 items-center">
+              <h3 class="text-black">Firma Electrónica</h3>
+            </div>
+            @if (byPersona.certificates.length === 0) {
+              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded" (click)="createDoc.open()">Agregar</button>
+            }
           </div>
+
           <hr class="my-3" />
           @if (uploadingDoc()) {
             <div class="text-center p-4">
               <div class="loader"></div>
             </div>
           } @else {
-            @if (files().length < config.maxBankFiles) {
-              <app-file-picker [maxFiles]="1" [manualHandled]="true" (selectFiles)="addFile($event)" />
-            }
+            @if (byPersona.certificates.length) {
+              @for (item of byPersona.certificates; track $index) {
+                <div class="p-2 rounded-lg flex items-center gap-3 bg-white border border-neutral-300">
+                  <div
+                    class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer bg-orange-500"
+                  >
+                    <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
+                  </div>
 
-            <!-- @for (file of files(); track $index) {
-              <app-remote-file-handler
-                [source]="file.source"
-                [name]="file.name"
-                [type]="file.type"
-                (deleted)="removeFile(file.id)"
-              />
-            } -->
+                  <div class="grow truncate">
+                    <a class="truncate">{{ item.name }}</a>
+                    <div class="flex gap-2 items-center">
+                      <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
+                    </div>
+                  </div>
+
+                  <button
+                    class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md"
+                    (click)="deleteDoc.open(); viewingFile.set(item.ide)"
+                  >
+                    <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="p-4 text-center bg-neutral-100 rounded-lg border border-neutral-300">
+                <p class="text-neutral-500">No hay firma electrónica disponible.</p>
+              </div>
+            }
           }
         </div>
       </aside>
 
       <main class="flex flex-col gap-4 w-full lg:w-3/4">
-        <!-- @defer (when permissions.hasPermission(permission.READ_APPLICATION)) {
-          <app-bank-offers [bankId]="bank.id" />
-        } -->
+        @defer {
+          <app-info-card />
+        }
+        <div class="bg-white rounded-lg shadow p-4">
+          <nav class="flex gap-4 md:flex-row flex-col mb-4 px-4 py-2">
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('clientes')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'clientes',
+                'text-gray-600': selectedTab() !== 'clientes',
+              }"
+            >
+              Clientes
+            </button>
+
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('inventario')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'inventario',
+                'text-gray-600': selectedTab() !== 'inventario',
+              }"
+            >
+              Inventario
+            </button>
+
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('doc')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'doc',
+                'text-gray-600': selectedTab() !== 'doc',
+              }"
+            >
+              Doc Autorizado
+            </button>
+          </nav>
+
+          <div class="tab-content">
+            @switch (selectedTab()) {
+              @case ('clientes') {
+                @defer {
+                  <app-list-cliente />
+                }
+              }
+              @case ('inventario') {
+                @defer {
+                  <app-list-inventario />
+                }
+              }
+              @case ('doc') {
+                @defer {
+                  <app-doc-autorizados />
+                }
+              }
+            }
+          </div>
+        </div>
       </main>
     </div>
   }
@@ -184,14 +289,18 @@
             <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
         </header>
-        <section class="p-4">
-          <app-update-info-persona />
-        </section>
+        @if (viewingInfo(); as personalInfo) {
+          <section class="p-4">
+            <app-update-info-persona
+              [infoPersonal]="personalInfo"
+              (updatePersonal)="updateInfoPersona.close(); viewingInfo.set(null)"
+            />
+          </section>
+        }
       </div>
     </div>
   }
 </app-modal>
-
 
 <app-modal #updateInfoTributaria>
   @defer {
@@ -203,9 +312,93 @@
             <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
         </header>
+        @if (viewingInfo(); as tributarioInfo) {
+          <section class="p-6">
+            <app-update-info-tributario
+              [infoTributario]="tributarioInfo"
+              (updateTributaria)="updateInfoTributaria.close(); viewingInfo.set(null)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #createEstablecimiento>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Agregar Establecimiento</h2>
+          <button (click)="createEstablecimiento.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingInfo(); as ruc) {
+          <section class="p-6">
+            <app-create-establecimiento
+              [ruc]="ruc.identificationNumber"
+              (establecimientoCreate)="createEstablecimiento.close(); viewingInfo.set(null)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #createDoc>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Subir Documentos Electrónico</h2>
+          <button (click)="createDoc.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+
         <section class="p-6">
-          <app-update-info-tributario/>
+          <app-create-file (fileCreate)="createDoc.close()" />
         </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #deleteDoc>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingFile(); as ide) {
+            <app-delete-file (deleted)="deleteDoc.close()" [ide]="ide" />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #updateEstablecimiento>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Establecimiento</h2>
+          <button (click)="updateEstablecimiento.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingEstablecimiento(); as item) {
+          <section class="p-6">
+            <app-update-establecimiento
+              [dataEstableciemiento]="item"
+              (establecimientoUpdate)="updateEstablecimiento.close(); viewingInfo.set(null)"
+            />
+          </section>
+        }
       </div>
     </div>
   }

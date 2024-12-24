@@ -96,12 +96,10 @@
 
                     <td>
                       <div class="flex gap-1">
-                        <button class="px-3 flex items-center">
-                          <div class="relative size-5 shrink-0">
-                            <img ngSrc="/assets/icon/edit.svg" alt="Edit" fill />
-                          </div>
-                        </button>
-                        <button class="px-3 flex items-center">
+                        <button
+                          class="px-3 flex items-center"
+                          (click)="deleteApplication.open(); viewing.set(counter.idePersonaRol)"
+                        >
                           <div class="relative size-4 shrink-0">
                             <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
                           </div>
@@ -118,3 +116,17 @@
     </div>
   </div>
 </div>
+
+<app-modal #deleteApplication>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewing(); as idePersonaRol) {
+            <app-delete-application (deleted)="deleteApplication.close()" [idePersonaRol]="idePersonaRol" />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
