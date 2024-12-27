@@ -282,19 +282,19 @@
 
           <div class="tab-content">
             @switch (selectedTab()) {
-              @case ('balance') {
+              <!-- @case ('balance') {
                 @defer {
-                  <!-- <app-balance /> -->
+                  <app-balance />
                 }
-              }
+              } -->
               @case ('clientes') {
                 @defer {
-                  <app-list-cliente />
+                  <app-list-cliente [idePersonaRol]="byPersona.idePersonaRol" />
                 }
               }
               @case ('inventario') {
                 @defer {
-                  <app-list-inventario />
+                  <app-list-inventario [idePersonaRol]="byPersona.idePersonaRol" />
                 }
               }
               @case ('doc') {
@@ -450,7 +450,9 @@
       <section class="p-4">
         @defer {
           @if (viewingIdeSubsidiary(); as ide) {
-            <app-delete-establecimiento (deleted)="deleteEstablecimiento.close()" [ide]="ide"
+            <app-delete-establecimiento
+              (deleted)="deleteEstablecimiento.close()"
+              [ide]="ide"
               (deleted)="$event && deleteEstable($event)"
             />
           }

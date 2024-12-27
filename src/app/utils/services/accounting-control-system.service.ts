@@ -48,4 +48,16 @@ export class AccountingControlSystemService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, { ...data });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/planes/createPlan`, { body: payload });
   }
+
+  impuestoIVA(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { label: 'IVA' });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/tax`, {
+      body: payload,
+    });
+  }
+
+  getTypesProduct(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, '');
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/productTypes`, { body: payload });
+  }
 }

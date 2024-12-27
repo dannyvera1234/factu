@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { CountersService } from '@/services/counters.service';
 import { of, mergeMap, finalize } from 'rxjs';
-import { CountersService } from '../../../../services/counters.service';
 
 @Component({
-  selector: 'app-delete-establecimiento',
+  selector: 'app-delete-cliente',
   imports: [],
-  templateUrl: './delete-establecimiento.component.html',
+  templateUrl: './delete-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeleteEstablecimientoComponent {
-@Input({ required: true }) public ide!: number;
+export class DeleteClienteComponent {
+@Input({ required: true }) idePersonaRol!: number;
+
 
 public readonly loading = signal(false);
 
@@ -18,10 +19,10 @@ public readonly loading = signal(false);
 
 constructor(private readonly counterService: CountersService) {}
 
-deleteEstablecimiento() {
+deleteClient() {
   of(this.loading.set(true))
     .pipe(
-      mergeMap(() => this.counterService.deleteEstablecimiento(this.ide)),
+      mergeMap(() => this.counterService.deleteClienteCounter(this.idePersonaRol)),
       finalize(() => this.loading.set(false)),
     )
     .subscribe((resp) => {
@@ -29,7 +30,10 @@ deleteEstablecimiento() {
         this.deleted.emit(
           Number(resp.data)
         );
+
       }
     });
 }
 }
+
+

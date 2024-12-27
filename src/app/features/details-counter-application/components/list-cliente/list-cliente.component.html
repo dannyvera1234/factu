@@ -8,7 +8,7 @@
 
     <button
       class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
-      (click)="createProducto.open()"
+      (click)="createClient.open()"
     >
       <div class="relative size-5 shrink-0 mr-2">
         <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
@@ -24,11 +24,11 @@
     <table class="w-full text-left">
       <thead>
         <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-          <th scope="col">Creation</th>
-          <th scope="col">Product</th>
-          <th scope="col">Quantity</th>
-          <th scope="col">Period</th>
-          <th scope="col">Status</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Identificación</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Telefono</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       @if (loading()) {
@@ -43,35 +43,57 @@
         </tbody>
       } @else {
         <tbody>
-          <!-- @for (application of applications()!.data; track $index) {
-                <tr
-                  class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
-                >
-                  <td>
-                    <a [routerLink]="['/', 'applications', application.id]" target="_blank">
-                      {{ application.created_at | customDate }}
-                      @if (application.created_by) {
-                        <br />by {{ application.created_by.first_name }} {{ application.created_by.last_name }}
-                      }
-                    </a>
-                  </td>
-                  <td>{{ application.loan_amount | currency }}</td>
-                  <td>
-                    {{ application.period }}
-                  </td>
-                  <td>
-                    {{ config.productType()[application.product] }}
-                  </td>
-                  <td>
-                    <p
-                      class="text-center rounded-lg inline-block px-3 py-1 text-white"
-                      [ngClass]="config.statusClasses()[application.status]"
+          @if (listClientes() && listClientes()!.data.length > 0) {
+            @for (cliente of listClientes()!.data; track $index) {
+              <tr class="border-b" class="hover:bg-gray-100">
+                <th scope="row" class="font-normal p-2">
+                  <div class="flex gap-4 items-center">
+                    <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                      {{ cliente.names + ' ' + cliente.lastName | initials }}
+                    </div>
+                    <div>
+                      <p class="font-bold">{{ cliente.names }} {{ cliente.lastName }}</p>
+
+                      <div class="flex items-center gap-2">
+                        <div class="relative">
+                          {{ cliente.email }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <td>
+                  {{ cliente.identificationNumber }}
+                </td>
+                <td>
+                  {{ cliente.address }}
+                </td>
+                <td>
+                  {{ cliente.cellPhone }}
+                </td>
+                <td>
+                  <div class="flex gap-1">
+                    <button
+                      class="px-3 flex items-center"
+                      (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
                     >
-                      {{ config.applicationStatus()[application.status] }}
-                    </p>
-                  </td>
-                </tr>
-              } -->
+                      <div class="relative size-4 shrink-0">
+                        <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
+                      </div>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="100%">
+                <div class="text-center py-9">
+                  <p class="text-neutral-400">No se encontraron resultados</p>
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
       }
     </table>
@@ -85,21 +107,41 @@
   }
 </section>
 
-<!-- } -->
-<app-modal #createProducto>
+<app-modal #createClient>
   @defer {
     <div class="flex items-center justify-center">
       <div class="bg-white w-full rounded-lg overflow-auto">
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Agregar Producto</h2>
-          <button (click)="createProducto.close()" class="shrink-0">
+          <h2 class="font-bold text-xl truncate">Agregar Cliente</h2>
+          <button (click)="createClient.close()" class="shrink-0">
             <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
         </header>
-        <!-- @if (viewingInfo(); as ruc) { -->
-        <section class="p-6"></section>
-        <!-- } -->
+        <section class="p-6">
+          <app-create-cliente
+            [idePersona]="idePersona()"
+            (created)="createClient.close(); $event && createCliente($event)"
+          />
+        </section>
       </div>
     </div>
   }
+</app-modal>
+
+<app-modal #deleteCounterClient>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingIdeCustomer(); as ideClient) {
+            <app-delete-cliente
+              (deleted)="deleteCounterClient.close()"
+              [idePersonaRol]="ideClient"
+              (deleted)="$event && deleteCliente($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
 </app-modal>

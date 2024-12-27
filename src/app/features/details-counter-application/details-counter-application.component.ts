@@ -51,7 +51,7 @@ export class DetailsCounterApplicationComponent {
 
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance'>('balance');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance'>('clientes');
 
   public readonly loading = signal(false);
 
@@ -134,7 +134,7 @@ export class DetailsCounterApplicationComponent {
   }
 
   createEstable(infoEstablecimiento: any) {
-    console.log(infoEstablecimiento);
+
     const currentPersona = this.counterByPersona();
 
     if (currentPersona) {
@@ -205,7 +205,6 @@ export class DetailsCounterApplicationComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
-        console.log(resp);
         if (resp.status === 'OK') {
           this.counterByPersona.set(resp);
         }

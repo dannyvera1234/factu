@@ -21,48 +21,31 @@ export const routes: Routes & {
       {
         path: 'aplicaciones_contadores',
         loadChildren: () => import('./features/counter-application/routes'),
-
       },
       {
         path: 'inventory',
         loadChildren: () => import('./features/inventario/routes'),
-        data: {
-          icon: '/assets/icon/inventory.svg',
-          name: 'Inventario',
-          permissions: 'INVENTARIO'
-        },
       },
       {
         path: 'planes',
         loadChildren: () => import('./features/planes/routes'),
-        data: {
-          icon: '/assets/icon/plan.svg',
-          name: 'Planes',
-          permissions: 'PLANES'
-        },
       },
       {
         path: 'perfiles',
         loadChildren: () => import('./features/perfiles/routes'),
-        data: {
-          icon: '/assets/icon/perfiles.svg',
-          permissions: 'REGISTRO_USUARIOS'
-        },
       },
       {
         path: 'perfilescontadores',
         loadChildren: () => import('./features/counters/routes'),
-        data: {
-          icon: '/assets/icon/perfiles.svg',
-          permissions: 'PERFILES_CONTADORES'
-        },
       },
+      {
+        path: 'emision_contadores',
+        loadChildren: () => import('./features/emision/routes'),
+      },
+      ///
       {
         path: 'establishment',
         loadChildren: () => import('./features/configuration/establecimientos/routes'),
-        data: {
-          permissions: 'ESTABLECIMIENTOS'
-        },
       },
       {
         path: '**',

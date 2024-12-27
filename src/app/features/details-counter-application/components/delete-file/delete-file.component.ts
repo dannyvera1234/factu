@@ -25,7 +25,6 @@ deleteDoc() {
       finalize(() => this.loading.set(false)),
     )
     .subscribe((resp) => {
-      console.log(resp);
       if (resp.status === 'OK') {
         this.deleted.emit(
           Number(resp.data)

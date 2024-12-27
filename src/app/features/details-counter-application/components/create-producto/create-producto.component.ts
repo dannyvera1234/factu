@@ -1,12 +1,173 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CustomInputComponent, CustomSelectComponent } from '@/components';
+import { NgClass } from '@angular/common';
+import { AccountingControlSystemService } from '@/utils/services';
+import { CountersService } from '@/services/counters.service';
+import { onlyNumbersDecimalsValidator } from '@/utils/validators';
+import { finalize, mergeMap, of } from 'rxjs';
+import { CreateProduct } from '@/interfaces';
 
 @Component({
   selector: 'app-create-producto',
-  imports: [],
+  imports: [ReactiveFormsModule, CustomInputComponent, NgClass, CustomSelectComponent],
   templateUrl: './create-producto.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateProductoComponent {
+  @Input({ required: true }) personaRolIde!: number;
 
+  public readonly loading = signal(false);
+
+  public readonly IVA = signal<any[]>([]);
+
+  public readonly ICE = signal<any[]>([]);
+
+  public readonly productType = signal<any[]>([]);
+
+  @Output() public readonly created = new EventEmitter<any | null>();
+
+  public readonly codeTariffIVA = computed<{ values: string[]; labels: string[] }>(() =>
+    this.IVA().reduce(
+      (acc, item) => {
+        acc.values.push(item.codeTariff);
+        acc.labels.push(item.description);
+        return acc;
+      },
+      { values: [], labels: [] } as { values: string[]; labels: string[] },
+    ),
+  );
+
+  // public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
+  //   this.ICE().reduce(
+  //     (acc, item) => {
+  //       acc.values.push(item.codeTariff);
+  //       acc.labels.push(item.description);
+  //       return acc;
+  //     },
+  //     { values: [], labels: [] } as { values: string[]; labels: string[] },
+  //   ),
+  // );
+
+  public readonly productTypeCode = computed<{ values: string[]; labels: string[] }>(() =>
+    this.productType().reduce(
+      (acc, item) => {
+        acc.values.push(item.value2);
+        acc.labels.push(item.value1);
+        return acc;
+      },
+      { values: [], labels: [] } as { values: string[]; labels: string[] },
+    ),
+  );
+  constructor(
+    private readonly _fb: FormBuilder,
+    private readonly countersService: CountersService,
+    private readonly controlService: AccountingControlSystemService,
+  ) {
+    this.getImpuestoIVA();
+    this.getTypesProduct();
+  }
+
+  onUsernameInput(event: any, sourceField: string): void {
+    const inputValue = event.target.value;
+
+    const newValue = inputValue.replace(/[^0-9]/g, '');
+
+    event.target.value = newValue;
+
+    const control = this.form.get(sourceField);
+
+    if (control) {
+      control.setValue(newValue);
+    }
+  }
+
+  public readonly form = this._fb.group({
+    ice: { value: false, disabled: true },
+    tariffCodeIva: ['', [Validators.required]],
+    name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+    productType: ['', [Validators.required]],
+    tariffCodeIce: [''],
+    mainCode: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+    auxiliaryCode: ['', [, Validators.minLength(1), Validators.maxLength(50)]],
+    description: [''],
+    unitPrice: [0, [Validators.required, onlyNumbersDecimalsValidator()]],
+    stock: [0],
+    // subsidiaryIde: [''],
+  });
+
+  toggle(event: Event, control: 'ice') {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.form.controls[control].enable();
+    } else {
+      this.form.controls[control].disable();
+    }
+  }
+
+  getImpuestoIVA(): void {
+    this.controlService.impuestoIVA().subscribe((response) => {
+      if (response.status === 'OK') {
+        this.IVA.set(response.data);
+      }
+    });
+  }
+
+  getTypesProduct(): void {
+    this.controlService.getTypesProduct().subscribe((response) => {
+      if (response.status === 'OK') {
+        this.productType.set(response.data);
+      }
+    });
+  }
+
+  submit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const dataProduct = {
+      name: this.form.controls.name.value,
+      description: this.form.controls.description.value,
+      tariffCodeIva: this.form.controls.tariffCodeIva.value,
+      tariffCodeIce: this.form.controls.tariffCodeIce.value,
+      mainCode: this.form.controls.mainCode.value,
+      auxiliaryCode: this.form.controls.auxiliaryCode.value,
+      unitPrice: this.form.controls.unitPrice.value,
+      stock: this.form.controls.stock.value,
+      subsidiaryIde: null,
+      productType: this.form.controls.productType.value,
+      personaRolIde: this.personaRolIde,
+    };
+
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.countersService.createProduct(dataProduct)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          this.created.emit({
+            name: this.form.controls.name.value,
+            mainCode: this.form.controls.mainCode.value,
+            stock: this.form.controls.stock.value,
+            tariffDesIva: this.IVA().find((item) => item.codeTariff === this.form.controls.tariffCodeIva.value)?.description,
+            unitPrice: this.form.controls.unitPrice.value,
+            productType: this.productType().find((item) => item.value2 === this.form.controls.productType.value)?.value2,
+            ide: Number(res.data),
+          });
+          this.form.reset();
+          this.form.patchValue({
+            ice: false,
+            productType: '',
+            tariffCodeIva: '',
+            tariffCodeIce: '',
+            unitPrice: 0,
+            stock: 0,
+          });
+        }
+      });
+  }
 }

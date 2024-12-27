@@ -1,0 +1,74 @@
+<div class="text-sm">
+  <header class="bg-orange-50 hover:bg-orange-100 transition-colors p-4 rounded-t-lg cursor-pointer">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <i class="fas fa-receipt text-orange-500"></i>
+        <h2 class="text-lg font-semibold">Resumen de Pago</h2>
+      </div>
+    </div>
+  </header>
+  <div class="p-4 space-y-6">
+    <div class="space-y-2">
+      <label for="metodo-pago" class="text-sm font-medium text-gray-500">Método de Pago</label>
+      <select id="metodo-pago" class="w-full p-2 border rounded">
+        <option value="">Seleccionar método</option>
+        <option value="efectivo">Efectivo</option>
+        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+        <option value="transferencia">Transferencia Bancaria</option>
+      </select>
+    </div>
+
+    <div class="space-y-3 pt-4 border-t">
+      @for (item of calculateSubtotals() | keyvalue; track item.key) {
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">
+            {{
+              item.key === 'sinImpuestos'
+                ? 'Subtotal sin impuestos'
+                : item.key === 'con12'
+                  ? 'Subtotal 12%'
+                  : item.key === 'con0'
+                    ? 'Subtotal 0%'
+                    : item.key === 'noObjetoIva'
+                      ? 'Subtotal no objeto de IVA'
+                      : item.key === 'exentoIva'
+                        ? 'Subtotal exento de IVA'
+                        : item.key === 'descuentos'
+                          ? 'Total descuentos'
+                          : item.key === 'ice'
+                            ? 'Valor ICE'
+                            : item.key
+            }}:
+          </span>
+          <span class="font-semibold">${{ item.value.toFixed(2) }}</span>
+        </div>
+      }
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-gray-600">IVA:</span>
+        <div class="flex items-center gap-2">
+          <!-- <select
+                [(ngModel)]="ivaPercentage()"
+                (ngModelChange)="ivaPercentage.set($event)"
+                class="w-[100px] p-1 border rounded"
+              >
+                <option [value]="0">0%</option>
+                <option [value]="12">12%</option>
+                <option [value]="16">16%</option>
+              </select> -->
+          <span class="font-semibold">
+            <!-- ${{((calculateSubtotals().con12 * ivaPercentage()) / 100).toFixed(2)}} -->
+          </span>
+        </div>
+      </div>
+      <div class="flex justify-between text-lg font-bold pt-2 border-t">
+        <span>Valor a Pagar:</span>
+        <!-- <span>${{calculateTotal().toFixed(2)}}</span> -->
+      </div>
+    </div>
+
+    <button class="w-full h-12 text-lg mt-4 bg-green-600 hover:bg-green-700 text-white rounded">
+      <i class="fas fa-dollar-sign mr-2"></i>
+      Registrar Venta
+    </button>
+  </div>
+</div>

@@ -76,7 +76,7 @@ export class UpdateInfoTributarioComponent {
     requiredAccounting: [false],
     rimpe: [false],
     rimpePopular: [false],
-    environmentCode: ['', [Validators.required]],
+    environmentCode: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(1)]],
   });
 
   public onUsernameInput(event: any, sourceField: string): void {

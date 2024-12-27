@@ -1,0 +1,71 @@
+<div class="flex justify-end">
+  <button class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100">
+    <div class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center">
+      <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
+    </div>
+
+    Agregar Producto
+  </button>
+</div>
+
+<div class="border rounded-lg overflow-x-auto mt-4">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b bg-gray-50">
+        <th class="text-left p-3 text-sm font-medium">Código</th>
+        <th class="text-left p-3 text-sm font-medium">Descripción</th>
+        <th class="text-left p-3 text-sm font-medium">Cantidad</th>
+        <th class="text-left p-3 text-sm font-medium">Precio Unit.</th>
+        <th class="text-left p-3 text-sm font-medium">Tarifa</th>
+        <th class="text-left p-3 text-sm font-medium">Descuento</th>
+        <th class="text-left p-3 text-sm font-medium">Valor Total</th>
+        <th class="text-left p-3 text-sm font-medium">Valor ICE</th>
+        <th class="text-left p-3 text-sm font-medium"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b" class="hover:bg-gray-100">
+        <!-- <td class="p-3">asdasds</td>
+        <td class="p-3 text-sm">dasdads</td>
+        <td class="p-3 text-sm">asd</td>
+        <td class="p-3 text-sm">asd</td>
+        <td class="p-3 text-sm">ad</td>
+        <td class="p-3 text-sm">asd</td>
+        <td class="p-3 text-sm">asd</td>
+        <td class="p-3 text-sm">asd</td>
+        <td class="p-3 text-sm">asd</td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- @if (products().length > 0) { -->
+<div class="overflow-x-auto">
+  <table class="w-full border-collapse border rounded-lg">
+    <tbody>
+      <!-- @for (product of products(); track product.id) {
+          <tr>
+            <td class="p-2">{{ product.codigo }}</td>
+            <td class="p-2">{{ product.descripcion }}</td>
+            <td class="p-2">
+              <input type="number" min="1" class="w-full p-1 border rounded" />
+            </td>
+            <td class="p-2">
+              <input type="number" step="0.01" min="0" class="w-full p-1 border rounded" />
+            </td>
+            <td class="p-2">{{ product.tarifa }}%</td>
+            <td class="p-2">
+              <input type="number" step="0.01" min="0" max="100" class="w-full p-1 border rounded" />
+            </td>
+            <td class="p-2">${{ calculateProductTotal(product).toFixed(2) }}</td>
+            <td class="p-2">${{ product.valorIce.toFixed(2) }}</td>
+            <td class="p-2">
+              <button (click)="removeProduct(product.id)" class="p-1 text-red-500 hover:bg-red-100 rounded">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        } -->
+    </tbody>
+  </table>
+</div>
+<!-- } -->

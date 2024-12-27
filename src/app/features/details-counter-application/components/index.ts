@@ -10,3 +10,6 @@ export * from './delete-file';
 export * from './create-file';
 export * from './update-establecimiento';
 export * from './delete-establecimiento';
+export * from './create-cliente';
+export * from './delete-cliente';
+export * from './delete-product';

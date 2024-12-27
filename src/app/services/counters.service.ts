@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../utils/services';
 import { PayloadService } from '../utils/services/payload.service';
 import { Modulos } from '../utils/permissions';
-import { map, Observable, of } from 'rxjs';
+import {  Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { CreateApplication } from '../interfaces';
+import {  CreateProduct } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +69,6 @@ export class CountersService {
   }
 
   updateCounterByEmisor(updateCounter: Partial<any>): Observable<any> {
-    console.log(updateCounter);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateCounter,
     });
@@ -150,4 +149,51 @@ export class CountersService {
       body: payload,
     });
   }
+
+  createClienteCounter(createClienteCounter: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...createClienteCounter,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addCustomer`, {
+      body: payload,
+    });
+  }
+
+  getListClientesCounter(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {personaRolIde: personaRolIde});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listCustomer`, {
+      body: payload,
+    });
+  }
+
+  deleteClienteCounter(ideRegister: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {ideRegister: ideRegister});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteCustomer`, {
+      body: payload,
+    });
+  }
+
+  allListProducts(personaRolIde:number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {personaRolIde: personaRolIde});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listProduct`, {
+      body: payload,
+    });
+  }
+
+  deleteProduct(ideRegister: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {ideRegister: ideRegister});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteProduct`, {
+      body: payload,
+    });
+  }
+
+  createProduct(createProduct: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...createProduct,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addProduct`, {
+      body: payload,
+    });
+  }
+
 }

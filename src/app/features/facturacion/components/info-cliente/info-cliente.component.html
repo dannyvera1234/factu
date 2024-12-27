@@ -1,0 +1,63 @@
+<header class=" p-4 rounded-t-lg cursor-pointer">
+  <!-- (click)="clienteExpanded.update(v => !v)" -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <i class="fas fa-user text-green-500"></i>
+      <h2 class="text-lg font-semibold">Información del Cliente</h2>
+      <!-- <i class="fas" [class.fa-chevron-up]="clienteExpanded()" [class.fa-chevron-down]="!clienteExpanded()"></i> -->
+    </div>
+    <button class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
+      (click)="createCliente.open()"
+    >
+      <div class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center">
+        <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
+      </div>
+
+      Nuevo Cliente
+    </button>
+  </div>
+</header>
+<!-- @if (clienteExpanded()) { -->
+<div class="p-4">
+  <div class="flex items-center gap-2 mb-4">
+    <!-- <select
+          (change)="handleClienteChange($any($event.target).value)"
+          class="w-[250px] p-2 border rounded"
+        >
+          <option value="">Seleccione un cliente</option>
+          <option value="new">Nuevo Cliente</option>
+          @for (cliente of clientes(); track cliente.id) {
+            <option [value]="cliente.id">
+              {{cliente.nombres}} - {{cliente.identidad}}
+            </option>
+          }
+    </select> -->
+
+  </div>
+
+  <!-- } -->
+  <!-- @if (showNewClientForm()) { -->
+
+  <!-- } -->
+</div>
+<!-- } -->
+
+<app-modal #createCliente>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Crear Cliente</h2>
+          <button (click)="createCliente.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+
+          <section class="p-4">
+        <app-create-cliente/>
+          </section>
+
+      </div>
+    </div>
+  }
+</app-modal>
