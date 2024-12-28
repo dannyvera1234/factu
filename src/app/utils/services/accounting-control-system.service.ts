@@ -49,8 +49,8 @@ export class AccountingControlSystemService {
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/planes/createPlan`, { body: payload });
   }
 
-  impuestoIVA(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { label: 'IVA' });
+  impuestoIVA(label:string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { label: label });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/tax`, {
       body: payload,
     });

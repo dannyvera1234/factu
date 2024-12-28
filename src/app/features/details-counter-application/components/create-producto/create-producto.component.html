@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <div>
       <app-custom-input label="Codigo*" formControlName="mainCode" />
     </div>
@@ -9,8 +9,6 @@
     <div>
       <app-custom-input label="Nombre*" formControlName="name" />
     </div>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
       <app-custom-select
         formControlName="productType"
@@ -32,12 +30,33 @@
     <div>
       <app-custom-input label="Precio*" formControlName="unitPrice" />
     </div>
-    <div>
-      <app-custom-input label="Cantidad" formControlName="stock" (input)="onUsernameInput($event, 'stock')" />
-    </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+    <div>
+      <input
+        id="Cantidad"
+        type="checkbox"
+        [checked]="form.controls.stockCount.enabled"
+        (change)="toggle($event, 'stockCount')"
+      />
+      <label for="Cantidad" class="text-gray-400 ml-2"> Stock </label>
+      @if (form.controls.stockCount.enabled) {
+        <div class="mt-4">
+          <app-custom-input
+            label="Cantidad"
+            formControlName="stock"
+            (input)="onUsernameInput($event, 'stock')"
+            [subLabel]="
+              form.controls.stock.value === null || form.controls.stock.value < 0 || form.controls.stock.value > 999999
+                ? 'La cantidad no puede ser mayor a 999999'
+                : 'La cantidad no puede ser menor a 0'
+            "
+          />
+        </div>
+      }
+    </div>
+
     <div>
       <input
         id="tariffCodeIce"
@@ -47,28 +66,27 @@
       />
       <label for="tariffCodeIce" class="text-gray-400 ml-2"> ICE </label>
       @if (form.controls.ice.enabled) {
-        <div>
+        <div class="mt-4">
           <app-custom-select
             formControlName="tariffCodeIce"
             placeholder="Tarifa ICE"
-            [options]="codeTariffIVA().values"
-            [labels]="codeTariffIVA().labels"
+            [options]="codeTariffICE().values"
+            [labels]="codeTariffICE().labels"
           />
         </div>
       }
     </div>
+  </div>
+  <div class="mt-4">
+    <textarea
+      id="nota-textarea"
+      rows="4"
+      formControlName="description"
+      class="w-full p-3 border-b-2 border-gray-300 focus:ring-teal-500 focus:border-teal-500 text-sm text-gray-700"
+      placeholder="Escribe una descripción del producto"
+    ></textarea>
 
-    <div>
-      <textarea
-        id="nota-textarea"
-        rows="4"
-        formControlName="description"
-        class="w-full p-3 border-b-2 border-gray-300 focus:ring-teal-500 focus:border-teal-500 text-sm text-gray-700"
-        placeholder="Escribe una descripción del producto"
-      ></textarea>
-
-      <div class="text-sm text-gray-600 text-right mt-1">{{ form.controls.description.value?.length ?? 0 }}/1000</div>
-    </div>
+    <div class="text-sm text-gray-600 text-right mt-1">{{ form.controls.description.value?.length ?? 0 }}/1000</div>
   </div>
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {

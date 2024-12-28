@@ -39,16 +39,16 @@ export class CreateProductoComponent {
     ),
   );
 
-  // public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
-  //   this.ICE().reduce(
-  //     (acc, item) => {
-  //       acc.values.push(item.codeTariff);
-  //       acc.labels.push(item.description);
-  //       return acc;
-  //     },
-  //     { values: [], labels: [] } as { values: string[]; labels: string[] },
-  //   ),
-  // );
+   public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
+     this.ICE().reduce(
+       (acc, item) => {
+         acc.values.push(item.codeTariff);
+         acc.labels.push(item.description);
+         return acc;
+       },
+       { values: [], labels: [] } as { values: string[]; labels: string[] },
+     ),
+   );
 
   public readonly productTypeCode = computed<{ values: string[]; labels: string[] }>(() =>
     this.productType().reduce(
@@ -66,6 +66,7 @@ export class CreateProductoComponent {
     private readonly controlService: AccountingControlSystemService,
   ) {
     this.getImpuestoIVA();
+    this.getImpuestoICA();
     this.getTypesProduct();
   }
 
@@ -85,6 +86,7 @@ export class CreateProductoComponent {
 
   public readonly form = this._fb.group({
     ice: { value: false, disabled: true },
+    stockCount: { value: false, disabled: true },
     tariffCodeIva: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
     productType: ['', [Validators.required]],
@@ -97,19 +99,29 @@ export class CreateProductoComponent {
     // subsidiaryIde: [''],
   });
 
-  toggle(event: Event, control: 'ice') {
+  toggle(event: Event, control: string) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
-      this.form.controls[control].enable();
+      this.form.get(control)?.enable();
     } else {
-      this.form.controls[control].disable();
+      this.form.get(control)?.disable();
     }
   }
 
   getImpuestoIVA(): void {
-    this.controlService.impuestoIVA().subscribe((response) => {
+    const IVA = "IVA";
+    this.controlService.impuestoIVA(IVA).subscribe((response) => {
       if (response.status === 'OK') {
         this.IVA.set(response.data);
+      }
+    });
+  }
+
+  getImpuestoICA(): void {
+    const ICE = "ICE";
+    this.controlService.impuestoIVA(ICE).subscribe((response) => {
+      if (response.status === 'OK') {
+        this.ICE.set(response.data);
       }
     });
   }
@@ -128,20 +140,22 @@ export class CreateProductoComponent {
       return;
     }
 
+
+
     const dataProduct = {
       name: this.form.controls.name.value,
       description: this.form.controls.description.value,
       tariffCodeIva: this.form.controls.tariffCodeIva.value,
-      tariffCodeIce: this.form.controls.tariffCodeIce.value,
+      tariffCodeIce: this.form.controls.tariffCodeIce.value || null,
       mainCode: this.form.controls.mainCode.value,
       auxiliaryCode: this.form.controls.auxiliaryCode.value,
       unitPrice: this.form.controls.unitPrice.value,
-      stock: this.form.controls.stock.value,
+      stock: this.form.controls.stock.value === 0 ? null : this.form.controls.stock.value,
       subsidiaryIde: null,
       productType: this.form.controls.productType.value,
       personaRolIde: this.personaRolIde,
     };
-
+    console.log(dataProduct);
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.countersService.createProduct(dataProduct)),

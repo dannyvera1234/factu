@@ -47,6 +47,7 @@ export class ListInventarioComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.listProducts.set(resp);
         }
       });

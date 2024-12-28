@@ -109,6 +109,14 @@
                   </tr>
                 }
               </tbody>
+            }@else {
+              @defer {
+                <tbody>
+                  <td colspan="100%">
+                   <app-not-count-application/>
+                  </td>
+                </tbody>
+              }
             }
           }
         </table>

@@ -6,11 +6,11 @@ import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import {  TextInitialsPipe } from '@/pipes';
 import { ModalComponent } from '../../components';
-import { DeleteApplicationComponent } from './components';
+import { DeleteApplicationComponent, NotCountApplicationComponent } from './components';
 
 @Component({
   selector: 'app-counter-application',
-  imports: [NgOptimizedImage, RouterLink, TextInitialsPipe, NgClass, ModalComponent, DeleteApplicationComponent],
+  imports: [NgOptimizedImage, RouterLink, TextInitialsPipe, NgClass, ModalComponent, DeleteApplicationComponent, NotCountApplicationComponent],
   templateUrl: './counter-application.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
