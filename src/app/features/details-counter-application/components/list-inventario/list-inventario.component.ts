@@ -7,6 +7,7 @@ import { finalize, mergeMap, of } from 'rxjs';
 import { AllListsProduct, GeneriResp } from '@/interfaces';
 import { TextInitialsPipe } from '@/pipes';
 import { DeleteProductComponent } from '../delete-product';
+import { UpdateProductComponent } from '../update-product';
 
 @Component({
   selector: 'app-list-inventario',
@@ -18,6 +19,7 @@ import { DeleteProductComponent } from '../delete-product';
     NgClass,
     CurrencyPipe,
     DeleteProductComponent,
+    UpdateProductComponent,
   ],
   templateUrl: './list-inventario.component.html',
   styles: ``,
@@ -34,6 +36,8 @@ export class ListInventarioComponent {
   public readonly loading = signal(false);
 
   public readonly viewingIdProduct = signal<number | null>(null);
+
+  public readonly viewingProduct = signal<AllListsProduct | null>(null);
 
   public readonly listProducts = signal<GeneriResp<AllListsProduct[]> | null>(null);
 
@@ -73,6 +77,26 @@ export class ListInventarioComponent {
       const updatedCliente = {
         ...currentCliente,
         data: [...currentCliente.data, create],
+      };
+
+      this.listProducts.set(updatedCliente);
+    }
+  }
+
+  updateProduct(update:any): void {
+    console.log(update)
+    const currentCliente = this.listProducts();
+
+    if (currentCliente) {
+      const updatedCliente = {
+        ...currentCliente,
+        data: currentCliente.data.map((cliente) => {
+          if (cliente.ide === update.ide) {
+            return update;
+          }
+
+          return cliente;
+        }),
       };
 
       this.listProducts.set(updatedCliente);

@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CountersService } from '../../services/counters.service';
 import { ModalComponent } from '../../components';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { TextInitialsPipe } from '../../pipes';
+import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { finalize, mergeMap, of } from 'rxjs';
 import { DeleteCounterComponent } from './components';
 import { CreateCounterComponent } from '../create-counter/create-counter.component';
 import { GeneriResp, PersonData } from '@/interfaces';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-counters',
@@ -17,6 +18,8 @@ import { GeneriResp, PersonData } from '@/interfaces';
     NgOptimizedImage,
     DeleteCounterComponent,
     CreateCounterComponent,
+    FormatPhonePipe,
+    RouterLink,
   ],
   templateUrl: './counters.component.html',
   styles: ``,
@@ -39,7 +42,12 @@ export class CountersComponent {
         mergeMap(() => this.counterService.getListCounters()),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((response) => this.counters.set(response));
+      .subscribe((response) => {
+        if (response.status === 'OK') {
+          console.log(response);
+          this.counters.set(response);
+        }
+      });
   }
 
   deletePerfil(idePersona: number) {

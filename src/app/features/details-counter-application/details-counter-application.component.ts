@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { finalize, mergeMap, of } from 'rxjs';
 import { CountersService } from '../../services/counters.service';
 import { ByApplicationCounter, GeneriResp } from '@/interfaces';
-import { CustomDatePipe, TextInitialsPipe } from '@/pipes';
+import { CustomDatePipe, FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { ConfigFacturacionService } from '@/utils/services';
 import { NgClass, NgOptimizedImage } from '@angular/common';
 import { ModalComponent } from '@/components';
@@ -39,6 +39,8 @@ import {
     CreateFileComponent,
     UpdateEstablecimientoComponent,
     DeleteEstablecimientoComponent,
+    FormatPhonePipe,
+    FormatIdPipe,
   ],
   templateUrl: './details-counter-application.component.html',
   styles: ``,
@@ -206,6 +208,7 @@ export class DetailsCounterApplicationComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.counterByPersona.set(resp);
         }
       });

@@ -5,12 +5,22 @@ import { finalize, mergeMap, of } from 'rxjs';
 import { CountersService } from '@/services/counters.service';
 import { CreateClienteComponent } from '../create-cliente';
 import { GeneriResp, ListClientes } from '@/interfaces';
-import { TextInitialsPipe } from '../../../../pipes';
+import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { DeleteClienteComponent } from '../delete-cliente';
+import { UpdateClienteComponent } from '../update-cliente';
 
 @Component({
   selector: 'app-list-cliente',
-  imports: [ModalComponent, NgOptimizedImage, CreateClienteComponent, TextInitialsPipe, DeleteClienteComponent],
+  imports: [
+    ModalComponent,
+    NgOptimizedImage,
+    CreateClienteComponent,
+    TextInitialsPipe,
+    DeleteClienteComponent,
+    UpdateClienteComponent,
+    FormatPhonePipe,
+    FormatIdPipe
+  ],
   templateUrl: './list-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +32,8 @@ export class ListClienteComponent {
   }
 
   public readonly loading = signal(false);
+
+  public readonly updateClient = signal<ListClientes | null>(null);
 
   public readonly idePersona = signal<number>(0);
 
@@ -39,6 +51,7 @@ export class ListClienteComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.listClientes.set(resp);
         }
       });
@@ -64,6 +77,26 @@ export class ListClienteComponent {
       const updatedCliente = {
         ...currentCliente,
         data: currentCliente.data.filter((cliente) => cliente.ideCustomer !== ideCustomer),
+      };
+
+      this.listClientes.set(updatedCliente);
+    }
+  }
+
+  updateCliente(update: any) {
+    console.log(update);
+    const currentCliente = this.listClientes();
+
+    if (currentCliente) {
+      const updatedCliente = {
+        ...currentCliente,
+        data: currentCliente.data.map((cliente) => {
+          if (cliente.ideCustomer === update.ideCustomer) {
+            return update;
+          }
+
+          return cliente;
+        }),
       };
 
       this.listClientes.set(updatedCliente);

@@ -14,5 +14,7 @@ export interface PersonData {
   typeDocument: string;
   typePerson: string | null;
   freeCustomer: Number;
+  amountCustomer: Number;
+  idePersonaRolEncrypted: string;
 }
 

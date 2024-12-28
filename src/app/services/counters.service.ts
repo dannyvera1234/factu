@@ -77,6 +77,15 @@ export class CountersService {
     });
   }
 
+  deleteConterEmisor(ideRegister: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: ideRegister,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/deleteEmisores`, {
+      body: payload,
+    });
+  }
+
   updateInfoTributario(updateInfoTributario: Partial<any>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateInfoTributario,
@@ -159,6 +168,16 @@ export class CountersService {
     });
   }
 
+  updateClienteCounter(updateClienteCounter: Partial<any>): Observable<any> {
+    console.log(updateClienteCounter);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...updateClienteCounter,
+    });
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/updateCustomer`, {
+      body: payload,
+    });
+  }
+
   getListClientesCounter(personaRolIde: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {personaRolIde: personaRolIde});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listCustomer`, {
@@ -192,6 +211,16 @@ export class CountersService {
       ...createProduct,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addProduct`, {
+      body: payload,
+    });
+  }
+
+  updateProduct(updateProduct: Partial<any>): Observable<any> {
+    console.log(updateProduct);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ...updateProduct,
+    });
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/updateProduct`, {
       body: payload,
     });
   }

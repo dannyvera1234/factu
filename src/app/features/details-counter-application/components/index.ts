@@ -13,3 +13,5 @@ export * from './delete-establecimiento';
 export * from './create-cliente';
 export * from './delete-cliente';
 export * from './delete-product';
+export * from './update-cliente';
+export * from './update-product';

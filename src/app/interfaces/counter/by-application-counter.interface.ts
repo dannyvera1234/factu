@@ -22,7 +22,7 @@ export interface Subsidiary {
 }
 
 export interface ByApplicationCounter {
-  cellPhone: string | null;
+  cellPhone: string;
   certificates: Certificate[];
   comercialName: string;
   dateBirth: string;

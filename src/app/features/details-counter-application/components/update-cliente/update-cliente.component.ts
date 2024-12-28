@@ -1,7 +1,10 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, mergeMap, finalize } from 'rxjs';
 import { IdentificationType } from '@/interfaces';
+import { CountersService } from '@/services/counters.service';
 import { ConfigFacturacionService, AccountingControlSystemService } from '@/utils/services';
 import {
   onlyLettersValidator,
@@ -10,22 +13,31 @@ import {
   rucValidator,
   cedulaValidator,
 } from '@/utils/validators';
-import { CountersService } from '@/services/counters.service';
-import { finalize, mergeMap, of } from 'rxjs';
-import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-create-cliente',
-  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgClass],
-  templateUrl: './create-cliente.component.html',
+  selector: 'app-update-cliente',
+  imports: [NgClass, CustomInputComponent, CustomSelectComponent, ReactiveFormsModule],
+  templateUrl: './update-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateClienteComponent {
-  @Input({ required: true }) idePersona!: number;
+export class UpdateClienteComponent {
+  @Input({ required: true }) set updatePersona(value: any) {
+    this.ideCustomer.set(value.ideCustomer);
+    this.form.patchValue({
+      names: value.names,
+      lastName: value.lastName,
+      typeDocument: value.typeDocument,
+      identificationNumber: value.identificationNumber,
+      email: value.email,
+      cellPhone: value.cellPhone,
+      address: value.address,
+    });
+  }
+
+  public readonly ideCustomer = signal<number>(0);
 
   public readonly loading = signal(false);
-
 
   public readonly identificationLabel = signal<string>('Identificación');
 
@@ -138,8 +150,8 @@ export class CreateClienteComponent {
       return;
     }
     const updateByInfoPersona = {
-      personaRolIde: this.idePersona,
-      infoCustomerReqDTO: {
+      ideCustomer: this.ideCustomer(),
+      dataToUpdate: {
         names: this.form.value.names,
         lastName: this.form.value.lastName,
         address: this.form.value.address,
@@ -152,7 +164,7 @@ export class CreateClienteComponent {
 
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.counterService.createClienteCounter(updateByInfoPersona)),
+        mergeMap(() => this.counterService.updateClienteCounter(updateByInfoPersona)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {

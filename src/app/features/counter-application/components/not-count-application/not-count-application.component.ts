@@ -16,7 +16,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       />
     </div>
     <h3 class="text-2xl font-bold">No hay aplicaciones</h3>
-    <p class="text-balance">No se encontraron aplicaciones registro de aplicaciones en este momento.</p>
+    <p class="text-balance">
+      No se encontraron aplicaciones de emisores registradas. Por favor, registre un nuevo emisor.
+    </p>
   </div>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

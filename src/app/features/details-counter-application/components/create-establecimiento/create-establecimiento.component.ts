@@ -14,12 +14,15 @@ import { CountersService } from '@/services/counters.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateEstablecimientoComponent {
-  @Input({ required: true }) set ruc(value: any) {
+  @Input({ required: true }) set data(value: any) {
     this.personaRolIde.set(value.idePersonaRol);
+    this.ruc.set(value.ruc);
     this.form.patchValue({
       ruc: value.ruc,
     });
   }
+
+  public readonly ruc = signal<string | null>(null);
 
   public readonly personaRolIde = signal<number | null>(null);
 
@@ -91,6 +94,9 @@ export class CreateEstablecimientoComponent {
            code: newEstablishment.dataToAdd.code,
            address: newEstablishment.dataToAdd.address,
             ideSubsidiary: Number(resp.data),
+            email: newEstablishment.dataToAdd.email,
+            cellPhone: newEstablishment.dataToAdd.cellPhone,
+            ruc: this.ruc(),
           });
         }
 

@@ -1,22 +1,35 @@
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
-import { NgClass } from '@angular/common';
-import { AccountingControlSystemService } from '@/utils/services';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, mergeMap, finalize } from 'rxjs';
 import { CountersService } from '@/services/counters.service';
+import { AccountingControlSystemService } from '@/utils/services';
 import { onlyNumbersDecimalsValidator } from '@/utils/validators';
-import { finalize, mergeMap, of } from 'rxjs';
-import { CreateProduct } from '@/interfaces';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-create-producto',
-  imports: [ReactiveFormsModule, CustomInputComponent, NgClass, CustomSelectComponent],
-  templateUrl: './create-producto.component.html',
+  selector: 'app-update-product',
+  imports: [CustomInputComponent, CustomSelectComponent, ReactiveFormsModule, NgClass],
+  templateUrl: './update-product.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateProductoComponent {
-  @Input({ required: true }) personaRolIde!: number;
+export class UpdateProductComponent {
+  @Input({ required: true }) set updateProduct(value: any) {
+    console.log(value, 'ads');
+    this.form.patchValue({
+      name: value.name,
+      description: value.description,
+      tariffCodeIva: value.tariffCodeIva,
+      tariffCodeIce: value.tariffCodeIce,
+      mainCode: value.mainCode,
+      auxiliaryCode: value.auxiliaryCode,
+      unitPrice: value.unitPrice,
+      stock: value.stock,
+      productType: value.productType,
+      ide: value.ide,
+    });
+  }
 
   public readonly loading = signal(false);
 
@@ -26,7 +39,7 @@ export class CreateProductoComponent {
 
   public readonly productType = signal<any[]>([]);
 
-  @Output() public readonly created = new EventEmitter<any | null>();
+  @Output() public readonly update = new EventEmitter<any | null>();
 
   public readonly codeTariffIVA = computed<{ values: string[]; labels: string[] }>(() =>
     this.IVA().reduce(
@@ -39,16 +52,16 @@ export class CreateProductoComponent {
     ),
   );
 
-   public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
-     this.ICE().reduce(
-       (acc, item) => {
-         acc.values.push(item.codeTariff);
-         acc.labels.push(item.description);
-         return acc;
-       },
-       { values: [], labels: [] } as { values: string[]; labels: string[] },
-     ),
-   );
+  public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
+    this.ICE().reduce(
+      (acc, item) => {
+        acc.values.push(item.codeTariff);
+        acc.labels.push(item.description);
+        return acc;
+      },
+      { values: [], labels: [] } as { values: string[]; labels: string[] },
+    ),
+  );
 
   public readonly productTypeCode = computed<{ values: string[]; labels: string[] }>(() =>
     this.productType().reduce(
@@ -85,18 +98,16 @@ export class CreateProductoComponent {
   }
 
   public readonly form = this._fb.group({
-    ice: { value: false, disabled: true },
-    stockCount: { value: false, disabled: true },
+    ide: [''],
     tariffCodeIva: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
     productType: ['', [Validators.required]],
     tariffCodeIce: [''],
-    mainCode: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+    mainCode: [{ value: '', disabled: true }],
     auxiliaryCode: ['', [, Validators.minLength(1), Validators.maxLength(50)]],
     description: [''],
     unitPrice: [0, [Validators.required, onlyNumbersDecimalsValidator()]],
-    stock: [''],
-    // subsidiaryIde: [''],
+    stock: [{ value: '', disabled: true }],
   });
 
   toggle(event: Event, control: string) {
@@ -109,7 +120,7 @@ export class CreateProductoComponent {
   }
 
   getImpuestoIVA(): void {
-    const IVA = "IVA";
+    const IVA = 'IVA';
     this.controlService.impuestoIVA(IVA).subscribe((response) => {
       if (response.status === 'OK') {
         this.IVA.set(response.data);
@@ -118,7 +129,7 @@ export class CreateProductoComponent {
   }
 
   getImpuestoICA(): void {
-    const ICE = "ICE";
+    const ICE = 'ICE';
     this.controlService.impuestoIVA(ICE).subscribe((response) => {
       if (response.status === 'OK') {
         this.ICE.set(response.data);
@@ -140,51 +151,45 @@ export class CreateProductoComponent {
       return;
     }
 
-
-
     const dataProduct = {
-      name: this.form.controls.name.value,
-      description: this.form.controls.description.value,
-      tariffCodeIva: this.form.controls.tariffCodeIva.value,
-      tariffCodeIce: this.form.controls.tariffCodeIce.value || null,
-      mainCode: this.form.controls.mainCode.value,
-      auxiliaryCode: this.form.controls.auxiliaryCode.value,
-      unitPrice: this.form.controls.unitPrice.value,
-      stock: Number(this.form.controls.stock.value) === 0 ? null : this.form.controls.stock.value,
-      subsidiaryIde: null,
-      productType: this.form.controls.productType.value,
-      personaRolIde: this.personaRolIde,
+      productIde: this.form.controls.ide.value,
+      dataToUpdate: {
+        name: this.form.controls.name.value,
+        description: this.form.controls.description.value,
+        tariffCodeIva: this.form.controls.tariffCodeIva.value,
+        tariffCodeIce: this.form.controls.tariffCodeIce.value || null,
+        mainCode: this.form.controls.mainCode.value,
+        auxiliaryCode: this.form.controls.auxiliaryCode.value,
+        unitPrice: this.form.controls.unitPrice.value,
+        stock: this.form.controls.stock.value,
+        productType: this.form.controls.productType.value,
+      },
     };
 
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.countersService.createProduct(dataProduct)),
+        mergeMap(() => this.countersService.updateProduct(dataProduct)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          this.created.emit({
+          this.update.emit({
             name: this.form.controls.name.value,
             mainCode: this.form.controls.mainCode.value,
             stock: this.form.controls.stock.value,
-            tariffCodeIva: this.form.controls.tariffCodeIva.value,
-            tariffCodeIce: this.form.controls.tariffCodeIce.value,
-            tariffDesIva: this.IVA().find((item) => item.codeTariff === this.form.controls.tariffCodeIva.value)?.description,
-            unitPrice: this.form.controls.unitPrice.value,
-            productType: this.productType().find((item) => item.value2 === this.form.controls.productType.value)?.value2,
-            ide: Number(res.data),
             availableStock: this.form.controls.stock.value,
-            description: this.form.controls.description.value,
+            tariffCodeIva: this.form.controls.tariffCodeIva.value,
+            tariffDesIva: this.IVA().find((item) => item.codeTariff === this.form.controls.tariffCodeIva.value)
+              ?.description,
+            tariffCodeIce: this.form.controls.tariffCodeIce.value,
+            unitPrice: this.form.controls.unitPrice.value,
+            productType: this.productType().find((item) => item.value2 === this.form.controls.productType.value)
+              ?.value2,
+            ide: Number(res.data),
             auxiliaryCode: this.form.controls.auxiliaryCode.value,
+            description:this.form.controls.description.value
           });
           this.form.reset();
-          this.form.patchValue({
-            productType: '',
-            tariffCodeIva: '',
-            tariffCodeIce: '',
-            unitPrice: 0,
-            stock: '',
-          });
         }
       });
   }

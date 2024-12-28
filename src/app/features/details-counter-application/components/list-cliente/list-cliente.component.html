@@ -23,12 +23,12 @@
   <div class="relative overflow-x-auto">
     <table class="w-full text-left">
       <thead>
-        <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-          <th scope="col">Nombres</th>
-          <th scope="col">Identificación</th>
-          <th scope="col">Dirección</th>
-          <th scope="col">Telefono</th>
-          <th scope="col"></th>
+        <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+          <th class="px-4 py-3">Nombres</th>
+          <th class="px-4 py-3 text-center">Identificación</th>
+          <th class="px-4 py-3 text-center">Dirección</th>
+          <th class="px-4 py-3 text-center">Telefono</th>
+          <th class="px-4 py-3 text-center"></th>
         </tr>
       </thead>
       @if (loading()) {
@@ -62,24 +62,25 @@
                     </div>
                   </div>
                 </th>
-                <td>
-                  {{ cliente.identificationNumber }}
+                <td class="px-4 py-3 text-center">
+                  {{ cliente.identificationNumber | formatId}}
                 </td>
-                <td>
+                <td class="px-4 py-3 text-center">
                   {{ cliente.address }}
                 </td>
-                <td>
-                  {{ cliente.cellPhone }}
+                <td class="px-4 py-3 text-center">
+                  {{ cliente.cellPhone | formatPhone}}
                 </td>
                 <td>
                   <div class="flex gap-1">
+                    <button class="px-2 py-1 rounded-md" (click)="editClient.open(); updateClient.set(cliente)">
+                      <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                    </button>
                     <button
-                      class="px-3 flex items-center"
+                      class="px-2 py-1 rounded-md"
                       (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
                     >
-                      <div class="relative size-4 shrink-0">
-                        <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
-                      </div>
+                      <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
                     </button>
                   </div>
                 </td>
@@ -144,4 +145,27 @@
       </section>
     </div>
   </div>
+</app-modal>
+
+<app-modal #editClient>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Cliente</h2>
+          <button (click)="editClient.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-6">
+          @if (updateClient(); as update) {
+            <app-update-cliente
+              [updatePersona]="update"
+              (created)="editClient.close(); $event && updateCliente($event)"
+            />
+          }
+        </section>
+      </div>
+    </div>
+  }
 </app-modal>

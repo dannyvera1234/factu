@@ -60,4 +60,9 @@ export class AccountingControlSystemService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, '');
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/productTypes`, { body: payload });
   }
+
+  getTypesCustomer(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypesCustomer`, { body: payload });
+  }
 }

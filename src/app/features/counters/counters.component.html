@@ -32,13 +32,14 @@
       <div class="border rounded-lg overflow-x-auto">
         <table class="w-full">
           <thead>
-            <tr class="border-b bg-gray-50">
-              <th class="text-left p-3 text-sm font-medium">Nombres</th>
-              <th class="text-left p-3 text-sm font-medium">Telefono</th>
-              <th class="text-left p-3 text-sm font-medium">Estado</th>
-              <th class="text-left p-3 text-sm font-medium">Email</th>
-              <th class="text-left p-3 text-sm font-medium">Perfil</th>
-              <th class="text-left p-3 text-sm font-medium">Acción</th>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th class="px-4 py-3 text-left">Nombres</th>
+              <th class="text-left p-3">Telefono</th>
+              <th class="text-center p-3">Estado</th>
+              <th class="text-left p-3">Email</th>
+              <th class="text-center p-3">Cantidad C.</th>
+              <th class="text-left p-3">Perfil</th>
+              <th class="text-left p-3"></th>
             </tr>
           </thead>
           @if (loading()) {
@@ -54,8 +55,8 @@
               <tbody>
                 @for (counter of counters()?.data; track $index) {
                   <tr class="border-b" class="hover:bg-gray-100">
-                    <td scope="row" class="p-3">
-                      <a>
+                    <td scope="row" class="p-3" [routerLink]="[counter.idePersonaRolEncrypted]">
+                      <a [routerLink]="[counter.idePersonaRolEncrypted]">
                         <div class="flex gap-4 items-center">
                           <div
                             class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
@@ -69,9 +70,9 @@
                       </a>
                     </td>
                     <td>
-                      {{ counter.cellPhone }}
+                      {{ counter.cellPhone | formatPhone }}
                     </td>
-                    <td>
+                    <td class="text-center">
                       <span
                         class="px-2 py-1 text-xs text-white rounded-full"
                         [ngClass]="{
@@ -85,16 +86,14 @@
                     <td>
                       {{ counter.email }}
                     </td>
+                    <td class="text-center">
+                      {{ counter.amountCustomer }}
+                    </td>
                     <td>
                       {{ counter.profileName }}
                     </td>
                     <td>
                       <div class="flex gap-1">
-                        <button class="px-3 flex items-center">
-                          <div class="relative size-5 shrink-0">
-                            <img ngSrc="/assets/icon/edit.svg" alt="Edit" fill />
-                          </div>
-                        </button>
                         <button
                           class="px-3 flex items-center"
                           (click)="deleteCounter.open(); viewing.set(counter.idePersonaRol)"
@@ -133,7 +132,8 @@
       </header>
       @defer {
         <section class="p-4">
-          <app-create-counter (createCounter)="createCounter.close()"
+          <app-create-counter
+            (createCounter)="createCounter.close()"
             (createCounter)="$event && updateCounter($event)"
           />
         </section>
@@ -147,8 +147,11 @@
       <section class="p-4">
         @defer {
           @if (viewing(); as idePersonaRol) {
-            <app-delete-counter [idePersonaRol]="idePersonaRol" (deleted)="$event && deletePerfil($event)"
-              (deleted)="deleteCounter.close(); viewing.set(null)" />
+            <app-delete-counter
+              [idePersonaRol]="idePersonaRol"
+              (deleted)="$event && deletePerfil($event)"
+              (deleted)="deleteCounter.close(); viewing.set(null)"
+            />
           }
         }
       </section>

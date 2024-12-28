@@ -26,7 +26,7 @@
         <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombre y Codigo</th>
           <th class="px-4 py-3 text-center">Stock</th>
-          <th class="px-4 py-3 text-center">C. Disponible.</th>
+          <th class="px-4 py-3 text-center">P. Disponible.</th>
           <th class="px-4 py-3 text-center">IVA</th>
           <th class="px-4 py-3 text-center">Precio Unitario</th>
           <th class="px-4 py-3">Categoría</th>
@@ -99,13 +99,14 @@
                 </td>
                 <td>
                   <div class="flex gap-1">
+                    <button class="px-2 py-1 rounded-md" (click)="editProduct.open(); viewingProduct.set(product)">
+                      <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                    </button>
                     <button
-                      class="px-3 flex items-center"
+                      class="px-2 py-1 rounded-md"
                       (click)="deleteProduct.open(); viewingIdProduct.set(product.ide)"
                     >
-                      <div class="relative size-4 shrink-0">
-                        <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
-                      </div>
+                      <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
                     </button>
                   </div>
                 </td>
@@ -162,11 +163,34 @@
             <app-delete-product
               [ideProduct]="ide"
               (deleted)="deleteProduct.close()"
-              (deleted)="$event && deleteProducto($event)"
+              (deleted)="$event && deleteProducto($event); viewingIdProduct.set(null)"
             />
           }
         }
       </section>
     </div>
   </div>
+</app-modal>
+<app-modal #editProduct>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Producto</h2>
+          <button (click)="editProduct.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-6">
+          @if (viewingProduct(); as product) {
+            <app-update-product
+              [updateProduct]="product"
+              (update)="editProduct.close()"
+              (update)="$event && updateProduct($event) && viewingProduct.set(null)"
+            />
+          }
+        </section>
+      </div>
+    </div>
+  }
 </app-modal>

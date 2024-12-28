@@ -73,7 +73,7 @@
                     </th>
 
                     <td>
-                      {{ counter.cellPhone }}
+                      {{ counter.cellPhone | formatPhone }}
                     </td>
 
                     <td>
@@ -91,7 +91,7 @@
                       {{ counter.email }}
                     </td>
                     <td>
-                      {{ counter.identificationNumber }}
+                      {{ counter.identificationNumber | formatId }}
                     </td>
 
                     <td>
@@ -109,11 +109,11 @@
                   </tr>
                 }
               </tbody>
-            }@else {
+            } @else {
               @defer {
                 <tbody>
                   <td colspan="100%">
-                   <app-not-count-application/>
+                    <app-not-count-application />
                   </td>
                 </tbody>
               }
@@ -131,7 +131,11 @@
       <section class="p-4">
         @defer {
           @if (viewing(); as idePersonaRol) {
-            <app-delete-application (deleted)="deleteApplication.close()" [idePersonaRol]="idePersonaRol" />
+            <app-delete-application
+              (deleted)="deleteApplication.close()"
+              [idePersonaRol]="idePersonaRol"
+              (deleted)="$event && deleteEmisor($event); viewing.set(null)"
+            />
           }
         }
       </section>

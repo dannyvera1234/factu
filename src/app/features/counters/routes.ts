@@ -7,9 +7,10 @@ export default [
     path: '',
     component: CountersComponent,
   },
-  // {
-  //   path: 'create',
-  //   loadComponent: () => import('../create-applications').then(m => m.CreateApplicationsComponent),
-  // },
+  {
+    path: ':idePersonaRolEncrypted',
+    loadComponent: () =>
+      import('./../details-counter').then((module) => module.DetailsCounterComponent),
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ] satisfies Route[];

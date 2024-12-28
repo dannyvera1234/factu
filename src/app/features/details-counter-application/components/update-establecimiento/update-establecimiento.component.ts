@@ -16,6 +16,7 @@ import { CountersService } from '@/services/counters.service';
 })
 export class UpdateEstablecimientoComponent {
   @Input({ required: true }) set dataEstableciemiento(value: any) {
+    // console.log(value);
     this.ideSubsidiary.set(value.ideSubsidiary);
     this.form.patchValue({
       ruc: value.ruc,
@@ -89,6 +90,8 @@ export class UpdateEstablecimientoComponent {
             code: this.form.get('code')?.value,
             email: this.form.controls.email.value,
             address: this.form.controls.address.value,
+            cellPhone: this.form.controls.cellPhone.value,
+            ruc: this.form.controls.ruc.value,
           });
         }
       });

@@ -51,14 +51,14 @@
                   <div class="mb-2">
                     <h4 class="mb-2">Telefono</h4>
                     <p class="text-neutral-500 mb-2">
-                      {{ byPersona.cellPhone }}
+                      {{ byPersona.cellPhone | formatPhone }}
                     </p>
                   </div>
                   <div class="mb-2">
                     <h4>RUC</h4>
 
                     <p class="text-neutral-500 mb-2">
-                      {{ byPersona.identificationNumber }}
+                      {{ byPersona.identificationNumber | formatId }}
                     </p>
                   </div>
 
@@ -371,7 +371,7 @@
         @if (viewingInfo(); as ruc) {
           <section class="p-6">
             <app-create-establecimiento
-              [ruc]="ruc"
+              [data]="ruc"
               (createEstablecimiento)="createEstablecimiento.close(); viewingInfo.set(null)"
               (createEstablecimiento)="$event && createEstable($event)"
             />

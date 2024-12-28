@@ -4,13 +4,23 @@ import { RouterLink } from '@angular/router';
 import { CountersService } from '../../services/counters.service';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
-import {  TextInitialsPipe } from '@/pipes';
+import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { ModalComponent } from '../../components';
 import { DeleteApplicationComponent, NotCountApplicationComponent } from './components';
 
 @Component({
   selector: 'app-counter-application',
-  imports: [NgOptimizedImage, RouterLink, TextInitialsPipe, NgClass, ModalComponent, DeleteApplicationComponent, NotCountApplicationComponent],
+  imports: [
+    NgOptimizedImage,
+    RouterLink,
+    TextInitialsPipe,
+    NgClass,
+    ModalComponent,
+    DeleteApplicationComponent,
+    NotCountApplicationComponent,
+    FormatPhonePipe,
+    FormatIdPipe,
+  ],
   templateUrl: './counter-application.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +30,7 @@ export class CounterApplicationComponent {
 
   public readonly counterList = signal<GeneriResp<any[]> | null>(null);
 
-    public readonly viewing = signal<number | null>(null);
+  public readonly viewing = signal<number | null>(null);
 
   constructor(private readonly counterService: CountersService) {
     this.getListCounters();
@@ -32,7 +42,25 @@ export class CounterApplicationComponent {
         mergeMap(() => this.counterService.getListCountersByEmisor()),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((resp) =>
-        this.counterList.set(resp));
+      .subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.counterList.set(resp);
+          console.log(resp);
+        }
+      });
+  }
+
+  deleteEmisor(idePersonaRol: number) {
+    const counterListData = this.counterList();
+    if (counterListData && counterListData.data) {
+      const updatedData = counterListData.data.filter((item) => item.idePersonaRol !== idePersonaRol);
+
+      this.counterList.set({
+        ...counterListData,
+        data: updatedData,
+      });
+    }
+
+    this.getListCounters();
   }
 }
