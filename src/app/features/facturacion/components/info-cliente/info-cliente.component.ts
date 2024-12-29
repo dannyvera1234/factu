@@ -1,142 +1,96 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import {  ModalComponent } from '@/components';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IdentificationType } from '@/interfaces';
-import { AccountingControlSystemService, ConfigFacturacionService } from '@/utils/services';
-import { onlyLettersValidator, emailValidator, onlyNumbersValidator, ageValidator, rucValidator, cedulaValidator } from '@/utils/validators';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener } from '@angular/core';
+import { ModalComponent } from '@/components';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateClienteComponent } from './components';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-info-cliente',
-  imports: [ReactiveFormsModule, ModalComponent,CreateClienteComponent],
+  imports: [ReactiveFormsModule, ModalComponent, CreateClienteComponent, FormsModule, NgOptimizedImage],
   templateUrl: './info-cliente.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoClienteComponent {
- public readonly idePersonaRol = signal<number | null>(null);
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: MouseEvent): void {
+    const dropdownContainer = document.querySelector('.dropdown-container');
+    if (!dropdownContainer?.contains(event.target as Node)) {
+      this.dropdownOpen = false;
+    }
+  }
 
-   public readonly loading = signal(false);
+  searchTerm: string = '';
+  dropdownOpen: boolean = false;
+  selectedEmissor: any | null = null;
+  selectedEstablishment: string = '';
+  filteredOptions: any[] = [];
 
-   public readonly typeDocument = signal<IdentificationType[]>([]);
+  allEmisores: any[] = [
+    {
+      id: '1',
+      name: 'Empresa A',
+      ruc: 'EMA123456ABC',
+      address: 'Calle 123, Ciudad de México',
+      email: 'contacto@empresaa.com',
+      establishments: ['Sucursal Principal', 'Sucursal Norte', 'Sucursal Sur'],
+      logo: '/placeholder.svg?height=100&width=100'
+    },
+    {
+      id: '2',
+      name: 'Corporación B',
+      ruc: 'COB789012DEF',
+      address: 'Av. Principal 456, Guadalajara',
+      email: 'info@corporacionb.com',
+      establishments: ['Oficina Central', 'Centro de Distribución', 'Tienda Online'],
+      logo: '/placeholder.svg?height=100&width=100'
+    },
+    {
+      id: '3',
+      name: 'Industrias C',
+      ruc: 'INC345678GHI',
+      address: 'Blvd. Industrial 789, Monterrey',
+      email: 'ventas@industriasc.com',
+      establishments: ['Planta de Producción', 'Centro de Investigación', 'Showroom'],
+      logo: '/placeholder.svg?height=100&width=100'
+    },
+  ];
 
-   public readonly identificationLabel = signal<string>('Identificación');
+  ngOnInit() {
+    this.filteredOptions = this.allEmisores;
+  }
 
-   public readonly transformedTypeDocument = computed<{ values: string[]; labels: string[] }>(() =>
-     this.typeDocument().reduce(
-       (acc, item) => {
-         acc.values.push(item.code);
-         acc.labels.push(item.description);
-         return acc;
-       },
-       { values: [], labels: [] } as { values: string[]; labels: string[] },
-     ),
-   );
+  handleSearchChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.searchTerm = target.value;
+    this.dropdownOpen = true;
+    this.filterOptions();
+  }
 
-   public readonly maxDate = computed(() => {
-     const today = new Date();
-     const maxDate = today.toISOString().split('T')[0];
-     return maxDate;
-   });
+  filterOptions() {
+    this.filteredOptions = this.allEmisores.filter(emisor =>
+      emisor.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      emisor.ruc.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
 
-   constructor(
-     private readonly _fb: FormBuilder,
-     public readonly config: ConfigFacturacionService,
-     public readonly controlService: AccountingControlSystemService,
-   ) {
-     this.getIdentificationTypes();
+  selectOption(emisor: any) {
+    this.selectedEmissor = emisor;
+    this.searchTerm = emisor.name;
+    this.selectedEstablishment = emisor.establishments[0];
+    this.dropdownOpen = false;
+  }
 
-     this.form.controls.typeDocument.valueChanges.subscribe((value: any) => {
-       this.identificationNumberValidators(value);
-     });
-   }
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
 
-   public readonly form = this._fb.group({
-     names: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
-     lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
-     typeDocument: ['', [Validators.required]],
-     identificationNumber: ['', [Validators.required]],
-     email: ['', [Validators.required, emailValidator()]],
-     cellPhone: [
-       '09',
-       [Validators.required, onlyNumbersValidator(), Validators.maxLength(10), Validators.minLength(10)],
-     ],
-     dateBirth: ['', [ageValidator()]],
-   });
 
-   private identificationNumberValidators(typeCode: string): void {
-     const selectedType = this.typeDocument().find((type) => type.code === typeCode);
 
-     if (selectedType) {
-       const length = selectedType.length;
-       this.identificationLabel.set(selectedType.description);
-       const identificationControl = this.form.controls.identificationNumber;
+}
 
-       switch (typeCode) {
-         case '04':
-           identificationControl?.setValidators([
-             Validators.required,
-             rucValidator(),
-             Validators.minLength(length),
-             Validators.maxLength(length),
-           ]);
-           break;
-         case '05':
-           identificationControl?.setValidators([
-             Validators.required,
-             cedulaValidator(),
-             Validators.minLength(length),
-             Validators.maxLength(length),
-           ]);
-           break;
-         default:
-           identificationControl?.setValidators([
-             Validators.required,
-             Validators.minLength(length),
-             Validators.maxLength(length),
-           ]);
-           break;
-       }
 
-       identificationControl?.updateValueAndValidity();
-     }
-   }
 
-   public onUsernameInput(event: any, sourceField: string): void {
-     const inputValue = event.target.value;
 
-     const newValue = inputValue.replace(/[^0-9]/g, '');
 
-     event.target.value = newValue;
 
-     const control = this.form.get([sourceField]);
-
-     if (control) {
-       control.setValue(newValue);
-     }
-   }
-
-   private getIdentificationTypes() {
-     this.controlService.getIdentificationTypes().subscribe((res) => this.typeDocument.set(res.data));
-   }
-
-   public submit(): void {
-     if (this.form.invalid) {
-       this.form.markAllAsTouched();
-       return;
-     }
-     const updateByInfoPersona = {
-       personaRolIde: this.idePersonaRol(),
-       dataToUpdateVO: {
-       names: this.form.value.names,
-       lastName: this.form.value.lastName,
-       typeDocument: this.form.value.typeDocument,
-       identificationNumber: this.form.get('identificationNumber')?.value,
-       email: this.form.value.email,
-       cellPhone: this.form.value.cellPhone,
-       dateBirth: this.form.value.dateBirth || null,
-       },
-     };
-
-   }
- }
