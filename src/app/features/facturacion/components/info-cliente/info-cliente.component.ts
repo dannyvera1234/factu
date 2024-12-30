@@ -1,84 +1,68 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, signal } from '@angular/core';
 import { ModalComponent } from '@/components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateClienteComponent } from './components';
 import { NgOptimizedImage } from '@angular/common';
 import { FacturacionService } from '@/services';
+import { CreateFacturacionService } from '../../create-facturacion.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { GeneriResp } from '../../../../interfaces';
+import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
 
 @Component({
   selector: 'app-info-cliente',
-  imports: [ReactiveFormsModule, ModalComponent, CreateClienteComponent, FormsModule, NgOptimizedImage],
+  imports: [
+    ReactiveFormsModule,
+    ModalComponent,
+    CreateClienteComponent,
+    FormsModule,
+    NgOptimizedImage,
+    FormatIdPipe,
+    FormatPhonePipe,
+  ],
   templateUrl: './info-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoClienteComponent {
-  @HostListener('document:click', ['$event'])
-  closeDropdown(event: MouseEvent): void {
-    const dropdownContainer = document.querySelector('.dropdown-container');
-    if (!dropdownContainer?.contains(event.target as Node)) {
-      this.dropdownOpen = false;
-    }
-  }
+   @HostListener('document:click', ['$event'])
+   closeDropdown(event: MouseEvent): void {
+     const dropdownContainer = document.querySelector('.dropdown');
+     if (!dropdownContainer?.contains(event.target as Node)) {
+       this.dropdownOpen = false;
+     }
+   }
 
   searchTerm: string = '';
   dropdownOpen: boolean = false;
-  selectedEmissor: any | null = null;
+  // selectedCliente: any | null = null;
   selectedEstablishment: string = '';
-  filteredOptions: any[] = [];
-
-  allEmisores: any[] = [
-    {
-      id: '1',
-      name: 'Empresa A',
-      ruc: 'EMA123456ABC',
-      address: 'Calle 123, Ciudad de México',
-      email: 'contacto@empresaa.com',
-      establishments: ['Sucursal Principal', 'Sucursal Norte', 'Sucursal Sur'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-    {
-      id: '2',
-      name: 'Corporación B',
-      ruc: 'COB789012DEF',
-      address: 'Av. Principal 456, Guadalajara',
-      email: 'info@corporacionb.com',
-      establishments: ['Oficina Central', 'Centro de Distribución', 'Tienda Online'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-    {
-      id: '3',
-      name: 'Industrias C',
-      ruc: 'INC345678GHI',
-      address: 'Blvd. Industrial 789, Monterrey',
-      email: 'ventas@industriasc.com',
-      establishments: ['Planta de Producción', 'Centro de Investigación', 'Showroom'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-  ];
+  // filteredOptions: any[] = [];
 
   ngOnInit() {
-    this.filteredOptions = this.allEmisores;
+    // this.filteredOptions = this.allEmisores;
   }
 
   handleSearchChange(event: Event) {
+    console.log(event);
     const target = event.target as HTMLInputElement;
     this.searchTerm = target.value;
     this.dropdownOpen = true;
-    this.filterOptions();
+    // this.filterOptions();
   }
 
-  filterOptions() {
-    this.filteredOptions = this.allEmisores.filter(emisor =>
-      emisor.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      emisor.ruc.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
+  // filterOptions() {
+  //   this.filteredOptions = this.allEmisores.filter(
+  //     (emisor) =>
+  //       emisor.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+  //       emisor.ruc.toLowerCase().includes(this.searchTerm.toLowerCase()),
+  //   );
+  // }
 
   selectOption(emisor: any) {
-    this.selectedEmissor = emisor;
+    this.selectedCliente.set(emisor);
     this.searchTerm = emisor.name;
-    this.selectedEstablishment = emisor.establishments[0];
+    // this.selectedEstablishment = emisor.establishments[0];
     this.dropdownOpen = false;
   }
 
@@ -86,21 +70,24 @@ export class InfoClienteComponent {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  constructor(private readonly facturacionService: FacturacionService) {}
-
-  getListClientes() {
-    // this.facturacionService.getListCountersByCliente().subscribe((resp) => {
-    //   if (resp.status === 'OK') {
-    //     this.filteredOptions = resp;
-    //   }
-    // });
+  constructor(
+    private readonly facturacionService: FacturacionService,
+    private readonly configFactu: CreateFacturacionService,
+  ) {
+    toObservable(this.persoRolIdEmisor).subscribe((emisor) => {
+      if (emisor !== null) {
+        this.facturacionService.getListCountersByCliente(emisor).subscribe((resp) => {
+          if (resp.status === 'OK') {
+            this.filteredOptions.set(resp);
+          }
+        });
+      }
+    });
   }
 
+  public readonly persoRolIdEmisor = computed(() => this.configFactu.setEmisor());
 
+  public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
+
+  public readonly selectedCliente = signal<any | null>(null);
 }
-
-
-
-
-
-

@@ -1,2 +1,2 @@
 export * from './facturacion.component';
-export * from './facturacion.service';
+export * from './create-facturacion.service';

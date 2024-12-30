@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FacturacionService } from '@/services';
-import { GeneriResp } from '../../../../interfaces';
+import { GeneriResp } from '@/interfaces';
+import { CreateFacturacionService } from '../../create-facturacion.service';
+import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
 
 @Component({
   selector: 'app-info-emisor',
-  imports: [FormsModule],
+  imports: [FormsModule, FormatIdPipe, FormatPhonePipe],
   templateUrl: './info-emisor.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,9 +21,6 @@ export class InfoEmisorComponent {
     }
   }
 
-  selectedEstablishment: string = '';
-
-  // Signal para opciones filtradas
   public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
 
   public readonly dropdownOpen = signal(false);
@@ -30,10 +29,13 @@ export class InfoEmisorComponent {
 
   public readonly searchTerm = signal('');
 
-  constructor(private readonly facturacionService: FacturacionService) {
+  constructor(
+    private readonly facturacionService: FacturacionService,
+    private readonly configFactu: CreateFacturacionService,
+  ) {
+    this.configFactu.setEmisor.set(null);
     this.getEmisores();
   }
-
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -56,9 +58,8 @@ export class InfoEmisorComponent {
 
   selectOption(emisor: any) {
     this.selectedEmissor.set(emisor);
-
-    // this.searchTerm.set(emisor.names + ' ' + emisor.lastName );
-     this.dropdownOpen.set(false);
+    this.configFactu.setEmisor.set(emisor.idePersonaRol);
+    this.dropdownOpen.set(false);
   }
 
   toggleDropdown() {

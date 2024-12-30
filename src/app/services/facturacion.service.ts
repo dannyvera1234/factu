@@ -22,10 +22,20 @@ export class FacturacionService {
   }
 
   getListCountersByCliente(personaRolIde: number): Observable<any> {
+    console.log(personaRolIde);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISION_DOCUMENTOS_CONTADORES, {
       personaRolIde: personaRolIde,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/counter/emisor/listCustomer`, {
+      body: payload,
+    });
+  }
+
+  getListaProductos(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISION_DOCUMENTOS_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/counter/emisor/listProduct`, {
       body: payload,
     });
   }
