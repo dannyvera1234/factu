@@ -30,9 +30,7 @@ export class ProductosComponent {
   //   this.isProductModalOpen.set(false);
   // }
 
-  removeProduct(id: number) {
-    this.products.update((currentProducts) => currentProducts.filter((product) => product.id !== id));
-  }
+
 
   updateProduct(id: number, field: keyof any, value: number | string) {
     this.products.update((currentProducts) =>
@@ -100,4 +98,9 @@ export class ProductosComponent {
       }
     });
   }
+  removeProduct(id: number) {
+    this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
+  }
+
+
 }
