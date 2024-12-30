@@ -1,5 +1,6 @@
 import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { AccountingControlSystemService } from '@/utils/services';
 
 @Component({
   selector: 'app-resumen-pago',
@@ -11,6 +12,10 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 export class ResumenPagoComponent {
   ivaPercentage = signal(12);
   products = signal<any[]>([]);
+
+  constructor(private readonly controlService: AccountingControlSystemService) {
+    this.getPayForms();
+  }
 
 
 calculateSubtotals = computed(() => {
@@ -52,4 +57,11 @@ calculateTotal = computed(() => {
   return baseImponible - subtotals.descuentos + subtotals.ice + iva;
 });
 
+
+
+private getPayForms(){
+  this.controlService.getTypesPayForm().subscribe((response) => {
+   console.log(response);
+  });
+}
 }

@@ -1,88 +1,75 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FacturacionService } from '@/services';
+import { GeneriResp } from '../../../../interfaces';
 
 @Component({
   selector: 'app-info-emisor',
   imports: [FormsModule],
   templateUrl: './info-emisor.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoEmisorComponent {
   @HostListener('document:click', ['$event'])
   closeDropdown(event: MouseEvent): void {
     const dropdownContainer = document.querySelector('.dropdown-container');
     if (!dropdownContainer?.contains(event.target as Node)) {
-      this.dropdownOpen = false;
+      this.dropdownOpen.set(false);
     }
   }
 
-  searchTerm: string = '';
-  dropdownOpen: boolean = false;
-  selectedEmissor: any | null = null;
   selectedEstablishment: string = '';
-  filteredOptions: any[] = [];
 
-  allEmisores: any[] = [
-    {
-      id: '1',
-      name: 'Empresa A',
-      ruc: 'EMA123456ABC',
-      address: 'Calle 123, Ciudad de México',
-      email: 'contacto@empresaa.com',
-      establishments: ['Sucursal Principal', 'Sucursal Norte', 'Sucursal Sur'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-    {
-      id: '2',
-      name: 'Corporación B',
-      ruc: 'COB789012DEF',
-      address: 'Av. Principal 456, Guadalajara',
-      email: 'info@corporacionb.com',
-      establishments: ['Oficina Central', 'Centro de Distribución', 'Tienda Online'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-    {
-      id: '3',
-      name: 'Industrias C',
-      ruc: 'INC345678GHI',
-      address: 'Blvd. Industrial 789, Monterrey',
-      email: 'ventas@industriasc.com',
-      establishments: ['Planta de Producción', 'Centro de Investigación', 'Showroom'],
-      logo: '/placeholder.svg?height=100&width=100'
-    },
-  ];
+  // Signal para opciones filtradas
+  public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
 
-  ngOnInit() {
-    this.filteredOptions = this.allEmisores;
+  public readonly dropdownOpen = signal(false);
+
+  public readonly selectedEmissor = signal<any | null>(null);
+
+  public readonly searchTerm = signal('');
+
+  constructor(private readonly facturacionService: FacturacionService) {
+    this.getEmisores();
   }
+
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.searchTerm = target.value;
-    this.dropdownOpen = true;
-    this.filterOptions();
+    this.searchTerm.set(target.value);
+    this.dropdownOpen.set(true);
+    this.filteredOptions();
   }
 
-  filterOptions() {
-    this.filteredOptions = this.allEmisores.filter(emisor =>
-      emisor.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      emisor.ruc.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
+  //  filterOptions() {
+  //    const searchTermLower = this.searchTerm().toLowerCase();
+
+  //   const filtered = this.emisores()?.data
+  //     .filter(
+  //       (emisor) =>
+  //         emisor.names.toLowerCase().includes(searchTermLower) ||
+  //         emisor.identificationNumber.toLowerCase().includes(searchTermLower)
+  //     );
+
+  //  }
 
   selectOption(emisor: any) {
-    this.selectedEmissor = emisor;
-    this.searchTerm = emisor.name;
-    this.selectedEstablishment = emisor.establishments[0];
-    this.dropdownOpen = false;
+    this.selectedEmissor.set(emisor);
+
+    // this.searchTerm.set(emisor.names + ' ' + emisor.lastName );
+     this.dropdownOpen.set(false);
   }
 
   toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
+    this.dropdownOpen.set(!this.dropdownOpen());
   }
 
-
-
+  getEmisores() {
+    this.facturacionService.getListCountersByEmisor().subscribe((resp) => {
+      if (resp.status === 'OK') {
+        this.filteredOptions.set(resp);
+      }
+    });
+  }
 }
-

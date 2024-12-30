@@ -3,6 +3,7 @@ import { ModalComponent } from '@/components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateClienteComponent } from './components';
 import { NgOptimizedImage } from '@angular/common';
+import { FacturacionService } from '@/services';
 
 @Component({
   selector: 'app-info-cliente',
@@ -85,6 +86,15 @@ export class InfoClienteComponent {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
+  constructor(private readonly facturacionService: FacturacionService) {}
+
+  getListClientes() {
+    // this.facturacionService.getListCountersByCliente().subscribe((resp) => {
+    //   if (resp.status === 'OK') {
+    //     this.filteredOptions = resp;
+    //   }
+    // });
+  }
 
 
 }

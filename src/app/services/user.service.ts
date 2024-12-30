@@ -45,8 +45,20 @@ export class UserService {
     const userData = localStorage.getItem('UserData');
     return userData ? JSON.parse(userData) : null;
   }
+
   logout(): void {
-    localStorage.removeItem('UserData');
-    this.router.navigate(['/login']);
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_LOGIN, '');
+    this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/auth/logout`, { body: payload }).subscribe(
+      (resp: any) => {
+        if (resp.status === 'OK') {
+          console.log('logout', resp);
+          localStorage.removeItem('UserData');
+          this.router.navigate(['/login']);
+        }
+      },
+      (error) => {
+        console.log(error);
+      },
+    );
   }
 }

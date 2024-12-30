@@ -7,7 +7,7 @@
         placeholder="Buscar emisor..."
         [(ngModel)]="searchTerm"
         (input)="handleSearchChange($event)"
-        (focus)="dropdownOpen = true"
+        (focus)="dropdownOpen.set(true)"
         class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-150 ease-in-out"
       />
       <button
@@ -17,20 +17,20 @@
       >
         <img src="/assets/icon/drop.svg" alt="Dropdown" class="w-4 h-4" />
       </button>
-      @if (dropdownOpen) {
+      @if (dropdownOpen()) {
         <div
           class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto transition-all duration-200 ease-in-out"
         >
           <ul class="py-1">
-            @for (emisor of filteredOptions; track $index) {
+            @for (emisor of filteredOptions()?.data; track $index) {
               <li
                 (click)="selectOption(emisor)"
                 class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"
               >
                 <img [src]="emisor.logo" [alt]="emisor.name + ' logo'" class="w-6 h-6 rounded-full object-cover" />
                 <div>
-                  <p class="text-sm font-medium text-gray-800">{{ emisor.name }}</p>
-                  <p class="text-xs text-gray-500">{{ emisor.ruc }}</p>
+                  <p class="text-sm font-medium text-gray-800">{{ emisor.names + ' ' + emisor.lastName }}</p>
+                  <p class="text-xs text-gray-500">{{ emisor.identificationNumber }}</p>
                 </div>
               </li>
             }
@@ -43,7 +43,7 @@
     </div>
   </div>
 </header>
-@if (!selectedEmissor) {
+@if (!selectedEmissor()) {
   <div class="p-4 flex items-center justify-center">
     <p class="text-sm text-gray-500">No se ha seleccionado ningún emisor.</p>
   </div>
@@ -52,53 +52,66 @@
     <div class="grid grid-cols-3 gap-x-4 justify-center items-center">
       <!-- Información justificada (centrada en la columna) -->
       <div class="col-span-2 text-left">
-        <h3 class="text-lg font-semibold text-gray-800 truncate">{{ selectedEmissor.name }}</h3>
+        <h3 class="text-lg font-semibold text-gray-800 truncate">
+          {{ selectedEmissor().names + ' ' + selectedEmissor().lastName }}
+        </h3>
         <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-2">
           <div class="col-span-2 sm:col-span-1">
             <div class="flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
+            <img src="/assets/icon/perfil-card.svg" alt="">
               <p class="text-xs font-medium text-gray-500">RUC</p>
             </div>
-            <p class="text-sm text-gray-800">{{ selectedEmissor.ruc }}</p>
+            <p class="text-sm text-gray-800">{{ selectedEmissor().identificationNumber }}</p>
             <div class="flex items-center space-x-2 mt-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M2 5a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H5a3 3 0 01-3-3V5z" clip-rule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 text-gray-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 5a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H5a3 3 0 01-3-3V5z"
+                  clip-rule="evenodd"
+                />
               </svg>
               <p class="text-xs font-medium text-gray-500">Dirección</p>
             </div>
-            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor.address }}</p>
+            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor().address }}</p>
           </div>
           <div class="col-span-2 sm:col-span-1">
             <div class="flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M2 5a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H5a3 3 0 01-3-3V5z" clip-rule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 text-gray-500"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 5a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H5a3 3 0 01-3-3V5z"
+                  clip-rule="evenodd"
+                />
               </svg>
               <p class="text-xs font-medium text-gray-500">Correo</p>
             </div>
-            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor.email }}</p>
+            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor().email }}</p>
             <div class="flex items-center space-x-2 mt-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4 5h12a1 1 0 011 1v8a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
+            <img src="/assets/icon/phone.svg" alt="">
               <p class="text-xs font-medium text-gray-500">Teléfono</p>
             </div>
-            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor.phone }}</p>
+            <p class="text-sm text-gray-800 truncate">{{ selectedEmissor().cellPhone }}</p>
           </div>
         </div>
       </div>
       <!-- Imagen de logo centrada -->
       <div class="flex justify-center items-center col-span-1">
         <img
-          [src]="selectedEmissor.logo"
-          [alt]="selectedEmissor.name + ' logo'"
+          [src]="selectedEmissor().logo"
+          [alt]="selectedEmissor().name + ' logo'"
           class="w-20 h-20 object-cover shadow-sm border-2 border-gray-200"
         />
       </div>
     </div>
   </div>
-
-
-
 }

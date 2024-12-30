@@ -118,6 +118,7 @@ export class CreateCounterApplicationService {
       email: step1.controls.email.value?.trim(),
       cellPhone: step1.controls.cellPhone.value?.trim(),
       dateBirth: step1.controls.dateBirth.value?.trim(),
+      address: step2.controls.mainAddress.value?.trim(),
       infoEmisor: {
         ruc: step1.controls.identificationNumber.value?.trim(),
         environmentCode: step2.controls.environmentCode.value?.trim(),

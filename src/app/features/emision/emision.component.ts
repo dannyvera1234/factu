@@ -17,4 +17,6 @@ export class EmisionComponent {
   public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'facturacion'): void {
     this.selectedTab.set(tab);
   }
+
+  constructor() {}
 }
