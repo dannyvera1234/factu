@@ -92,11 +92,11 @@ export class ProductosComponent {
     console.log(product);
 
     this.products.update((currentProducts) => {
-      const existingProduct = currentProducts.find((p) => p.id === product.id);
+      const existingProduct = currentProducts.find((p) => p.ide === product.ide);
       if (existingProduct) {
-        return currentProducts.map((p) => (p.id === product.id ? { ...p, cantidad: p.cantidad + 1 } : p));
+        return currentProducts.map((p) => (p.ide === product.ide ? { ...p, stock: p.stock + 1 } : p));
       } else {
-        return [...currentProducts, { ...product, cantidad: 1 }];
+        return [...currentProducts, { ...product, stock: 1 }];
       }
     });
   }
