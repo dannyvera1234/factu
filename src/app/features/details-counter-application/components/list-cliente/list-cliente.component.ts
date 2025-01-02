@@ -51,7 +51,6 @@ export class ListClienteComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.listClientes.set(resp);
         }
       });
@@ -84,7 +83,6 @@ export class ListClienteComponent {
   }
 
   updateCliente(update: any) {
-    console.log(update);
     const currentCliente = this.listClientes();
 
     if (currentCliente) {

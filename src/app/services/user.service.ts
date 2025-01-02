@@ -51,14 +51,11 @@ export class UserService {
     this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/auth/logout`, { body: payload }).subscribe(
       (resp: any) => {
         if (resp.status === 'OK') {
-          console.log('logout', resp);
           localStorage.removeItem('UserData');
           this.router.navigate(['/login']);
         }
       },
-      (error) => {
-        console.log(error);
-      },
+
     );
   }
 }

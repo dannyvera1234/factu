@@ -22,7 +22,6 @@ export class FacturacionService {
   }
 
   getListCountersByCliente(personaRolIde: number): Observable<any> {
-    console.log(personaRolIde);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISION_DOCUMENTOS_CONTADORES, {
       personaRolIde: personaRolIde,
     });

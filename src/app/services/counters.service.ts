@@ -169,7 +169,6 @@ export class CountersService {
   }
 
   updateClienteCounter(updateClienteCounter: Partial<any>): Observable<any> {
-    console.log(updateClienteCounter);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateClienteCounter,
     });
@@ -216,7 +215,6 @@ export class CountersService {
   }
 
   updateProduct(updateProduct: Partial<any>): Observable<any> {
-    console.log(updateProduct);
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateProduct,
     });

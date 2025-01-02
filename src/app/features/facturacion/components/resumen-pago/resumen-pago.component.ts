@@ -70,7 +70,6 @@ private getPayForms(){
       this.paymentMethods.set(response);
     }
 
-   console.log(response);
   });
 }
 }

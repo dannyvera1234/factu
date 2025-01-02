@@ -51,7 +51,6 @@ export class ListInventarioComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.listProducts.set(resp);
         }
       });
@@ -84,7 +83,6 @@ export class ListInventarioComponent {
   }
 
   updateProduct(update:any): void {
-    console.log(update)
     const currentCliente = this.listProducts();
 
     if (currentCliente) {

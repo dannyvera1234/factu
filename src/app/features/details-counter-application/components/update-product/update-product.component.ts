@@ -16,7 +16,6 @@ import { NgClass } from '@angular/common';
 })
 export class UpdateProductComponent {
   @Input({ required: true }) set updateProduct(value: any) {
-    console.log(value, 'ads');
     this.form.patchValue({
       name: value.name,
       description: value.description,

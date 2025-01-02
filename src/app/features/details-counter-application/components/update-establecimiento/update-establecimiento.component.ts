@@ -16,7 +16,6 @@ import { CountersService } from '@/services/counters.service';
 })
 export class UpdateEstablecimientoComponent {
   @Input({ required: true }) set dataEstableciemiento(value: any) {
-    // console.log(value);
     this.ideSubsidiary.set(value.ideSubsidiary);
     this.form.patchValue({
       ruc: value.ruc,

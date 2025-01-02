@@ -55,7 +55,6 @@ export class InfoClienteComponent {
   // filteredOptions: any[] = [];
 
   handleSearchChange(event: Event) {
-    console.log(event);
     const target = event.target as HTMLInputElement;
     this.searchTerm = target.value;
     this.dropdownOpen.set(true);
@@ -113,7 +112,6 @@ export class InfoClienteComponent {
         if (emisor !== null) {
           this.facturacionService.getListCountersByCliente(emisor).subscribe((resp) => {
             if (resp.status === 'OK') {
-              console.log(resp);
               this.filteredOptions.set(resp);
             }
           });

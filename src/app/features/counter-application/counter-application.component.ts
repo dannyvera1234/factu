@@ -45,7 +45,6 @@ export class CounterApplicationComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.counterList.set(resp);
-          console.log(resp);
         }
       });
   }

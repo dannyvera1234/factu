@@ -47,7 +47,6 @@ export class ProductosComponent {
 
   calculateProductTotal(product: any): number {
     const subtotal = product.stock * product.unitPrice;
-    console.log(subtotal);
     // const discountAmount = subtotal * (product.descuento / 100);
     return subtotal;
   }
@@ -87,7 +86,6 @@ export class ProductosComponent {
   public readonly products = signal<any[]>([]);
 
   addProducto(product: any) {
-    console.log(product);
 
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);

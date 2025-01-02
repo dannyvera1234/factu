@@ -44,7 +44,6 @@ export class CountersComponent {
       )
       .subscribe((response) => {
         if (response.status === 'OK') {
-          console.log(response);
           this.counters.set(response);
         }
       });

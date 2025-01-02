@@ -208,7 +208,6 @@ export class DetailsCounterApplicationComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.counterByPersona.set(resp);
         }
       });
