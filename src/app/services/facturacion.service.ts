@@ -39,4 +39,13 @@ export class FacturacionService {
       body: payload,
     });
   }
+
+  getListEstablishmentByEmisor(personaRolIde:number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISION_DOCUMENTOS_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/counter/emisor/subsidiaries`, {
+      body: payload,
+    });
+  }
 }

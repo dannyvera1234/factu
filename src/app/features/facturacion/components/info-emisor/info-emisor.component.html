@@ -52,64 +52,78 @@
     </div>
   </div>
 </header>
-@if (!selectedEmissor()) {
-  <div class="p-4 flex items-center justify-center">
-    <p class="text-sm text-gray-500">No se ha seleccionado ningún emisor.</p>
+@if (loading()) {
+  <div class="h-full text-center flex justify-center items-center p-5">
+    <div class="loader"></div>
   </div>
 } @else {
-  <div class="p-4 bg-white">
-    <div class="grid grid-cols-3 gap-x-4 justify-center items-center">
-      <div class="col-span-2 text-left">
-        <h3 class="text-lg font-semibold text-gray-800 truncate">
-          {{ selectedEmissor().names + ' ' + selectedEmissor().lastName }}
-        </h3>
-        <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-2">
-          <div class="col-span-2 sm:col-span-1">
-            <div class="flex items-center space-x-2">
-              <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-
-              <div class="grid grid-cols-1 text-left">
-                <p class="text-xs font-medium text-gray-500">RUC</p>
-                <p class="text-sm text-gray-800">{{ selectedEmissor().identificationNumber | formatId }}</p>
+  @if (!selectedEmissor()) {
+    <div class="p-4 flex items-center justify-center">
+      <p class="text-sm text-gray-500">No se ha seleccionado ningún emisor.</p>
+    </div>
+  } @else {
+    <div class="p-6 bg-white rounded-lg shadow-md">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 items-center">
+        <!-- Información del emisor -->
+        <div class="col-span-2 text-left">
+          <h3 class="text-lg font-semibold text-gray-800 truncate mb-4">
+            {{ selectedEmissor().names + ' ' + selectedEmissor().lastName }}
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+            <!-- Columna 1 -->
+            <div>
+              <div class="flex items-center space-x-4">
+                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
+                <div class="grid text-left">
+                  <p class="text-xs font-medium text-gray-500">RUC</p>
+                  <p class="text-sm text-gray-800">{{ selectedEmissor().identificationNumber | formatId }}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4 mt-4">
+                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
+                <div class="grid text-left">
+                  <p class="text-xs font-medium text-gray-500">Dirección</p>
+                  <p class="text-sm text-gray-800">{{ selectedEmissor().address }}</p>
+                </div>
               </div>
             </div>
-            <div class="flex items-center space-x-2 mt-2">
-              <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-
-              <div class="grid grid-cols-1 text-left">
-                <p class="text-xs font-medium text-gray-500">Dirección</p>
-                <p class="text-sm text-gray-800">{{ selectedEmissor().address }}</p>
+            <!-- Columna 2 -->
+            <div>
+              <div class="flex items-center space-x-4">
+                <img src="/assets/icon/perfil-card.svg" alt="Correo" class="size-5" />
+                <div class="grid text-left">
+                  <p class="text-xs font-medium text-gray-500">Correo</p>
+                  <p class="text-sm text-gray-800">{{ selectedEmissor().email }}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4 mt-4">
+                <img src="/assets/icon/phone.svg" alt="Teléfono" class="size-5" />
+                <div class="grid text-left">
+                  <p class="text-xs font-medium text-gray-500">Teléfono</p>
+                  <p class="text-sm text-gray-800">{{ selectedEmissor().cellPhone | formatPhone }}</p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-span-2 sm:col-span-1">
-            <div class="flex items-center space-x-2">
-              <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-
-              <div class="grid grid-cols-1 text-left">
-                <p class="text-xs font-medium text-gray-500">Correo</p>
-                <p class="text-sm text-gray-800">{{ selectedEmissor().email }}</p>
-              </div>
-            </div>
-
-            <div class="flex items-center space-x-2 mt-2">
-              <img src="/assets/icon/phone.svg" alt="Perfil" class="size-5" />
-
-              <div class="grid grid-cols-1 text-left">
-                <p class="text-xs font-medium text-gray-500">Teléfono</p>
-                <p class="text-sm text-gray-800">{{ selectedEmissor().cellPhone | formatPhone }}</p>
-              </div>
-            </div>
+          <div class="mt-4">
+            <app-custom-select
+              [(ngModel)]="selectedEstabliecimient"
+              placeholder="Seleccione un establecimiento"
+              [options]="transformedEstabliecimient().values"
+              [labels]="transformedEstabliecimient().labels"
+            />
           </div>
         </div>
-      </div>
-      <div class="flex justify-center items-center col-span-1">
-        <img
-          [src]="selectedEmissor().logo ? selectedEmissor().logo : '/assets/icon/file.png'"
-          [alt]="selectedEmissor().name + ' logo'"
-          class="size-20 rounded-full object-cover"
-        />
+        <!-- Logo del emisor -->
+        <div class="flex justify-center items-center col-span-1">
+          <img
+            [src]="selectedEmissor()?.logo || '/assets/icon/file.png'"
+            [alt]="selectedEmissor()?.name + ' logo'"
+            class="size-24 rounded-full object-cover"
+          />
+        </div>
       </div>
     </div>
-  </div>
+  }
 }
+
