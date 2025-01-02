@@ -60,16 +60,19 @@
           </div>
         }
       </div>
-
-      <button
-        class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 bg-white flex items-center"
-        (click)="createCliente.open()"
-      >
-        <div class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center">
-          <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
-        </div>
-        Nuevo Cliente
-      </button>
+      @if (persoRolIdEmisor()) {
+        <button
+          class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 bg-white flex items-center"
+          (click)="createCliente.open()"
+        >
+          <div
+            class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center"
+          >
+            <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
+          </div>
+          Nuevo Cliente
+        </button>
+      }
     </div>
   </div>
 </header>
@@ -146,9 +149,10 @@
         </header>
 
         <section class="p-4">
-          <app-create-cliente (created)="createCliente.close()" [idePersona]="configFactu.idePersona()"
-          (created)="$event && createClient($event)"
-
+          <app-create-cliente
+            (created)="createCliente.close()"
+            [idePersona]="configFactu.idePersona()"
+            (created)="$event && createClient($event)"
           />
         </section>
       </div>

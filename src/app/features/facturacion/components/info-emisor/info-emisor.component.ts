@@ -37,8 +37,6 @@ export class InfoEmisorComponent {
 
   public readonly getListEstablishment = signal<any[]>([]);
 
-  public readonly puntoVenta = signal<string>('');
-
   public readonly loadingCombo = signal(false);
 
   public readonly transformedEstabliecimient = computed<{ values: number[]; labels: string[] }>(() =>
@@ -54,7 +52,7 @@ export class InfoEmisorComponent {
 
   constructor(
     private readonly facturacionService: FacturacionService,
-    private readonly configFactu: CreateFacturacionService,
+    public readonly configFactu: CreateFacturacionService,
   ) {
     this.configFactu.setEmisor.set(null);
     this.configFactu.idePersona.set(0);
@@ -74,7 +72,7 @@ export class InfoEmisorComponent {
     this.dropdownOpen.set(false);
     of(this.loading.set(true))
       .pipe(
-         delay(1000),
+        delay(1000),
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
@@ -82,8 +80,17 @@ export class InfoEmisorComponent {
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
         this.configFactu.idePersona.set(emisor.idePersona);
         this.selectedEstabliecimient.set('');
-        this.puntoVenta.set('');
+        this.configFactu.pointCode.set('');
         this.getListEstablishmentByEmisor(emisor.idePersonaRol);
+        this.configFactu.infoEmisor.set({
+          identificationNumber: emisor.identificationNumber,
+          typeDocument: emisor.typeDocument,
+          socialReason: emisor.socialReason,
+          address: emisor.address,
+          email: emisor.email,
+          cellPhone: emisor.cellPhone,
+          personaRolIde: emisor.idePersonaRol,
+        });
       });
   }
 
@@ -112,7 +119,6 @@ export class InfoEmisorComponent {
       }
     });
   }
-
 
   public preventLetters(event: KeyboardEvent): void {
     const key = event.key;

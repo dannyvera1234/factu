@@ -18,9 +18,9 @@
         <th class="text-left p-3 text-sm font-medium">Descripción</th>
         <th class="text-left p-3 text-sm font-medium">Cantidad</th>
         <th class="text-left p-3 text-sm font-medium">Precio Unit.</th>
-        <th class="text-left p-3 text-sm font-medium">Tarifa</th>
-        <th class="text-left p-3 text-sm font-medium">Valor Total</th>
+        <th class="text-left p-3 text-sm font-medium">Tarifa IVA</th>
         <th class="text-left p-3 text-sm font-medium">Valor ICE</th>
+        <th class="text-left p-3 text-sm font-medium">Valor Total</th>
         <th class="text-left p-3 text-sm font-medium"></th>
       </tr>
     </thead>
@@ -41,10 +41,10 @@
               class="w-full p-1 border rounded"
             />
           </td>
-          <td class="p-2">{{ product.tariffDesIva }}</td>
+          <td class="p-2">{{ product.tariffIva | currency }}</td>
 
-          <td class="p-2">${{ calculateProductTotal(product).toFixed(2) }}</td>
           <td class="p-2">{{ product.tariffCodeIce }}</td>
+          <td class="p-2">${{ calculateProductTotal(product).toFixed(2) }}</td>
           <td class="p-2">
             <button (click)="removeProduct(product.ide)" class="p-1 hover:bg-red-100 rounded">
               <img src="assets/icon/trash-icon.svg" alt="" class="size-5" />

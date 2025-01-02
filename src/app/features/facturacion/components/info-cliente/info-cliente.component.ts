@@ -5,7 +5,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { FacturacionService } from '@/services';
 import { CreateFacturacionService } from '../../create-facturacion.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { GeneriResp } from '../../../../interfaces';
+import { GeneriResp } from '@/interfaces';
 import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
 import { delay, finalize, of } from 'rxjs';
 import { CreateClienteComponent } from '../../../details-counter-application/components';
@@ -46,13 +46,9 @@ export class InfoClienteComponent {
 
   public readonly selectedCliente = signal<any | null>(null);
 
-  public readonly previousEmisor = signal<number | null>(null);
-
+  public readonly previousEmisor = signal<number>(0);
 
   searchTerm: string = '';
-  // selectedCliente: any | null = null;
-  selectedEstablishment: string = '';
-  // filteredOptions: any[] = [];
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -69,14 +65,7 @@ export class InfoClienteComponent {
   //   );
   // }
 
-  // selectOption(emisor: any) {
-  //   this.selectedCliente.set(emisor);
-  //   this.searchTerm = emisor.name;
-  //   // this.selectedEstablishment = emisor.establishments[0];
-  //   this.dropdownOpen = false;
-  // }
-
-  selectOption(emisor: any) {
+  selectOption(cliente: any) {
     this.dropdownOpen.set(false);
     of(this.loading.set(true))
       .pipe(
@@ -84,8 +73,17 @@ export class InfoClienteComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
-        this.selectedCliente.set(emisor);
+        this.selectedCliente.set(cliente);
         this.dropdownOpen.set(false);
+        this.configFactu.infoCustomer.set({
+          identification: cliente.identification,
+          typeDocument: cliente.typeDocument,
+          socialReason: cliente.socialReason,
+          mainAddress: cliente.address,
+          email: cliente.email,
+          cellPhone: cliente.cellPhone,
+          customerIde: cliente.idePersona,
+        });
       });
   }
 
@@ -97,17 +95,13 @@ export class InfoClienteComponent {
     private readonly facturacionService: FacturacionService,
     public readonly configFactu: CreateFacturacionService,
   ) {
-    this.getListClients();
-  }
-
-
-  getListClients() {
     toObservable(this.persoRolIdEmisor)
       .pipe(takeUntilDestroyed())
       .subscribe((emisor) => {
         if (emisor !== null && this.previousEmisor() !== emisor) {
           this.selectedCliente.set(null);
         }
+        this.previousEmisor.set(emisor || 0);
 
         if (emisor !== null) {
           this.facturacionService.getListCountersByCliente(emisor).subscribe((resp) => {
@@ -120,6 +114,12 @@ export class InfoClienteComponent {
   }
 
   createClient(event: any) {
-    this.getListClients();
+    if (event.status === 'OK') {
+      this.facturacionService.getListCountersByCliente(this.previousEmisor()).subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.filteredOptions.set(resp);
+        }
+      });
+    }
   }
 }
