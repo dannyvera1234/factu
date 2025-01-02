@@ -6,7 +6,7 @@
       </div>
       <h2 class="text-lg font-semibold text-gray-800">Información del Emisor</h2>
     </div>
-    <div class="relative w-full md:w-64 dropdown-container">
+    <div class="relative w-full md:max-w-md dropdown-container">
       <input
         type="text"
         placeholder="Buscar emisor..."
@@ -22,31 +22,38 @@
       >
         <img src="/assets/icon/drop.svg" alt="Dropdown" class="w-4 h-4" />
       </button>
+
       @if (dropdownOpen()) {
         <div
           class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto transition-all duration-200 ease-in-out"
         >
-          <ul class="py-1">
-            @for (emisor of filteredOptions()?.data; track $index) {
-              <li
-                (click)="selectOption(emisor)"
-                class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"
-              >
-                <img
-                  [src]="emisor.logo ? emisor.logo : '/assets/icon/file.png'"
-                  [alt]="emisor.name + ' logo'"
-                  class="size-12 rounded-full object-cover"
-                />
-                <div>
-                  <p class="text-sm font-medium text-gray-800">{{ emisor.names + ' ' + emisor.lastName }}</p>
-                  <p class="text-xs text-gray-500">{{ emisor.identificationNumber | formatId }}</p>
-                </div>
-              </li>
-            }
-            @if (filteredOptions.length === 0) {
-              <li * class="px-3 py-2 text-sm text-gray-500 italic">No se encontraron resultados</li>
-            }
-          </ul>
+          @if (loadingCombo()) {
+            <div class="h-full text-center flex justify-center items-center p-5">
+              <div class="loader"></div>
+            </div>
+          } @else {
+            <ul class="py-1">
+              @for (emisor of filteredOptions()?.data; track $index) {
+                <li
+                  (click)="selectOption(emisor)"
+                  class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"
+                >
+                  <img
+                    [src]="emisor.logo ? emisor.logo : '/assets/icon/file.png'"
+                    [alt]="emisor.name + ' logo'"
+                    class="size-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">{{ emisor.names + ' ' + emisor.lastName }}</p>
+                    <p class="text-xs text-gray-500">{{ emisor.identificationNumber | formatId }}</p>
+                  </div>
+                </li>
+              }
+              @if (filteredOptions.length === 0) {
+                <li * class="px-3 py-2 text-sm text-gray-500 italic">No se encontraron resultados</li>
+              }
+            </ul>
+          }
         </div>
       }
     </div>
@@ -62,14 +69,14 @@
       <p class="text-sm text-gray-500">No se ha seleccionado ningún emisor.</p>
     </div>
   } @else {
-    <div class="p-6 bg-white rounded-lg shadow-md">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 items-center">
+    <div class="p-4 bg-white rounded-lg shadow-md">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
         <!-- Información del emisor -->
-        <div class="col-span-2 text-left">
+        <div class="col-span-3 text-left">
           <h3 class="text-lg font-semibold text-gray-800 truncate mb-4">
             {{ selectedEmissor().names + ' ' + selectedEmissor().lastName }}
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
             <!-- Columna 1 -->
             <div>
               <div class="flex items-center space-x-4">
@@ -79,12 +86,14 @@
                   <p class="text-sm text-gray-800">{{ selectedEmissor().identificationNumber | formatId }}</p>
                 </div>
               </div>
+
               <div class="flex items-center space-x-4 mt-4">
-                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-                <div class="grid text-left">
-                  <p class="text-xs font-medium text-gray-500">Dirección</p>
-                  <p class="text-sm text-gray-800">{{ selectedEmissor().address }}</p>
-                </div>
+                <app-custom-select
+                  [(ngModel)]="selectedEstabliecimient"
+                  placeholder="Seleccione un establecimiento"
+                  [options]="transformedEstabliecimient().values"
+                  [labels]="transformedEstabliecimient().labels"
+                />
               </div>
             </div>
             <!-- Columna 2 -->
@@ -96,6 +105,25 @@
                   <p class="text-sm text-gray-800">{{ selectedEmissor().email }}</p>
                 </div>
               </div>
+
+              <div class="flex items-center space-x-4 mt-4">
+                <app-custom-input
+                  [(ngModel)]="puntoVenta"
+                  label="Punto de venta"
+                  (keypress)="preventLetters($event)"
+                  [id]="'puntoVenta'"
+                />
+              </div>
+            </div>
+            <!-- Columna 3 -->
+            <div>
+              <div class="flex items-center space-x-4 mt-4">
+                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
+                <div class="grid text-left">
+                  <p class="text-xs font-medium text-gray-500">Dirección</p>
+                  <p class="text-sm text-gray-800">{{ selectedEmissor().address }}</p>
+                </div>
+              </div>
               <div class="flex items-center space-x-4 mt-4">
                 <img src="/assets/icon/phone.svg" alt="Teléfono" class="size-5" />
                 <div class="grid text-left">
@@ -105,16 +133,8 @@
               </div>
             </div>
           </div>
-          <div class="mt-4">
-            <app-custom-select
-              [(ngModel)]="selectedEstabliecimient"
-              placeholder="Seleccione un establecimiento"
-              [options]="transformedEstabliecimient().values"
-              [labels]="transformedEstabliecimient().labels"
-            />
-          </div>
         </div>
-        <!-- Logo del emisor -->
+        <!-- Logo del emisor (Columna 4) -->
         <div class="flex justify-center items-center col-span-1">
           <img
             [src]="selectedEmissor()?.logo || '/assets/icon/file.png'"
@@ -126,4 +146,3 @@
     </div>
   }
 }
-

@@ -166,6 +166,7 @@ export class CreateClienteComponent {
             identificationNumber: this.form.value.identificationNumber,
             email: this.form.value.email,
             cellPhone: this.form.value.cellPhone,
+            status: res.status,
           });
 
           this.form.reset();

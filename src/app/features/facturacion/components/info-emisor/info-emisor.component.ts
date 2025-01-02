@@ -4,12 +4,12 @@ import { FacturacionService } from '@/services';
 import { GeneriResp } from '@/interfaces';
 import { CreateFacturacionService } from '../../create-facturacion.service';
 import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
-import { CustomSelectComponent } from '@/components';
-import { delay, finalize, of } from 'rxjs';
+import { CustomInputComponent, CustomSelectComponent } from '@/components';
+import { delay, finalize, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-info-emisor',
-  imports: [FormsModule, FormatIdPipe, FormatPhonePipe, CustomSelectComponent],
+  imports: [FormsModule, FormatIdPipe, FormatPhonePipe, CustomSelectComponent, CustomInputComponent],
   templateUrl: './info-emisor.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +37,10 @@ export class InfoEmisorComponent {
 
   public readonly getListEstablishment = signal<any[]>([]);
 
+  public readonly puntoVenta = signal<string>('');
+
+  public readonly loadingCombo = signal(false);
+
   public readonly transformedEstabliecimient = computed<{ values: number[]; labels: string[] }>(() =>
     this.getListEstablishment().reduce(
       (acc: any, item: any) => {
@@ -53,6 +57,7 @@ export class InfoEmisorComponent {
     private readonly configFactu: CreateFacturacionService,
   ) {
     this.configFactu.setEmisor.set(null);
+    this.configFactu.idePersona.set(0);
     this.getEmisores();
   }
 
@@ -63,34 +68,23 @@ export class InfoEmisorComponent {
     this.filteredOptions();
   }
 
-  filterOptions() {
-    // const searchTermLower = this.searchTerm().toLowerCase();
-    // if (this.filteredOptions()?.data) {
-    //   const filtered = this.filteredOptions().data.filter(
-    //     (emisor) =>
-    //       emisor.names.toLowerCase().includes(searchTermLower) ||
-    //       emisor.identificationNumber.toLowerCase().includes(searchTermLower),
-    //   );
-    //   this.filteredOptions.set({ ...this.filteredOptions(), data: filtered });
-    // }
-  }
+  filterOptions() {}
 
   selectOption(emisor: any) {
+    this.dropdownOpen.set(false);
     of(this.loading.set(true))
       .pipe(
-        delay(1000),
-        finalize(() => this.loading.set(false)))
+         delay(1000),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe(() => {
         this.selectedEmissor.set(emisor);
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
+        this.configFactu.idePersona.set(emisor.idePersona);
+        this.selectedEstabliecimient.set('');
+        this.puntoVenta.set('');
         this.getListEstablishmentByEmisor(emisor.idePersonaRol);
-        this.dropdownOpen.set(false);
       });
-
-    // this.selectedEmissor.set(emisor);
-    // this.configFactu.setEmisor.set(emisor.idePersonaRol);
-    // this.getListEstablishmentByEmisor(emisor.idePersonaRol);
-    // this.dropdownOpen.set(false);
   }
 
   toggleDropdown() {
@@ -98,19 +92,33 @@ export class InfoEmisorComponent {
   }
 
   getEmisores() {
-    this.facturacionService.getListCountersByEmisor().subscribe((resp) => {
-      if (resp.status === 'OK') {
-        this.filteredOptions.set(resp);
-      }
-    });
+    of(this.loadingCombo.set(true))
+      .pipe(
+        delay(1000),
+        mergeMap(() => this.facturacionService.getListCountersByEmisor()),
+        finalize(() => this.loadingCombo.set(false)),
+      )
+      .subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.filteredOptions.set(resp);
+        }
+      });
   }
 
   getListEstablishmentByEmisor(personaRolIde: number) {
     this.facturacionService.getListEstablishmentByEmisor(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
         this.getListEstablishment.set(resp.data);
-        console.log(resp);
       }
     });
+  }
+
+
+  public preventLetters(event: KeyboardEvent): void {
+    const key = event.key;
+
+    if (!/[\d]/.test(key) && key !== 'Backspace') {
+      event.preventDefault();
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { AccountingControlSystemService } from '@/utils/services';
+import { GeneriResp } from '../../../../interfaces';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-resumen-pago',
-  imports: [KeyValuePipe],
+  imports: [KeyValuePipe, FormsModule],
   templateUrl: './resumen-pago.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -57,10 +59,17 @@ calculateTotal = computed(() => {
   return baseImponible - subtotals.descuentos + subtotals.ice + iva;
 });
 
+public readonly paymentMethods = signal<GeneriResp<any[]>| null>(null);
+
+selectedPaymentMethod = signal<string >('');
 
 
 private getPayForms(){
   this.controlService.getTypesPayForm().subscribe((response) => {
+    if (response.status === 'OK') {
+      this.paymentMethods.set(response);
+    }
+
    console.log(response);
   });
 }
