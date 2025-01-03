@@ -51,6 +51,7 @@ export class ProductosComponent {
 
   addProducto(product: any) {
     this.products.update((currentProducts) => {
+      console.log('currentProducts', product);
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
 
       if (existingProduct) {

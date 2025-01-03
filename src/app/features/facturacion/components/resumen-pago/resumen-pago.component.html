@@ -21,47 +21,65 @@
     </div>
 
     <div class="space-y-3 pt-4 border-t">
-      @for (item of calculateSubtotals() | keyvalue; track item.key) {
+
+      <!-- @for (item of listIva()?.data; track $index) {
+        
         <div class="flex justify-between text-sm">
           <span class="text-gray-600">
-            {{
-              item.key === 'sinImpuestos'
-                ? 'Subtotal sin impuestos'
-                : item.key === 'con12'
-                  ? 'Subtotal 12%'
-                  : item.key === 'con0'
-                    ? 'Subtotal 0%'
-                    : item.key === 'noObjetoIva'
-                      ? 'Subtotal no objeto de IVA'
-                      : item.key === 'exentoIva'
-                        ? 'Subtotal exento de IVA'
-                        : item.key === 'descuentos'
-                          ? 'Total descuentos'
-                          : item.key === 'ice'
-                            ? 'Valor ICE'
-                            : item.key
-            }}:
+            {{ 'Subtotal '+ item.description}}:
           </span>
-          <span class="font-semibold">${{ item.value.toFixed(2) }}</span>
+        </div>
+      } -->
+
+      <!-- <div class="flex justify-between text-sm">
+        <span class="text-gray-600">
+          {{ 'IVA'}}:
+        </span>
+      </div>
+
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-600">
+          {{ 'ICE '}}:
+        </span>
+      </div>
+
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-600">
+          {{ 'SUBTOTAL SIN IMPUESTOS: '}}:
+        </span>
+      </div>
+
+      
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-600">
+          {{ 'SUBTOTAL CON IMPUESTOS: '}}:
+        </span>
+      </div> -->
+      @for (item of valuesCalculates(); track item.key) {
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">
+          
+            @if (item.key === 'tarifaIva') {
+              @for (itemIva of item.values ; track itemIva.key) {
+
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-600">
+                    {{ 'Subtotal '+  itemIva.label}} : {{itemIva.value | currency}}
+                  </span>
+                </div>
+              }
+            }@else{
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">
+                  {{ item.label}} : {{item.values | currency}}
+                </span>
+              </div>
+            }
+
+          </span>
         </div>
       }
-      <div class="flex justify-between items-center text-sm">
-        <span class="text-gray-600">IVA:</span>
-        <div class="flex items-center gap-2">
-          <!-- <select
-                [(ngModel)]="ivaPercentage()"
-                (ngModelChange)="ivaPercentage.set($event)"
-                class="w-[100px] p-1 border rounded"
-              >
-                <option [value]="0">0%</option>
-                <option [value]="12">12%</option>
-                <option [value]="16">16%</option>
-              </select> -->
-          <span class="font-semibold">
-            <!-- ${{((calculateSubtotals().con12 * ivaPercentage()) / 100).toFixed(2)}} -->
-          </span>
-        </div>
-      </div>
+    
       <div class="flex justify-between text-lg font-bold pt-2 border-t">
         <span>Valor a Pagar:</span>
         <!-- <span>${{calculateTotal().toFixed(2)}}</span> -->
