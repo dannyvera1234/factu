@@ -4,6 +4,8 @@ import { AccountingControlSystemService } from '@/utils/services';
 import { GeneriResp } from '../../../../interfaces';
 import { FormsModule } from '@angular/forms';
 import { CreateFacturacionService } from '../../create-facturacion.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-resumen-pago',
@@ -21,7 +23,26 @@ export class ResumenPagoComponent {
     public readonly configFactu: CreateFacturacionService,
   ) {
     this.getPayForms();
+    // console.log("data recibe",this.listProduct());
+
+    toObservable(this.listProduct)
+    .pipe(
+      takeUntilDestroyed(),
+      map((products) =>
+       {
+        console.log("data recibe",products);
+        // return products;
+       }
+      )
+    )
+    .subscribe((updatedProducts) => {
+      // console.log("data recibe",updatedProducts);
+    });
+
+
   }
+
+  public readonly listProduct = computed(() => this.configFactu.products());
 
   calculateSubtotals = computed(() => {
     const subtotals = {

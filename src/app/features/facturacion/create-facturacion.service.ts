@@ -14,6 +14,8 @@ export class CreateFacturacionService {
 
   public readonly infoCustomer = signal<any | null>(null);
 
+  public readonly products = signal<any[]>([]);
+
   constructor() {}
 
 

@@ -1,9 +1,6 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { CreateFacturacionService } from '../../create-facturacion.service';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { FacturacionService } from '../../../../services';
-import { GeneriResp } from '../../../../interfaces';
 import { ListProductComponent } from './components';
 import { ModalComponent } from '../../../../components';
 import { FormsModule } from '@angular/forms';
@@ -16,41 +13,6 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductosComponent {
-  // products = signal<any[]>([]);
-  isProductModalOpen = signal(false);
-  // addProduct(product: any) {
-  //   this.products.update((currentProducts) => {
-  //     const existingProduct = currentProducts.find((p) => p.id === product.id);
-  //     if (existingProduct) {
-  //       return currentProducts.map((p) => (p.id === product.id ? { ...p, cantidad: p.cantidad + 1 } : p));
-  //     } else {
-  //       return [...currentProducts, { ...product, cantidad: 1 }];
-  //     }
-  //   });
-  //   this.isProductModalOpen.set(false);
-  // }
-
-
-
-  updateProduct(id: number, field: keyof any, value: number | string) {
-    this.products.update((currentProducts) =>
-      currentProducts.map((product) => {
-        if (product.id === id) {
-          const updatedProduct = { ...product, [field]: typeof value === 'string' ? parseFloat(value) : value };
-          updatedProduct.valorTotal = this.calculateProductTotal(updatedProduct);
-          return updatedProduct;
-        }
-        return product;
-      }),
-    );
-  }
-
-  calculateProductTotal(product: any): number {
-    const subtotal = product.stock * product.unitPrice;
-    // const discountAmount = subtotal * (product.descuento / 100);
-    return subtotal;
-  }
-
   calculateSubtotals = computed(() => {
     const subtotals = {
       sinImpuestos: 0,
@@ -83,22 +45,32 @@ export class ProductosComponent {
     return subtotals;
   });
 
+  constructor(private config: CreateFacturacionService) {}
+
   public readonly products = signal<any[]>([]);
 
   addProducto(product: any) {
-
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
+
       if (existingProduct) {
-        return currentProducts.map((p) => (p.ide === product.ide ? { ...p, stock: p.stock + 1 } : p));
+        existingProduct.cantidad = existingProduct.cantidad += 1;
+        existingProduct.valorIVA = (existingProduct.subTotal * existingProduct.tariffIva) / 100;
+        existingProduct.subTotal = existingProduct.cantidad * existingProduct.unitPrice;
+        existingProduct.valorTotal = existingProduct.subTotal + existingProduct.valorIVA;
+        return currentProducts;
       } else {
-        return [...currentProducts, { ...product, stock: 1 }];
+        product.cantidad = 1;
+        product.subTotal = product.cantidad * product.unitPrice;
+        product.valorIVA = (product.cantidad * product.unitPrice * product.tariffIva) / 100;
+        product.valorTotal = product.subTotal + product.valorIVA;
+
+        return [...currentProducts, { ...product }];
       }
     });
+    this.config.products.set(this.products());
   }
   removeProduct(id: number) {
     this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
   }
-
-
 }

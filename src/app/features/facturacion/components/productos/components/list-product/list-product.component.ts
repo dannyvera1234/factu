@@ -30,7 +30,6 @@ export class ListProductComponent {
         if (emisor !== null) {
           this.facturacionService.getListaProductos(emisor).subscribe((resp) => {
             if (resp.status === 'OK') {
-              console.log(resp);
               this.listProducts.set(resp);
             }
           });
