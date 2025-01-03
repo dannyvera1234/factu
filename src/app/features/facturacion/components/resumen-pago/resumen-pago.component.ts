@@ -23,23 +23,12 @@ export class ResumenPagoComponent {
     public readonly configFactu: CreateFacturacionService,
   ) {
     this.getPayForms();
-    // console.log("data recibe",this.listProduct());
-
+    this.getImpuestoIVA();
     toObservable(this.listProduct)
-    .pipe(
-      takeUntilDestroyed(),
-      map((products) =>
-       {
-        console.log("data recibe",products);
-        // return products;
-       }
-      )
-    )
-    .subscribe((updatedProducts) => {
-      // console.log("data recibe",updatedProducts);
-    });
-
-
+      .pipe(takeUntilDestroyed())
+      .subscribe((updatedProducts) => {
+        console.log('data recibe', updatedProducts);
+      });
   }
 
   public readonly listProduct = computed(() => this.configFactu.products());
@@ -76,21 +65,25 @@ export class ResumenPagoComponent {
     return subtotals;
   });
 
-  calculateTotal = computed(() => {
-    const subtotals = this.calculateSubtotals();
-    const baseImponible = subtotals.con12 + subtotals.con0 + subtotals.noObjetoIva + subtotals.exentoIva;
-    const iva = (subtotals.con12 * this.ivaPercentage()) / 100;
-    return baseImponible - subtotals.descuentos + subtotals.ice + iva;
-  });
-
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);
 
   selectedPaymentMethod = signal<string>('');
+
+  public readonly IVA = signal<GeneriResp<any[]> | null>(null);
 
   private getPayForms() {
     this.controlService.getTypesPayForm().subscribe((response) => {
       if (response.status === 'OK') {
         this.paymentMethods.set(response);
+      }
+    });
+  }
+  getImpuestoIVA(): void {
+    const IVA = 'IVA';
+    this.controlService.impuestoIVA(IVA).subscribe((response) => {
+      if (response.status === 'OK') {
+        console.log(response);
+        this.IVA.set(response);
       }
     });
   }

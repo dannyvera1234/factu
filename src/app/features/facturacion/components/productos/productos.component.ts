@@ -68,7 +68,7 @@ export class ProductosComponent {
         return [...currentProducts, { ...product }];
       }
     });
-    this.config.products.set(this.products());
+    this.config.products.set([...this.products()]);
   }
   removeProduct(id: number) {
     this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
