@@ -23,7 +23,7 @@
   <div class="relative overflow-x-auto">
     <table class="w-full text-left">
       <thead>
-        <tr class="*:font-sm *:text-neutral-400 *:px-5 *:py-3">
+        <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombre y Codigo</th>
           <th class="px-4 py-3 text-center">Stock</th>
           <th class="px-4 py-3 text-center">P. Disponible.</th>
@@ -100,13 +100,13 @@
                 <td>
                   <div class="flex justify-center gap-1">
                     <button class="px-2 py-1 rounded-md" (click)="editProduct.open(); viewingProduct.set(product)">
-                      <img src="/assets/icon/edit.svg" class="w-8 h-8" alt="Edit" />
+                      <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
                     </button>
                     <button
                       class="px-2 py-1 rounded-md"
                       (click)="deleteProduct.open(); viewingIdProduct.set(product.ide)"
                     >
-                      <img src="/assets/icon/trash-icon.svg" class="w-6 h-6" alt="Delete" />
+                      <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
                     </button>
                   </div>
                 </td>
