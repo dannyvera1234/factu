@@ -33,8 +33,6 @@ export class InfoEmisorComponent {
 
   public readonly searchTerm = signal('');
 
-  public readonly selectedEstabliecimient = signal('');
-
   public readonly getListEstablishment = signal<any[]>([]);
 
   public readonly loadingCombo = signal(false);
@@ -42,7 +40,7 @@ export class InfoEmisorComponent {
   public readonly transformedEstabliecimient = computed<{ values: number[]; labels: string[] }>(() =>
     this.getListEstablishment().reduce(
       (acc: any, item: any) => {
-        acc.values.push(item.ideSubsidiary);
+        acc.values.push(item.code);
         acc.labels.push(item.code);
         return acc;
       },
@@ -79,7 +77,7 @@ export class InfoEmisorComponent {
         this.selectedEmissor.set(emisor);
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
         this.configFactu.idePersona.set(emisor.idePersona);
-        this.selectedEstabliecimient.set('');
+        this.configFactu.selectedEstabliecimient.set('');
         this.configFactu.pointCode.set('');
         this.getListEstablishmentByEmisor(emisor.idePersonaRol);
         this.configFactu.infoEmisor.set({
@@ -115,6 +113,7 @@ export class InfoEmisorComponent {
   getListEstablishmentByEmisor(personaRolIde: number) {
     this.facturacionService.getListEstablishmentByEmisor(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
+        console.log(resp.data);
         this.getListEstablishment.set(resp.data);
       }
     });
@@ -127,4 +126,5 @@ export class InfoEmisorComponent {
       event.preventDefault();
     }
   }
+
 }

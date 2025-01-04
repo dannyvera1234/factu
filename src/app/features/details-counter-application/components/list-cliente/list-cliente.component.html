@@ -45,7 +45,7 @@
         <tbody>
           @if (listClientes() && listClientes()!.data.length > 0) {
             @for (cliente of listClientes()!.data; track $index) {
-              <tr class="border-b" class="hover:bg-gray-100">
+              <tr class="border-b" class="hover:bg-gray-100 text-sm">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">

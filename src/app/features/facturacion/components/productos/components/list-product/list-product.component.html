@@ -15,8 +15,7 @@
       <thead>
         <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombre y Codigo</th>
-          <th class="px-4 py-3 text-center">Stock</th>
-          <th class="px-4 py-3 text-center">P. Disponible.</th>
+          <th class="px-4 py-3 text-center">Productos Disponible.</th>
           <th class="px-4 py-3 text-center">IVA</th>
           <th class="px-4 py-3 text-center">Precio Unitario</th>
           <th class="px-4 py-3">Categoría</th>
@@ -44,13 +43,7 @@
                   </div>
                 </div>
               </th>
-              <td class="px-4 py-3 text-center">
-                @if (product.stock === null) {
-                  No aplica
-                } @else {
-                  {{ product.stock }}
-                }
-              </td>
+
               <td class="px-4 py-3 text-center">
                 <span
                   [ngClass]="{

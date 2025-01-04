@@ -6,16 +6,22 @@ import { Notification, NotificationService } from '@/utils/services/notification
 @Component({
   selector: 'app-toast',
   template: `
-    <button
-      class="p-2 rounded max-w-lg text-start w-full break-all"
-      [ngClass]="classStatus()"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-      (click)="dispose()"
-    >
-      {{ notification.message }}
-    </button>
+    <div class="p-4 w-full max-w-lg">
+      <button
+        class="p-4 rounded-lg w-full bg-gradient-to-r font-semibold text-left shadow-xl flex items-center justify-between gap-3 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-opacity-50 hover:shadow-2xl"
+        role="alert"
+        [ngClass]="classStatus()"
+        aria-live="assertive"
+        aria-atomic="true"
+        (click)="dispose()"
+      >
+        <div class="flex items-center gap-3">
+          <div class="flex-grow">
+            <span class="block text-sm opacity-90">{{ notification.message }}</span>
+          </div>
+        </div>
+      </button>
+    </div>
   `,
   imports: [NgClass],
   changeDetection: ChangeDetectionStrategy.OnPush,

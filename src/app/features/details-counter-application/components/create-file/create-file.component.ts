@@ -4,6 +4,7 @@ import { DocumentPickerComponent } from '@/components';
 import { NgClass } from '@angular/common';
 import { of, mergeMap, finalize } from 'rxjs';
 import { CountersService } from '@/services/counters.service';
+import { NotificationService } from '../../../../utils/services';
 
 type StatementType = {
   certificatePassword?: string;
@@ -28,6 +29,7 @@ export class CreateFileComponent {
   constructor(
     private readonly _fb: FormBuilder,
     private readonly counterService: CountersService,
+    private readonly notification: NotificationService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -62,6 +64,10 @@ export class CreateFileComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.fileCreate.emit(resp.data);
+          this.notification.push({
+            message: 'Archivo subido correctamente',
+            type: 'success',
+          });
         }
       });
   }

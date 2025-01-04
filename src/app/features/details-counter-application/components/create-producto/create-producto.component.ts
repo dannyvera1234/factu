@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Outp
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { NgClass } from '@angular/common';
-import { AccountingControlSystemService } from '@/utils/services';
+import { AccountingControlSystemService, NotificationService } from '@/utils/services';
 import { CountersService } from '@/services/counters.service';
 import { onlyNumbersDecimalsValidator } from '@/utils/validators';
 import { finalize, mergeMap, of } from 'rxjs';
@@ -64,6 +64,7 @@ export class CreateProductoComponent {
     private readonly _fb: FormBuilder,
     private readonly countersService: CountersService,
     private readonly controlService: AccountingControlSystemService,
+    private readonly notification: NotificationService,
   ) {
     this.getImpuestoIVA();
     this.getImpuestoICA();
@@ -163,6 +164,10 @@ export class CreateProductoComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          this.notification.push({
+            message: 'Producto creado correctamente',
+            type: 'success',
+          });
           this.created.emit({
             name: this.form.controls.name.value,
             mainCode: this.form.controls.mainCode.value,

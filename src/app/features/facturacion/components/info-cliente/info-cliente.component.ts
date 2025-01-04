@@ -57,14 +57,6 @@ export class InfoClienteComponent {
     // this.filterOptions();
   }
 
-  // filterOptions() {
-  //   this.filteredOptions = this.allEmisores.filter(
-  //     (emisor) =>
-  //       emisor.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-  //       emisor.ruc.toLowerCase().includes(this.searchTerm.toLowerCase()),
-  //   );
-  // }
-
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
     of(this.loading.set(true))
@@ -74,12 +66,13 @@ export class InfoClienteComponent {
       )
       .subscribe(() => {
         this.selectedCliente.set(cliente);
+        console.log(cliente);
         this.dropdownOpen.set(false);
         this.configFactu.infoCustomer.set({
-          identification: cliente.identification,
+          identificationNumber: cliente.identificationNumber,
           typeDocument: cliente.typeDocument,
-          socialReason: cliente.socialReason,
-          mainAddress: cliente.address,
+          socialReason: cliente.names + ' ' + cliente.lastName,
+          address: cliente.address,
           email: cliente.email,
           cellPhone: cliente.cellPhone,
           customerIde: cliente.idePersona,
@@ -98,6 +91,7 @@ export class InfoClienteComponent {
     toObservable(this.persoRolIdEmisor)
       .pipe(takeUntilDestroyed())
       .subscribe((emisor) => {
+        console.log(emisor);
         if (emisor !== null && this.previousEmisor() !== emisor) {
           this.selectedCliente.set(null);
         }
@@ -122,4 +116,5 @@ export class InfoClienteComponent {
       });
     }
   }
+
 }

@@ -10,86 +10,46 @@
   <div class="p-4 space-y-6">
     <div class="space-y-2">
       <label for="metodo-pago" class="text-sm font-medium text-gray-500">Método de Pago</label>
-      <select id="metodo-pago" class="w-full p-2 border rounded" [(ngModel)]="selectedPaymentMethod">
+      <select id="metodo-pago" class="w-full p-2 border rounded" [(ngModel)]="configFactu.selectedPaymentMethod">
         <option value="">Seleccionar método</option>
         @for (method of paymentMethods()?.data; track $index) {
-          <option [value]="method.code">
+          <option [ngValue]="method">
             {{ method.description }}
           </option>
         }
       </select>
     </div>
 
-    <div class="space-y-3 pt-4 border-t">
-
-      <!-- @for (item of listIva()?.data; track $index) {
-        
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-600">
-            {{ 'Subtotal '+ item.description}}:
-          </span>
-        </div>
-      } -->
-
-      <!-- <div class="flex justify-between text-sm">
-        <span class="text-gray-600">
-          {{ 'IVA'}}:
-        </span>
-      </div>
-
-      <div class="flex justify-between text-sm">
-        <span class="text-gray-600">
-          {{ 'ICE '}}:
-        </span>
-      </div>
-
-      <div class="flex justify-between text-sm">
-        <span class="text-gray-600">
-          {{ 'SUBTOTAL SIN IMPUESTOS: '}}:
-        </span>
-      </div>
-
-      
-      <div class="flex justify-between text-sm">
-        <span class="text-gray-600">
-          {{ 'SUBTOTAL CON IMPUESTOS: '}}:
-        </span>
-      </div> -->
-      @for (item of valuesCalculates(); track item.key) {
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-600">
-          
+    <div class="border-t border-gray-200">
+      @if (valuesCalculates()?.length) {
+        @for (item of valuesCalculates(); track item.key) {
+          <div class="text-sm text-gray-700">
             @if (item.key === 'tarifaIva') {
-              @for (itemIva of item.values ; track itemIva.key) {
-
-                <div class="flex justify-between text-sm">
-                  <span class="text-gray-600">
-                    {{ 'Subtotal '+  itemIva.label}} : {{itemIva.value | currency}}
-                  </span>
+              @for (itemIva of item.values; track itemIva.key) {
+                <div class="flex justify-between items-center w-full py-1">
+                  <span class="text-gray-600">{{ 'Subtotal ' + itemIva.label }}</span>
+                  <span class="font-semibold text-gray-800 ml-auto text-right">{{ itemIva.value | currency }}</span>
                 </div>
               }
-            }@else{
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-600">
-                  {{ item.label}} : {{item.values | currency}}
-                </span>
+            } @else {
+              <div class="flex justify-between items-center w-full py-1">
+                <span class="text-gray-600 truncate">{{ item.label }}</span>
+                <span class="font-semibold text-gray-800 ml-auto text-right">{{ item.values | currency }}</span>
               </div>
             }
-
-          </span>
+          </div>
+        }
+      } @else {
+        <div class="h-full text-center flex justify-center items-center p-5">
+          <div class="loader"></div>
         </div>
       }
-    
-      <div class="flex justify-between text-lg font-bold pt-2 border-t">
-        <span>Valor a Pagar:</span>
-        <!-- <span>${{calculateTotal().toFixed(2)}}</span> -->
-      </div>
     </div>
 
-    <button class="w-full h-12 text-lg mt-4 bg-green-600 hover:bg-green-700 text-white rounded"
+    <button
+      class="w-full h-12 text-lg mt-4 rounded flex items-center justify-center px-4 bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors"
       (click)="configFactu.submit()"
     >
-      <i class="fas fa-dollar-sign mr-2"></i>
       Registrar Venta
     </button>
   </div>

@@ -5,6 +5,7 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { emailValidator } from '@/utils/validators';
 import { NgClass } from '@angular/common';
 import { CountersService } from '@/services/counters.service';
+import { NotificationService } from '@/utils/services';
 
 @Component({
   selector: 'app-create-establecimiento',
@@ -35,6 +36,7 @@ export class CreateEstablecimientoComponent {
   constructor(
     private _fb: FormBuilder,
     private readonly counterService: CountersService,
+    private readonly notification: NotificationService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -82,6 +84,10 @@ export class CreateEstablecimientoComponent {
       .subscribe((resp) => {
 
         if (resp.status === 'OK') {
+          this.notification.push({
+            message: 'Establecimiento creado correctamente',
+            type: 'success',
+          });
           this.form.reset();
         this.form.setValue({
           ruc: '',

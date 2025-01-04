@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
 import { CountersService } from '../../../../services/counters.service';
+import { NotificationService } from '../../../../utils/services';
 
 @Component({
   selector: 'app-delete-establecimiento',
@@ -16,7 +17,9 @@ public readonly loading = signal(false);
 
 @Output() public readonly deleted = new EventEmitter<number |null>();
 
-constructor(private readonly counterService: CountersService) {}
+constructor(private readonly counterService: CountersService,
+private readonly notification: NotificationService) {}
+
 
 deleteEstablecimiento() {
   of(this.loading.set(true))
@@ -26,6 +29,10 @@ deleteEstablecimiento() {
     )
     .subscribe((resp) => {
       if (resp.status === 'OK') {
+        this.notification.push({
+          message: 'Establecimiento eliminado del registro.',
+          type: 'success',
+        });
         this.deleted.emit(
           Number(resp.data)
         );

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Outp
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IdentificationType } from '@/interfaces';
-import { ConfigFacturacionService, AccountingControlSystemService } from '@/utils/services';
+import { ConfigFacturacionService, AccountingControlSystemService, NotificationService } from '@/utils/services';
 import {
   onlyLettersValidator,
   emailValidator,
@@ -25,7 +25,6 @@ export class CreateClienteComponent {
   @Input({ required: true }) idePersona!: number;
 
   public readonly loading = signal(false);
-
 
   public readonly identificationLabel = signal<string>('Identificación');
 
@@ -55,6 +54,7 @@ export class CreateClienteComponent {
     public readonly config: ConfigFacturacionService,
     public readonly controlService: AccountingControlSystemService,
     private readonly counterService: CountersService,
+    private readonly notification: NotificationService,
   ) {
     this.getIdentificationTypes();
 
@@ -157,6 +157,10 @@ export class CreateClienteComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          this.notification.push({
+            message: 'El cliente ha sido creado con éxito.',
+            type: 'success',
+          });
           this.created.emit({
             ideCustomer: Number(res.data),
             names: this.form.value.names,

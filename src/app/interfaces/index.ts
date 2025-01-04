@@ -6,3 +6,4 @@ export * from './perfil';
 export * from './common';
 export * from './generico.interface';
 export * from './counter';
+export * from './producto';
