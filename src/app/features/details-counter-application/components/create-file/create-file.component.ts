@@ -65,7 +65,7 @@ export class CreateFileComponent {
         if (resp.status === 'OK') {
           this.fileCreate.emit(resp.data);
           this.notification.push({
-            message: 'Archivo subido correctamente',
+            message: 'Archivo subido correctamente.',
             type: 'success',
           });
         }
