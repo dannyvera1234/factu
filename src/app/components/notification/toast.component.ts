@@ -6,7 +6,7 @@ import { Notification, NotificationService } from '@/utils/services/notification
 @Component({
   selector: 'app-toast',
   template: `
-    <div class="p-4 w-full max-w-lg">
+    <div class="p-1 w-full max-w-lg">
       <button
         class="p-4 rounded-lg w-full bg-gradient-to-r font-semibold text-left shadow-xl flex items-center justify-between gap-3 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-opacity-50 hover:shadow-2xl"
         role="alert"

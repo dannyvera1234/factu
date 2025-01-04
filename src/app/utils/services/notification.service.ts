@@ -16,7 +16,7 @@ type NotificationArguments = UntypedNotification & {
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private readonly DEFAULT_DELAY = 5000;
+  private readonly DEFAULT_DELAY = 1000;
 
   public readonly notifications = signal<(Notification & { id: string })[]>([]);
 

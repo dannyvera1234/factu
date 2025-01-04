@@ -4,7 +4,9 @@
       <div class="flex items-center justify-center size-9 bg-blue-300 rounded-full">
         <img src="/assets/icon/emisor.svg" alt="Info" class="size-6" />
       </div>
-      <h2 class="text-lg font-semibold text-gray-800">Información del Emisor</h2>
+      <h2 class="text-lg font-semibold text-gray-800">
+        {{ selectedEmissor() ? selectedEmissor().names + ' ' + selectedEmissor().lastName : 'Información del emisor' }}
+      </h2>
     </div>
     <div class="relative w-full md:max-w-md dropdown-container">
       <input
@@ -73,9 +75,6 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
         <!-- Información del emisor -->
         <div class="col-span-3 text-left">
-          <h3 class="text-lg font-semibold text-gray-800 truncate mb-4">
-            {{ selectedEmissor().names + ' ' + selectedEmissor().lastName }}
-          </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
             <!-- Columna 1 -->
             <div>
