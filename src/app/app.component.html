@@ -1,10 +1,5 @@
-<!-- @if (auth.isAuthenticated$ | async) { -->
-  <app-layout />
+<router-outlet />
 
-<!-- } @else { -->
-  <!-- <div class="w-full text-center flex items-center justify-center h-full bg-primary">
-    <div class="size-20 relative">
-      <img ngSrc="/assets/logo.png" fill alt="loading..." class="animate-ping" priority />
-    </div>
-  </div>
-} -->
+@defer {
+  <app-notification />
+}

@@ -1,104 +1,61 @@
 <div class="p-5">
   <div class="rounded-2xl shadow bg-white p-6">
-    <nav class="flex gap-4 justify-between items-center flex-wrap md:flex-row flex-col mb-4">
-      <!-- Search -->
-      <div class="bg-stone-100 w-full md:max-w-96 flex h-11 items-center rounded-2xl ps-4 gap-4"></div>
+    <div>
+      <!-- Barra de acciones superior -->
+      <div class="flex items-center justify-between mb-4 gap-4">
+        <div class="flex flex-col items-start gap-1">
+          <h3 class="text-2xl font-semibold">Lista de aplicaciones</h3>
+          <span class="text-xs text-gray-500">
+            Visualiza y administra las aplicaciones registradas de los clientes.</span
+          >
+        </div>
 
-      <div class="max-md:w-full">
-        <a
-          class="flex items-center gap-2 bg-secondary text-white px-4 py-2 rounded-lg cursor-pointer"
-          routerLink="/Applications/create"
-        >
-          <div class="relative size-5 shrink-0"><img ngSrc="/assets/icon/add.svg" alt="Create" fill /></div>
-          Agregar
-        </a>
+        <div class="flex items-center gap-4">
+          <div>
+            <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-[200px] border rounded" />
+          </div>
+          <button
+            class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
+            routerLink="/applications/create"
+          >
+            <div class="relative size-5 shrink-0 mr-2"><img ngSrc="/assets/icon/add.svg" alt="Create" fill /></div>
+
+            Agregar
+          </button>
+        </div>
       </div>
-    </nav>
 
-    <section>
-      <div class="w-full overflow-x-auto">
-        <table class="table-striped table">
+      <!-- Tabla -->
+      <div class="border rounded-lg overflow-x-auto">
+        <table class="w-full">
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
+            <tr class="border-b bg-gray-50">
+              <th class="text-left p-3 text-sm font-medium">Full name</th>
+              <th class="text-left p-3 text-sm font-medium">Position</th>
+              <th class="text-left p-3 text-sm font-medium">Date of birth</th>
+              <th class="text-left p-3 text-sm font-medium">Exp.</th>
+              <th class="text-left p-3 text-sm font-medium">Skills</th>
+              <th class="text-left p-3 text-sm font-medium">Rank, $</th>
+              <th class="text-left p-3 text-sm font-medium">Date of birth</th>
+              <th class="text-left p-3 text-sm font-medium">Exp.</th>
+              <th class="text-left p-3 text-sm font-medium">Skill</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="text-nowrap">John Doe</td>
-              <td>johndoeexample.com</td>
-              <td><span class="badge badge-soft badge-success text-xs">Professional</span></td>
-              <td class="text-nowrap">March 1, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Jane Smith</td>
-              <td>janesmithxample.com</td>
-              <td><span class="badge badge-soft badge-error text-xs">Rejected</span></td>
-              <td class="text-nowrap">March 2, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Alice Johnson</td>
-              <td>alicejohnsonexample.com</td>
-              <td><span class="badge badge-soft badge-info text-xs">Applied</span></td>
-              <td class="text-nowrap">March 3, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-nowrap">Bob Brown</td>
-              <td>bobrownexample.com</td>
-              <td><span class="badge badge-soft badge-primary text-xs">Current</span></td>
-              <td class="text-nowrap">March 4, 2024</td>
-              <td>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--pencil]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--trash]"></span>
-                </button>
-                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button">
-                  <span class="icon-[tabler--dots-vertical]"></span>
-                </button>
-              </td>
+            <tr class="border-b" class="hover:bg-gray-100">
+              <td class="p-3">asdasds</td>
+              <td class="p-3 text-sm">dasdads</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">ad</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
+              <td class="p-3 text-sm">asd</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </section>
+    </div>
   </div>
 </div>

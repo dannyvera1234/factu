@@ -1,0 +1,24 @@
+<div [formGroup]="form">
+  <div class="mb-4">
+    @if (!form.controls.file.value) {
+      <div [formGroup]="form">
+        <app-file-picker [manualHandled]="true" [maxFiles]="1" (selectFiles)="addFile($event)" [hideDescription]="false" />
+        <app-form-error-message [control]="form.controls.file" />
+      </div>
+    } @else {
+      @let file = form.controls.file.value;
+      <app-file-handler
+        [name]="file.name"
+        [type]="file.type"
+        [sizeInKb]="file.size"
+        (removeFile)="removeFile()"
+        [source]="file"
+      />
+    }
+  </div>
+  @if (withCertifactePassword()) {
+    <div class="mb-4">
+      <app-custom-input label="Password" formControlName="certificatePassword" />
+    </div>
+  }
+</div>

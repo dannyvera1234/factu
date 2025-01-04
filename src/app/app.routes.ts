@@ -1,28 +1,57 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes & {
   data?: any & { icon?: string; name?: string; permissions?: string };
 } = [
-  {
-    path: '',
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
+  {
+    path: 'login',
+    loadChildren: () => import('./features/login/routes'),
+  },
+
+  {
+    path: 'sistema_contable',
+    canActivate: [authGuard],
+    loadComponent() {
+      return import('./layout/layout.component').then((m) => m.LayoutComponent);
+    },
     children: [
       {
-        path: 'Applications',
-        loadChildren: () => import('./features/aplicaciones/routes'),
-
-        data: {
-          icon: '/assets/icons/menu_applications.svg',
-          name: 'Aplicaciones',
-
-        },
+        path: 'aplicaciones_contadores',
+        loadChildren: () => import('./features/counter-application/routes'),
+      },
+      {
+        path: 'inventory',
+        loadChildren: () => import('./features/inventario/routes'),
+      },
+      {
+        path: 'planes',
+        loadChildren: () => import('./features/planes/routes'),
+      },
+      {
+        path: 'perfiles',
+        loadChildren: () => import('./features/perfiles/routes'),
+      },
+      {
+        path: 'perfilescontadores',
+        loadChildren: () => import('./features/counters/routes'),
+      },
+      {
+        path: 'emision_contadores',
+        loadChildren: () => import('./features/emision/routes'),
+      },
+      ///
+      {
+        path: 'establishment',
+        loadChildren: () => import('./features/configuration/establecimientos/routes'),
       },
       {
         path: '**',
         redirectTo: 'applications',
         pathMatch: 'full',
       },
-    ]
-  }
-
-]
+    ],
+  },
+];

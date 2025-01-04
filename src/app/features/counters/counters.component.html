@@ -1,0 +1,160 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <div>
+      <!-- Barra de acciones superior -->
+      <div class="flex items-center justify-between mb-4 gap-4 flex-wrap">
+        <div class="flex flex-col items-start gap-1">
+          <h3 class="text-2xl font-semibold">Lista de perfiles de contadores</h3>
+          <span class="text-xs text-gray-500">
+            Aquí puedes ver y administrar los perfiles de contadores de tu empresa.
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4 mt-2 md:mt-0">
+          <div>
+            <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-full md:w-[200px] border rounded" />
+          </div>
+
+          <button
+            class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
+            (click)="createCounter.open()"
+          >
+            <div class="relative size-5 shrink-0 mr-2">
+              <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
+            </div>
+
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="border rounded-lg overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+              <th class="px-4 py-3 text-left">Nombres</th>
+              <th class="text-left p-3">Telefono</th>
+              <th class="text-center p-3">Estado</th>
+              <th class="text-left p-3">Email</th>
+              <th class="text-center p-3">Cantidad C.</th>
+              <th class="text-left p-3">Perfil</th>
+              <th class="text-left p-3"></th>
+            </tr>
+          </thead>
+          @if (loading()) {
+            <tbody>
+              <td colspan="100%">
+                <div class="text-center py-9">
+                  <div class="loader"></div>
+                </div>
+              </td>
+            </tbody>
+          } @else {
+            @if (counters() && counters()!.data.length > 0) {
+              <tbody>
+                @for (counter of counters()?.data; track $index) {
+                  <tr class="border-b" class="hover:bg-gray-100">
+                    <td scope="row" class="p-3" [routerLink]="[counter.idePersonaRolEncrypted]">
+                      <a [routerLink]="[counter.idePersonaRolEncrypted]">
+                        <div class="flex gap-4 items-center">
+                          <div
+                            class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
+                          >
+                            {{ counter.names + ' ' + counter.lastName | initials }}
+                          </div>
+                          <div>
+                            <p class="font-semibold">{{ counter.names }} {{ counter.lastName }}</p>
+                          </div>
+                        </div>
+                      </a>
+                    </td>
+                    <td>
+                      {{ counter.cellPhone | formatPhone }}
+                    </td>
+                    <td class="text-center">
+                      <span
+                        class="px-2 py-1 text-xs text-white rounded-full"
+                        [ngClass]="{
+                          'bg-green-500': counter.statusRecord === 'Activo',
+                          'bg-red-500': counter.statusRecord === 'Inactivo',
+                        }"
+                      >
+                        {{ counter.statusRecord }}
+                      </span>
+                    </td>
+                    <td>
+                      {{ counter.email }}
+                    </td>
+                    <td class="text-center">
+                      {{ counter.amountCustomer }}
+                    </td>
+                    <td>
+                      {{ counter.profileName }}
+                    </td>
+                    <td>
+                      <div class="flex gap-1">
+                        <button
+                          class="px-3 flex items-center"
+                          (click)="deleteCounter.open(); viewing.set(counter.idePersonaRol)"
+                        >
+                          <div class="relative size-4 shrink-0">
+                            <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
+                          </div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            }
+          }
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal #createCounter>
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Crear perfil</h2>
+        <button (click)="createCounter.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icon/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      @defer {
+        <section class="p-4">
+          <app-create-counter
+            (createCounter)="createCounter.close()"
+            (createCounter)="$event && updateCounter($event)"
+          />
+        </section>
+      }
+    </div>
+  </div>
+</app-modal>
+<app-modal #deleteCounter>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewing(); as idePersonaRol) {
+            <app-delete-counter
+              [idePersonaRol]="idePersonaRol"
+              (deleted)="$event && deletePerfil($event)"
+              (deleted)="deleteCounter.close(); viewing.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>

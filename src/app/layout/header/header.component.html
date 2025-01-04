@@ -3,58 +3,67 @@
     <button
       class="size-8 bg-[#35568F] rounded-lg transition-all"
       (click)="toggle()"
-      >
-      <!-- [ngClass]="{ 'rotate-180': closeSidebar() }" -->
+      [ngClass]="{ 'rotate-180': closeSidebar() }"
+    >
       <div class="relative flex justify-center items-center">
-        <img ngSrc="/assets/icons/toggle-menu-icon.svg" style="filter: invert(100%)" width="16" height="16" alt="" />
+        <img ngSrc="/assets/icon/toggle-menu-icon.svg" style="filter: invert(100%)" width="16" height="16" alt="" />
       </div>
     </button>
 
     <div class="hidden lg:block">
-      <!-- @if (user(); as user) {
-        <h5 class="font-bold text-xl">Welcome back {{ user.first_name }}!</h5>
-      } -->
-      <p class="text-neutral-400">Track your sales activity, leads and deals here.</p>
+      <p class="text-neutral-400">
+        Realice un seguimiento de su actividad de ventas, clientes potenciales y acuerdos aquí.
+      </p>
     </div>
   </div>
 
-  <div class="flex items-center justify-between gap-4">
-
-    <!-- @if (user(); as user) { -->
-      <!-- <div class="relative hidden lg:block">
-        <button class="flex items-center bg-white border-0 p-1" (click)="dropdownsm.classList.toggle('hidden')">
-          {{ user.first_name }} {{ user.last_name }}
-          <img src="assets/icons/arrow-down.svg" class="ml-2 size-3" alt="" />
-        </button>
-      </div> -->
-
+  <div class="relative hidden lg:flex items-center space-x-3">
+    @if (userData(); as user) {
       <div class="relative">
         <button
-          (click)="dropdownsm.classList.toggle('hidden')"
           type="button"
-          class="text-white text-center avatar rounded cursor-pointer mr-5"
+          class="text-white text-center avatar rounded bg-red-600"
           role="button"
           style="width: 30px; height: 30px; line-height: 30px"
         >
-        <img src="assets/icon/config.svg" alt="config" >
+          {{ user.fullName | initials }}
         </button>
-        <ul class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg dropdown-menu hidden" #dropdownsm>
+      </div>
+
+      <div class="relative">
+        <button class="flex items-center rounded p-1 hover:bg-gray-100" (click)="toggleDropdown()">
+          {{ user.fullName }}
+        </button>
+
+        <ul
+          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
+          [class.hidden]="!isDropdownOpen()"
+        >
           <li>
-            <a class=" px-4 py-2 hover:bg-gray-100 flex items-center">
-              <img src="assets/icon/perfil.svg" alt="user" class="mr-2" />
+            <a routerLink="/establishment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/establecimiento.svg" alt="User" class="inline-block w-4 h-4 mr-2" />
+              Establecimiento
+            </a>
+          </li>
+          <li>
+            <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/config.svg" alt="Config" class="inline-block w-4 h-4 mr-2" />
+              Configuración
+            </a>
+          </li>
+          <li>
+            <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              <img src="assets/icon/perfil.svg" alt="Perfil" class="inline-block w-4 h-4 mr-2" />
               Perfil
             </a>
           </li>
-
           <li>
-            <a
-              class="block px-4 py-2 hover:bg-gray-100"
-              >Salir</a
-              >
-
+            <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+              Salir
+            </a>
           </li>
         </ul>
       </div>
-    <!-- } -->
+    }
   </div>
 </header>

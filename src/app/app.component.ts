@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { LayoutComponent } from './layout';
+
+import { RouterOutlet } from '@angular/router';
+import { NotificationComponent } from './components';
 
 @Component({
   selector: 'app-root',
-  imports: [ LayoutComponent],
+  imports: [RouterOutlet, NotificationComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {

@@ -9,12 +9,9 @@ module.exports = {
         tertiary: '#F2F8FF',
       },
       fontFamily: {
-        Poppins: ['normal'],
+        poppins: ['sans-serif'],
       },
     },
   },
-  plugins: [
-    require("flyonui"),
-    require("flyonui/plugin")
-  ],
+  // plugins: [require('flyonui'), require('flyonui/plugin')],
 };

@@ -1,0 +1,32 @@
+<div class="p-2 rounded-lg flex items-center gap-3 bg-white border border-neutral-300">
+  <div class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer bg-orange-500">
+    <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
+  </div>
+
+  <div class="grow cursor-pointer truncate">
+    <a class="truncate">{{ name }}</a>
+    <div class="flex gap-2 items-center">
+      <p class="text-neutral-400 text-sm">{{ kbFormatter.format(sizeInKb) }}</p>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-center gap-2">
+    @if (isUploading) {
+      <div class="text-emerald-500">{{ progressUpload }}%</div>
+    }
+    @if (progressUpload === 100) {
+      <div>
+        <img
+          src="/assets/icons/check-icon.svg"
+          width="20"
+          height="20"
+          alt="Loaded"
+          style="filter: invert(68%) sepia(56%) saturate(3288%) hue-rotate(114deg) brightness(95%) contrast(101%)"
+        />
+      </div>
+    }
+    <button (click)="removeFile.emit()" class="shrink-0" type="button">
+      <img src="/assets/icon/trash-icon.svg" width="14" height="16" alt="Delete" />
+    </button>
+  </div>
+</div>
