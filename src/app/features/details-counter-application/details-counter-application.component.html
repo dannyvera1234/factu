@@ -7,12 +7,33 @@
     <div class="flex flex-col lg:flex-row gap-4 p-4">
       <aside class="w-full lg:w-1/4 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
+          <!-- <div class="flex flex-col items-center space-y-4">
+            <label class="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              <span>Seleccionar Logo (JPG o PNG)</span>
+              <input
+                type="file"
+                (change)="onFileSelected($event, byPersona.idePersonaRol)"
+
+                accept=".jpg,.jpeg,.png"
+                class="hidden">
+            </label>
+            @if (errorMessage) {
+              <p class="text-red-500">{{ errorMessage }}</p>
+            }
+
+              <div class="max-w-md">
+                <img [src]="logoUrl" alt="Logo" class="w-full h-auto rounded-lg" />
+              </div>
+
+          </div> -->
+
           <header class="text-center mb-6">
             <div
               class="bg-blue-950 text-white rounded-lg size-20 flex items-center justify-center mb-8 mx-auto text-2xl"
             >
               {{ byPersona.names + ' ' + byPersona.lastName | initials }}
             </div>
+            <button (click)="updateFile.open()">agg</button>
             <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
             @if (byPersona.dateBirth) {
               <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
@@ -456,6 +477,18 @@
               (deleted)="$event && deleteEstable($event)"
             />
           }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #updateFile>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          <app-update-logo />
         }
       </section>
     </div>

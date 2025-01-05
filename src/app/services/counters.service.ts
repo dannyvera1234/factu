@@ -223,4 +223,20 @@ export class CountersService {
     });
   }
 
+  updateLogo(personaRolIde:number, files: File | null): Observable<any> {
+    console.log('personaRolIde', personaRolIde);
+    console.log('files', files);
+    const form = new FormData();
+
+    if (files) {
+      form.append('logo', files);
+    }
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    form.append('reqDTO', JSON.stringify(payload));
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addPhoto`, { body: form });
+  }
+
 }

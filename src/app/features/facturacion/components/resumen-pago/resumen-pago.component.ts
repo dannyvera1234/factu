@@ -130,9 +130,9 @@ export class ResumenPagoComponent {
     const defaultValues = [
       { key: 'IVA', values: 0, label: 'IVA' },
       { key: 'ICE', values: 0, label: 'ICE' },
-      { key: 'SUBTOTAL', values: 0, label: 'SUBTOTAL' },
-      { key: 'PROPINA', values: 0, label: 'PROPINA' },
-      { key: 'TOTAL', values: 0, label: 'TOTAL' },
+      { key: 'SUBTOTAL', values: 0, label: 'SubTotal' },
+      { key: 'PROPINA', values: 0, label: 'Propina' },
+      { key: 'TOTAL', values: 0, label: 'Total' },
     ];
 
     // Configura los valores iniciales

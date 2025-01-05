@@ -109,8 +109,11 @@
                 <app-custom-input
                   [(ngModel)]="configFactu.pointCode"
                   label="Punto de venta"
+                  maxlength="3"
+                  (ngModelChange)="validatePointCode()"
                   (keypress)="preventLetters($event)"
                   [id]="'puntoVenta'"
+                  type="number"
                 />
               </div>
             </div>

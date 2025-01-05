@@ -12,7 +12,7 @@ export class CreateFacturacionService {
 
   public readonly infoEmisor = signal<any | null>(null);
 
-  public readonly pointCode = signal<string>('');
+  public  pointCode = signal<string>('001');
 
   public readonly infoCustomer = signal<any | null>(null);
 
@@ -53,6 +53,8 @@ export class CreateFacturacionService {
       });
       return;
     }
+    const emissionDate = new Date();
+    const formattedDate = emissionDate.toISOString().split('T')[0]; // "2025-01-03"
 
     // Si todos los campos están completos, procedemos a enviar los datos
     const dataFacturacion = {
@@ -82,7 +84,7 @@ export class CreateFacturacionService {
       infoInvoiceReqDTO: {
         documentType: '01',
         documentTypeDesc: 'Factura',
-        emissionDate: new Date(),
+        emissionDate: formattedDate,
       },
       detailProducts: this.detailProducts()?.map((product) => ({
         productIde: product.ide,

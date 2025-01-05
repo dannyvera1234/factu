@@ -78,7 +78,6 @@ export class InfoEmisorComponent {
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
         this.configFactu.idePersona.set(emisor.idePersona);
         this.configFactu.selectedEstabliecimient.set('');
-        this.configFactu.pointCode.set('');
         this.getListEstablishmentByEmisor(emisor.idePersonaRol);
         this.configFactu.infoEmisor.set({
           identificationNumber: emisor.identificationNumber,
@@ -119,12 +118,38 @@ export class InfoEmisorComponent {
     });
   }
 
-  public preventLetters(event: KeyboardEvent): void {
-    const key = event.key;
+  preventLetters(event: KeyboardEvent) {
+    const inputChar = String.fromCharCode(event.charCode);
 
-    if (!/[\d]/.test(key) && key !== 'Backspace') {
+    // Solo permite números
+    if (!/[0-9]/.test(inputChar)) {
+      event.preventDefault();
+    }
+
+    // Limitar a 3 dígitos
+    if (this.configFactu.pointCode?.length >= 3) {
       event.preventDefault();
     }
   }
 
+  validatePointCode() {
+    // Si el campo está vacío, asignar "001" como valor inicial
+    if (!this.configFactu.pointCode()) {
+      this.configFactu.pointCode.set('001');
+    }
+
+    // Si el valor es "000", asignar "001"
+    if (this.configFactu.pointCode() === '000' || this.configFactu.pointCode() === '0') {
+      this.configFactu.pointCode.set('001');
+    }
+
+    // Eliminar ceros iniciales y asegurarse de que el número sea válido
+    const numericValue = this.configFactu.pointCode().replace(/^0+/, '');
+
+    // Si el valor ingresado es numérico, incrementamos el valor
+    if (numericValue) {
+      // Asegurarse de que siempre tenga 3 dígitos, rellenando con ceros si es necesario
+      this.configFactu.pointCode.set(numericValue.padStart(3, '0'));
+    }
+  }
 }
