@@ -239,4 +239,14 @@ export class CountersService {
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addPhoto`, { body: form });
   }
 
+
+  deleteLogo(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deletePhoto`, {
+      body: payload,
+    });
+  }
+
 }

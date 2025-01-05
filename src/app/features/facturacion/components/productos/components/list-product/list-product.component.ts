@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, Output, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GeneriResp } from '@/interfaces';
 import { FacturacionService } from '@/services';
 import { CreateFacturacionService } from '../../../../create-facturacion.service';
@@ -25,8 +25,9 @@ export class ListProductComponent {
     private readonly facturacionService: FacturacionService,
   ) {
     toObservable(this.persoRolIdEmisor)
-      .pipe()
+    .pipe(takeUntilDestroyed())
       .subscribe((emisor) => {
+        this.listProducts.set(null);
         if (emisor !== null) {
           this.facturacionService.getListaProductos(emisor).subscribe((resp) => {
             if (resp.status === 'OK') {
@@ -36,6 +37,7 @@ export class ListProductComponent {
         }
       });
   }
+
 
   addProduct(product: any) {
     this.addProducto.emit(product);

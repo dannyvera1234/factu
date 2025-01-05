@@ -91,7 +91,6 @@ export class InfoClienteComponent {
     toObservable(this.persoRolIdEmisor)
       .pipe(takeUntilDestroyed())
       .subscribe((emisor) => {
-        console.log(emisor);
         if (emisor !== null && this.previousEmisor() !== emisor) {
           this.selectedCliente.set(null);
         }

@@ -7,33 +7,52 @@
     <div class="flex flex-col lg:flex-row gap-4 p-4">
       <aside class="w-full lg:w-1/4 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
-          <!-- <div class="flex flex-col items-center space-y-4">
-            <label class="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-              <span>Seleccionar Logo (JPG o PNG)</span>
-              <input
-                type="file"
-                (change)="onFileSelected($event, byPersona.idePersonaRol)"
+          <header class="text-center mb-6">
+            @if (byPersona.photo) {
+              <div class="relative w-24 h-24 mx-auto">
+                <!-- Imagen de la persona -->
+                <img [src]="byPersona.photo" alt="Foto" class="rounded-full w-full h-full object-cover" />
 
-                accept=".jpg,.jpeg,.png"
-                class="hidden">
-            </label>
-            @if (errorMessage) {
-              <p class="text-red-500">{{ errorMessage }}</p>
+                <!-- Ícono de eliminar -->
+                <button
+                  class="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition"
+                  (click)="deleteLogo.open(); viewingPersona.set(byPersona.idePersonaRol)"
+                  title="Eliminar Foto"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            } @else {
+              <div
+                class="relative bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
+              >
+                {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+
+                <button
+                  class="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full shadow-md cursor-pointer hover:bg-blue-700 transition"
+                  (click)="updateFile.open(); viewingPersona.set(byPersona.idePersonaRol)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
             }
 
-              <div class="max-w-md">
-                <img [src]="logoUrl" alt="Logo" class="w-full h-auto rounded-lg" />
-              </div>
-
-          </div> -->
-
-          <header class="text-center mb-6">
-            <div
-              class="bg-blue-950 text-white rounded-lg size-20 flex items-center justify-center mb-8 mx-auto text-2xl"
-            >
-              {{ byPersona.names + ' ' + byPersona.lastName | initials }}
-            </div>
-            <button (click)="updateFile.open()">agg</button>
             <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
             @if (byPersona.dateBirth) {
               <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
@@ -418,7 +437,7 @@
             <app-create-file
               (fileCreate)="createDoc.close()"
               [idePersonaRol]="idePersonaRol"
-              (fileCreate)="$event && createFile($event)"
+              (fileCreate)="$event && createFile($event); viewingPersona.set(null)"
             />
           </section>
         }
@@ -433,7 +452,11 @@
       <section class="p-4">
         @defer {
           @if (viewingFile(); as ide) {
-            <app-delete-file (deleted)="deleteDoc.close()" [ide]="ide" (deleted)="$event && deleteFile($event)" />
+            <app-delete-file
+              (deleted)="deleteDoc.close()"
+              [ide]="ide"
+              (deleted)="$event && deleteFile($event); viewingFile.set(null)"
+            />
           }
         }
       </section>
@@ -474,7 +497,7 @@
             <app-delete-establecimiento
               (deleted)="deleteEstablecimiento.close()"
               [ide]="ide"
-              (deleted)="$event && deleteEstable($event)"
+              (deleted)="$event && deleteEstable($event); viewingIdeSubsidiary.set(null)"
             />
           }
         }
@@ -484,11 +507,41 @@
 </app-modal>
 
 <app-modal #updateFile>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">subir logo</h2>
+        <button (click)="updateFile.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          @if (viewingPersona(); as ide) {
+            <app-update-logo
+              [idePersonaRol]="ide"
+              (created)="updateFile.close()"
+              (created)="$event && updateLogo($event); viewingPersona.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #deleteLogo>
   <div class="h-screen w-full flex items-center justify-center">
     <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
       <section class="p-4">
         @defer {
-          <app-update-logo />
+          @if (viewingPersona(); as ide) {
+            <app-delete-logo
+              (deleted)="deleteLogo.close()"
+              [idePersonaRol]="ide"
+              (deleted)="deleteLog($event); viewingPersona.set(null)"
+            />
+          }
         }
       </section>
     </div>

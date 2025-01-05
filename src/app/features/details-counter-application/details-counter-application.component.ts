@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
-import { finalize, mergeMap, of, map } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
+import { finalize, mergeMap, of } from 'rxjs';
 import { CountersService } from '../../services/counters.service';
 import { ByApplicationCounter, GeneriResp } from '@/interfaces';
 import { CustomDatePipe, FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { ConfigFacturacionService } from '@/utils/services';
-import { NgClass, NgOptimizedImage, NgStyle } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { ModalComponent } from '@/components';
 import {
   CreateEstablecimientoComponent,
   CreateFileComponent,
   DeleteEstablecimientoComponent,
   DeleteFileComponent,
+  DeleteLogoComponent,
   DocAutorizadosComponent,
   InfoCardComponent,
   ListClienteComponent,
@@ -43,6 +44,7 @@ import {
     FormatPhonePipe,
     FormatIdPipe,
     UpdateLogoComponent,
+    DeleteLogoComponent,
   ],
   templateUrl: './details-counter-application.component.html',
   styles: ``,
@@ -75,10 +77,7 @@ export class DetailsCounterApplicationComponent {
   constructor(
     private readonly counterService: CountersService,
     public readonly config: ConfigFacturacionService,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.updateFile()
-  }
+  ) {}
 
   public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'balance'): void {
     this.selectedTab.set(tab);
@@ -142,7 +141,6 @@ export class DetailsCounterApplicationComponent {
   }
 
   createEstable(infoEstablecimiento: any) {
-
     const currentPersona = this.counterByPersona();
 
     if (currentPersona) {
@@ -220,48 +218,35 @@ export class DetailsCounterApplicationComponent {
       });
   }
 
-  logoUrl: string | null = null;
-  errorMessage: string | null = null;
+  updateLogo(file: any) {
+    const currentPersona = this.counterByPersona();
 
-  // constructor() {}
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          photo: file.data,
+        },
+      };
 
-  onFileSelected(event: Event, idePersonaRol:number): void {
-    console.log('idePersonaRol', idePersonaRol);
-
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      if (this.isValidFileType(file)) {
-        this.errorMessage = null;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.logoUrl = e.target?.result as string;
-          // Forzar la detección de cambios
-          this.cdr.detectChanges();
-
-          // this.counterService.updateLogo(idePersonaRol, file).subscribe((resp) => {
-          //   if (resp.status === 'OK') {
-          //       console.log('File created', resp);
-          //      this.createFile(resp.data);
-          //     }
-          //   });
-        };
-        reader.readAsDataURL(file);
-      } else {
-        this.errorMessage = 'Por favor, selecciona un archivo JPG o PNG.';
-        this.logoUrl = null;
-        // Forzar la detección de cambios
-        this.cdr.detectChanges();
-      }
+      this.counterByPersona.set(updatedPersona);
     }
   }
 
-  private isValidFileType(file: File): boolean {
-    const acceptedFileTypes = ['image/jpeg', 'image/png'];
-    return acceptedFileTypes.includes(file.type);
-  }
+  deleteLog(photo: any) {
+    const currentPersona = this.counterByPersona();
 
-  updateFile() {
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          photo: photo,
+        },
+      };
 
-
+      this.counterByPersona.set(updatedPersona);
+    }
   }
 }
