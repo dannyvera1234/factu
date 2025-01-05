@@ -70,7 +70,7 @@ export class InfoEmisorComponent {
     this.dropdownOpen.set(false);
     of(this.loading.set(true))
       .pipe(
-        delay(1000),
+        delay(500),
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
@@ -98,12 +98,12 @@ export class InfoEmisorComponent {
   getEmisores() {
     of(this.loadingCombo.set(true))
       .pipe(
-        delay(1000),
         mergeMap(() => this.facturacionService.getListCountersByEmisor()),
         finalize(() => this.loadingCombo.set(false)),
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.filteredOptions.set(resp);
         }
       });

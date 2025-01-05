@@ -41,8 +41,8 @@
                   class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"
                 >
                   <img
-                    [src]="emisor.logo ? emisor.logo : '/assets/icon/file.png'"
-                    [alt]="emisor.name + ' logo'"
+                    [src]="emisor.photo ? emisor.photo : '/assets/icon/file.png'"
+                    [alt]="emisor.photo + ' logo'"
                     class="size-12 rounded-full object-cover"
                   />
                   <div>
@@ -139,8 +139,8 @@
         <!-- Logo del emisor (Columna 4) -->
         <div class="flex justify-center items-center col-span-1">
           <img
-            [src]="selectedEmissor()?.logo || '/assets/icon/file.png'"
-            [alt]="selectedEmissor()?.name + ' logo'"
+            [src]="selectedEmissor()?.photo || '/assets/icon/file.png'"
+            [alt]="selectedEmissor()?.photo + ' logo'"
             class="size-24 rounded-full object-cover"
           />
         </div>
