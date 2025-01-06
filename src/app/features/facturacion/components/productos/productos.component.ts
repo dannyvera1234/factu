@@ -16,18 +16,9 @@ export class ProductosComponent {
   constructor(private config: CreateFacturacionService) {}
 
   public readonly products = signal<any[]>([]);
-  // private isEmisorChanged(): boolean {
-  //   // Aquí deberías verificar si el emisor ha cambiado
-  //   // Puedes comparar el valor actual con el anterior
-  //   // Por ejemplo, puedes almacenar el último emisor en una variable
-  //   // return this.persoRolIdEmisor !== this.previousEmisor;
-  // }
+
   addProducto(product: any) {
 
-    // if (this.isEmisorChanged()) {
-    //   this.products.update(() => []);
-    //   console.log('Lista de productos reseteada');
-    // }
 
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
@@ -47,7 +38,6 @@ export class ProductosComponent {
         return [...currentProducts, { ...product }];
       }
     });
-    console.log(...this.products());
     this.config.detailProducts.set([...this.products()]);
     this.config.products.set([...this.products()]);
   }

@@ -62,7 +62,7 @@ export class CreateFacturacionService {
       return;
     }
 
-    // Obtener la fecha de emisión y formatearla como YYYY-MM-DD
+    // Obtener  la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
     const formattedDate = emissionDate.toISOString().split('T')[0]; // Ejemplo: "2025-01-03"
 
@@ -127,40 +127,35 @@ export class CreateFacturacionService {
         },
       ],
       infoVoucherReqDTO: {
-        taxes: this.infoVoucherReqDTO()
-          .inpuestoIva.filter((iva: any) => iva.key === 'tarifaIva')[0]
-          .values.map((iva: any) => ({
-            codeTaxType: '2',
-            tariffCode: iva.key,
-            tariffValue: iva.tariffValue,
-            description: iva.label,
-            imponibleBase: iva.value,
-          })),
-        totalSinImpuestos: this.infoVoucherReqDTO().totalSinImpuestos, // Total sin impuestos
-        totalDescuento: 0, // Descuentos aplicados (si los hay)
-        valorIva: this.infoVoucherReqDTO().valorIva, // Valor del IVA (a calcular)
-        valorIce: this.infoVoucherReqDTO().valorIce, // Valor del ICE (a calcular)
+        taxes: this.infoVoucherReqDTO().inpuestoIva.values.map((iva: any) => ({
+          codeTaxType: '2',
+          tariffCode: iva.key,
+          tariffValue: iva.tariffValue,
+          description: iva.label,
+          imponibleBase: iva.value,
+        })),
+        totalSinImpuestos: this.infoVoucherReqDTO().totalSinImpuestos,
+        totalDescuento: 0,
+        valorIva: this.infoVoucherReqDTO().valorIva,
+        valorIce: this.infoVoucherReqDTO().valorIce,
         propina: 0, // Propina (si aplica)
-        importeTotal: this.infoVoucherReqDTO().importeTotal, // Importe total a pagar
+        importeTotal: this.infoVoucherReqDTO().importeTotal,
       },
       observation: null,
     };
 
-    console.log(this.infoVoucherReqDTO());
-    // Mostrar los datos en consola para revisión
-     console.log(dataFacturacion);
+
 
     // Llamar al servicio para generar la factura
     this.facturacionService.generateInvoice(dataFacturacion).subscribe(
       (response) => {
-        console.log(response);
+
         this.notification.push({
           message: 'Factura generada correctamente',
           type: 'success',
         });
       },
       (error) => {
-        console.error(error);
         this.notification.push({
           message: 'Ocurrió un error al generar la factura',
           type: 'error',

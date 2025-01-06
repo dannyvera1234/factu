@@ -120,7 +120,6 @@ export class InfoEmisorComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
-        console.log(emisor);
         this.selectedEmissor.set(emisor);
         this.searchTerm.set('');
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
@@ -151,7 +150,6 @@ export class InfoEmisorComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.filteredOptions.set(resp);
         }
       });

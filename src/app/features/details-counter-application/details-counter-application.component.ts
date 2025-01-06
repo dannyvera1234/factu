@@ -52,7 +52,6 @@ import {
 })
 export class DetailsCounterApplicationComponent {
   @Input() set idePersonaRolEncrypted(value: string) {
-    console.log('idePersonaRolEncrypted', value);
     this.getByIdePersona(value);
   }
 
@@ -212,7 +211,6 @@ export class DetailsCounterApplicationComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log('resp', resp);
           this.counterByPersona.set(resp);
         }
       });

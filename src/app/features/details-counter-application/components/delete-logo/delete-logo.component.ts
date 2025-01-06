@@ -30,7 +30,6 @@ export class DeleteLogoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log('Logo eliminado del registro.', resp);
           this.deleted.emit(resp.data);
           this.notification.push({
             message: 'Logo eliminado del registro.',

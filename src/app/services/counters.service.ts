@@ -39,7 +39,6 @@ export class CountersService {
   }
 
   createApplicationCounrter(createApplication: Partial<any>, files: File | null): Observable<any> {
-    console.log('createApplication', createApplication);
     const form = new FormData();
 
     if (files) {
@@ -225,8 +224,7 @@ export class CountersService {
   }
 
   updateLogo(personaRolIde:number, files: File | null): Observable<any> {
-    console.log('personaRolIde', personaRolIde);
-    console.log('files', files);
+
     const form = new FormData();
 
     if (files) {

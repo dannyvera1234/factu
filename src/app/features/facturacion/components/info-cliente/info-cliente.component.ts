@@ -67,7 +67,6 @@ export class InfoClienteComponent {
       )
       .subscribe(() => {
         this.selectedCliente.set(cliente);
-        console.log(cliente);
         this.dropdownOpen.set(false);
         this.configFactu.infoCustomer.set({
           identificationNumber: cliente.identificationNumber,

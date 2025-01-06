@@ -69,7 +69,6 @@ export class UpdateLogoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log('File created', resp);
           this.created.emit(resp);
           this.notification.push({
             message: 'Logo actualizado correctamente.',
