@@ -29,7 +29,6 @@ export class ResumenPagoComponent {
     this.getPayForms();
     this.getImpuestoIVA();
 
-
     toObservable(this.listProduct)
       .pipe(takeUntilDestroyed())
       .subscribe((updatedProducts) => {
@@ -112,7 +111,6 @@ export class ResumenPagoComponent {
   private getPayForms() {
     this.controlService.getTypesPayForm().subscribe((response) => {
       if (response.status === 'OK') {
-
         this.paymentMethods.set(response);
       }
     });
@@ -121,7 +119,6 @@ export class ResumenPagoComponent {
     const IVA = 'IVA';
     this.controlService.impuestoIVA(IVA).subscribe((response) => {
       if (response.status === 'OK') {
-
         this.listIva.set(response);
         this.createDetailsPay();
       }
@@ -138,7 +135,7 @@ export class ResumenPagoComponent {
       })) || [];
 
     const defaultValues = [
-      { key: 'IVA', values: 0, label: 'IVA'},
+      { key: 'IVA', values: 0, label: 'IVA' },
       { key: 'ICE', values: 0, label: 'ICE' },
       { key: 'SUBTOTAL', values: 0, label: 'SubTotal' },
       { key: 'PROPINA', values: 0, label: 'Propina' },
@@ -146,9 +143,6 @@ export class ResumenPagoComponent {
     ];
 
     // Configura los valores iniciales
-    this.valuesCalculates.set([
-      { key: 'tarifaIva', values: tarifaIva },
-      ...defaultValues,
-    ]);
+    this.valuesCalculates.set([{ key: 'tarifaIva', values: tarifaIva }, ...defaultValues]);
   }
 }

@@ -1,4 +1,3 @@
-import { map } from 'rxjs';
 import { Injectable, signal } from '@angular/core';
 import { DetailsProducto } from '../../interfaces';
 import { NotificationService } from '../../utils/services';
@@ -138,7 +137,7 @@ export class CreateFacturacionService {
         totalDescuento: 0,
         valorIva: this.infoVoucherReqDTO().valorIva,
         valorIce: this.infoVoucherReqDTO().valorIce,
-        propina: 0, // Propina (si aplica)
+        propina: 0,
         importeTotal: this.infoVoucherReqDTO().importeTotal,
       },
       observation: null,
@@ -149,7 +148,6 @@ export class CreateFacturacionService {
     // Llamar al servicio para generar la factura
     this.facturacionService.generateInvoice(dataFacturacion).subscribe(
       (response) => {
-
         this.notification.push({
           message: 'Factura generada correctamente',
           type: 'success',
