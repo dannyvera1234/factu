@@ -39,6 +39,7 @@ export class CountersService {
   }
 
   createApplicationCounrter(createApplication: Partial<any>, files: File | null): Observable<any> {
+    console.log('createApplication', createApplication);
     const form = new FormData();
 
     if (files) {

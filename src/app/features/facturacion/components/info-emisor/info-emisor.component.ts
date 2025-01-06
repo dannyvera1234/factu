@@ -3,13 +3,22 @@ import { FormsModule } from '@angular/forms';
 import { FacturacionService } from '@/services';
 import { GeneriResp } from '@/interfaces';
 import { CreateFacturacionService } from '../../create-facturacion.service';
-import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
+import { CustomDatePipe, FormatIdPipe, FormatPhonePipe } from '@/pipes';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { delay, finalize, mergeMap, of } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-info-emisor',
-  imports: [FormsModule, FormatIdPipe, FormatPhonePipe, CustomSelectComponent, CustomInputComponent],
+  imports: [
+    FormsModule,
+    FormatIdPipe,
+    FormatPhonePipe,
+    CustomSelectComponent,
+    RouterLink,
+    CustomDatePipe,
+    CustomInputComponent,
+  ],
   templateUrl: './info-emisor.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +31,10 @@ export class InfoEmisorComponent {
       this.dropdownOpen.set(false);
     }
   }
+
+  public readonly isEditing = signal(false);
+
+  public readonly isEditingEstabliecimient = signal(false);
 
   public readonly loading = signal(false);
 
@@ -61,10 +74,43 @@ export class InfoEmisorComponent {
     const target = event.target as HTMLInputElement;
     this.searchTerm.set(target.value);
     this.dropdownOpen.set(true);
-    this.filteredOptions();
+    this.filterOption();
   }
 
-  filterOptions() {}
+
+  filterOption(): void {
+    const searchTerm = this.searchTerm();  // Obtén el término de búsqueda
+
+    // Verifica si el término de búsqueda no está vacío
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();  // Convertir el término a minúsculas una sola vez
+
+      // Filtra las opciones basadas en el término de búsqueda
+      const filtered = this.filteredOptions()?.data.filter((option) => {
+        return [
+          option.identificationNumber,
+          option.socialReason,
+          option.names,
+          option.lastName
+        ].some(field => field?.toLowerCase().includes(term));
+      }) ?? [];
+
+
+
+      // Actualiza las opciones filtradas
+      this.filteredOptions.set({
+        data: filtered,
+        status: 'OK',
+        message: filtered.length > 1 ? 'Búsqueda realizada correctamente' : 'No se encontraron resultados',
+      });
+    } else {
+      // Si el término de búsqueda está vacío, restablece las opciones completas
+      this.getEmisores();  // Recarga las opciones completas si no hay búsqueda
+    }
+  }
+
+
+
 
   selectOption(emisor: any) {
     this.dropdownOpen.set(false);
@@ -74,7 +120,9 @@ export class InfoEmisorComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
+        console.log(emisor);
         this.selectedEmissor.set(emisor);
+        this.searchTerm.set('');
         this.configFactu.setEmisor.set(emisor.idePersonaRol);
         this.configFactu.idePersona.set(emisor.idePersona);
         this.configFactu.selectedEstabliecimient.set('');
@@ -112,7 +160,6 @@ export class InfoEmisorComponent {
   getListEstablishmentByEmisor(personaRolIde: number) {
     this.facturacionService.getListEstablishmentByEmisor(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
-        console.log(resp.data);
         this.getListEstablishment.set(resp.data);
       }
     });
@@ -150,6 +197,24 @@ export class InfoEmisorComponent {
     if (numericValue) {
       // Asegurarse de que siempre tenga 3 dígitos, rellenando con ceros si es necesario
       this.configFactu.pointCode.set(numericValue.padStart(3, '0'));
+    }
+  }
+  toggleEdit(type: 'pointOfSale' | 'establishment') {
+    if (type === 'pointOfSale') {
+      this.isEditing.set(!this.isEditing());
+    } else if (type === 'establishment') {
+      this.isEditingEstabliecimient.set(!this.isEditingEstabliecimient());
+    }
+  }
+
+  // Función para guardar cambios
+  saveChanges(type: 'pointOfSale' | 'establishment') {
+    if (type === 'pointOfSale') {
+      this.isEditing.set(false);
+      // Lógica para guardar el punto de venta
+    } else if (type === 'establishment') {
+      this.isEditingEstabliecimient.set(false);
+      // Lógica para guardar el establecimiento
     }
   }
 }

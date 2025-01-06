@@ -47,4 +47,14 @@ export class FacturacionService {
       body: payload,
     });
   }
+
+  generateInvoice(data:Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISION_DOCUMENTOS_CONTADORES, {
+      ...data,
+    });
+    console.log(payload);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/counter/emisor/generateInvoice`, {
+      body: payload,
+    });
+  }
 }

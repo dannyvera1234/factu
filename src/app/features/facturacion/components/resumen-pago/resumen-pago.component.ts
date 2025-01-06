@@ -98,6 +98,14 @@ export class ResumenPagoComponent {
         });
 
         this.valuesCalculates.set(updatedValues || []);
+
+        this.configFactu.infoVoucherReqDTO.set({
+          inpuestoIva: this.valuesCalculates(),
+          totalSinImpuestos: subtotal,
+          valorIva: totalIVA,
+          valorIce: totalICE,
+          importeTotal: valorTotal,
+        });
       });
   }
 
@@ -113,6 +121,7 @@ export class ResumenPagoComponent {
     const IVA = 'IVA';
     this.controlService.impuestoIVA(IVA).subscribe((response) => {
       if (response.status === 'OK') {
+        console.log('Impuesto IVA:', response);
         this.listIva.set(response);
         this.createDetailsPay();
       }
@@ -125,10 +134,11 @@ export class ResumenPagoComponent {
         key: tipoIva.codeTariff,
         label: tipoIva.description,
         value: 0, // Inicializa con 0
+        tariffValue: tipoIva.tariffIva,
       })) || [];
 
     const defaultValues = [
-      { key: 'IVA', values: 0, label: 'IVA' },
+      { key: 'IVA', values: 0, label: 'IVA'},
       { key: 'ICE', values: 0, label: 'ICE' },
       { key: 'SUBTOTAL', values: 0, label: 'SubTotal' },
       { key: 'PROPINA', values: 0, label: 'Propina' },
