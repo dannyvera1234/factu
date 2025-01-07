@@ -12,7 +12,7 @@
             <div class="relative group">
               <!-- Botón de configuración -->
               <button
-                class="absolute -top-4 -right-2 bg-gray-100 hover:bg-gray-200 rounded-full p-1 shadow-md"
+                class="absolute -top-4 -right-2 p-1"
                 aria-label="Configuración"
                 (click)="addSequential.open(); viewingPersona.set(byPersona.idePersonaRol)"
               >
@@ -74,10 +74,10 @@
                   </svg>
                 </button>
                 <div
-                class="absolute top-8 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-              >
+                  class="absolute top-8 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                >
                   Actualizar logo
-              </div>
+                </div>
               </div>
             }
 
@@ -588,9 +588,7 @@
       <section class="p-4">
         @defer {
           @if (viewingPersona(); as ide) {
-            <app-sequential [idePersonaRol]="ide"
-              (created)="addSequential.close()"
-            />
+            <app-sequential [idePersonaRol]="ide" (created)="addSequential.close()" />
           }
         }
       </section>
