@@ -55,7 +55,7 @@
               </div>
             } @else {
               <div
-                class="relative bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
+                class="relative group bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
               >
                 {{ byPersona.names + ' ' + byPersona.lastName | initials }}
 
@@ -73,6 +73,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                   </svg>
                 </button>
+                <div
+                class="absolute top-8 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              >
+                  Actualizar logo
+              </div>
               </div>
             }
 
