@@ -1,6 +1,7 @@
-import {  Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { DetailsProducto } from '../../interfaces';
 import { NotificationService } from '../../utils/services';
+import { FacturacionService } from '../../services';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class CreateFacturacionService {
 
   public readonly infoEmisor = signal<any | null>(null);
 
-  public readonly pointCode = signal<string>('');
+  public pointCode = signal<string>('001');
 
   public readonly infoCustomer = signal<any | null>(null);
 
@@ -24,13 +25,19 @@ export class CreateFacturacionService {
 
   public readonly selectedPaymentMethod = signal<any | null>('');
 
-  constructor(private readonly notification: NotificationService) {}
+  public readonly infoVoucherReqDTO = signal<any | null>(null);
 
+  constructor(
+    private readonly notification: NotificationService,
+    private readonly facturacionService: FacturacionService,
+  ) {}
   submit() {
+    // Obtener la información del emisor, cliente y método de pago seleccionado
     const infoEmisor = this.infoEmisor();
     const infoCustomer = this.infoCustomer();
     const selectedPaymentMethod = this.selectedPaymentMethod();
 
+    // Verificar si hay productos disponibles
     if (this.products()?.length === 0) {
       this.notification.push({
         message: 'No hay productos disponibles para registrar la venta',
@@ -39,7 +46,7 @@ export class CreateFacturacionService {
       return;
     }
 
-    // Verifica si todos los campos están completos
+    // Verificar si todos los campos obligatorios están completos
     if (
       !infoEmisor ||
       !infoCustomer ||
@@ -54,13 +61,17 @@ export class CreateFacturacionService {
       return;
     }
 
-    // Si todos los campos están completos, procedemos a enviar los datos
+    // Obtener  la fecha de emisión y formatearla como YYYY-MM-DD
+    const emissionDate = new Date();
+    const formattedDate = emissionDate.toISOString().split('T')[0]; // Ejemplo: "2025-01-03"
+
+    // Crear el objeto de datos para la facturación
     const dataFacturacion = {
       infoEmisor: {
         identificationNumber: infoEmisor.identificationNumber,
         typeDocument: infoEmisor.typeDocument,
         socialReason: infoEmisor.socialReason,
-        address: infoEmisor.address,
+        mainAddress: infoEmisor.address,
         email: infoEmisor.email,
         cellPhone: infoEmisor.cellPhone,
         personaRolIde: infoEmisor.personaRolIde,
@@ -69,7 +80,7 @@ export class CreateFacturacionService {
         identificationNumber: infoCustomer.identificationNumber,
         typeDocument: infoCustomer.typeDocument,
         socialReason: infoCustomer.socialReason,
-        address: infoCustomer.address,
+        mainAddress: infoCustomer.address,
         email: infoCustomer.email,
         cellPhone: infoCustomer.cellPhone,
         customerIde: infoCustomer.customerIde,
@@ -82,7 +93,7 @@ export class CreateFacturacionService {
       infoInvoiceReqDTO: {
         documentType: '01',
         documentTypeDesc: 'Factura',
-        emissionDate: new Date(),
+        emissionDate: formattedDate,
       },
       detailProducts: this.detailProducts()?.map((product) => ({
         productIde: product.ide,
@@ -101,7 +112,7 @@ export class CreateFacturacionService {
         tariffAdValoremIce: product.tariffAdValoremIce,
         tariffSpecificIce: product.tariffSpecificIce,
         tariffDesICE: product.tariffDesICE,
-        valueIce: product.valorICE || null,
+        valueIce: product.valorICE || 0,
         subtotal: product.subTotal,
         total: product.valorTotal,
       })),
@@ -109,33 +120,37 @@ export class CreateFacturacionService {
         {
           code: selectedPaymentMethod.code,
           description: selectedPaymentMethod.description,
-          total: null,
+          total: this.infoVoucherReqDTO().importeTotal,
           timeUnit: 'dias',
           plazo: '0',
         },
       ],
       infoVoucherReqDTO: {
-        taxes: [
-          {
-            codeTaxType: '01',
-            description: 'IVA',
-            tariffCode: '2',
-            tariffValue: 12,
-            imponibleBase: 0,
-          },
-        ],
-        totalSinImpuestos: 0,
+        taxes: this.infoVoucherReqDTO().inpuestoIva.values.map((iva: any) => ({
+          codeTaxType: '2',
+          tariffCode: iva.key,
+          tariffValue: iva.tariffValue,
+          description: iva.label,
+          imponibleBase: iva.value,
+        })),
+        totalSinImpuestos: this.infoVoucherReqDTO().totalSinImpuestos,
         totalDescuento: 0,
-        valorIva: 0,
-        valorIce: 0,
+        valorIva: this.infoVoucherReqDTO().valorIva,
+        valorIce: this.infoVoucherReqDTO().valorIce,
         propina: 0,
-        importeTotal: 0,
+        importeTotal: this.infoVoucherReqDTO().importeTotal,
       },
-      observation: '',
+      observation: null,
     };
 
-    console.log(dataFacturacion);
-
-    // Aquí puedes proceder a enviar los datos a un servidor o realizar alguna acción adicional.
+    // Llamar al servicio para generar la factura
+    this.facturacionService.generateInvoice(dataFacturacion).subscribe((response) => {
+      if (response.status === 'OK') {
+        this.notification.push({
+          message: 'Factura generada correctamente',
+          type: 'success',
+        });
+      }
+    });
   }
 }

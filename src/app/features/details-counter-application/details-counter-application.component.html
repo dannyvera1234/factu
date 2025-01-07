@@ -7,12 +7,80 @@
     <div class="flex flex-col lg:flex-row gap-4 p-4">
       <aside class="w-full lg:w-1/4 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
-          <header class="text-center mb-6">
-            <div
-              class="bg-blue-950 text-white rounded-lg size-20 flex items-center justify-center mb-8 mx-auto text-2xl"
-            >
-              {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+          <header class="relative text-center mb-6">
+            <!-- Botón de configuración en la esquina -->
+            <div class="relative group">
+              <!-- Botón de configuración -->
+              <button
+                class="absolute -top-4 -right-2 bg-gray-100 hover:bg-gray-200 rounded-full p-1 shadow-md"
+                aria-label="Configuración"
+                (click)="addSequential.open(); viewingPersona.set(byPersona.idePersonaRol)"
+              >
+                <img src="assets/icon/config.svg" alt="Configuración" />
+              </button>
+
+              <!-- Tooltip -->
+              <div
+                class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              >
+                Agregar secuencial de los documentos
+              </div>
             </div>
+
+            @if (byPersona.photo) {
+              <div class="relative group w-24 h-24 mx-auto">
+                <!-- Imagen de la persona -->
+                <img [src]="byPersona.photo" alt="Foto" class="rounded-full w-full h-full object-cover" />
+
+                <!-- Ícono de eliminar -->
+                <button
+                  class="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition"
+                  (click)="deleteLogo.open(); viewingPersona.set(byPersona.idePersonaRol)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <div
+                  class="absolute top-10 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                >
+                  Eliminar logo
+                </div>
+              </div>
+            } @else {
+              <div
+                class="relative group bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
+              >
+                {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+
+                <button
+                  class="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full shadow-md cursor-pointer hover:bg-blue-700 transition"
+                  (click)="updateFile.open(); viewingPersona.set(byPersona.idePersonaRol)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+                <div
+                class="absolute top-8 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              >
+                  Actualizar logo
+              </div>
+              </div>
+            }
+
             <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
             @if (byPersona.dateBirth) {
               <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
@@ -276,7 +344,7 @@
                 'text-gray-600': selectedTab() !== 'doc',
               }"
             >
-              Doc Autorizado
+              Documentos
             </button>
           </nav>
 
@@ -299,7 +367,7 @@
               }
               @case ('doc') {
                 @defer {
-                  <app-doc-autorizados />
+                  <app-doc-autorizados [idePersonaRol]="byPersona.idePersonaRol" />
                 }
               }
             }
@@ -397,7 +465,7 @@
             <app-create-file
               (fileCreate)="createDoc.close()"
               [idePersonaRol]="idePersonaRol"
-              (fileCreate)="$event && createFile($event)"
+              (fileCreate)="$event && createFile($event); viewingPersona.set(null)"
             />
           </section>
         }
@@ -412,7 +480,11 @@
       <section class="p-4">
         @defer {
           @if (viewingFile(); as ide) {
-            <app-delete-file (deleted)="deleteDoc.close()" [ide]="ide" (deleted)="$event && deleteFile($event)" />
+            <app-delete-file
+              (deleted)="deleteDoc.close()"
+              [ide]="ide"
+              (deleted)="$event && deleteFile($event); viewingFile.set(null)"
+            />
           }
         }
       </section>
@@ -453,7 +525,71 @@
             <app-delete-establecimiento
               (deleted)="deleteEstablecimiento.close()"
               [ide]="ide"
-              (deleted)="$event && deleteEstable($event)"
+              (deleted)="$event && deleteEstable($event); viewingIdeSubsidiary.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #updateFile>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">subir logo</h2>
+        <button (click)="updateFile.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          @if (viewingPersona(); as ide) {
+            <app-update-logo
+              [idePersonaRol]="ide"
+              (created)="updateFile.close()"
+              (created)="$event && updateLogo($event); viewingPersona.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #deleteLogo>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingPersona(); as ide) {
+            <app-delete-logo
+              (deleted)="deleteLogo.close()"
+              [idePersonaRol]="ide"
+              (deleted)="deleteLog($event); viewingPersona.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #addSequential>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Agregar Secuencial</h2>
+        <button (click)="addSequential.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          @if (viewingPersona(); as ide) {
+            <app-sequential [idePersonaRol]="ide"
+              (created)="addSequential.close()"
             />
           }
         }

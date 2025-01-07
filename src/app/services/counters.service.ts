@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../utils/services';
 import { PayloadService } from '../utils/services/payload.service';
 import { Modulos } from '../utils/permissions';
-import {  Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import {  CreateProduct } from '../interfaces';
+import { CreateProduct } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +131,6 @@ export class CountersService {
     });
   }
 
-
   createEstablecimiento(createEstablecimiento: Partial<any>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...createEstablecimiento,
@@ -145,18 +144,24 @@ export class CountersService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ideRegister: ideRegister,
     });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteSubsidiary`, {
-      body: payload,
-    });
+    return this._http.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteSubsidiary`,
+      {
+        body: payload,
+      },
+    );
   }
 
   updateEstablecimiento(updateEstablecimiento: Partial<any>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...updateEstablecimiento,
     });
-    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/updateSubsidiary`, {
-      body: payload,
-    });
+    return this._http.put(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/updateSubsidiary`,
+      {
+        body: payload,
+      },
+    );
   }
 
   createClienteCounter(createClienteCounter: Partial<any>): Observable<any> {
@@ -178,28 +183,36 @@ export class CountersService {
   }
 
   getListClientesCounter(personaRolIde: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {personaRolIde: personaRolIde});
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listCustomer`, {
       body: payload,
     });
   }
 
   deleteClienteCounter(ideRegister: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {ideRegister: ideRegister});
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: ideRegister,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteCustomer`, {
       body: payload,
     });
   }
 
-  allListProducts(personaRolIde:number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {personaRolIde: personaRolIde});
+  allListProducts(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listProduct`, {
       body: payload,
     });
   }
 
   deleteProduct(ideRegister: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {ideRegister: ideRegister});
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: ideRegister,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deleteProduct`, {
       body: payload,
     });
@@ -223,4 +236,56 @@ export class CountersService {
     });
   }
 
+  updateLogo(personaRolIde: number, files: File | null): Observable<any> {
+    const form = new FormData();
+
+    if (files) {
+      form.append('logo', files);
+    }
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    form.append('reqDTO', JSON.stringify(payload));
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addPhoto`, {
+      body: form,
+    });
+  }
+
+  deleteLogo(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      ideRegister: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/deletePhoto`, {
+      body: payload,
+    });
+  }
+
+  getListInvoices(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listInvoices`, {
+      body: payload,
+    });
+  }
+
+  addSequential( personaRolIde: number, sequential: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+      docsSequential: sequential,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addSequential`, {
+      body: payload,
+    });
+  }
+
+  listSequential(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listSequential`, {
+      body: payload,
+    });
+  }
 }

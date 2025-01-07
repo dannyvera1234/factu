@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       @for (product of products(); track $index) {
-        <tr class="hover:bg-gray-100">
+        <tr class="hover:bg-gray-100 text-sm">
           <td class="p-2">{{ product.mainCode }}</td>
           <td class="p-2">{{ product.name }}</td>
           <td class="p-2">
@@ -63,7 +63,14 @@
         </tr>
       }
       <tr *ngIf="products().length === 0">
-        <td colspan="9" class="text-center text-gray-500 p-4">No hay productos añadidos.</td>
+        <td colspan="9" class="p-2">
+          <div
+            class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+          >
+            <p class="font-medium">Ningún producto seleccionado</p>
+            <span class="text-sm">Por favor, seleccione un producto para ver su información</span>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

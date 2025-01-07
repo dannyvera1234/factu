@@ -48,25 +48,25 @@ export class InfoClienteComponent {
 
   public readonly previousEmisor = signal<number>(0);
 
-  searchTerm: string = '';
+  public readonly  searchTerm = signal('');
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.searchTerm = target.value;
+    this.searchTerm.set(target.value);
     this.dropdownOpen.set(true);
-    // this.filterOptions();
+    // this.filterOption();
   }
+
 
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
     of(this.loading.set(true))
       .pipe(
-        delay(1000),
+        delay(500),
         finalize(() => this.loading.set(false)),
       )
       .subscribe(() => {
         this.selectedCliente.set(cliente);
-        console.log(cliente);
         this.dropdownOpen.set(false);
         this.configFactu.infoCustomer.set({
           identificationNumber: cliente.identificationNumber,
@@ -91,7 +91,6 @@ export class InfoClienteComponent {
     toObservable(this.persoRolIdEmisor)
       .pipe(takeUntilDestroyed())
       .subscribe((emisor) => {
-        console.log(emisor);
         if (emisor !== null && this.previousEmisor() !== emisor) {
           this.selectedCliente.set(null);
         }

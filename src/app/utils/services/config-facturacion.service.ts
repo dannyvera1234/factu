@@ -27,4 +27,36 @@ export class ConfigFacturacionService {
     N: 'Persona Natural',
     J: 'Persona Jurídica',
   });
+
+  public readonly documentType = signal<Record<string, string>>({
+    '01': 'Factura',
+    '03': 'Nota de venta',
+    '04': 'Nota de crédito',
+    '05': 'Otro',
+  });
+
+
+  public readonly DOCUMENT_STYLES = signal<Record<string, { bgColor: string; icon: string }>>({
+    'Factura': {
+      bgColor: 'bg-blue-500',
+      icon: '/assets/icon/file.svg',
+    },
+    'Nota de venta': {
+      bgColor: 'bg-green-500',
+      icon: '/assets/icon/sales-note.svg',
+    },
+    'Nota de crédito': {
+      bgColor: 'bg-purple-500',
+      icon: '/assets/icon/credit-note.svg',
+    },
+    Otro: {
+      bgColor: 'bg-gray-500',
+      icon: '/assets/icon/other.svg',
+    },
+  });
+
+  getDocumentStyle(docCode: string) {
+    const docType = this.documentType()[docCode]; // Convierte el código al tipo
+    return this.DOCUMENT_STYLES()[docType]; // Devuelve los estilos
+  }
 }

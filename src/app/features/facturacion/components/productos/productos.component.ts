@@ -18,6 +18,8 @@ export class ProductosComponent {
   public readonly products = signal<any[]>([]);
 
   addProducto(product: any) {
+
+
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
 
@@ -36,7 +38,6 @@ export class ProductosComponent {
         return [...currentProducts, { ...product }];
       }
     });
-    console.log(...this.products());
     this.config.detailProducts.set([...this.products()]);
     this.config.products.set([...this.products()]);
   }

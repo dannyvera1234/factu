@@ -1,13 +1,17 @@
-<header class="p-2 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-  <div class="flex flex-col md:flex-row items-center justify-between space-y-2 md:space-y-0">
-    <div class="flex items-center space-x-4">
-      <div class="flex items-center justify-center size-9 bg-blue-300 rounded-full">
-        <img src="/assets/icon/emisor.svg" alt="Info" class="size-6" />
+<div class="p-4 border border-gray-200 rounded-md shadow-sm bg-white">
+  <div class="flex items-center justify-between">
+    <div class="space-y-1">
+      <div class="flex items-center gap-3">
+        <div class="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-2.5 border">
+          <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+        </div>
+        <div>
+          <h2 class="text-xl font-semibold">Información del Emisor</h2>
+          <p class="text-sm text-gray-500">Seleccione la empresa emisora de la factura</p>
+        </div>
       </div>
-      <h2 class="text-lg font-semibold text-gray-800">
-        {{ selectedEmissor() ? selectedEmissor().names + ' ' + selectedEmissor().lastName : 'Información del emisor' }}
-      </h2>
     </div>
+
     <div class="relative w-full md:max-w-md dropdown-container">
       <input
         type="text"
@@ -15,8 +19,24 @@
         [(ngModel)]="searchTerm"
         (input)="handleSearchChange($event)"
         (focus)="dropdownOpen.set(true)"
-        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-150 ease-in-out"
+        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+
       <button
         type="button"
         (click)="toggleDropdown()"
@@ -41,8 +61,8 @@
                   class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"
                 >
                   <img
-                    [src]="emisor.logo ? emisor.logo : '/assets/icon/file.png'"
-                    [alt]="emisor.name + ' logo'"
+                    [src]="emisor.photo ? emisor.photo : '/assets/icon/file.png'"
+                    [alt]="emisor.photo + ' logo'"
                     class="size-12 rounded-full object-cover"
                   />
                   <div>
@@ -60,88 +80,197 @@
       }
     </div>
   </div>
-</header>
-@if (loading()) {
-  <div class="h-full text-center flex justify-center items-center p-5">
-    <div class="loader"></div>
-  </div>
-} @else {
-  @if (!selectedEmissor()) {
-    <div class="p-4 flex items-center justify-center">
-      <p class="text-sm text-gray-500">No se ha seleccionado ningún emisor.</p>
+
+  @if (loading()) {
+    <div class="h-full text-center flex justify-center items-center p-5">
+      <div class="loader"></div>
     </div>
   } @else {
-    <div class="p-4 bg-white rounded-lg shadow-md">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 items-center">
-        <!-- Información del emisor -->
-        <div class="col-span-3 text-left">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-8">
-            <!-- Columna 1 -->
-            <div>
-              <div class="flex items-center space-x-4">
-                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-                <div class="grid text-left">
-                  <p class="text-xs font-medium text-gray-500">RUC</p>
-                  <p class="text-sm text-gray-800">{{ selectedEmissor().identificationNumber | formatId }}</p>
+    @if (!selectedEmissor()) {
+      <div
+        class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+      >
+        <p class="font-medium">Ningún emisor seleccionado</p>
+        <span class="text-sm">Por favor, seleccione un emisor para ver su información</span>
+      </div>
+    } @else {
+      <div class="rounded-xl border bg-gradient-to-b from-white to-slate-50 p-4 mt-3 text-sm">
+        <div class="grid gap-2 md:grid-cols-[3fr,1fr]">
+          <div class="space-y-2">
+            <div class="grid gap-2 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">RUC</p>
+                  <p class="font-medium truncate">{{ selectedEmissor().identificationNumber | formatId }}</p>
                 </div>
               </div>
 
-              <div class="flex items-center space-x-4 mt-4">
-                <app-custom-select
-                  [(ngModel)]="configFactu.selectedEstabliecimient"
-                  placeholder="Seleccione un establecimiento"
-                  [options]="transformedEstabliecimient().values"
-                  [labels]="transformedEstabliecimient().labels"
-                />
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-green-50 p-2">
+                  <img src="assets/icon/email.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Correo</p>
+                  <p class="font-medium truncate">
+                    {{ selectedEmissor().email }}
+                  </p>
+                </div>
               </div>
             </div>
-            <!-- Columna 2 -->
-            <div>
-              <div class="flex items-center space-x-4">
-                <img src="/assets/icon/perfil-card.svg" alt="Correo" class="size-5" />
-                <div class="grid text-left">
-                  <p class="text-xs font-medium text-gray-500">Correo</p>
-                  <p class="text-sm text-gray-800">{{ selectedEmissor().email }}</p>
+            <div class="grid gap-2 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md text-sm"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="assets/icon/address.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Dirección</p>
+                  <p class="font-medium truncate">{{ selectedEmissor().address }}</p>
                 </div>
               </div>
 
-              <div class="flex items-center space-x-4 mt-4">
-                <app-custom-input
-                  [(ngModel)]="configFactu.pointCode"
-                  label="Punto de venta"
-                  (keypress)="preventLetters($event)"
-                  [id]="'puntoVenta'"
-                />
-              </div>
-            </div>
-            <!-- Columna 3 -->
-            <div>
-              <div class="flex items-center space-x-4 mt-4">
-                <img src="/assets/icon/perfil-card.svg" alt="Perfil" class="size-5" />
-                <div class="grid text-left">
-                  <p class="text-xs font-medium text-gray-500">Dirección</p>
-                  <p class="text-sm text-gray-800">{{ selectedEmissor().address }}</p>
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-green-50 p-2">
+                  <img src="assets/icon/cell.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Teléfono</p>
+                  <p class="font-medium truncate">
+                    {{ selectedEmissor().cellPhone | formatPhone }}
+                  </p>
                 </div>
               </div>
-              <div class="flex items-center space-x-4 mt-4">
-                <img src="/assets/icon/phone.svg" alt="Teléfono" class="size-5" />
-                <div class="grid text-left">
-                  <p class="text-xs font-medium text-gray-500">Teléfono</p>
-                  <p class="text-sm text-gray-800">{{ selectedEmissor().cellPhone | formatPhone }}</p>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-purple-100 p-2">
+                  <img src="assets/icon/company.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Establecimiento</p>
+                  <div class="flex items-center gap-2">
+                    @if (!isEditingEstabliecimient()) {
+                      <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
+                        {{ configFactu.selectedEstabliecimient() || '0' }}
+                      </span>
+                      <button
+                        (click)="toggleEdit('establishment')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
+                        Cambiar
+                      </button>
+                    } @else {
+                      <div class="flex gap-2">
+                        <app-custom-select
+                          [(ngModel)]="configFactu.selectedEstabliecimient"
+                          placeholder="Seleccione un establecimiento"
+                          [options]="transformedEstabliecimient().values"
+                          [labels]="transformedEstabliecimient().labels"
+                        />
+                        <button
+                          (click)="toggleEdit('establishment')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
+                          Guardar
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-pink-50 p-2">
+                  <img src="assets/icon/code.svg" alt="" />
+                </div>
+                <div class="space-y-1 flex-1">
+                  <p class="text-sm text-gray-500">Punto de venta</p>
+                  <div class="flex items-center gap-2">
+                    @if (!isEditing()) {
+                      <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
+                        {{ configFactu.pointCode() }}
+                      </span>
+                      <button
+                        (click)="toggleEdit('pointOfSale')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
+                        Cambiar
+                      </button>
+                    } @else {
+                      <div class="flex gap-2">
+                        <app-custom-input
+                          [(ngModel)]="configFactu.pointCode"
+                          maxlength="3"
+                          (ngModelChange)="validatePointCode()"
+                          (keypress)="preventLetters($event)"
+                          [id]="'puntoVenta'"
+                          type="number"
+                        />
+                        <button
+                          (click)="toggleEdit('pointOfSale')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
+                          Guardar
+                        </button>
+                      </div>
+                    }
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Logo del emisor (Columna 4) -->
-        <div class="flex justify-center items-center col-span-1">
-          <img
-            [src]="selectedEmissor()?.logo || '/assets/icon/file.png'"
-            [alt]="selectedEmissor()?.name + ' logo'"
-            class="size-24 rounded-full object-cover"
-          />
+
+          <div class="relative text-sm">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
+            <div
+              class="relative flex flex-col items-center justify-center gap-4 rounded-xl border bg-white/50 p-1 backdrop-blur-sm"
+            >
+              <div class="relative">
+                <img
+                  [src]="selectedEmissor()?.photo || '/assets/icon/file.png'"
+                  alt="Emisor"
+                  class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
+                />
+                <span
+                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
+                  [ngClass]="{
+                    'bg-green-500': selectedEmissor().environment === '2',
+                    'bg-red-500': selectedEmissor().environment === '1',
+                  }"
+                >
+                  {{ config.environmentCode()[selectedEmissor().environment] }}
+                </span>
+              </div>
+              <div class="text-center">
+                <p class="font-medium">{{ selectedEmissor().socialReason }}</p>
+                <p class="text-sm text-gray-500">{{ selectedEmissor().dateBirth | customDate }}</p>
+              </div>
+              <hr class="w-full border-t border-gray-200" />
+              <a
+                routerLink="/sistema_contable/aplicaciones_contadores/{{ selectedEmissor().idePersonaRolEncrypted }}"
+                class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-center"
+              >
+                Ver detalles
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    }
   }
-}
+</div>

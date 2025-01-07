@@ -29,7 +29,6 @@ export class ResumenPagoComponent {
     this.getPayForms();
     this.getImpuestoIVA();
 
-
     toObservable(this.listProduct)
       .pipe(takeUntilDestroyed())
       .subscribe((updatedProducts) => {
@@ -98,13 +97,20 @@ export class ResumenPagoComponent {
         });
 
         this.valuesCalculates.set(updatedValues || []);
+
+        this.configFactu.infoVoucherReqDTO.set({
+          inpuestoIva: this.valuesCalculates()?.filter((value) => value.key === 'tarifaIva')[0],
+          totalSinImpuestos: subtotal,
+          valorIva: totalIVA,
+          valorIce: totalICE,
+          importeTotal: valorTotal,
+        });
       });
   }
 
   private getPayForms() {
     this.controlService.getTypesPayForm().subscribe((response) => {
       if (response.status === 'OK') {
-        console.log('Métodos de pago:', response);
         this.paymentMethods.set(response);
       }
     });
@@ -125,20 +131,18 @@ export class ResumenPagoComponent {
         key: tipoIva.codeTariff,
         label: tipoIva.description,
         value: 0, // Inicializa con 0
+        tariffValue: tipoIva.tariffIva,
       })) || [];
 
     const defaultValues = [
       { key: 'IVA', values: 0, label: 'IVA' },
       { key: 'ICE', values: 0, label: 'ICE' },
-      { key: 'SUBTOTAL', values: 0, label: 'SUBTOTAL' },
-      { key: 'PROPINA', values: 0, label: 'PROPINA' },
-      { key: 'TOTAL', values: 0, label: 'TOTAL' },
+      { key: 'SUBTOTAL', values: 0, label: 'SubTotal' },
+      { key: 'PROPINA', values: 0, label: 'Propina' },
+      { key: 'TOTAL', values: 0, label: 'Total' },
     ];
 
     // Configura los valores iniciales
-    this.valuesCalculates.set([
-      { key: 'tarifaIva', values: tarifaIva },
-      ...defaultValues,
-    ]);
+    this.valuesCalculates.set([{ key: 'tarifaIva', values: tarifaIva }, ...defaultValues]);
   }
 }

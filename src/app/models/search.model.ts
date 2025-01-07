@@ -10,7 +10,7 @@ export class SearchModel {
   ) {}
 
   static get EMPTY(): SearchModel {
-    return new SearchModel(10, 0, null, null, null, null, null);
+    return new SearchModel(1, 0, null, null, null, null, null);
   }
 
   public copyWith(search: {

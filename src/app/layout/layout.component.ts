@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
 import { FooterComponent } from './footer';
 import { HeaderComponent } from './header';
 import { SidebarComponent } from './sidebar';

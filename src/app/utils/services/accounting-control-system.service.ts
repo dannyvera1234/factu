@@ -16,7 +16,6 @@ export class AccountingControlSystemService {
   ) {}
 
   getIdentificationTypes(): Observable<any> {
-
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypes`, { body: payload });
   }
@@ -49,8 +48,10 @@ export class AccountingControlSystemService {
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/planes/createPlan`, { body: payload });
   }
 
-  impuestoIVA(label:string): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, { label: label });
+  impuestoIVA(label: string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+      label: label,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/tax`, {
       body: payload,
     });
@@ -63,11 +64,20 @@ export class AccountingControlSystemService {
 
   getTypesCustomer(): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {});
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypesCustomer`, { body: payload });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypesCustomer`, {
+      body: payload,
+    });
   }
 
   getTypesPayForm(): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_UTILS, {});
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/payForms`, { body: payload });
+  }
+
+  getdocsType(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, null);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/docsType`, {
+      body: payload,
+    });
   }
 }

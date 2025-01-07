@@ -22,6 +22,7 @@ export interface Subsidiary {
 }
 
 export interface ByApplicationCounter {
+  photo: string;
   cellPhone: string;
   certificates: Certificate[];
   comercialName: string;

@@ -11,13 +11,16 @@ import {
   CreateFileComponent,
   DeleteEstablecimientoComponent,
   DeleteFileComponent,
+  DeleteLogoComponent,
   DocAutorizadosComponent,
   InfoCardComponent,
   ListClienteComponent,
   ListInventarioComponent,
+  SequentialComponent,
   UpdateEstablecimientoComponent,
   UpdateInfoPersonaComponent,
   UpdateInfoTributarioComponent,
+  UpdateLogoComponent,
 } from './components';
 
 @Component({
@@ -41,6 +44,9 @@ import {
     DeleteEstablecimientoComponent,
     FormatPhonePipe,
     FormatIdPipe,
+    UpdateLogoComponent,
+    DeleteLogoComponent,
+    SequentialComponent,
   ],
   templateUrl: './details-counter-application.component.html',
   styles: ``,
@@ -136,7 +142,6 @@ export class DetailsCounterApplicationComponent {
   }
 
   createEstable(infoEstablecimiento: any) {
-
     const currentPersona = this.counterByPersona();
 
     if (currentPersona) {
@@ -211,5 +216,37 @@ export class DetailsCounterApplicationComponent {
           this.counterByPersona.set(resp);
         }
       });
+  }
+
+  updateLogo(file: any) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          photo: file.data,
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
+  }
+
+  deleteLog(photo: any) {
+    const currentPersona = this.counterByPersona();
+
+    if (currentPersona) {
+      const updatedPersona = {
+        ...currentPersona,
+        data: {
+          ...currentPersona.data,
+          photo: photo,
+        },
+      };
+
+      this.counterByPersona.set(updatedPersona);
+    }
   }
 }
