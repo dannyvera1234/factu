@@ -97,7 +97,6 @@ export class CreateProductoComponent {
     description: [''],
     unitPrice: [0, [Validators.required, onlyNumbersDecimalsValidator()]],
     stock: [''],
-    // subsidiaryIde: [''],
   });
 
   toggle(event: Event, control: string) {

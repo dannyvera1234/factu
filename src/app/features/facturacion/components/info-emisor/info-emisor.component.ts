@@ -7,6 +7,8 @@ import { CustomDatePipe, FormatIdPipe, FormatPhonePipe } from '@/pipes';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { delay, finalize, mergeMap, of } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { ConfigFacturacionService } from '../../../../utils/services';
 
 @Component({
   selector: 'app-info-emisor',
@@ -18,6 +20,7 @@ import { RouterLink } from '@angular/router';
     RouterLink,
     CustomDatePipe,
     CustomInputComponent,
+    NgClass
   ],
   templateUrl: './info-emisor.component.html',
   styles: ``,
@@ -64,6 +67,7 @@ export class InfoEmisorComponent {
   constructor(
     private readonly facturacionService: FacturacionService,
     public readonly configFactu: CreateFacturacionService,
+    public readonly config: ConfigFacturacionService,
   ) {
     this.configFactu.setEmisor.set(null);
     this.configFactu.idePersona.set(0);

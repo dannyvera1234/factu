@@ -1,95 +1,90 @@
 <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
-  <div>
-
-  </div>
-
-
+  <div></div>
 </nav>
 
-    <hr class="my-4" />
-    <section>
-      <div class="relative overflow-x-auto">
-        <table class="w-full text-left">
-          <thead>
-            <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-              <th scope="col">Creation</th>
-              <th scope="col">Product</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Period</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          @if (loading()) {
-            <tbody>
-              <tr>
-                <td colspan="100%">
-                  <div class="text-center py-9">
-                    <div class="loader"></div>
+<hr class="my-4" />
+<section>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-left">
+      <thead>
+        <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+          <th class="px-4 py-3">Nombres</th>
+          <th class="px-4 py-3 text-center">Identificación</th>
+          <th class="px-4 py-3 text-center">Fecha de Emisión</th>
+          <th class="px-4 py-3 text-center">Estado</th>
+          <th class="px-4 py-3 text-center">Total</th>
+        </tr>
+      </thead>
+      @if (loading()) {
+        <tbody>
+          <tr>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @if (listInvoices() && listInvoices()!.data.length > 0) {
+            @for (invoice of listInvoices()!.data; track $index) {
+              <tr class="border-b hover:bg-gray-100 text-sm">
+                <th scope="row" class="font-normal p-2">
+                  <div class="flex gap-4 items-center">
+                    <div
+                      class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer"
+                      [ngClass]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).bgColor"
+                    >
+                      <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
+                    </div>
+
+                    <div>
+                      <p class="font-bold">{{ invoice.socialReasonCustomer }}</p>
+
+                      <div class="flex items-center gap-2">
+                        <div class="relative">
+                          {{ invoice.electronicDesTypeDoc }}
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                </th>
+                <td class="px-4 py-3 text-center">
+                  {{ invoice.identificationCustomer | formatId }}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  {{ invoice.emissionDate | customDate }}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  {{ invoice.statusProcess }}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  {{ invoice.total | currency }}
                 </td>
               </tr>
-            </tbody>
+            }
           } @else {
-            <tbody>
-              <!-- @for (application of applications()!.data; track $index) {
-                <tr
-                  class="bg-white border-b border-dashed border-neutral-200 *:px-6 *:py-4 *:whitespace-nowrap [&>th]:ps-0"
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
                 >
-                  <td>
-                    <a [routerLink]="['/', 'applications', application.id]" target="_blank">
-                      {{ application.created_at | customDate }}
-                      @if (application.created_by) {
-                        <br />by {{ application.created_by.first_name }} {{ application.created_by.last_name }}
-                      }
-                    </a>
-                  </td>
-                  <td>{{ application.loan_amount | currency }}</td>
-                  <td>
-                    {{ application.period }}
-                  </td>
-                  <td>
-                    {{ config.productType()[application.product] }}
-                  </td>
-                  <td>
-                    <p
-                      class="text-center rounded-lg inline-block px-3 py-1 text-white"
-                      [ngClass]="config.statusClasses()[application.status]"
-                    >
-                      {{ config.applicationStatus()[application.status] }}
-                    </p>
-                  </td>
-                </tr>
-              } -->
-            </tbody>
+                  <p class="font-medium">Ningún documento encontrado</p>
+                  <span class="text-sm">Por favor, genere un documento para ver su información</span>
+                </div>
+              </td>
+            </tr>
           }
-        </table>
-      </div>
-      @defer {
-        <!-- @if (applications()?.pagination) {
-          <div class="mt-4">
-            <app-pagination />
-          </div>
-        } -->
+        </tbody>
       }
-    </section>
-
-<!-- } -->
-<app-modal #createProducto>
+    </table>
+  </div>
   @defer {
-    <div class="flex items-center justify-center">
-      <div class="bg-white w-full rounded-lg overflow-auto">
-        <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Agregar Producto</h2>
-          <button (click)="createProducto.close()" class="shrink-0">
-            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
-          </button>
-        </header>
-        <!-- @if (viewingInfo(); as ruc) { -->
-          <section class="p-6">
-
-          </section>
-        <!-- } -->
-      </div>
-    </div>
+    <!-- @if (applications()?.pagination) { -->
+    <!-- <div class="mt-4">
+            <app-pagination />
+          </div> -->
+    <!-- } -->
   }
-</app-modal>
+</section>

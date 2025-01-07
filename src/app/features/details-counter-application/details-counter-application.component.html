@@ -7,9 +7,28 @@
     <div class="flex flex-col lg:flex-row gap-4 p-4">
       <aside class="w-full lg:w-1/4 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
-          <header class="text-center mb-6">
+          <header class="relative text-center mb-6">
+            <!-- Botón de configuración en la esquina -->
+            <div class="relative group">
+              <!-- Botón de configuración -->
+              <button
+                class="absolute -top-4 -right-2 bg-gray-100 hover:bg-gray-200 rounded-full p-1 shadow-md"
+                aria-label="Configuración"
+                (click)="addSequential.open(); viewingPersona.set(byPersona.idePersonaRol)"
+              >
+                <img src="assets/icon/config.svg" alt="Configuración" />
+              </button>
+
+              <!-- Tooltip -->
+              <div
+                class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              >
+                Agregar secuencial de los documentos
+              </div>
+            </div>
+
             @if (byPersona.photo) {
-              <div class="relative w-24 h-24 mx-auto">
+              <div class="relative group w-24 h-24 mx-auto">
                 <!-- Imagen de la persona -->
                 <img [src]="byPersona.photo" alt="Foto" class="rounded-full w-full h-full object-cover" />
 
@@ -17,7 +36,6 @@
                 <button
                   class="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition"
                   (click)="deleteLogo.open(); viewingPersona.set(byPersona.idePersonaRol)"
-                  title="Eliminar Foto"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -29,6 +47,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
+                <div
+                  class="absolute top-10 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                >
+                  Eliminar logo
+                </div>
               </div>
             } @else {
               <div
@@ -316,7 +339,7 @@
                 'text-gray-600': selectedTab() !== 'doc',
               }"
             >
-              Doc Autorizado
+              Documentos
             </button>
           </nav>
 
@@ -339,7 +362,7 @@
               }
               @case ('doc') {
                 @defer {
-                  <app-doc-autorizados />
+                  <app-doc-autorizados [idePersonaRol]="byPersona.idePersonaRol" />
                 }
               }
             }
@@ -540,6 +563,28 @@
               (deleted)="deleteLogo.close()"
               [idePersonaRol]="ide"
               (deleted)="deleteLog($event); viewingPersona.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #addSequential>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Agregar Secuencial</h2>
+        <button (click)="addSequential.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          @if (viewingPersona(); as ide) {
+            <app-sequential [idePersonaRol]="ide"
+              (created)="addSequential.close()"
             />
           }
         }

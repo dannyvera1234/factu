@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { NotificationService } from './notification.service';
 
-
 @Injectable({ providedIn: 'root' })
 export class HttpService {
   constructor(
@@ -12,15 +11,11 @@ export class HttpService {
   ) {}
 
   public get<T>(url: string, errorHandled = false): Observable<T> {
-    return this.http
-      .get<T>(url)
-      .pipe(catchError((error) => this.handleError<T>(error, errorHandled)));
+    return this.http.get<T>(url).pipe(catchError((error) => this.handleError<T>(error, errorHandled)));
   }
 
   public delete<T>(url: string, errorHandled = false): Observable<T> {
-    return this.http
-      .delete<T>(url)
-      .pipe(catchError((error) => this.handleError<T>(error, errorHandled)));
+    return this.http.delete<T>(url).pipe(catchError((error) => this.handleError<T>(error, errorHandled)));
   }
 
   public post<T>(url: string, options?: { body?: unknown }, errorHandled?: boolean): Observable<T> {

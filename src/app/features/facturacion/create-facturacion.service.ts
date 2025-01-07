@@ -143,22 +143,14 @@ export class CreateFacturacionService {
       observation: null,
     };
 
-
-
     // Llamar al servicio para generar la factura
-    this.facturacionService.generateInvoice(dataFacturacion).subscribe(
-      (response) => {
+    this.facturacionService.generateInvoice(dataFacturacion).subscribe((response) => {
+      if (response.status === 'OK') {
         this.notification.push({
           message: 'Factura generada correctamente',
           type: 'success',
         });
-      },
-      (error) => {
-        this.notification.push({
-          message: 'Ocurrió un error al generar la factura',
-          type: 'error',
-        });
-      },
-    );
+      }
+    });
   }
 }

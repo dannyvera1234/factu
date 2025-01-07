@@ -166,7 +166,10 @@
                       <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
                         {{ configFactu.selectedEstabliecimient() || '0' }}
                       </span>
-                      <button (click)="toggleEdit('establishment')" class="text-xs font-medium text-blue-600 hover:text-blue-800">
+                      <button
+                        (click)="toggleEdit('establishment')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
                         Cambiar
                       </button>
                     } @else {
@@ -177,7 +180,10 @@
                           [options]="transformedEstabliecimient().values"
                           [labels]="transformedEstabliecimient().labels"
                         />
-                        <button (click)="toggleEdit('establishment')" class="text-xs font-medium text-green-600 hover:text-green-800">
+                        <button
+                          (click)="toggleEdit('establishment')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
                           Guardar
                         </button>
                       </div>
@@ -199,21 +205,26 @@
                       <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
                         {{ configFactu.pointCode() }}
                       </span>
-                      <button (click)="toggleEdit('pointOfSale')" class="text-xs font-medium text-blue-600 hover:text-blue-800">
+                      <button
+                        (click)="toggleEdit('pointOfSale')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
                         Cambiar
                       </button>
                     } @else {
                       <div class="flex gap-2">
                         <app-custom-input
-                        [(ngModel)]="configFactu.pointCode"
-
-                        maxlength="3"
-                        (ngModelChange)="validatePointCode()"
-                        (keypress)="preventLetters($event)"
-                        [id]="'puntoVenta'"
-                        type="number"
-                      />
-                        <button (click)="toggleEdit('pointOfSale')" class="text-xs font-medium text-green-600 hover:text-green-800">
+                          [(ngModel)]="configFactu.pointCode"
+                          maxlength="3"
+                          (ngModelChange)="validatePointCode()"
+                          (keypress)="preventLetters($event)"
+                          [id]="'puntoVenta'"
+                          type="number"
+                        />
+                        <button
+                          (click)="toggleEdit('pointOfSale')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
                           Guardar
                         </button>
                       </div>
@@ -236,9 +247,14 @@
                   class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
                 />
                 <span
-                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white text-xs font-semibold px-2 py-1 rounded-full text-green-600 border"
-                  >{{ selectedEmissor().statusRecord }}</span
+                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
+                  [ngClass]="{
+                    'bg-green-500': selectedEmissor().environment === '2',
+                    'bg-red-500': selectedEmissor().environment === '1',
+                  }"
                 >
+                  {{ config.environmentCode()[selectedEmissor().environment] }}
+                </span>
               </div>
               <div class="text-center">
                 <p class="font-medium">{{ selectedEmissor().socialReason }}</p>

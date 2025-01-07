@@ -17,3 +17,4 @@ export * from './update-cliente';
 export * from './update-product';
 export * from './update-logo';
 export * from './delete-logo';
+export * from './sequential';
