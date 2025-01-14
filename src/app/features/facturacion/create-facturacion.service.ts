@@ -63,9 +63,14 @@ export class CreateFacturacionService {
 
     // Obtener  la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
-    const formattedDate = emissionDate.toISOString().split('T')[0]; // Ejemplo: "2025-01-03"
 
-    // Crear el objeto de datos para la facturación
+    const formattedDate = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Guayaquil', // Quito usa esta zona horaria (GMT-5)
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(emissionDate);
+
     const dataFacturacion = {
       infoEmisor: {
         identificationNumber: infoEmisor.identificationNumber,
