@@ -33,6 +33,6 @@ export class CustomDatePipe implements PipeTransform {
 
     const options = isISODate ? dateTimeFormat : dateFormat;
 
-    return date.toLocaleDateString('en-US', options);
+    return date.toLocaleDateString('es-EC', options);
   }
 }
