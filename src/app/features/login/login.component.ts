@@ -68,18 +68,10 @@ export class LoginComponent {
         mergeMap(() => this.userService.login(login)),
         finalize(() => this.loanding.set(false)),
       )
-      .subscribe(
-        (response) => {
-          if (response.status === 'OK') {
-            this.router.navigate(['/sistema_contable']);
-          }
-        },
-        (error) => {
-          this.toastService.push({
-            message: error.error.message,
-            type: 'error',
-          });
-        },
-      );
+      .subscribe((response) => {
+        if (response.status === 'OK') {
+          this.router.navigate(['/sistema_contable']);
+        }
+      });
   }
 }
