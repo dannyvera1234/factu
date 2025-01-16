@@ -15,7 +15,7 @@ export class DeleteLogoComponent {
 
   public readonly loading = signal(false);
 
-  @Output() public readonly deleted = new EventEmitter<number | null>();
+  @Output() public readonly deleted = new EventEmitter<any | null>();
 
   constructor(
     private counterService: CountersService,
@@ -30,7 +30,7 @@ export class DeleteLogoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          this.deleted.emit(resp.data);
+          this.deleted.emit(resp);
           this.notification.push({
             message: 'Logo eliminado del registro.',
             type: 'success',

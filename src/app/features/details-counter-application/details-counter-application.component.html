@@ -274,17 +274,17 @@
                   </div>
 
                   <div class="grow truncate">
-                    <a class="truncate">{{ item.name }}</a>
+                    <a class="truncate text-sm">{{ item.name }}</a>
                     <div class="flex gap-2 items-center">
                       <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
                     </div>
                   </div>
 
                   <button
-                    class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md"
+                  class="px-2 py-1 rounded-md"
                     (click)="deleteDoc.open(); viewingFile.set(item.ide)"
                   >
-                    <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
+                    <img src="/assets/icon/trash-icon.svg" class="size-6" alt="Delete" />
                   </button>
                 </div>
               }

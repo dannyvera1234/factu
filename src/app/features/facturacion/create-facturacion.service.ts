@@ -2,11 +2,14 @@ import { Injectable, signal } from '@angular/core';
 import { DetailsProducto } from '../../interfaces';
 import { NotificationService } from '../../utils/services';
 import { FacturacionService } from '../../services';
+import { finalize, mergeMap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreateFacturacionService {
+  public readonly loading = signal(false);
+
   public readonly setEmisor = signal<number | null>(null);
 
   public readonly idePersona = signal<number>(0);
@@ -148,14 +151,18 @@ export class CreateFacturacionService {
       observation: null,
     };
 
-    // Llamar al servicio para generar la factura
-    this.facturacionService.generateInvoice(dataFacturacion).subscribe((response) => {
-      if (response.status === 'OK') {
-        this.notification.push({
-          message: 'Factura generada correctamente',
-          type: 'success',
-        });
-      }
-    });
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((response) => {
+        if (response.status === 'OK') {
+          this.notification.push({
+            message: 'Factura generada correctamente',
+            type: 'success',
+          });
+        }
+      });
   }
 }

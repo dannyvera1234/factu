@@ -242,7 +242,7 @@ export class DetailsCounterApplicationComponent {
         ...currentPersona,
         data: {
           ...currentPersona.data,
-          photo: photo,
+          photo: photo.data,
         },
       };
 

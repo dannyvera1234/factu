@@ -4,15 +4,14 @@
 >
   <a
     class="grid grid-cols-[max-content_max-content] border-b border-b-gray-600 items-center gap-4 h-[72px] p-4"
-    [ngClass]="closeSidebar() ? 'ps-6' : 'ps-8'"
+    [ngClass]="closeSidebar() ? 'ps-3' : 'ps-6'"
   >
-    <div class="size-9 relative">
-      <!-- <img ngSrc="/assets/logo.png" fill alt="" /> -->
+    <div class="size-12 relative">
+      <img src="/assets/logo.png" fill alt="" />
     </div>
 
-    <!-- <h4 class="text-xl text-white">Fctur</h4> -->
+    <h4 class="text-xl text-white">FACTU EC</h4>
   </a>
-
   <ul class="flex flex-col gap-3 p-4" [ngClass]="{ 'pe-0': closeSidebar() }">
     @for (route of userData(); track $index) {
       <li class="mb-1 group *:grid *:grid-cols-[max-content_max-content]">

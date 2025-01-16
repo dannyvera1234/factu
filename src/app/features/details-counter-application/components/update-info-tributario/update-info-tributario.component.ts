@@ -7,10 +7,6 @@ import { AccountingControlSystemService, ConfigFacturacionService } from '@/util
 import { finalize, mergeMap, of } from 'rxjs';
 import { CountersService } from '@/services/counters.service';
 
-type StatementType = {
-  certificatePassword?: string;
-  file?: File | null;
-};
 
 @Component({
   selector: 'app-update-info-tributario',
