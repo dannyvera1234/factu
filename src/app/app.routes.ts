@@ -5,8 +5,12 @@ import { authGuardLoginGuard } from './guards/auth-guard-login.guard';
 export const routes: Routes & {
   data?: any & { icon?: string; name?: string; permissions?: string };
 } = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'web', pathMatch: 'full' },
 
+  {
+    path: 'web',
+    loadChildren: () => import('./web/routes'),
+  },
   {
     path: 'login',
     loadChildren: () => import('./features/login/routes'),
@@ -19,7 +23,12 @@ export const routes: Routes & {
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
     },
+
     children: [
+      {
+        path: 'inicio_contadores',
+        loadChildren: () => import('./features/home/routes'),
+      },
       {
         path: 'aplicaciones_contadores',
         loadChildren: () => import('./features/counter-application/routes'),
@@ -44,14 +53,13 @@ export const routes: Routes & {
         path: 'emision_contadores',
         loadChildren: () => import('./features/emision/routes'),
       },
-      ///
       {
         path: 'establishment',
         loadChildren: () => import('./features/configuration/establecimientos/routes'),
       },
       {
         path: '**',
-        redirectTo: 'applications',
+        redirectTo: 'inicio_contadores',
         pathMatch: 'full',
       },
     ],

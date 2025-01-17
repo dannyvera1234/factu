@@ -20,6 +20,7 @@ export class SidebarComponent {
 
   public readonly userData = computed(() => {
     const data = this.userService.getUserData();
+    console.log(data);
     return data && data.permission.length > 0 ? data.permission[0].modules : [];
   });
 

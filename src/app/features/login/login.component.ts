@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FooterComponent } from '@/layout/footer';
 import { UserService } from '@/services';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { finalize, mergeMap, of } from 'rxjs';
 import { NotificationService } from '../../utils/services/notification.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FooterComponent],
+  imports: [ReactiveFormsModule, FooterComponent, RouterLink],
   templateUrl: './login.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +70,7 @@ export class LoginComponent {
       )
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.router.navigate(['/sistema_contable']);
+          this.router.navigate(['/sistema_contable/inicio_contadores']);
         }
       });
   }
