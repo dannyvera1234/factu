@@ -3,12 +3,12 @@ import { CurrencyPipe, NgClass } from '@angular/common';
 import { CountersService } from '@/services/counters.service';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
-import { CustomDatePipe, FormatIdPipe } from '@/pipes';
+import { CustomDatePipe } from '@/pipes';
 import { ConfigFacturacionService } from '@/utils/services';
 
 @Component({
   selector: 'app-doc-autorizados',
-  imports: [CurrencyPipe, NgClass, FormatIdPipe, CustomDatePipe],
+  imports: [CurrencyPipe, NgClass, CustomDatePipe],
   templateUrl: './doc-autorizados.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +46,10 @@ export class DocAutorizadosComponent {
     if (idePersonaRol) {
       this.getListInvoices(idePersonaRol);
     }
+  }
+
+  reeviarEmail(id: number) {
+    console.log('Reenviar email', id);
   }
 
   getListInvoices(idePersonaRol: number) {

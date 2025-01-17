@@ -130,7 +130,7 @@
                     class="flex items-center justify-center px-1 py-0.5 rounded-full text-white"
                     [ngClass]="{
                       'bg-green-500': invoice.envCod === '2',
-                      'bg-red-500': invoice.envCod === '1',
+                      'bg-blue-400': invoice.envCod === '1',
                     }"
                   >
                     {{ config.environmentCode()[invoice.envCod] }}
@@ -143,16 +143,53 @@
                 <td>
                   <div class="flex justify-center">
                     @if (invoice.pdf !== null) {
-                      <a
-                        [href]="invoice.pdf"
-                        target="_blank"
-                        class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      >
-                        <img src="assets/icon/downlad.svg" alt="Descargar" />
-                      </a>
-                      <button class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200">
-                        <img src="assets/icon/email.svg" alt="email" />
-                      </button>
+                      <div class="group relative">
+                        <a
+                          [href]="invoice.pdf"
+                          target="_blank"
+                          class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/downlad.svg" alt="Descargar" />
+                        </a>
+                        <!-- Tooltip para PDF -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Descargar PDF
+                        </div>
+                      </div>
+
+                      <div class="group relative">
+                        <a
+                          [href]="invoice.xml"
+                          target="_blank"
+                          class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/xml.svg" alt="Descargar" />
+                        </a>
+                        <!-- Tooltip para XML -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Descargar XML
+                        </div>
+
+                      </div>
+
+                      <div class="group relative">
+                        <button
+                          (click)="reeviarEmail(invoice.ide)"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/email.svg" alt="email" />
+                        </button>
+                        <!-- Tooltip para Email -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Enviar por correo
+                        </div>
+                      </div>
                     }
                   </div>
                 </td>

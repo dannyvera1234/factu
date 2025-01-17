@@ -22,9 +22,9 @@
           [routerLink]="route.url"
         >
           <div class="size-6 relative">
-            <img [src]="route.icon" fill alt="" />
+            <div [innerHTML]="route.icon"></div>
           </div>
-          <span>{{ route.title }}</span>
+          <span>{{ route.title }} </span>
         </a>
       </li>
     }
