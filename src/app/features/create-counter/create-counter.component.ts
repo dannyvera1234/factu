@@ -50,7 +50,7 @@ export class CreateCounterComponent {
     names: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
     lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), onlyLettersValidator()]],
     typeDocument: ['', [Validators.required]],
-    identificationNumber: ['', [Validators.required]],
+    identificationNumber: ['', [Validators.required, cedulaValidator()]],
     email: ['', [Validators.required, emailValidator()]],
     cellPhone: ['09', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
     amountCustomer: ['2', [Validators.required, Validators.min(1)]],

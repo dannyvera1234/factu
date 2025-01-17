@@ -12,6 +12,10 @@ export const routes: Routes & {
     loadChildren: () => import('./web/routes'),
   },
   {
+    path: 'registro_contadores',
+    loadChildren: () => import('./web/registro-contadores/routes'),
+  },
+  {
     path: 'login',
     loadChildren: () => import('./features/login/routes'),
     canActivate: [authGuardLoginGuard],

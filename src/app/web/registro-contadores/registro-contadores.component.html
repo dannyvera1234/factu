@@ -1,0 +1,245 @@
+<div class="min-h-screen bg-white text-gray-800 relative overflow-hidden">
+  <!-- Fondo decorativo -->
+  <div class="absolute inset-0">
+    <div class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-72 h-72 top-10 left-10"></div>
+    <div class="absolute bg-gray-200 opacity-20 rounded-full animate-pulse w-60 h-60 top-20 right-10"></div>
+    <div class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-72 h-72 bottom-20 left-1/2"></div>
+    <div class="absolute bg-gray-200 opacity-10 rounded-full animate-pulse w-96 h-96 top-1/4 right-1/3"></div>
+    <div class="absolute bg-gray-200 opacity-25 rounded-full animate-pulse w-60 h-60 top-40 left-1/4"></div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="flex justify-between items-center px-6 py-4 md:px-10 bg-white shadow-md relative z-10">
+    <div class="text-lg font-bold">
+      <img src="assets/pixelcut-export.png" alt="Logo de la empresa" class="h-12" />
+    </div>
+    <nav class="hidden md:flex space-x-8 items-center">
+      <a href="#" class="hover:text-blue-600 transition-colors duration-200">Inicio</a>
+
+      <a
+        routerLink="/login"
+        class="border border-gray-400 text-black px-6 py-2 rounded-lg hover:bg-blue-700 hover:bg-opacity-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+        aria-label="Iniciar sesión"
+      >
+        Iniciar Sesión
+      </a>
+    </nav>
+  </header>
+
+  <!-- Sección principal -->
+  <section class="flex items-center justify-center h-full">
+    <div class="max-w-7xl w-full mt-12">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Izquierda -->
+        <div class="flex flex-col justify-center">
+          <h1 class="text-4xl lg:text-5xl font-bold leading-tight">
+            <span class="text-orange-400"> Registrate </span>y Potencia tu Gestión como Contador.
+          </h1>
+          <ul class="mt-6 space-y-4 text-lg z-10">
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Genera Facturas Electrónicas Ilimitadas de Forma Rápida y Sencilla.
+            </li>
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Simplifica la gestión contable de principio a fin.
+            </li>
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Facilita la comunicación con tus clientes.
+            </li>
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Gestión de Clientes y Control de Inventario por emisor.
+            </li>
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Soporte Técnico y Capacitación Continua 24/7.
+            </li>
+            <li class="flex items-center">
+              <svg
+                class="h-6 w-6 text-green-400 mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Gestionar Múltiples Empresas y Generar Facturas Personalizadas por Emisor.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Derecha -->
+        @if (loanding()) {
+          <div class="flex justify-center items-center h-full mt-4">
+            <div class="loader"></div>
+          </div>
+        } @else {
+          <div class="bg-white rounded-2xl shadow-lg p-8 z-10">
+            <h2 class="text-2xl text-center font-semibold text-gray-800">
+              Registro de Cuenta Gratuita para Contadores
+            </h2>
+
+            <form [formGroup]="form" class="mt-6 space-y-4">
+              <div class="flex space-x-4">
+                <div class="w-1/2">
+                  <label for="nombres" class="block text-gray-700 font-medium">
+                    Nombres <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="nombres"
+                    formControlName="names"
+                    (input)="onletterInput($event, 'names')"
+                    class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  @if (form.controls.names.touched && form.controls.names.invalid) {
+                    <div class="text-red-500">
+                      @if (form.controls.names.errors?.['required']) {
+                        <span class="text-xs font-medium"> El nombre es obligatorio. </span>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="w-1/2">
+                  <label for="apellidos" class="block text-gray-700 font-medium">
+                    Apellidos <span class="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="apellidos"
+                    formControlName="lastName"
+                    (input)="onletterInput($event, 'lastName')"
+                    class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+                    <div class="text-red-500">
+                      @if (form.controls.lastName.errors?.['required']) {
+                        <span class="text-xs font-medium"> El apellido es obligatorio. </span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+              <div>
+                <label for="name" class="block text-gray-700 font-medium"
+                  >Cedula <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="text"
+                  id="name"
+                  formControlName="identificationNumber"
+                  (input)="onUsernameInput($event, 'identificationNumber')"
+                  class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <app-form-error-message [control]="form.controls.identificationNumber" />
+              </div>
+
+              <div>
+                <label for="email" class="block text-gray-700 font-medium"
+                  >Correo Electrónico <span class="text-red-500">*</span></label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                  <div class="text-red-500">
+                    @if (form.controls.email.errors?.['required']) {
+                      <span class="text-xs font-medium"> El correo electrónico es obligatorio. </span>
+                    }
+                  </div>
+                }
+              </div>
+              <div class="flex gap-4">
+                <div>
+                  <label for="phone-code" class="block text-gray-700 font-medium">Código</label>
+                  <select
+                    id="phone-code"
+                    class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option>+593</option>
+                  </select>
+                </div>
+                <div class="flex-grow">
+                  <label for="phone" class="block text-gray-700 font-medium"
+                    >Teléfono <span class="text-red-500">*</span></label
+                  >
+                  <input
+                    formControlName="cellPhone"
+                    id="phone"
+                    class="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    (input)="onUsernameInput($event, 'cellPhone')"
+                  />
+                  <span> </span>
+                  @if (form.controls.cellPhone.touched && form.controls.cellPhone.invalid) {
+                    <div class="text-red-500">
+                      @if (form.controls.cellPhone.errors?.['required']) {
+                        <span class="text-xs font-medium"> El teléfono es obligatorio. </span>
+                      }
+                    </div>
+                  } @else {
+                    <small class="text-gray-500 text-xs"> Ejemplo: 0987654321 </small>
+                  }
+                </div>
+              </div>
+
+              <button
+                (click)="submit()"
+                class="w-full bg-teal-500 text-white font-semibold py-3 rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              >
+                Registrar
+              </button>
+            </form>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</div>
