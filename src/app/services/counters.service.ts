@@ -291,9 +291,10 @@ export class CountersService {
 
 
   sendNotification(personaRolIde: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
-      personaRolIde: personaRolIde,
-    });
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES,
+       personaRolIde,
+    );
+    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/sendNotification`, {
       body: payload,
     });

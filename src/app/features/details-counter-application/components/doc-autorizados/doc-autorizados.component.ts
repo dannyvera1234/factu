@@ -30,7 +30,7 @@ export class DocAutorizadosComponent {
   constructor(
     private readonly counterService: CountersService,
     public readonly config: ConfigFacturacionService,
-     private readonly notification: NotificationService,
+    private readonly notification: NotificationService,
   ) {}
 
   toggleTooltip(id: number, isVisible: boolean): void {
@@ -50,19 +50,19 @@ export class DocAutorizadosComponent {
   }
 
   reeviarEmail(id: number) {
-    of(this.loading.set(true)).pipe(
-      mergeMap(() => this.counterService.sendNotification(id)),
-      finalize(() => this.loading.set(false)),
-    ).subscribe((res) => {
-      if (res.status === 'OK') {
-        console.log(res);
-        this.notification.push({
-          message: 'Correo enviado correctamente',
-          type: 'success',
-        });
-      }
-    });
-
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.counterService.sendNotification(id)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          this.notification.push({
+            message: 'Correo enviado correctamente',
+            type: 'success',
+          });
+        }
+      });
   }
 
   getListInvoices(idePersonaRol: number) {
@@ -73,7 +73,6 @@ export class DocAutorizadosComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.listInvoices.set(res);
         }
       });
