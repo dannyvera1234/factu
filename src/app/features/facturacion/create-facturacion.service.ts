@@ -165,6 +165,7 @@ export class CreateFacturacionService {
               message: 'Factura generada correctamente',
               type: 'success',
             });
+            this.selectedPaymentMethod.set('');
           } else {
             this.notification.push({
               message: 'Error al generar la factura. Intente nuevamente.',
