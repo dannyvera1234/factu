@@ -34,6 +34,7 @@ export class CreateFacturacionService {
     private readonly notification: NotificationService,
     private readonly facturacionService: FacturacionService,
   ) {}
+
   submit() {
     // Obtener la información del emisor, cliente y método de pago seleccionado
     const infoEmisor = this.infoEmisor();
@@ -64,9 +65,8 @@ export class CreateFacturacionService {
       return;
     }
 
-    // Obtener  la fecha de emisión y formatearla como YYYY-MM-DD
+    // Obtener la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
-
     const formattedDate = new Intl.DateTimeFormat('en-CA', {
       timeZone: 'America/Guayaquil', // Quito usa esta zona horaria (GMT-5)
       year: 'numeric',
@@ -74,6 +74,7 @@ export class CreateFacturacionService {
       day: '2-digit',
     }).format(emissionDate);
 
+    // Preparar los datos de facturación
     const dataFacturacion = {
       infoEmisor: {
         identificationNumber: infoEmisor.identificationNumber,
@@ -151,18 +152,33 @@ export class CreateFacturacionService {
       observation: null,
     };
 
+    // Mostrar el cargador mientras se procesa la factura
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)),
         finalize(() => this.loading.set(false)),
       )
-      .subscribe((response) => {
-        if (response.status === 'OK') {
+      .subscribe(
+        (response) => {
+          if (response.status === 'OK') {
+            this.notification.push({
+              message: 'Factura generada correctamente',
+              type: 'success',
+            });
+          } else {
+            this.notification.push({
+              message: 'Error al generar la factura. Intente nuevamente.',
+              type: 'error',
+            });
+          }
+        },
+        (error) => {
           this.notification.push({
-            message: 'Factura generada correctamente',
-            type: 'success',
+            message: 'Ocurrió un error inesperado.',
+            type: 'error',
           });
         }
-      });
+      );
   }
 }
+

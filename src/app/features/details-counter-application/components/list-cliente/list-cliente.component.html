@@ -45,7 +45,7 @@
         <tbody>
           @if (listClientes() && listClientes()!.data.length > 0) {
             @for (cliente of listClientes()!.data; track $index) {
-              <tr   class="border-b hover:bg-gray-100 text-sm">
+              <tr class="border-b hover:bg-gray-100 text-sm">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
@@ -63,21 +63,24 @@
                   </div>
                 </th>
                 <td class="px-4 py-3 text-center">
-                  {{ cliente.identificationNumber | formatId}}
+                  {{ cliente.identificationNumber | formatId }}
                 </td>
                 <td class="px-4 py-3 text-center">
                   {{ cliente.address }}
                 </td>
                 <td class="px-4 py-3 text-center">
-                  {{ cliente.cellPhone | formatPhone}}
+                  {{ cliente.cellPhone | formatPhone }}
                 </td>
                 <td>
                   <div class="flex gap-1">
-                    <button class="px-2 py-1 rounded-md" (click)="editClient.open(); updateClient.set(cliente)">
+                    <button
+                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      (click)="editClient.open(); updateClient.set(cliente)"
+                    >
                       <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
                     </button>
                     <button
-                      class="px-2 py-1 rounded-md"
+                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
                     >
                       <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
@@ -90,11 +93,11 @@
             <tr>
               <td colspan="100%">
                 <div
-                class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
-              >
-                <p class="font-medium">Ningún cliente encontrado</p>
-                <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
-              </div>
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún cliente encontrado</p>
+                  <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                </div>
               </td>
             </tr>
           }
@@ -104,10 +107,10 @@
   </div>
   @defer {
     <!-- @if (applications()?.pagination) { -->
-          <!-- <div class="mt-4">
+    <!-- <div class="mt-4">
             <app-pagination />
           </div> -->
-        <!-- } -->
+    <!-- } -->
   }
 </section>
 
