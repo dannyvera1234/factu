@@ -20,9 +20,14 @@ export class SidebarComponent {
 
   public readonly userData = computed(() => {
     const data = this.userService.getUserData();
-    console.log(data);
-    return data && data.permission.length > 0 ? data.permission[0].modules : [];
+
+    if (data && data.permission.length > 0) {
+      return data.permission[0].modules.sort((a: any, b: any) => a.order - b.order);
+    }
+
+    return [];
   });
+
 
   public toggle(): void {
     this.sidebar.closeSidebar.set(!this.sidebar.closeSidebar());
