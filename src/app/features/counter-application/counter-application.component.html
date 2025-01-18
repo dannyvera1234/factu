@@ -50,7 +50,7 @@
             @if (counterList() && counterList()!.data.length > 0) {
               <tbody>
                 @for (counter of counterList()?.data; track $index) {
-                  <tr class="border-b hover:bg-gray-100">
+                  <tr class="border-b hover:bg-gray-100 text-sm">
                     <th scope="row" class="font-normal p-2" [routerLink]="[counter.idePersonaRolEncrypted]">
                       <a [routerLink]="[counter.idePersonaRolEncrypted]">
                         <div class="flex gap-4 items-center">

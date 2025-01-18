@@ -26,13 +26,13 @@
           role="button"
           style="width: 30px; height: 30px; line-height: 30px"
         >
-          {{ user.fullName.split(' ')[0] + ' ' + user.fullName.split(' ')[2] | initials }}
+          {{ user.fullName | initials }}
         </button>
       </div>
 
       <div class="relative">
         <button class="flex items-center rounded p-1 hover:bg-gray-100" (click)="toggleDropdown()">
-          {{ user.fullName.split(' ')[0] }} {{ user.fullName.split(' ')[2] }}
+          {{ user.fullName }}
         </button>
 
         <ul

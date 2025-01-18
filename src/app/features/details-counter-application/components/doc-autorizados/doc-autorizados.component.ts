@@ -4,7 +4,7 @@ import { CountersService } from '@/services/counters.service';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { CustomDatePipe } from '@/pipes';
-import { ConfigFacturacionService } from '@/utils/services';
+import { ConfigFacturacionService, NotificationService } from '@/utils/services';
 
 @Component({
   selector: 'app-doc-autorizados',
@@ -30,6 +30,7 @@ export class DocAutorizadosComponent {
   constructor(
     private readonly counterService: CountersService,
     public readonly config: ConfigFacturacionService,
+     private readonly notification: NotificationService,
   ) {}
 
   toggleTooltip(id: number, isVisible: boolean): void {
@@ -49,7 +50,19 @@ export class DocAutorizadosComponent {
   }
 
   reeviarEmail(id: number) {
-    console.log('Reenviar email', id);
+    of(this.loading.set(true)).pipe(
+      mergeMap(() => this.counterService.sendNotification(id)),
+      finalize(() => this.loading.set(false)),
+    ).subscribe((res) => {
+      if (res.status === 'OK') {
+        console.log(res);
+        this.notification.push({
+          message: 'Correo enviado correctamente',
+          type: 'success',
+        });
+      }
+    });
+
   }
 
   getListInvoices(idePersonaRol: number) {
