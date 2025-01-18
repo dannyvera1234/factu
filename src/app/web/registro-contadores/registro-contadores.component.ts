@@ -57,7 +57,6 @@ export class RegistroContadoresComponent {
   public onletterInput(event: any, sourceField: string): void {
     const inputValue = event.target.value;
 
-    // Reemplazar todo lo que no sea una letra
     const newValue = inputValue.replace(/[^a-zA-Z]/g, '');
 
     event.target.value = newValue;
@@ -87,7 +86,6 @@ export class RegistroContadoresComponent {
             type: 'success',
           });
           this.router.navigate(['/login']);
-          console.log('Registro exitoso', resp);
         }
       });
   }

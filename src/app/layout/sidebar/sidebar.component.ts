@@ -1,6 +1,6 @@
-import { NgClass, NgOptimizedImage } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarService } from '@/utils/services';
 import { UserService } from '../../services';
 
@@ -27,7 +27,6 @@ export class SidebarComponent {
 
     return [];
   });
-
 
   public toggle(): void {
     this.sidebar.closeSidebar.set(!this.sidebar.closeSidebar());
