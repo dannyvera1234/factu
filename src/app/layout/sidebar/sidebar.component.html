@@ -7,10 +7,10 @@
     [ngClass]="closeSidebar() ? 'ps-3' : 'ps-6'"
   >
     <div class="size-12 relative">
-      <img src="/assets/logo.png" fill alt="" />
+      <img src="assets/logo.png" fill alt="" />
     </div>
 
-    <h4 class="text-xl text-white">FACTU EC</h4>
+    <h4 class="text-xl text-white font-semibold">OlimPush</h4>
   </a>
   <ul class="flex flex-col gap-3 p-4" [ngClass]="{ 'pe-0': closeSidebar() }">
     @for (route of userData(); track $index) {
