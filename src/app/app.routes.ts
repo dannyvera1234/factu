@@ -5,15 +5,17 @@ import { authGuardLoginGuard } from './guards/auth-guard-login.guard';
 export const routes: Routes & {
   data?: any & { icon?: string; name?: string; permissions?: string };
 } = [
-  { path: '', redirectTo: 'web', pathMatch: 'full' },
+  { path: '', redirectTo: '', pathMatch: 'full' },
 
   {
-    path: 'web',
-    loadChildren: () => import('./web/routes'),
+    path: '',
+    loadComponent: () =>
+      import('./web/pega-informative/pega-informative.component').then((m) => m.PegaInformativeComponent),
   },
   {
     path: 'registro_contadores',
-    loadChildren: () => import('./web/registro-contadores/routes'),
+    loadComponent: () =>
+      import('./web/registro-contadores/registro-contadores.component').then((m) => m.RegistroContadoresComponent),
   },
   {
     path: 'login',
