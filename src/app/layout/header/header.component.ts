@@ -1,13 +1,12 @@
 import { DOCUMENT, NgClass, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, Inject, signal } from '@angular/core';
 import { SidebarService } from '../../utils/services';
-import { RouterLink } from '@angular/router';
 import { UserService } from '../../services';
 import { TextInitialsPipe } from '../../pipes';
 
 @Component({
   selector: 'app-header',
-  imports: [NgClass, RouterLink, NgOptimizedImage, TextInitialsPipe],
+  imports: [NgClass, NgOptimizedImage, TextInitialsPipe],
   templateUrl: './header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

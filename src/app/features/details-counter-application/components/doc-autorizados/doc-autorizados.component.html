@@ -21,7 +21,7 @@
 
 <hr class="my-4" />
 <section>
-  <div class="relative overflow-x-auto">
+  <div class="relative flex items-center justify-between">
     <table class="w-full text-left">
       <thead>
         <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
@@ -82,7 +82,7 @@
                         <!-- Tooltip -->
                         @if (isTooltipVisible(invoice.ide)) {
                           <div
-                            class="absolute z-10 top-[-120%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            class="absolute z-10 top-[-1000%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                             (mouseenter)="toggleTooltip(invoice.ide, true)"
                             (mouseleave)="toggleTooltip(invoice.ide, false)"
                           >
@@ -212,7 +212,7 @@
   </div>
   @defer {
     <div class="mt-4">
-      @if (listInvoices() && listInvoices()!.data!.page) {
+      @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
         <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
       }
     </div>
