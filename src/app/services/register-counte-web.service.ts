@@ -17,8 +17,7 @@ export class RegisterCounteWebService {
 
 
   registerCounterWeb(register:Partial<any>): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_USER, {...register});
-    console.log('payload', payload);
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/util/identificationTypesUser`, { body: payload });
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EJEMPLO, {...register});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/public/createCounter`, { body: payload });
   }
 }

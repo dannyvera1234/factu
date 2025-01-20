@@ -38,9 +38,7 @@ export class LoginComponent {
     event.preventDefault();
   }
 
-  onPaste(event: ClipboardEvent): void {
-    event.preventDefault();
-  }
+
 
   onUsernameInput(event: any): void {
     const inputValue = event.target.value;
