@@ -46,8 +46,8 @@
         </tbody>
       } @else {
         <tbody>
-          @if (listInvoices() && listInvoices()!.data.length > 0) {
-            @for (invoice of listInvoices()!.data; track $index) {
+          @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
+            @for (invoice of listInvoices()!.data!.listData; track $index) {
               <tr class="border-b hover:bg-gray-100 text-sm">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
@@ -173,7 +173,6 @@
                         >
                           Ver XML
                         </div>
-
                       </div>
 
                       <div class="group relative">
@@ -212,10 +211,8 @@
     </table>
   </div>
   @defer {
-    <!-- @if (applications()?.pagination) { -->
-    <!-- <div class="mt-4">
-            <app-pagination />
-          </div> -->
-    <!-- } -->
+    <div class="mt-4">
+      <app-pagination [paginationData]="listInvoices()?.data?.page" (pageChange)="onPageChange($event)" />
+    </div>
   }
 </section>

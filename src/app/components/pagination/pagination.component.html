@@ -1,24 +1,25 @@
-@if (pagination(); as pagination) {
-  @if (pagination.total_pages > 1) {
-    <div class="flex md:flex-row flex-col gap-4 items-center justify-between">
-      <div class="text-sm">
-        Showing {{ pagination.offset + 1 }} to
-        {{ [pagination.offset + pagination.number_of_items, pagination.total_items] | min }} of
-        {{ pagination.total_items }} entries
+<div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+  <div class="text-sm">
+    Mostrando
+    {{ startIndex }}
+    a
+    {{ endIndex }}
+    de {{ paginationData.totalElements }} entradas
+  </div>
+
+  <div class="flex gap-2 items-center">
+    <!-- Botones de página -->
+    @for (page of [].constructor(paginationData.totalPages); track $index) {
+      <div>
+        <button
+          (click)="changePage($index)"
+          [class.bg-blue-500]="paginationData.currentPage === $index + 1"
+          [class.text-white]="paginationData.currentPage === $index + 1"
+          class="px-3 py-1 rounded hover:bg-gray-400"
+        >
+          {{ $index + 1 }}
+        </button>
       </div>
-      <div class="flex gap-4 *:cursor-pointer *:size-10 *:flex *:items-center *:justify-center">
-        <a (click)="prev()">&lt; </a>
-        @for (page of pages(); track $index) {
-          <a
-            (click)="changePage(page * pagination.limit - pagination.limit)"
-            [ngClass]="{
-              'bg-black text-white rounded-lg': currentPage() === page,
-            }"
-            >{{ page }}</a
-          >
-        }
-        <a (click)="next()">&gt;</a>
-      </div>
-    </div>
-  }
-}
+    }
+  </div>
+</div>
