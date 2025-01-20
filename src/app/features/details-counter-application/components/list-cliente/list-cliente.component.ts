@@ -21,7 +21,6 @@ import { PaginationComponent } from '@/components/pagination';
     UpdateClienteComponent,
     FormatPhonePipe,
     FormatIdPipe,
-    PaginationComponent
   ],
   templateUrl: './list-cliente.component.html',
   styles: ``,

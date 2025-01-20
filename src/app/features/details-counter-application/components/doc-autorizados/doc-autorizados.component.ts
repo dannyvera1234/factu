@@ -74,7 +74,6 @@ export class DocAutorizadosComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.listInvoices.set(res);
         }
       });

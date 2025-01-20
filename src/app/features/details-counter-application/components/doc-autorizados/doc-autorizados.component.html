@@ -212,7 +212,9 @@
   </div>
   @defer {
     <div class="mt-4">
-      <app-pagination [paginationData]="listInvoices()?.data?.page" (pageChange)="onPageChange($event)" />
+      @if (listInvoices() && listInvoices()!.data!.page) {
+        <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
+      }
     </div>
   }
 </section>
