@@ -5,7 +5,6 @@ import { Modulos } from '../utils/permissions';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -304,5 +303,14 @@ export class CountersService {
         body: payload,
       },
     );
+  }
+
+  detailsHome(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/detailsHome`, {
+      body: payload,
+    });
   }
 }
