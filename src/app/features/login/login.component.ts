@@ -68,7 +68,7 @@ export class LoginComponent {
       )
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.router.navigate(['/sistema_contable/inicio_contadores']);
+          this.router.navigate(['/sistema_contable/aplicaciones_contadores']);
         }
       });
   }
