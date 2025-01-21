@@ -30,31 +30,31 @@ export class InfoCardComponent {
     {
       title: 'Ventas Diarias',
       key: 'ventasDiarias',
-      color: 'blue',
+      color: 'bg-blue-100',
       icon: '/assets/icon/sale-daily.svg',
     },
     {
       title: 'Ventas Mensuales',
       key: 'ventasMensual',
-      color: 'green',
+      color: 'bg-green-100',
       icon: '/assets/icon/sales-monthy.svg',
     },
     {
       title: 'Productos Registrados',
       key: 'totalProductos',
-      color: 'yellow',
+      color: 'bg-yellow-100',
       icon: '/assets/icon/products.svg',
     },
     {
       title: 'Clientes Registrados',
       key: 'totalClientes',
-      color: 'orange',
+      color: 'bg-orange-100',
       icon: '/assets/icon/perfil.svg',
     },
     {
       title: 'Documentos Autorizados',
       key: 'totalDocAutorizados',
-      color: 'red',
+      color: 'bg-red-100',
       icon: '/assets/icon/documents.svg',
     },
   ];

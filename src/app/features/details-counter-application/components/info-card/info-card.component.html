@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
   @for (stat of stats; track $index) {
     <div class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center gap-4">
-      <div class="p-3" [ngClass]="'bg-' + stat.color + '-100 rounded-lg'">
+      <div class="p-3" [ngClass]="stat.color" class="rounded-lg p-3">
         <img [src]="stat.icon" [alt]="stat.title" class="w-8 h-8" />
       </div>
       <div>
