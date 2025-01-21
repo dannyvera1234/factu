@@ -6,7 +6,7 @@ import { AccountingControlSystemService, NotificationService } from '@/utils/ser
 import { CountersService } from '@/services/counters.service';
 import { onlyNumbersDecimalsValidator } from '@/utils/validators';
 import { finalize, mergeMap, of } from 'rxjs';
-import { CreateProduct } from '@/interfaces';
+import { DetailsService } from '../../details.service';
 
 @Component({
   selector: 'app-create-producto',
@@ -39,16 +39,16 @@ export class CreateProductoComponent {
     ),
   );
 
-   public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
-     this.ICE().reduce(
-       (acc, item) => {
-         acc.values.push(item.codeTariff);
-         acc.labels.push(item.description);
-         return acc;
-       },
-       { values: [], labels: [] } as { values: string[]; labels: string[] },
-     ),
-   );
+  public readonly codeTariffICE = computed<{ values: string[]; labels: string[] }>(() =>
+    this.ICE().reduce(
+      (acc, item) => {
+        acc.values.push(item.codeTariff);
+        acc.labels.push(item.description);
+        return acc;
+      },
+      { values: [], labels: [] } as { values: string[]; labels: string[] },
+    ),
+  );
 
   public readonly productTypeCode = computed<{ values: string[]; labels: string[] }>(() =>
     this.productType().reduce(
@@ -65,6 +65,7 @@ export class CreateProductoComponent {
     private readonly countersService: CountersService,
     private readonly controlService: AccountingControlSystemService,
     private readonly notification: NotificationService,
+    private readonly detailsService: DetailsService,
   ) {
     this.getImpuestoIVA();
     this.getImpuestoICA();
@@ -109,7 +110,7 @@ export class CreateProductoComponent {
   }
 
   getImpuestoIVA(): void {
-    const IVA = "IVA";
+    const IVA = 'IVA';
     this.controlService.impuestoIVA(IVA).subscribe((response) => {
       if (response.status === 'OK') {
         this.IVA.set(response.data);
@@ -118,7 +119,7 @@ export class CreateProductoComponent {
   }
 
   getImpuestoICA(): void {
-    const ICE = "ICE";
+    const ICE = 'ICE';
     this.controlService.impuestoIVA(ICE).subscribe((response) => {
       if (response.status === 'OK') {
         this.ICE.set(response.data);
@@ -139,8 +140,6 @@ export class CreateProductoComponent {
       this.form.markAllAsTouched();
       return;
     }
-
-
 
     const dataProduct = {
       name: this.form.controls.name.value,
@@ -167,15 +166,22 @@ export class CreateProductoComponent {
             message: 'Producto creado correctamente',
             type: 'success',
           });
+
+          this.detailsService.info.set({
+            personaRolIde: this.personaRolIde,
+          });
+
           this.created.emit({
             name: this.form.controls.name.value,
             mainCode: this.form.controls.mainCode.value,
             stock: this.form.controls.stock.value,
             tariffCodeIva: this.form.controls.tariffCodeIva.value,
             tariffCodeIce: this.form.controls.tariffCodeIce.value,
-            tariffDesIva: this.IVA().find((item) => item.codeTariff === this.form.controls.tariffCodeIva.value)?.description,
+            tariffDesIva: this.IVA().find((item) => item.codeTariff === this.form.controls.tariffCodeIva.value)
+              ?.description,
             unitPrice: this.form.controls.unitPrice.value,
-            productType: this.productType().find((item) => item.value2 === this.form.controls.productType.value)?.value2,
+            productType: this.productType().find((item) => item.value2 === this.form.controls.productType.value)
+              ?.value2,
             ide: Number(res.data),
             availableStock: this.form.controls.stock.value,
             description: this.form.controls.description.value,

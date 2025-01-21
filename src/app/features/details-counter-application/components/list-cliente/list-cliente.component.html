@@ -142,6 +142,7 @@
         @defer {
           @if (viewingIdeCustomer(); as ideClient) {
             <app-delete-cliente
+              [personaRolIde]="idePersona()"
               (deleted)="deleteCounterClient.close()"
               [idePersonaRol]="ideClient"
               (deleted)="$event && deleteCliente($event)"

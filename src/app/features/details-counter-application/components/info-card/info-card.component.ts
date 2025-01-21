@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
 import { CountersService } from '../../../../services/counters.service';
 import { GeneriResp } from '../../../../interfaces';
 import { NgClass } from '@angular/common';
+import { DetailsService } from '../../details.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 interface InfoCardData {
   totalClientes: number;
   totalDocAutorizados: number;
@@ -72,11 +74,26 @@ export class InfoCardComponent {
     return value;
   }
 
-  constructor(private readonly counterService: CountersService) {}
+  public readonly card = computed(() => this.detailsService.info());
+
+  constructor(
+    private readonly counterService: CountersService,
+    private readonly detailsService: DetailsService,
+  ) {
+    toObservable(this.card)
+      .pipe(takeUntilDestroyed())
+      .subscribe((info) => {
+        const personaRolIde = info?.personaRolIde;
+        if (personaRolIde) {
+          this.detailsHome(personaRolIde);
+        }
+      });
+  }
 
   detailsHome(personaRolIde: number): void {
     this.counterService.detailsHome(personaRolIde).subscribe((response) => {
       if (response.status === 'OK') {
+        console.log(response);
         this.infoCard.set(response);
       }
     });

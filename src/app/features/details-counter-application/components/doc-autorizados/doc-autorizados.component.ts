@@ -1,3 +1,4 @@
+import { DetailsService } from './../../details.service';
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { CountersService } from '@/services/counters.service';
@@ -32,6 +33,7 @@ export class DocAutorizadosComponent {
     private readonly counterService: CountersService,
     public readonly config: ConfigFacturacionService,
     private readonly notification: NotificationService,
+    private readonly DetailsService: DetailsService,
   ) {}
 
   toggleTooltip(id: number, isVisible: boolean): void {
@@ -47,6 +49,9 @@ export class DocAutorizadosComponent {
     const idePersonaRol = this.idePersona();
     if (idePersonaRol) {
       this.getListInvoices(idePersonaRol, 0);
+      this.DetailsService.info.set({
+        personaRolIde: idePersonaRol,
+      });
     }
   }
 
@@ -74,7 +79,9 @@ export class DocAutorizadosComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
+          this.DetailsService.info.set({
+            personaRolIde: idePersonaRol,
+          });
           this.listInvoices.set(res);
         }
       });

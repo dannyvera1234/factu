@@ -13,6 +13,7 @@ import {
 import { CountersService } from '@/services/counters.service';
 import { finalize, mergeMap, of } from 'rxjs';
 import { NgClass } from '@angular/common';
+import { DetailsService } from '../../details.service';
 
 @Component({
   selector: 'app-create-cliente',
@@ -55,6 +56,7 @@ export class CreateClienteComponent {
     public readonly controlService: AccountingControlSystemService,
     private readonly counterService: CountersService,
     private readonly notification: NotificationService,
+    private readonly detailsService: DetailsService,
   ) {
     this.getIdentificationTypes();
 
@@ -172,11 +174,18 @@ export class CreateClienteComponent {
             cellPhone: this.form.value.cellPhone,
             status: res.status,
           });
-
+          this.detailsService.info.set({
+            personaRolIde: this.idePersona,
+          });
           this.form.reset();
           this.form.patchValue({
             cellPhone: '09',
             typeDocument: '',
+            email: '',
+            address: '',
+            identificationNumber: '',
+            names: '',
+            lastName: '',
           });
         }
       });

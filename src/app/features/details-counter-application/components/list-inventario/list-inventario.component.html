@@ -166,6 +166,7 @@
           @if (viewingIdProduct(); as ide) {
             <app-delete-product
               [ideProduct]="ide"
+              [personaRolIde]="personaRol()"
               (deleted)="deleteProduct.close()"
               (deleted)="$event && deleteProducto($event); viewingIdProduct.set(null)"
             />

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal
 import { CountersService } from '@/services/counters.service';
 import { of, mergeMap, finalize } from 'rxjs';
 import { NotificationService } from '../../../../utils/services';
+import { DetailsService } from '../../details.service';
 
 @Component({
   selector: 'app-delete-cliente',
@@ -13,6 +14,8 @@ import { NotificationService } from '../../../../utils/services';
 export class DeleteClienteComponent {
   @Input({ required: true }) idePersonaRol!: number;
 
+  @Input({ required: true }) personaRolIde!: number;
+
   public readonly loading = signal(false);
 
   @Output() public readonly deleted = new EventEmitter<number | null>();
@@ -20,6 +23,7 @@ export class DeleteClienteComponent {
   constructor(
     private readonly counterService: CountersService,
     private readonly notification: NotificationService,
+    private readonly detailsService: DetailsService
   ) {}
 
   deleteClient() {
@@ -34,6 +38,10 @@ export class DeleteClienteComponent {
             message: 'Cliente eliminado del registro.',
             type: 'success',
           });
+          this.detailsService.info.set({
+            personaRolIde: this.personaRolIde,
+          });
+          console.log('deleted', this.idePersonaRol);
           this.deleted.emit(Number(resp.data));
         }
       });

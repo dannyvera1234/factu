@@ -50,6 +50,14 @@ export class CreateFacturacionService {
       return;
     }
 
+    if(infoCustomer.identificationNumber === '9999999999999' && this.infoVoucherReqDTO().importeTotal > 50){
+      this.notification.push({
+        message: 'No se puede realizar una factura con valor mayor a $50.00 para consumidor final',
+        type: 'error',
+      });
+      return;
+    }
+
     // Verificar si todos los campos obligatorios están completos
     if (
       !infoEmisor ||
@@ -152,6 +160,8 @@ export class CreateFacturacionService {
       observation: null,
     };
 
+    console.log('dataFacturacion', dataFacturacion);
+    // return
     // Mostrar el cargador mientras se procesa la factura
     of(this.loading.set(true))
       .pipe(

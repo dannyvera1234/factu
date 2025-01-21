@@ -48,15 +48,13 @@ export class InfoClienteComponent {
 
   public readonly previousEmisor = signal<number>(0);
 
-  public readonly  searchTerm = signal('');
+  public readonly searchTerm = signal('');
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.searchTerm.set(target.value);
     this.dropdownOpen.set(true);
-    // this.filterOption();
   }
-
 
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
@@ -99,7 +97,21 @@ export class InfoClienteComponent {
         if (emisor !== null) {
           this.facturacionService.getListCountersByCliente(emisor).subscribe((resp) => {
             if (resp.status === 'OK') {
+              const consumidorFinal = {
+                names: 'CONSUMIDOR',
+                lastName: 'FINAL',
+                identificationNumber: '9999999999999',
+                typeDocument: '07',
+                socialReason: 'CONSUMIDOR FINAL',
+                address: 'Santo Domingo',
+                email: 'manuelcarrillopenuela51@gmail.com',
+                cellPhone: '9999999999',
+                idePersona: 0,
+                customerIde: -1,
+              };
+              resp.data.unshift(consumidorFinal);
               this.filteredOptions.set(resp);
+              console.log('filteredOptions', this.filteredOptions());
             }
           });
         }
@@ -115,5 +127,4 @@ export class InfoClienteComponent {
       });
     }
   }
-
 }
