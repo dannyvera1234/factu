@@ -65,7 +65,7 @@ export const routes: Routes & {
       },
       {
         path: '**',
-        redirectTo: 'inicio_contadores',
+        redirectTo: 'aplicaciones_contadores',
         pathMatch: 'full',
       },
     ],
