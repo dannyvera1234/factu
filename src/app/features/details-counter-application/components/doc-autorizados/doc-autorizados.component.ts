@@ -48,26 +48,8 @@ export class DocAutorizadosComponent {
   onSyncClick() {
     const idePersonaRol = this.idePersona();
     if (idePersonaRol) {
+      this.DetailsService.info.set({ idePersonaRol });
       this.getListInvoices(idePersonaRol, 0);
-      this.DetailsService.info.set({
-        personaRolIde: idePersonaRol,
-      });
-    }
-  }
-
-  onPageChange(newPage: number): void {
-    const pagination = this.listInvoices()?.data?.page;
-    const idePersonaRol = this.idePersona()!;
-
-    if (pagination) {
-      pagination.currentPage = newPage;
-
-      // Lógica adicional para manejar hasNext y hasPrevious
-      pagination.hasNext = newPage < pagination.totalPages;
-      pagination.hasPrevious = newPage > 1;
-
-      this.getListInvoices(idePersonaRol, newPage);
-      // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
     }
   }
 
@@ -85,6 +67,21 @@ export class DocAutorizadosComponent {
           this.listInvoices.set(res);
         }
       });
+  }
+  onPageChange(newPage: number): void {
+    const pagination = this.listInvoices()?.data?.page;
+    const idePersonaRol = this.idePersona()!;
+
+    if (pagination) {
+      pagination.currentPage = newPage;
+
+      // Lógica adicional para manejar hasNext y hasPrevious
+      pagination.hasNext = newPage < pagination.totalPages;
+      pagination.hasPrevious = newPage > 1;
+
+      this.getListInvoices(idePersonaRol, newPage);
+      // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
+    }
   }
 
   reeviarEmail(id: number) {

@@ -4,6 +4,7 @@ import { GeneriResp } from '../../../../interfaces';
 import { NgClass } from '@angular/common';
 import { DetailsService } from '../../details.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
 interface InfoCardData {
   totalClientes: number;
   totalDocAutorizados: number;
@@ -81,11 +82,18 @@ export class InfoCardComponent {
     private readonly detailsService: DetailsService,
   ) {
     toObservable(this.card)
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        takeUntilDestroyed(),
+        tap(() => this.infoCard.set(null)),
+      )
       .subscribe((info) => {
+        console.log(info);
         const personaRolIde = info?.personaRolIde;
         if (personaRolIde) {
+
           this.detailsHome(personaRolIde);
+          this.detailsService.info.set(null);
+
         }
       });
   }
