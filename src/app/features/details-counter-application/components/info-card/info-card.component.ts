@@ -87,7 +87,7 @@ export class InfoCardComponent {
         tap(() => this.infoCard.set(null)),
       )
       .subscribe((info) => {
-        console.log(info);
+
         const personaRolIde = info?.personaRolIde;
         if (personaRolIde) {
 
@@ -101,7 +101,7 @@ export class InfoCardComponent {
   detailsHome(personaRolIde: number): void {
     this.counterService.detailsHome(personaRolIde).subscribe((response) => {
       if (response.status === 'OK') {
-        console.log(response);
+
         this.infoCard.set(response);
       }
     });

@@ -111,7 +111,7 @@ export class InfoClienteComponent {
               };
               resp.data.unshift(consumidorFinal);
               this.filteredOptions.set(resp);
-              console.log('filteredOptions', this.filteredOptions());
+
             }
           });
         }

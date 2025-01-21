@@ -160,8 +160,6 @@ export class CreateFacturacionService {
       observation: null,
     };
 
-    console.log('dataFacturacion', dataFacturacion);
-    // return
     // Mostrar el cargador mientras se procesa la factura
     of(this.loading.set(true))
       .pipe(

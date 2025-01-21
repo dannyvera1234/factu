@@ -56,7 +56,6 @@ export class SequentialComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log('res', res);
           const docs = this.docsType();
           if (docs && res.data) {
             const updatedDocs = docs.map((doc) => {

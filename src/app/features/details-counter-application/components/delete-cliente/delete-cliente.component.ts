@@ -41,7 +41,7 @@ export class DeleteClienteComponent {
           this.detailsService.info.set({
             personaRolIde: this.personaRolIde,
           });
-          console.log('deleted', this.idePersonaRol);
+
           this.deleted.emit(Number(resp.data));
         }
       });

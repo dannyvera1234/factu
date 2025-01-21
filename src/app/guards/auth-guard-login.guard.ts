@@ -10,7 +10,6 @@ export const authGuardLoginGuard: CanActivateFn = (route, state) => {
   const token = authService.getAuthToken();
   if (token) {
     // Si el token existe, redirigir al dashboard (o alguna página que desees)
-    console.log('Usuario ya autenticado. Redirigiendo al dashboard...');
     router.navigate(['/sistema_contable']);
     return false;
   }

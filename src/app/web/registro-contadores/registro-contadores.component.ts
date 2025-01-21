@@ -80,7 +80,7 @@ export class RegistroContadoresComponent {
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.log('Formulario invalido');
+
       return;
     }
 
