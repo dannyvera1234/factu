@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-footer',
   standalone: true,
   template: ` <footer class="bg-white p-2 shadow text-center text-sm">
-    © {{ year }} Desarrollado por <span class="text-red-500"> OlimPush</span>. Todos los derechos reservados.
+    © {{ year }} Desarrollado por <span class="text-red-500"> OlimPush</span>, Todos los derechos reservados.
   </footer>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

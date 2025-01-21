@@ -14,17 +14,22 @@
               <button
                 class="absolute -top-4 -right-2 p-1"
                 aria-label="Configuración"
-                (click)="addSequential.open(); viewingPersona.set(byPersona.idePersonaRol)"
+                (click)="addSequential.open(); viewingInfo.set(byPersona)"
               >
                 <img src="assets/icon/config.svg" alt="Configuración" />
               </button>
 
-              <!-- Tooltip -->
-              <div
+              <span
                 class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
               >
-                Agregar secuencial de los documentos
-              </div>
+                {{
+                  byPersona.environmentCode === '1'
+                    ? 'Agregar secuencial de los documentos en ambiente de pruebas'
+                    : 'Agregar secuencial de los documentos en ambiente de producción'
+                }}
+              </span>
+
+              <!-- Tooltip -->
             </div>
 
             @if (byPersona.photo) {
@@ -577,15 +582,23 @@
   <div class="flex items-center justify-center">
     <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
       <header class="p-4 flex justify-between items-center border-b border-gray-300">
-        <h2 class="font-bold text-xl truncate">Agregar Secuencial</h2>
+        <h2 class="font-bold text-xl truncate">
+          {{
+            viewingInfo()?.environmentCode === '1' ? 'Agregar Secuencial de prueba' : 'Agregar Secuencial de producción'
+          }}
+        </h2>
         <button (click)="addSequential.close()" class="shrink-0">
           <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
         </button>
       </header>
       <section class="p-4">
         @defer {
-          @if (viewingPersona(); as ide) {
-            <app-sequential [idePersonaRol]="ide" (created)="addSequential.close()" />
+          @if (viewingInfo(); as ide) {
+            <app-sequential
+              [idePersonaRol]="ide.idePersonaRol"
+              (created)="addSequential.close()"
+              [enviroment]="ide.environmentCode"
+            />
           }
         }
       </section>

@@ -15,6 +15,8 @@ import { finalize, mergeMap, of } from 'rxjs';
 export class SequentialComponent {
   @Input({ required: true }) idePersonaRol!: number;
 
+  @Input({ required: true }) enviroment!: string;
+
   public readonly docsType = signal<any[] | null>(null);
 
   public readonly loading = signal(false);
@@ -49,11 +51,12 @@ export class SequentialComponent {
   getListSequential() {
     of(this.loadingModal.set(true))
       .pipe(
-        mergeMap(() => this.counterService.listSequential(this.idePersonaRol)),
+        mergeMap(() => this.counterService.listSequential(this.idePersonaRol, this.enviroment)),
         finalize(() => this.loadingModal.set(false)),
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log('res', res);
           const docs = this.docsType();
           if (docs && res.data) {
             const updatedDocs = docs.map((doc) => {
@@ -105,7 +108,7 @@ export class SequentialComponent {
 
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.counterService.addSequential(this.idePersonaRol, docsSequential)),
+        mergeMap(() => this.counterService.addSequential(this.idePersonaRol, docsSequential, this.enviroment)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {

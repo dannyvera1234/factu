@@ -273,19 +273,21 @@ export class CountersService {
     });
   }
 
-  addSequential(personaRolIde: number, sequential: Partial<any>): Observable<any> {
+  addSequential(personaRolIde: number, sequential: Partial<any>, enviro: string): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       personaRolIde: personaRolIde,
       docsSequential: sequential,
+      environment: enviro,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addSequential`, {
       body: payload,
     });
   }
 
-  listSequential(personaRolIde: number): Observable<any> {
+  listSequential(personaRolIde: number ,enviro: string ): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       personaRolIde: personaRolIde,
+      environment: enviro,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listSequential`, {
       body: payload,
