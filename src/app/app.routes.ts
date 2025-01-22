@@ -23,6 +23,42 @@ export const routes: Routes & {
     canActivate: [authGuardLoginGuard],
   },
 
+  // cuenta para empresa
+  {
+    path: 'sistema_contable_empresa',
+    canActivate: [authGuard],
+    loadComponent() {
+      return import('./layout/layout.component').then((m) => m.LayoutComponent);
+    },
+    children: [
+      {
+        path: 'inicio',
+        loadChildren: () => import('./features-empresas/home/routes'),
+      },
+      {
+        path: 'inventario',
+        loadChildren: () => import('./features-empresas/inventario/routes'),
+      },
+      {
+        path: 'clientes',
+        loadChildren: () => import('./features-empresas/clientes/routes'),
+      },
+      {
+        path: 'documentos',
+        loadChildren: () => import('./features-empresas/documentos/routes'),
+      },
+      {
+        path: 'emision',
+        loadChildren: () => import('./features-empresas/emision/routes'),
+      },
+      {
+        path: '**',
+        redirectTo: 'inicio',
+        pathMatch: 'full',
+      },
+    ],
+  },
+  //cuenta de contador
   {
     path: 'sistema_contable',
     canActivate: [authGuard],
@@ -32,21 +68,21 @@ export const routes: Routes & {
 
     children: [
       {
-        path: 'inicio_contadores',
+        path: 'inicio',
         loadChildren: () => import('./features/home/routes'),
       },
       {
         path: 'aplicaciones_contadores',
         loadChildren: () => import('./features/counter-application/routes'),
       },
-      {
-        path: 'inventory',
-        loadChildren: () => import('./features/inventario/routes'),
-      },
-      {
-        path: 'planes',
-        loadChildren: () => import('./features/planes/routes'),
-      },
+      // {
+      //   path: 'inventory',
+      //   loadChildren: () => import('./features/inventario/routes'),
+      // },
+      // {
+      //   path: 'planes',
+      //   loadChildren: () => import('./features/planes/routes'),
+      // },
       {
         path: 'perfiles',
         loadChildren: () => import('./features/perfiles/routes'),
@@ -59,15 +95,17 @@ export const routes: Routes & {
         path: 'emision_contadores',
         loadChildren: () => import('./features/emision/routes'),
       },
-      {
-        path: 'establishment',
-        loadChildren: () => import('./features/configuration/establecimientos/routes'),
-      },
+      // {
+      //   path: 'establishment',
+      //   loadChildren: () => import('./features/configuration/establecimientos/routes'),
+      // },
       {
         path: '**',
-        redirectTo: 'aplicaciones_contadores',
+        redirectTo: 'inicio',
         pathMatch: 'full',
       },
     ],
   },
+
+  // cuenta Administrador
 ];

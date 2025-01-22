@@ -1,0 +1,142 @@
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    <div>
+      <!-- Barra de acciones superior -->
+      <div class="flex items-center justify-between mb-4 gap-4">
+        <div class="flex flex-col items-start gap-1">
+          <h3 class="text-2xl font-semibold">Lista de Empresas</h3>
+          <span class="text-xs text-gray-500"> Visualiza y administra las empresas registradas en el sistema </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div>
+            <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-[200px] border rounded" />
+          </div>
+          <button
+            class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
+            routerLink="/sistema_contable/aplicaciones_contadores/create"
+          >
+            <div class="relative size-5 shrink-0 mr-2"><img ngSrc="/assets/icon/add.svg" alt="Create" fill /></div>
+
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="border rounded-lg overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b bg-gray-50">
+              <th class="text-left p-3 text-sm font-medium">Nombres</th>
+              <th class="text-left p-3 text-sm font-medium">Telefono</th>
+              <th class="text-left p-3 text-sm font-medium">Estado</th>
+              <th class="text-left p-3 text-sm font-medium">Email</th>
+              <th class="text-left p-3 text-sm font-medium">Identificación</th>
+              <th class="text-left p-3 text-sm font-medium">Acción</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+            <tbody>
+              <td colspan="100%">
+                <div class="text-center py-9">
+                  <div class="loader"></div>
+                </div>
+              </td>
+            </tbody>
+          } @else {
+            @if (counterList() && counterList()!.data.length > 0) {
+              <tbody>
+                @for (counter of counterList()?.data; track $index) {
+                  <tr class="border-b hover:bg-gray-100 text-sm">
+                    <th scope="row" class="font-normal p-2" [routerLink]="[counter.idePersonaRolEncrypted]">
+                      <a [routerLink]="[counter.idePersonaRolEncrypted]">
+                        <div class="flex gap-4 items-center">
+                          <div
+                            class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
+                          >
+                            {{ counter.names + ' ' + counter.lastName | initials }}
+                          </div>
+                          <div>
+                            <p class="font-bold">{{ counter.names }} {{ counter.lastName }}</p>
+
+                            <div class="flex items-center gap-2">
+                              <div class="relative">
+                                {{ counter.socialReason }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    </th>
+
+                    <td>
+                      {{ counter.cellPhone | formatPhone }}
+                    </td>
+
+                    <td>
+                      <span
+                        class="px-2 py-1 text-xs text-white rounded-full"
+                        [ngClass]="{
+                          'bg-green-500': counter.statusRecord === 'Activo',
+                          'bg-red-500': counter.statusRecord === 'Inactivo',
+                        }"
+                      >
+                        {{ counter.statusRecord }}
+                      </span>
+                    </td>
+                    <td>
+                      {{ counter.email }}
+                    </td>
+                    <td>
+                      {{ counter.identificationNumber | formatId }}
+                    </td>
+
+                    <td>
+                      <div class="flex gap-1">
+                        <button
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          (click)="deleteApplication.open(); viewing.set(counter.idePersonaRol)"
+                        >
+                          <div class="relative size-4 shrink-0">
+                            <img ngSrc="/assets/icon/trash-icon.svg" alt="Delete" fill />
+                          </div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            } @else {
+              @defer {
+                <tbody>
+                  <td colspan="100%">
+                    <app-not-count-application />
+                  </td>
+                </tbody>
+              }
+            }
+          }
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal #deleteApplication>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewing(); as idePersonaRol) {
+            <app-delete-application
+              (deleted)="deleteApplication.close()"
+              [idePersonaRol]="idePersonaRol"
+              (deleted)="$event && deleteEmisor($event); viewing.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>

@@ -1,0 +1,95 @@
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { PaginationComponent } from '../../components/pagination';
+import { GeneriResp } from '../../interfaces';
+import { CurrencyPipe, NgClass } from '@angular/common';
+import { CustomDatePipe } from '../../pipes';
+import { ConfigFacturacionService, NotificationService } from '../../utils/services';
+import { of, mergeMap, finalize } from 'rxjs';
+import { CountersService } from '../../services/counters.service';
+
+@Component({
+  selector: 'app-documentos',
+  imports: [PaginationComponent, CurrencyPipe, NgClass, CustomDatePipe],
+  templateUrl: './documentos.component.html',
+  styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DocumentosComponent {
+  public readonly idePersona = signal<number | null>(null);
+
+  public readonly showTooltip = signal<{ [key: string]: boolean }>({});
+
+  public readonly loading = signal(false);
+
+  public readonly listInvoices = signal<GeneriResp<any> | null>(null);
+
+  constructor(
+    private readonly counterService: CountersService,
+    public readonly config: ConfigFacturacionService,
+    private readonly notification: NotificationService,
+  ) {}
+
+  toggleTooltip(id: number, isVisible: boolean): void {
+    const currentState = this.showTooltip();
+    this.showTooltip.set({ ...currentState, [id]: isVisible });
+  }
+
+  isTooltipVisible(id: number): boolean {
+    return !!this.showTooltip()[id];
+  }
+
+  onSyncClick() {
+    const idePersonaRol = this.idePersona();
+    if (idePersonaRol) {
+      // this.DetailsService.info.set({ idePersonaRol });
+      this.getListInvoices(idePersonaRol, 0);
+    }
+  }
+
+  getListInvoices(idePersonaRol: number, page: number): void {
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.counterService.getListInvoices(idePersonaRol, page)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          // this.DetailsService.info.set({
+          //   personaRolIde: idePersonaRol,
+          // });
+          this.listInvoices.set(res);
+        }
+      });
+  }
+  onPageChange(newPage: number): void {
+    const pagination = this.listInvoices()?.data?.page;
+    const idePersonaRol = this.idePersona()!;
+
+    if (pagination) {
+      pagination.currentPage = newPage;
+
+      // Lógica adicional para manejar hasNext y hasPrevious
+      pagination.hasNext = newPage < pagination.totalPages;
+      pagination.hasPrevious = newPage > 1;
+
+      this.getListInvoices(idePersonaRol, newPage);
+      // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
+    }
+  }
+
+  reeviarEmail(id: number) {
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.counterService.sendNotification(id)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          this.notification.push({
+            message: 'Correo enviado correctamente',
+            type: 'success',
+          });
+        }
+      });
+  }
+}
