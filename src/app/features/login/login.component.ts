@@ -22,7 +22,6 @@ export class LoginComponent {
     public _fb: FormBuilder,
     public readonly userService: UserService,
     private router: Router,
-    private toastService: NotificationService,
   ) {}
 
   public readonly form = this._fb.group({
@@ -37,8 +36,6 @@ export class LoginComponent {
   onCopy(event: ClipboardEvent): void {
     event.preventDefault();
   }
-
-
 
   onUsernameInput(event: any): void {
     const inputValue = event.target.value;
@@ -68,7 +65,7 @@ export class LoginComponent {
       )
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.router.navigate(['/sistema_contable/aplicaciones_contadores']);
+          this.router.navigate([`/${this.userService.getPermissions()[0].urlSegment}/inicio`]);
         }
       });
   }

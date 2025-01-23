@@ -46,6 +46,11 @@ export class UserService {
     return userData ? JSON.parse(userData) : null;
   }
 
+  getPermissions(): any[] {
+    const userData = this.getUserData();
+    return userData?.permission || [];
+  }
+
   logout(): void {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_LOGIN, '');
     this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/auth/logout`, { body: payload }).subscribe(

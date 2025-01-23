@@ -1,0 +1,565 @@
+@if (loading()) {
+  <div class="h-full text-center flex justify-center items-center">
+    <div class="loader"></div>
+  </div>
+} @else {
+  @if (emisorInfo()!.data; as byPersona) {
+    <div class="flex flex-col lg:flex-row gap-4 p-4">
+      <aside class="w-full lg:w-1/4 flex flex-col gap-4">
+        <div class="bg-white rounded-lg shadow p-4 py-6">
+          <header class="relative text-center mb-6">
+            <!-- Botón de configuración en la esquina -->
+            <div class="relative group">
+              <!-- Botón de configuración -->
+              <button
+                class="absolute -top-4 -right-2 p-1"
+                aria-label="Configuración"
+                (click)="addSequential.open(); viewingInfo.set(byPersona)"
+              >
+                <img src="assets/icon/config.svg" alt="Configuración" />
+              </button>
+
+              <span
+                class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+              >
+                {{
+                  byPersona.environmentCode === '1'
+                    ? 'Agregar secuencial de los documentos en ambiente de pruebas'
+                    : 'Agregar secuencial de los documentos en ambiente de producción'
+                }}
+              </span>
+
+              <!-- Tooltip -->
+            </div>
+
+            @if (byPersona.photo) {
+              <div class="relative group w-24 h-24 mx-auto">
+                <!-- Imagen de la persona -->
+                <img [src]="byPersona.photo" alt="Foto" class="rounded-full w-full h-full object-cover" />
+
+                <!-- Ícono de eliminar -->
+                <button
+                  class="absolute bottom-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-md hover:bg-red-700 transition"
+                  (click)="deleteLogo.open()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <div
+                  class="absolute top-10 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                >
+                  Eliminar logo
+                </div>
+              </div>
+            } @else {
+              <div
+                class="relative group bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
+              >
+                {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+
+                <button
+                  class="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full shadow-md cursor-pointer hover:bg-blue-700 transition"
+                  (click)="updateFile.open()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+                <div
+                  class="absolute top-8 -right-20 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                >
+                  Actualizar logo
+                </div>
+              </div>
+            }
+
+            <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
+            @if (byPersona.dateBirth) {
+              <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
+            }
+            <span
+              class="px-2 py-1 text-xs text-white rounded-full mt-2"
+              [ngClass]="{
+                'bg-green-500': byPersona.environmentCode === '2',
+                'bg-red-500': byPersona.environmentCode === '1',
+              }"
+            >
+              {{ config.environmentCode()[byPersona.environmentCode] }}
+            </span>
+          </header>
+
+          <div class="group open" #details>
+            <div class="flex justify-between items-center">
+              <button (click)="details.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Personal</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+
+              <button
+                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                (click)="updateInfoEmisor.open(); viewingEmisor.set(byPersona)"
+              >
+                Editar
+              </button>
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div>
+                  <div class="mb-2">
+                    <h4 class="mb-2">Telefono</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.cellPhone | formatPhone }}
+                    </p>
+                  </div>
+                  <div class="mb-2">
+                    <h4>RUC</h4>
+
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.identificationNumber | formatId }}
+                    </p>
+                  </div>
+
+                  <div class="mb-2">
+                    <h4>Email</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.email }}
+                    </p>
+                  </div>
+
+                  <hr class="my-2" />
+                  <div class="flex justify-between items-center">
+                    <button class="flex gap-2 items-center">
+                      <h3 class="text-black">Establecimiento</h3>
+                    </button>
+
+                    <button
+                      class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                      (click)="createEstablecimiento.open(); viewingRuc.set(byPersona.identificationNumber)"
+                    >
+                      Agregar
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 truncate">
+                    @for (item of byPersona.subsidiaries; track $index) {
+                      <div class="flex items-center gap-4 p-2 rounded-lg">
+                        <div class="bg-red-600 rounded-full size-8 flex items-center justify-center shrink-0">
+                          <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
+                        </div>
+
+                        <div class="grow truncate">
+                          <p class="text-gray-700 truncate">{{ item.code }}</p>
+                          <p class="text-sm text-gray-500 truncate">{{ item.address }}</p>
+                        </div>
+
+                        <div class="flex gap-2 items-center">
+                          <button
+                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                            (click)="updateEstablecimiento.open(); viewingEstablecimiento.set(item)"
+                          >
+                            <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                          </button>
+                          <button
+                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                            (click)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(item.ideSubsidiary)"
+                          >
+                            <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="group" #filters>
+            <div class="flex justify-between items-center">
+              <button (click)="filters.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Tributaria</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+
+              <button
+                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
+                (click)="updateInfoTributaria.open(); viewingInfo.set(byPersona)"
+              >
+                Editar
+              </button>
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div class="*:mb-4">
+                  <div>
+                    <h4>Nombre Comercial</h4>
+                    <p class="text-neutral-500">{{ byPersona.comercialName }}</p>
+                  </div>
+                  <div>
+                    <h4>Razon Social</h4>
+                    <p class="text-neutral-500">
+                      {{ byPersona.socialReason }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4>Dirección Matriz</h4>
+                    <p class="text-neutral-500">{{ byPersona.mainAddress }}</p>
+                  </div>
+
+                  <div>
+                    <div class="text-neutral-500">
+                      <p>Rimpe: {{ config.rimpe()[byPersona.rimpe.toString()] }}</p>
+                      <p>rimpe Popular: {{ config.rimpe()[byPersona.rimpePopular.toString()] }}</p>
+                      <p>Lleva Contabilidad: {{ config.rimpe()[byPersona.requiredAccounting.toString()] }}</p>
+                      <p>Tipo de Persona: {{ config.typePerson()[byPersona.typePerson] }}</p>
+                      @if (byPersona.retentionAgent) {
+                        <p>Agente de Retención: {{ byPersona.retentionAgent }}</p>
+                      }
+                      @if (byPersona.specialContributor) {
+                        <p>Contribuyente Especial: {{ byPersona.specialContributor }}</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow px-5 py-4">
+          <div class="flex justify-between items-center">
+            <div class="flex gap-2 items-center">
+              <h3 class="text-black">Firma Electrónica</h3>
+            </div>
+            @if (byPersona.certificates.length === 0) {
+              <button class="bg-gray-200 text-gray-600 py-1 px-3 rounded" (click)="createDoc.open()">Agregar</button>
+            }
+          </div>
+
+          <hr class="my-3" />
+          @if (uploadingDoc()) {
+            <div class="text-center p-4">
+              <div class="loader"></div>
+            </div>
+          } @else {
+            @if (byPersona.certificates.length) {
+              @for (item of byPersona.certificates; track $index) {
+                <div class="p-2 rounded-lg flex items-center gap-3 bg-white border border-neutral-300">
+                  <div
+                    class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer bg-orange-500"
+                  >
+                    <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
+                  </div>
+
+                  <div class="grow truncate">
+                    <a class="truncate text-sm">{{ item.name }}</a>
+                    <div class="flex gap-2 items-center">
+                      <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
+                    </div>
+                  </div>
+
+                  <button class="px-2 py-1 rounded-md" (click)="deleteDoc.open(); viewingFile.set(item.ide)">
+                    <img src="/assets/icon/trash-icon.svg" class="size-6" alt="Delete" />
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="p-4 text-center bg-neutral-100 rounded-lg border border-neutral-300">
+                <p class="text-neutral-500">No hay firma electrónica disponible.</p>
+              </div>
+            }
+          }
+        </div>
+      </aside>
+
+      <main class="flex flex-col gap-4 w-full lg:w-3/4">
+        @defer {
+         <app-info-card-empresa/>
+        }
+        <div class="bg-white rounded-lg shadow p-4">
+          <nav class="flex gap-4 md:flex-row flex-col mb-4 px-4 py-2">
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('clientes')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'clientes',
+                'text-gray-600': selectedTab() !== 'clientes',
+              }"
+            >
+              Clientes
+            </button>
+
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('inventario')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'inventario',
+                'text-gray-600': selectedTab() !== 'inventario',
+              }"
+            >
+              Inventario
+            </button>
+
+            <button
+              class="relative px-4 py-2 text-gray-600 w-full md:w-auto truncate focus:outline-none focus:ring-0 transition-all duration-300 hover:text-primary"
+              (click)="changeTab('doc')"
+              [ngClass]="{
+                'text-black border-b-2 border-primary': selectedTab() === 'doc',
+                'text-gray-600': selectedTab() !== 'doc',
+              }"
+            >
+              Documentos
+            </button>
+          </nav>
+
+          <div class="tab-content">
+            @switch (selectedTab()) {
+              @case ('clientes') {
+                @defer {
+                  <app-lista-clientes-empresa />
+                }
+              }
+              @case ('inventario') {
+                @defer {
+                  <app-lista-producto-empresa />
+                }
+              }
+              @case ('doc') {
+                @defer {
+                  <app-lista-doc-empresa />
+                }
+              }
+            }
+          </div>
+        </div>
+      </main>
+    </div>
+  }
+}
+
+<app-modal #updateInfoEmisor>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Informacion Personal</h2>
+          <button (click)="updateInfoEmisor.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingEmisor(); as infoEmisor) {
+          <section class="p-4">
+            <app-update-emisor
+              [infoEmisor]="infoEmisor"
+              (updateEmisor)="updateInfoEmisor.close(); viewingEmisor.set(null)"
+              (updateEmisor)="$event && updateEmisor($event)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #updateInfoTributaria>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Informacion Tributaria</h2>
+          <button (click)="updateInfoTributaria.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingInfo(); as tributarioInfo) {
+          <section class="p-6">
+            <app-update-emisor-tributaria
+              [infoTributario]="tributarioInfo"
+              (updateTributaria)="updateInfoTributaria.close(); viewingInfo.set(null)"
+              (updateTributaria)="$event && updateTributaria($event)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #createDoc>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Subir Documentos Electrónico</h2>
+          <button (click)="createDoc.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+
+        <section class="p-6">
+          <app-create-file (fileCreate)="createDoc.close()" (fileCreate)="$event && createFile($event)" />
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #deleteDoc>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingFile(); as ideRegister) {
+            <app-delete-file
+              (deleted)="deleteDoc.close(); viewingFile.set(null)"
+              [ideRegister]="ideRegister"
+              (deleted)="$event && deleteFile($event); viewingFile.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #createEstablecimiento>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Agregar Establecimiento</h2>
+          <button (click)="createEstablecimiento.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingRuc(); as ruc) {
+          <section class="p-6">
+            <app-create-establecimiento
+              [ruc]="ruc"
+              (createEstablecimiento)="createEstablecimiento.close(); viewingInfo.set(null)"
+              (createEstablecimiento)="$event && createEstable($event)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #deleteEstablecimiento>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingIdeSubsidiary(); as ideRegister) {
+            <app-delete-establecimiento
+              (deleted)="deleteEstablecimiento.close()"
+              [ideRegister]="ideRegister"
+              (deleted)="$event && deleteEstable($event); viewingIdeSubsidiary.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #updateEstablecimiento>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Establecimiento</h2>
+          <button (click)="updateEstablecimiento.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        @if (viewingEstablecimiento(); as item) {
+          <section class="p-6">
+            <app-update-establecimiento
+              [dataEstableciemiento]="item"
+              (establecimientoUpdate)="updateEstablecimiento.close(); viewingInfo.set(null)"
+              (establecimientoUpdate)="$event && updateEstable($event)"
+            />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #addSequential>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">
+          {{
+            viewingInfo()?.environmentCode === '1' ? 'Agregar Secuencial de prueba' : 'Agregar Secuencial de producción'
+          }}
+        </h2>
+        <button (click)="addSequential.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          @if (viewingInfo(); as ide) {
+            <app-sequential (created)="addSequential.close()" [enviroment]="ide.environmentCode" />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #updateFile>
+  <div class="flex items-center justify-center">
+    <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">subir logo</h2>
+        <button (click)="updateFile.close()" class="shrink-0">
+          <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+        </button>
+      </header>
+      <section class="p-4">
+        @defer {
+          <app-update-logo (created)="updateFile.close()" (created)="$event && updateLogo($event)" />
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #deleteLogo>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          <app-delete-logo (deleted)="deleteLogo.close()" (deleted)="deleteLog($event)" />
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>

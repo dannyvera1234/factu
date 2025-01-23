@@ -36,19 +36,11 @@ export const routes: Routes & {
         loadChildren: () => import('./features-empresas/home/routes'),
       },
       {
-        path: 'inventario',
-        loadChildren: () => import('./features-empresas/inventario/routes'),
+        path: 'configuracion',
+        loadChildren: () => import('./features-empresas/configuracion/routes'),
       },
       {
-        path: 'clientes',
-        loadChildren: () => import('./features-empresas/clientes/routes'),
-      },
-      {
-        path: 'documentos',
-        loadChildren: () => import('./features-empresas/documentos/routes'),
-      },
-      {
-        path: 'emision',
+        path: 'emision_empresas',
         loadChildren: () => import('./features-empresas/emision/routes'),
       },
       {
@@ -58,6 +50,17 @@ export const routes: Routes & {
       },
     ],
   },
+  // cuenta para administrador
+  // {
+  //   path:'sistema_contable_admin',
+  //   canActivate: [authGuard],
+  //   loadComponent() {
+  //     return import('./layout/layout.component').then((m) => m.LayoutComponent);
+  //   },
+  //   children: [
+  //     {},
+  //   ],
+  // },
   //cuenta de contador
   {
     path: 'sistema_contable',
@@ -105,7 +108,9 @@ export const routes: Routes & {
         pathMatch: 'full',
       },
     ],
+
   },
 
-  // cuenta Administrador
+
+
 ];

@@ -8,7 +8,6 @@ import { GeneriResp, ListClientes } from '@/interfaces';
 import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { DeleteClienteComponent } from '../delete-cliente';
 import { UpdateClienteComponent } from '../update-cliente';
-import { PaginationComponent } from '@/components/pagination';
 
 @Component({
   selector: 'app-list-cliente',

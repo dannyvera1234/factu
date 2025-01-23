@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomInputComponent } from '@/components';
 import { of, mergeMap, finalize } from 'rxjs';
-import { CreateEstablecimiento } from '@/interfaces';
 import { emailValidator } from '@/utils/validators';
 import { NgClass } from '@angular/common';
 import { CountersService } from '@/services/counters.service';

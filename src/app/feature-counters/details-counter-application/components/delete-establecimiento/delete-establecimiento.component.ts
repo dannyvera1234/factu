@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
-import { CountersService } from '../../../../services/counters.service';
-import { NotificationService } from '../../../../utils/services';
+import { CountersService } from '@/services/counters.service';
+import { NotificationService } from '@/utils/services';
 
 @Component({
   selector: 'app-delete-establecimiento',
