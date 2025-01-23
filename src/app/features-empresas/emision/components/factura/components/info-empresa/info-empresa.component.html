@@ -1,0 +1,201 @@
+<div class="p-4 border border-gray-200 rounded-md shadow-sm bg-white">
+  <div class="flex items-center justify-between">
+    <div class="space-y-1">
+      <div class="flex items-center gap-3">
+        <div class="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-2.5 border">
+          <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+        </div>
+        <div>
+          <h2 class="text-xl font-semibold">Información Empresa</h2>
+          <p class="text-sm text-gray-500">Detalles de la empresa</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="h-full text-center flex justify-center items-center p-5">
+      <div class="loader"></div>
+    </div>
+  } @else {
+    @if (infoEmpresa()?.data; as empresa) {
+      <div class="rounded-xl border bg-gradient-to-b from-white to-slate-50 p-4 mt-3 text-sm">
+        <div class="grid gap-2 md:grid-cols-[3fr,1fr]">
+          <div class="space-y-2">
+            <div class="grid gap-2 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">RUC</p>
+                  <p class="font-medium truncate">{{ empresa.identificationNumber | formatId }}</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-green-50 p-2">
+                  <img src="assets/icon/email.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Correo</p>
+                  <p class="font-medium truncate">
+                    {{ empresa.email }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="grid gap-2 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md text-sm"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="assets/icon/address.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Dirección</p>
+                  <p class="font-medium truncate">{{ empresa.address }}</p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-green-50 p-2">
+                  <img src="assets/icon/cell.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Teléfono</p>
+                  <p class="font-medium truncate">
+                    {{ empresa.cellPhone | formatPhone }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-purple-100 p-2">
+                  <img src="assets/icon/company.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Establecimiento</p>
+                  <div class="flex items-center gap-2">
+                    @if (!isEditingEstabliecimient()) {
+                      <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
+                        {{ configFactu.selectedEstabliecimient() || '0' }}
+                      </span>
+                      <button
+                        (click)="toggleEdit('establishment')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
+                        Cambiar
+                      </button>
+                    } @else {
+                      <div class="flex gap-2">
+                        <app-custom-select
+                          [(ngModel)]="configFactu.selectedEstabliecimient"
+                          placeholder="Seleccione un establecimiento"
+                          [options]="transformedEstabliecimient().values"
+                          [labels]="transformedEstabliecimient().labels"
+                        />
+                        <button
+                          (click)="toggleEdit('establishment')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
+                          Guardar
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-pink-50 p-2">
+                  <img src="assets/icon/code.svg" alt="" />
+                </div>
+                <div class="space-y-1 flex-1">
+                  <p class="text-sm text-gray-500">Punto de venta</p>
+                  <div class="flex items-center gap-2">
+                    @if (!isEditing()) {
+                      <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
+                        {{ configFactu.pointCode() }}
+                      </span>
+                      <button
+                        (click)="toggleEdit('pointOfSale')"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                      >
+                        Cambiar
+                      </button>
+                    } @else {
+                      <div class="flex gap-2">
+                        <app-custom-input
+                          [(ngModel)]="configFactu.pointCode"
+                          maxlength="3"
+                          (ngModelChange)="validatePointCode()"
+                          (keypress)="preventLetters($event)"
+                          [id]="'puntoVenta'"
+                          type="number"
+                        />
+                        <button
+                          (click)="toggleEdit('pointOfSale')"
+                          class="text-xs font-medium text-green-600 hover:text-green-800"
+                        >
+                          Guardar
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative text-sm">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
+            <div
+              class="relative flex flex-col items-center justify-center gap-4 rounded-xl border bg-white/50 p-1 backdrop-blur-sm"
+            >
+              <div class="relative">
+                <img
+                  [src]="empresa.photo || '/assets/icon/file.png'"
+                  alt="Emisor"
+                  class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
+                />
+                <span
+                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
+                  [ngClass]="{
+                    'bg-green-500': empresa.environmentCode === '2',
+                    'bg-red-500': empresa.environmentCode === '1',
+                  }"
+                >
+                  {{ config.environmentCode()[empresa.environmentCode] }}
+                </span>
+              </div>
+              <div class="text-center">
+                <p class="font-medium">{{ empresa.socialReason }}</p>
+                <p class="text-sm text-gray-500">{{ empresa.dateBirth | customDate }}</p>
+              </div>
+              <hr class="w-full border-t border-gray-200" />
+              <a
+                routerLink="/sistema_contable_empresa/configuracion"
+                class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-center"
+              >
+                Ver detalles
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>

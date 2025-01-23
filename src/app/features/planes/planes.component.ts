@@ -23,7 +23,7 @@ export class PlanesComponent {
     this.getPlanes();
   }
   public updatePlan(plan:any):void {
-      // this.planes()?.push(plan);
+
   }
 
   private getPlanes() {

@@ -1,0 +1,47 @@
+@if (!logoUrl()) {
+  <label
+    class="bg-gray-50 border border-dashed border-neutral-400 block p-4 rounded-lg text-center mb-4 cursor-pointer"
+  >
+    <div class="flex gap-2 flex-col">
+      <input type="file" (change)="onFileSelected($event)" class="hidden" accept=".jpg,.jpeg,.png" />
+      <div class="size-14 mx-auto bg-blue-300 rounded-full flex items-center justify-center">
+        <img ngSrc="/assets/icon/drag_and_drop.svg" alt="Upload" width="35" height="30" />
+      </div>
+      <p class="text-balance">Arrastre y suelte el archivo aquí o seleccione la imagen</p>
+      <p class="text-sm text-neutral-400">Formato del archivo permitido: JPG, JPEG, PNG</p>
+    </div>
+  </label>
+} @else {
+  <div class="relative w-40 h-40 mx-auto">
+    <img
+      [src]="logoUrl()"
+      alt="Logo"
+      class="w-full h-full object-cover rounded-full border border-gray-300 shadow-md"
+    />
+    <button
+      (click)="removeLogo()"
+      class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-md"
+      title="Eliminar Logo"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+}
+<div class="flex justify-end gap-4 mt-6">
+  @if (!loading()) {
+    <button
+      class="px-4 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+      type="button"
+      (click)="created.emit(null)"
+    >
+      Cancelar
+    </button>
+    <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" (click)="updateFile()">guardar</button>
+  } @else {
+    <div class="flex justify-center items-center h-full mt-4">
+      <div class="loader"></div>
+    </div>
+  }
+</div>

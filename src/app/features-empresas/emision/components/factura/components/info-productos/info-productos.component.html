@@ -1,0 +1,102 @@
+<div class="flex justify-end mb-4">
+  <button
+    class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
+    (click)="addProduct.open()"
+  >
+    <div class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center">
+      <img src="/assets/icon/add-product.svg" alt="Agregar Producto" class="size-3" />
+    </div>
+    Agregar Producto
+  </button>
+</div>
+
+<div class="border rounded-lg overflow-x-auto">
+  <table class="w-full">
+    <thead>
+      <tr class="border-b bg-gray-50">
+        <th class="text-left p-3 text-sm font-medium">Código</th>
+        <th class="text-left p-3 text-sm font-medium">Descripción</th>
+        <th class="text-left p-3 text-sm font-medium">Cantidad</th>
+        <th class="text-left p-3 text-sm font-medium">Precio Unit.</th>
+        <th class="text-left p-3 text-sm font-medium">Tarifa IVA</th>
+        <th class="text-left p-3 text-sm font-medium">Valor IVA</th>
+        <th class="text-left p-3 text-sm font-medium">Sub Total</th>
+        <th class="text-left p-3 text-sm font-medium">Valor Total</th>
+        <th class="text-left p-3 text-sm font-medium"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products(); track $index) {
+        <tr class="hover:bg-gray-100 text-sm">
+          <td class="p-2">{{ product.mainCode }}</td>
+          <td class="p-2">{{ product.name }}</td>
+          <td class="p-2">
+            <input
+              type="number"
+              min="1"
+              [(ngModel)]="product.cantidad"
+              [max]="product.availableStock"
+              class="w-full p-1 border rounded"
+              (keyup)="updateProduct(product)"
+              (ngModelChange)="updateProduct(product)"
+              (keydown)="restrictInput($event)"
+            />
+          </td>
+          <td class="p-2">
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              (keyup)="updateProduct( product)"
+              [(ngModel)]="product.unitPrice"
+              class="w-full p-1 border rounded"
+            />
+          </td>
+          <td class="p-2">{{ product.tariffDesIva }}</td>
+          <td class="p-2">{{ product.valorIVA | currency }}</td>
+          <td class="p-2">{{ product.subTotal | currency }}</td>
+          <td class="p-2">${{ product.valorTotal | currency }}</td>
+          <td class="p-2">
+            <button (click)="removeProduct(product.ide)" class="p-1 hover:bg-red-100 rounded">
+              <img src="assets/icon/trash-icon.svg" alt="" class="size-5" />
+            </button>
+          </td>
+        </tr>
+      }
+      <tr *ngIf="products().length === 0">
+        <td colspan="9" class="p-2">
+          <div
+            class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+          >
+            <p class="font-medium">Ningún producto seleccionado</p>
+            <span class="text-sm">Por favor, seleccione un producto para ver su información</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-modal #addProduct>
+  <div class="h-full flex items-center">
+    <div class="bg-white w-full rounded-lg overflow-auto max-h-full">
+      <header class="p-4 flex justify-between items-center border border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Agregar Productos</h2>
+        <button (click)="addProduct.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icon/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      @defer {
+        <section class="p-4">
+          <app-lista-productos (addProducto)="addProduct.close()" (addProducto)="$event && addProducto($event)" />
+        </section>
+      }
+    </div>
+  </div>
+</app-modal>
