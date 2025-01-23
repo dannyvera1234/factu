@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { of, finalize, mergeMap } from 'rxjs';
-import { CreateFacturacionService } from '@/features/facturacion';
 import { GeneriResp } from '@/interfaces';
 import { FacturacionService } from '@/services';
 import { ConfigFacturacionService } from '@/utils/services';
@@ -10,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { CustomSelectComponent, CustomInputComponent } from '@/components';
 import { FormatIdPipe, FormatPhonePipe, CustomDatePipe } from '@/pipes';
 import { EmpresaService } from '@/services/service-empresas';
+import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 
 @Component({
   selector: 'app-info-empresa',
@@ -51,7 +51,7 @@ export class InfoEmpresaComponent {
 
   constructor(
     private readonly facturacionService: FacturacionService,
-    public readonly configFactu: CreateFacturacionService,
+    public readonly configFactu: CreateFacturaEmpresaService,
     public readonly config: ConfigFacturacionService,
     public readonly emisorService: EmpresaService,
   ) {
@@ -70,6 +70,8 @@ export class InfoEmpresaComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.infoEmpresa.set(resp);
+          console.log(resp);
+           this.configFactu.setEmisor.set(resp.data.idePersonaRol);
         }
       });
   }

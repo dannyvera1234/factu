@@ -14,4 +14,5 @@ export enum Modulos {
   // cuenta para empresas
 
   MODULE_EMPRESA_CONFI = 'CONFIGURACION_EMPRESA',
+  MODULE_EMISON_EMPRESA = 'EMISION_EMPRESA',
 }
