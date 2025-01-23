@@ -6,7 +6,7 @@ import { onlyNumbersDecimalsValidator } from '@/utils/validators';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { NgClass } from '@angular/common';
 import { InventarioService } from '@/services/service-empresas';
-import { DetailsService } from '@/features/details-counter-application';
+import { DetailsService } from '@/feature-counters/details-counter-application';
 
 @Component({
   selector: 'app-create-producto-empresa',

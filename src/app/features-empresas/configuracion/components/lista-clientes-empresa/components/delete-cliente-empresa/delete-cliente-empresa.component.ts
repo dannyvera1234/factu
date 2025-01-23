@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
-import { DetailsService } from '@/features/details-counter-application';
 import { NotificationService } from '@/utils/services';
 import { ClientesService } from '@/services/service-empresas';
+import { DetailsService } from '@/feature-counters/details-counter-application';
 
 @Component({
   selector: 'app-delete-cliente-empresa',

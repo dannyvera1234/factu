@@ -6,7 +6,7 @@
           <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
         </div>
         <div>
-          <h2 class="text-xl font-semibold">Información del Empresa</h2>
+          <h2 class="text-xl font-semibold">Información Empresa</h2>
           <p class="text-sm text-gray-500">Detalles de la empresa</p>
         </div>
       </div>
@@ -174,11 +174,11 @@
                 <span
                   class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
                   [ngClass]="{
-                    'bg-green-500': empresa.environment === '2',
-                    'bg-red-500': empresa.environment === '1',
+                    'bg-green-500': empresa.environmentCode === '2',
+                    'bg-red-500': empresa.environmentCode === '1',
                   }"
                 >
-                  {{ config.environmentCode()[empresa.environment] }}
+                  {{ config.environmentCode()[empresa.environmentCode] }}
                 </span>
               </div>
               <div class="text-center">

@@ -63,7 +63,7 @@ export const routes: Routes & {
   // },
   //cuenta de contador
   {
-    path: 'sistema_contable',
+    path: 'sistema_contable_contador',
     canActivate: [authGuard],
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
@@ -72,11 +72,15 @@ export const routes: Routes & {
     children: [
       {
         path: 'inicio',
-        loadChildren: () => import('./features/home/routes'),
+        loadChildren: () => import('./feature-counters/home/routes'),
       },
       {
         path: 'aplicaciones_contadores',
-        loadChildren: () => import('./features/counter-application/routes'),
+        loadChildren: () => import('./feature-counters/counter-application/routes'),
+      },
+      {
+        path: 'emision_contadores',
+        loadChildren: () => import('./feature-counters/emision/routes'),
       },
       // {
       //   path: 'inventory',
@@ -86,18 +90,15 @@ export const routes: Routes & {
       //   path: 'planes',
       //   loadChildren: () => import('./features/planes/routes'),
       // },
-      {
-        path: 'perfiles',
-        loadChildren: () => import('./features/perfiles/routes'),
-      },
-      {
-        path: 'perfilescontadores',
-        loadChildren: () => import('./features/counters/routes'),
-      },
-      {
-        path: 'emision_contadores',
-        loadChildren: () => import('./features/emision/routes'),
-      },
+      // {
+      //   path: 'perfiles',
+      //   loadChildren: () => import('./features/perfiles/routes'),
+      // },
+      // {
+      //   path: 'perfilescontadores',
+      //   loadChildren: () => import('./features/counters/routes'),
+      // },
+
       // {
       //   path: 'establishment',
       //   loadChildren: () => import('./features/configuration/establecimientos/routes'),

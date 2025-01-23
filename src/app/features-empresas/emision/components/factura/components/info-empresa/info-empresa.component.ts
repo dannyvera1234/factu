@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { of, finalize, mergeMap } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
-import { FacturacionService } from '@/services';
 import { ConfigFacturacionService } from '@/utils/services';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CustomSelectComponent, CustomInputComponent } from '@/components';
 import { FormatIdPipe, FormatPhonePipe, CustomDatePipe } from '@/pipes';
-import { EmpresaService } from '@/services/service-empresas';
+import { DocumentosService, EmpresaService } from '@/services/service-empresas';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 
 @Component({
@@ -50,14 +49,11 @@ export class InfoEmpresaComponent {
   );
 
   constructor(
-    private readonly facturacionService: FacturacionService,
     public readonly configFactu: CreateFacturaEmpresaService,
     public readonly config: ConfigFacturacionService,
     public readonly emisorService: EmpresaService,
+    public readonly facturacionService: DocumentosService,
   ) {
-    // this.configFactu.setEmisor.set(null);
-    // this.configFactu.idePersona.set(0);
-    // // this.getEmisores();
     this.retrieveEmisor();
   }
 
@@ -70,14 +66,15 @@ export class InfoEmpresaComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.infoEmpresa.set(resp);
-          console.log(resp);
-           this.configFactu.setEmisor.set(resp.data.idePersonaRol);
+          this.configFactu.setEmisor.set(resp.data.idePersonaRol);
+          this.configFactu.infoEmisor.set(resp.data);
+          this.getListEstablishmentByEmisor(resp.data.idePersonaRol);
         }
       });
   }
 
   getListEstablishmentByEmisor(personaRolIde: number) {
-    this.facturacionService.getListEstablishmentByEmisor(personaRolIde).subscribe((resp) => {
+    this.facturacionService.subsidiaries(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
         this.getListEstablishment.set(resp.data);
       }

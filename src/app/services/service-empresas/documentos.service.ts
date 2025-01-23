@@ -23,4 +23,30 @@ export class DocumentosService {
       body: payload,
     });
   }
+
+  subsidiaries(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/subsidiaries`, {
+      body: payload,
+    });
+  }
+
+  listProduct(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/listProduct`, {
+      body: payload,
+    });
+  }
+
+  generateInvoice(data: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
+    console.log(payload);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/generateInvoice`, {
+      body: payload,
+    });
+  }
 }

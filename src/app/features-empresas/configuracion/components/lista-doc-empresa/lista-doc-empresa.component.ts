@@ -6,7 +6,7 @@ import { PaginationComponent } from '@/components/pagination';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { CustomDatePipe } from '@/pipes';
 import { DocumentosService } from '@/services/service-empresas';
-import { DetailsService } from '@/features/details-counter-application';
+import { DetailsService } from '@/feature-counters/details-counter-application';
 
 @Component({
   selector: 'app-lista-doc-empresa',

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
-import { DetailsService } from '@/features/details-counter-application';
 import { GeneriResp } from '@/interfaces';
-import { CountersService } from '@/services/counters.service';
 import { NgClass } from '@angular/common';
-import { ConfiguracionService } from '../../../../services/service-empresas';
+import { ConfiguracionService } from '@/services/service-empresas';
+import { DetailsService } from '@/feature-counters/details-counter-application';
 interface InfoCardData {
   totalClientes: number;
   totalDocAutorizados: number;

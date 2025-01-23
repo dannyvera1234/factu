@@ -1,24 +1,23 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { CreateFacturacionService } from '../../../../../../features/facturacion';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../../../../../../components';
+import { ModalComponent } from '@/components';
+import { ListaProductosComponent } from './components';
+import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 
 @Component({
   selector: 'app-info-productos',
-  imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule],
+  imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule, ListaProductosComponent],
   templateUrl: './info-productos.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoProductosComponent {
-constructor(private config: CreateFacturacionService) {}
+  constructor(private config: CreateFacturaEmpresaService) {}
 
   public readonly products = signal<any[]>([]);
 
   addProducto(product: any) {
-
-
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
 
@@ -48,6 +47,7 @@ constructor(private config: CreateFacturacionService) {}
 
   updateProduct(product: any) {
     // Verificar si la cantidad ingresada es mayor que el stock disponible
+
     if (product.cantidad > product.availableStock) {
       // Ajustar la cantidad al stock disponible
       product.cantidad = product.availableStock;
@@ -63,6 +63,7 @@ constructor(private config: CreateFacturacionService) {}
     product.valorIVA = (product.subTotal * product.tariffIva) / 100;
     product.valorTotal = product.subTotal + product.valorIVA;
 
+    console.log(product.subTotal, product.valorIVA, product.valorTotal);
     // Actualizar el producto en el array de productos
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);
@@ -89,4 +90,3 @@ constructor(private config: CreateFacturacionService) {}
     }
   }
 }
-

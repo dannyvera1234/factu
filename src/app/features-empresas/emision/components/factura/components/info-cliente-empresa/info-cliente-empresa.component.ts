@@ -5,13 +5,22 @@ import { GeneriResp } from '@/interfaces';
 import { NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
-import { FormatIdPipe, FormatPhonePipe } from '@/pipes';
+import { FormatPhonePipe } from '@/pipes';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 import { EmisionService } from '@/services/service-empresas/emision.service';
+import { CreateClienteEmpresaComponent } from '../../../../../configuracion/components/lista-clientes-empresa/components';
+import { consumidorFinal } from '@/interfaces/common/constante';
 
 @Component({
   selector: 'app-info-cliente-empresa',
-  imports: [ReactiveFormsModule, ModalComponent, FormsModule, NgOptimizedImage, FormatIdPipe, FormatPhonePipe],
+  imports: [
+    ReactiveFormsModule,
+    ModalComponent,
+    FormsModule,
+    NgOptimizedImage,
+    FormatPhonePipe,
+    CreateClienteEmpresaComponent,
+  ],
   templateUrl: './info-cliente-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,15 +66,15 @@ export class InfoClienteEmpresaComponent {
       .subscribe(() => {
         this.selectedCliente.set(cliente);
         this.dropdownOpen.set(false);
-        // this.configFactu.infoCustomer.set({
-        //   identificationNumber: cliente.identificationNumber,
-        //   typeDocument: cliente.typeDocument,
-        //   socialReason: cliente.names + ' ' + cliente.lastName,
-        //   address: cliente.address,
-        //   email: cliente.email,
-        //   cellPhone: cliente.cellPhone,
-        //   customerIde: cliente.idePersona,
-        // });
+        this.configFactu.infoCustomer.set({
+           identificationNumber: cliente.identificationNumber,
+           typeDocument: cliente.typeDocument,
+           socialReason: cliente.names + ' ' + cliente.lastName,
+           address: cliente.address,
+           email: cliente.email,
+           cellPhone: cliente.cellPhone,
+           customerIde: cliente.idePersona,
+       });
       });
   }
 
@@ -75,7 +84,7 @@ export class InfoClienteEmpresaComponent {
 
   constructor(
     private readonly emisionService: EmisionService,
-    public readonly configFactu: CreateFacturaEmpresaService
+    public readonly configFactu: CreateFacturaEmpresaService,
   ) {
     toObservable(this.persoRolIdEmisor)
       .pipe(takeUntilDestroyed())
@@ -88,18 +97,6 @@ export class InfoClienteEmpresaComponent {
         if (emisor !== null) {
           this.emisionService.listCustomer(emisor).subscribe((resp) => {
             if (resp.status === 'OK') {
-              const consumidorFinal = {
-                names: 'CONSUMIDOR',
-                lastName: 'FINAL',
-                identificationNumber: '9999999999999',
-                typeDocument: '07',
-                socialReason: 'CONSUMIDOR FINAL',
-                address: 'Santo Domingo',
-                email: 'manuelcarrillopenuela51@gmail.com',
-                cellPhone: '9999999999',
-                idePersona: 0,
-                customerIde: -1,
-              };
               resp.data.unshift(consumidorFinal);
               this.filteredOptions.set(resp);
             }
@@ -108,13 +105,14 @@ export class InfoClienteEmpresaComponent {
       });
   }
 
-  createClient(event: any) {
-    // if (event.status === 'OK') {
-    //   this.facturacionService.getListCountersByCliente(this.previousEmisor()).subscribe((resp) => {
-    //     if (resp.status === 'OK') {
-    //       this.filteredOptions.set(resp);
-    //     }
-    //   });
-    // }
+  createCliente(event: any) {
+    if (event.status === 'OK') {
+      this.emisionService.listCustomer(this.previousEmisor()).subscribe((resp) => {
+        if (resp.status === 'OK') {
+          resp.data.unshift(consumidorFinal);
+          this.filteredOptions.set(resp);
+        }
+      });
+    }
   }
 }

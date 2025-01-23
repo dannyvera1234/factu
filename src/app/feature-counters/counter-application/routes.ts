@@ -9,7 +9,7 @@ export default [
   {
     path: 'create',
     loadComponent: () =>
-      import('../create-counter-application/create-counter-application.component').then(
+      import('./../create-counter-application/create-counter-application.component').then(
         (m) => m.CreateCounterApplicationComponent,
       ),
   },

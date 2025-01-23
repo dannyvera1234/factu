@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CreateFacturacionService } from '../../../../../../features/facturacion';
 import { GeneriResp } from '../../../../../../interfaces';
 import { AccountingControlSystemService } from '../../../../../../utils/services';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 
 @Component({
   selector: 'app-resumen-pago-enpresa',
@@ -24,7 +24,7 @@ public readonly listProduct = computed(() => this.configFactu.products());
 
   constructor(
     private readonly controlService: AccountingControlSystemService,
-    public readonly configFactu: CreateFacturacionService,
+    public readonly configFactu: CreateFacturaEmpresaService,
   ) {
     this.getPayForms();
     this.getImpuestoIVA();

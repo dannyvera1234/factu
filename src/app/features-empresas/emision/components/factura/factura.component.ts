@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { InfoClienteEmpresaComponent, InfoEmpresaComponent, InfoProductosComponent, ResumenPagoEnpresaComponent } from './components';
+import { CreateFacturaEmpresaService } from './create-factura-empresa.service';
 
 @Component({
   selector: 'app-factura',
@@ -9,5 +10,6 @@ import { InfoClienteEmpresaComponent, InfoEmpresaComponent, InfoProductosCompone
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FacturaComponent {
+  constructor(public readonly config:CreateFacturaEmpresaService) {}
 
 }

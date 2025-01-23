@@ -37,6 +37,7 @@
               [(ngModel)]="product.cantidad"
               [max]="product.availableStock"
               class="w-full p-1 border rounded"
+              (keyup)="updateProduct(product)"
               (ngModelChange)="updateProduct(product)"
               (keydown)="restrictInput($event)"
             />
@@ -46,7 +47,7 @@
               type="number"
               step="0.01"
               min="0"
-              (ngModelChange)="updateProduct(product)"
+              (keyup)="updateProduct( product)"
               [(ngModel)]="product.unitPrice"
               class="w-full p-1 border rounded"
             />
@@ -93,7 +94,7 @@
       </header>
       @defer {
         <section class="p-4">
-          <!-- <app-list-product (addProducto)="$event && addProducto($event)" (addProducto)="addProduct.close()" /> -->
+          <app-lista-productos (addProducto)="addProduct.close()" (addProducto)="$event && addProducto($event)" />
         </section>
       }
     </div>

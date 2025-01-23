@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal
 import { of, mergeMap, finalize } from 'rxjs';
 import { NotificationService } from '@/utils/services';
 import { InventarioService } from '@/services/service-empresas';
-import { DetailsService } from '@/features/details-counter-application';
+import { DetailsService } from '@/feature-counters/details-counter-application';
 
 @Component({
   selector: 'app-delete-producto-empresa',

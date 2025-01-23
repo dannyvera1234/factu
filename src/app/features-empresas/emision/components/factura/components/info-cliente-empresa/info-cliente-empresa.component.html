@@ -6,7 +6,7 @@
           <img src="/assets/icon/perfil.svg" alt="Info" class="w-6 h-6" />
         </div>
         <div>
-          <h2 class="text-xl font-semibold">Información del Cliente</h2>
+          <h2 class="text-xl font-semibold">Información Cliente</h2>
           <p class="text-sm text-gray-500">Busque o registre un nuevo cliente</p>
         </div>
       </div>
@@ -83,7 +83,7 @@
       @if (persoRolIdEmisor()) {
         <button
           class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
-          (click)="createCliente.open()"
+          (click)="createClient.open()"
         >
           <div
             class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center"
@@ -119,7 +119,7 @@
               </div>
               <div class="space-y-1 min-w-0">
                 <p class="text-sm text-gray-500">Identificación</p>
-                <p class="font-medium truncate">{{ selectedCliente().identificationNumber | formatId }}</p>
+                <p class="font-medium truncate">{{ selectedCliente().identificationNumber }}</p>
               </div>
             </div>
 
@@ -169,23 +169,19 @@
     }
   }
 
-  <app-modal #createCliente>
+  <app-modal #createClient>
     @defer {
       <div class="flex items-center justify-center">
         <div class="bg-white w-full max-w rounded-lg overflow-auto">
           <header class="p-4 flex justify-between items-center border-b border-gray-300">
             <h2 class="font-bold text-xl truncate">Crear Cliente</h2>
-            <button (click)="createCliente.close()" class="shrink-0">
+            <button (click)="createClient.close()" class="shrink-0">
               <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
             </button>
           </header>
 
           <section class="p-4">
-            <!-- <app-create-cliente
-              (created)="createCliente.close()"
-              [idePersona]="configFactu.idePersona()"
-              (created)="$event && createClient($event)"
-            /> -->
+            <app-create-cliente-empresa (created)="createClient.close()" (created)="$event && createCliente($event)" />
           </section>
         </div>
       </div>
