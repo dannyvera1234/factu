@@ -6,7 +6,7 @@
           <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
         </div>
         <div>
-          <h2 class="text-xl font-semibold">Información del Emisor</h2>
+          <h2 class="text-xl font-semibold">Información Empresa</h2>
           <p class="text-sm text-gray-500">Seleccione la empresa emisora de la factura</p>
         </div>
       </div>
@@ -15,7 +15,7 @@
     <div class="relative w-full md:max-w-md dropdown-container">
       <input
         type="text"
-        placeholder="Buscar emisor..."
+        placeholder="Buscar Empresa..."
         [(ngModel)]="searchTerm"
         (input)="handleSearchChange($event)"
         (focus)="dropdownOpen.set(true)"
@@ -90,8 +90,8 @@
       <div
         class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
       >
-        <p class="font-medium">Ningún emisor seleccionado</p>
-        <span class="text-sm">Por favor, seleccione un emisor para ver su información</span>
+        <p class="font-medium">Ningún empresa seleccionado</p>
+        <span class="text-sm">Por favor, seleccione una empresa para ver su información</span>
       </div>
     } @else {
       <div class="rounded-xl border bg-gradient-to-b from-white to-slate-50 p-4 mt-3 text-sm">

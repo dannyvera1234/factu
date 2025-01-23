@@ -48,7 +48,7 @@ export class CountersService {
       ...createApplication,
     });
     form.append('reqDTO', JSON.stringify(payload));
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/createEmisor`, { body: form });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/createEmisor`, { body: form });
   }
 
   getListCountersByEmisor(): Observable<any> {

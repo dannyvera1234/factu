@@ -19,7 +19,7 @@ export const routes: Routes & {
   },
   {
     path: 'login',
-    loadChildren: () => import('./features/login/routes'),
+    loadChildren: () => import('./components/login/routes'),
     canActivate: [authGuardLoginGuard],
   },
 
@@ -51,16 +51,37 @@ export const routes: Routes & {
     ],
   },
   // cuenta para administrador
-  // {
-  //   path:'sistema_contable_admin',
-  //   canActivate: [authGuard],
-  //   loadComponent() {
-  //     return import('./layout/layout.component').then((m) => m.LayoutComponent);
-  //   },
-  //   children: [
-  //     {},
-  //   ],
-  // },
+  {
+    path: 'sistema_contable_admin',
+    canActivate: [authGuard],
+    loadComponent() {
+      return import('./layout/layout.component').then((m) => m.LayoutComponent);
+    },
+    children: [
+      {
+        path: 'inicio',
+        loadChildren: () => import('./features-admin/inicio-admin/routes'),
+      },
+      {
+        path: 'aplicaciones_emisores',
+        loadChildren: () => import('./features-admin/perfil-empresa/routes'),
+      },
+      {
+        path: 'perfilescontadores',
+        loadChildren: () => import('./features-admin/perfil-contador/routes'),
+      },
+      {
+        path: 'perfiles',
+        loadChildren: () => import('./features-admin/perfil-usuarios/routes'),
+      },
+
+      {
+        path: '**',
+        redirectTo: 'inicio',
+        pathMatch: 'full',
+      },
+    ],
+  },
   //cuenta de contador
   {
     path: 'sistema_contable_contador',
@@ -82,10 +103,7 @@ export const routes: Routes & {
         path: 'emision_contadores',
         loadChildren: () => import('./feature-counters/emision/routes'),
       },
-      // {
-      //   path: 'inventory',
-      //   loadChildren: () => import('./features/inventario/routes'),
-      // },
+
       // {
       //   path: 'planes',
       //   loadChildren: () => import('./features/planes/routes'),
@@ -109,9 +127,5 @@ export const routes: Routes & {
         pathMatch: 'full',
       },
     ],
-
   },
-
-
-
 ];
