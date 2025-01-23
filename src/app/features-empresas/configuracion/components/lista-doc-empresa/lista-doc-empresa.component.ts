@@ -78,18 +78,18 @@ export class ListaDocEmpresaComponent {
   }
 
   reeviarEmail(id: number) {
-    // of(this.loading.set(true))
-    //   .pipe(
-    //     mergeMap(() => this.counterService.sendNotification(id)),
-    //     finalize(() => this.loading.set(false)),
-    //   )
-    //   .subscribe((res) => {
-    //     if (res.status === 'OK') {
-    //       this.notification.push({
-    //         message: 'Correo enviado correctamente',
-    //         type: 'success',
-    //       });
-    //     }
-    //   });
+     of(this.loading.set(true))
+       .pipe(
+         mergeMap(() => this.docService.sendNotification(id)),
+         finalize(() => this.loading.set(false)),
+       )
+       .subscribe((res) => {
+         if (res.status === 'OK') {
+           this.notification.push({
+             message: 'Correo enviado correctamente',
+             type: 'success',
+           });
+         }
+       });
   }
 }
