@@ -22,7 +22,7 @@ import { NgOptimizedImage } from '@angular/common';
       tu solicitud ha sido creada exitosamente, ahora puedes seguir el estado de tu solicitud en la lista de solicitudes
     </p>
     <button
-      routerLink="/sistema_contable/aplicaciones_contadores"
+      routerLink="/sistema_contable_admin/aplicaciones_emisores"
       (click)="formService.reset()"
       class="w-full p-2 bg-secondary block text-white rounded-lg mt-11 cursor-pointer"
     >

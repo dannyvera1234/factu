@@ -44,7 +44,7 @@ export class CountersService {
       form.append('certificate', files);
     }
 
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES, {
       ...createApplication,
     });
     form.append('reqDTO', JSON.stringify(payload));
