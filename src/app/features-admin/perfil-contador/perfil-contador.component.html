@@ -34,6 +34,7 @@
           <thead>
             <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
               <th class="px-4 py-3 text-left">Nombres</th>
+              <th class="px-4 py-3 text-left">Identificación</th>
               <th class="text-left p-3">Telefono</th>
               <th class="text-center p-3">Estado</th>
               <th class="text-left p-3">Email</th>
@@ -68,6 +69,9 @@
                           </div>
                         </div>
                       </a>
+                    </td>
+                    <td>
+                      {{ counter.identificationNumber }}
                     </td>
                     <td>
                       {{ counter.cellPhone | formatPhone }}
