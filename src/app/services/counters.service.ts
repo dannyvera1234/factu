@@ -44,11 +44,11 @@ export class CountersService {
       form.append('certificate', files);
     }
 
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES, {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       ...createApplication,
     });
     form.append('reqDTO', JSON.stringify(payload));
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/createEmisor`, { body: form });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/createEmisor`, { body: form });
   }
 
   getListCountersByEmisor(): Observable<any> {
