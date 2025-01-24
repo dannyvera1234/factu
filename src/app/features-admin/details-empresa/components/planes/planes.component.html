@@ -1,6 +1,6 @@
-<div class="mx-auto px-4 py-8">
+<div class="mx-auto px-4 py-5">
   <form [formGroup]="form">
-    <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-3 gap-6 mt-6">
+    <div class="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-6 mt-6">
       <!-- Iteración de los planes -->
       @for (plan of planes(); track $index) {
         <div
@@ -16,19 +16,13 @@
             {{ plan.title }}
           </h2>
 
-          <!-- Descripción del plan -->
-          <p class="text-gray-600 mb-4">
-            {{ plan.description }}
-          </p>
-
           <!-- Precio del plan -->
           <div class="text-4xl font-bold text-primary mb-4">
             {{ plan.price | currency }}
-            <span class="text-lg font-medium text-gray-500">/ {{ plan.period }}</span>
           </div>
 
           <!-- Características del plan -->
-          <ul class="list-disc list-inside text-gray-700 mb-6">
+          <ul class="list-disc list-inside text-gray-700 mb-6 text-sm">
             @for (item of plan.characteristic; track $index) {
               <li>
                 {{ item.description }}
@@ -52,10 +46,10 @@
     </div>
 
     <!-- Mensaje de error -->
-    <app-form-error-message [control]="form.controls.planIde"></app-form-error-message>
+    <app-form-error-message [control]="form.controls.planIde" />
 
     <!-- Botones de acción -->
-    <div class="flex justify-end gap-4">
+    <div class="flex justify-end gap-4 mt-6">
       @if (!loading()) {
         <button
           class="px-4 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"

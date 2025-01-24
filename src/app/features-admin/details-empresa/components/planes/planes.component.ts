@@ -55,6 +55,7 @@ export class PlanesComponent {
         .subscribe((resp) => {
           if (resp.status === 'OK') {
             this.plan.emit(resp);
+            window.location.reload();
           }
         });
     }
