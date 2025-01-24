@@ -18,6 +18,11 @@ export const routes: Routes & {
       import('./web/registro-contadores/registro-contadores.component').then((m) => m.RegistroContadoresComponent),
   },
   {
+    path: 'registro_empresa',
+    loadComponent: () =>
+      import('./web/registro-empresa/registro-empresa.component').then((m) => m.RegistroEmpresaComponent),
+  },
+  {
     path: 'login',
     loadChildren: () => import('./components/login/routes'),
     canActivate: [authGuardLoginGuard],

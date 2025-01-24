@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, Input, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { of, delay, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
@@ -33,10 +33,15 @@ export class InfoClienteEmpresaComponent {
       this.dropdownOpen.set(false);
     }
   }
+
+  @Input({ required: true }) set setPersonaRol(value: any) {
+    if (value !== null) {
+      this.getCustomer(value);
+    }
+  }
   public readonly loading = signal(false);
   public readonly dropdownOpen = signal(false);
   public readonly loadingCombo = signal(false);
-  public readonly persoRolIdEmisor = computed(() => this.configFactu.setEmisor());
   public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
   public readonly selectedCliente = signal<any | null>(null);
   public readonly previousEmisor = signal<number>(0);
@@ -114,24 +119,17 @@ export class InfoClienteEmpresaComponent {
     private readonly emisionService: EmisionService,
     public readonly configFactu: CreateFacturaEmpresaService,
   ) {
-    toObservable(this.persoRolIdEmisor)
-      .pipe(takeUntilDestroyed())
-      .subscribe((emisor) => {
-        if (emisor !== null && this.previousEmisor() !== emisor) {
-          this.selectedCliente.set(null);
-        }
-        this.previousEmisor.set(emisor || 0);
 
-        if (emisor !== null) {
-          this.emisionService.listCustomer(emisor).subscribe((resp) => {
-            if (resp.status === 'OK') {
-              resp.data.unshift(consumidorFinal);
-              this.originalOptions = resp; // Guardamos las opciones originales
-              this.filteredOptions.set(resp);
-            }
-          });
-        }
-      });
+  }
+
+  getCustomer(idePersona: number) {
+    this.emisionService.listCustomer(idePersona).subscribe((resp) => {
+      if (resp.status === 'OK') {
+        resp.data.unshift(consumidorFinal);
+        this.originalOptions = resp; // Guardamos las opciones originales nuevamente
+        this.filteredOptions.set(resp);
+      }
+    });
   }
 
   createCliente(event: any) {

@@ -39,7 +39,6 @@
       <a
         routerLink="/login"
         class="block border z-10000 border-gray-400 text-black px-6 py-2 rounded-lg hover:bg-blue-700 hover:bg-opacity-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 md:inline-block"
-
       >
         Login
       </a>
@@ -75,126 +74,126 @@
       <img src="assets/aplication.jpg" alt="Business Illustration" class="w-full h-auto" />
     </div>
   </section>
+  <section class="bg-gray-50 py-16" id="planes">
+    <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Planes para Contadores</h2>
+        <p class="text-lg text-gray-600 mt-4">
+          Escoge el plan que mejor se adapte a tus necesidades. ¡Obtén soluciones flexibles y fáciles de usar para tu
+          negocio!
+        </p>
+      </div>
 
-  <section class="bg-gray-50 py-16" >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slide 1: Planes para Contadores -->
-          <div class="swiper-slide p-6">
-            <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Planes para Contadores</h2>
-            <p class="text-lg text-gray-600 mt-4">
-              Si eres contador o asesor fiscal, tenemos planes especiales para ti. Registra tus empresas y lleva la
-              contabilidad de tus clientes de forma sencilla y eficiente.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-              <!-- Plan Básico -->
-              <div class="bg-white shadow-xl rounded-lg p-6">
-                <h3 class="text-2xl font-semibold text-gray-800 text-center">Básico</h3>
-                <p class="text-gray-600 mt-2 mb-6 text-center">Para pequeños negocios y emprendedores.</p>
-                <div class="text-4xl font-bold text-gray-900 mb-4 text-center">Plan Gratuito</div>
-                <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
-                  <li>Obtén tu primer registro de empresa completamente GRATIS.</li>
-                  <li>Gestionar Múltiples Empresas y Generar Facturas Personalizadas por Emisor.</li>
-                  <li>Gestión de Clientes y Control de Inventario por emisor</li>
-                  <li>Acceso a todas las funciones.</li>
-                  <li>Soporte prioritario 24/7.</li>
-                  <li>Facturas Electrónicas Ilimitadas.</li>
-                </ul>
-                <a
-                  routerLink="/registro_contadores"
-                  class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
-                >
-                  Registrarse Gratis
-                </a>
-              </div>
-
-              <!-- Plan Profesional -->
-              <div class="bg-white shadow-xl rounded-lg p-6">
-                <h3 class="text-2xl font-semibold text-gray-800 text-center">Profesional</h3>
-                <p class="text-gray-600 mt-2 mb-6 text-center">Para empresas en crecimiento con mayores necesidades.</p>
-                <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
-                  $4.99/ <span class="text-red-600">mensual</span>
-                </div>
-                <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
-                  <li>Registra 3 empresas por el precio de 1 (valido para el primer registro).</li>
-                  <li>Gestionar Múltiples Empresas y Generar Facturas Personalizadas por Emisor.</li>
-                  <li>Gestión de Clientes y Control de Inventario por emisor</li>
-                  <li>Acceso a todas las funciones.</li>
-                  <li>Facturas Electrónicas Ilimitadas.</li>
-                  <li>Soporte prioritario 24/7.</li>
-                </ul>
-                <a
-                  href="https://w.app/ATef2J"
-                  target="_blank"
-                  class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
-                >
-                  Elegir Plan
-                </a>
-              </div>
-            </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-12">
+        <div
+          class="bg-white shadow-xl rounded-lg p-8 transition-transform transform hover:scale-105 hover:shadow-2xl"
+          [ngClass]="{
+            'border-4 border-blue-600': selectedPlan === 'basico',
+            'border-transparent': selectedPlan !== 'basico',
+          }"
+          (click)="selectPlan('basico')"
+        >
+          <h3 class="text-2xl font-semibold text-gray-800 text-center">Básico</h3>
+          <p class="text-gray-600 mt-2 mb-6 text-center">Para pequeños negocios y emprendedores.</p>
+          <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
+            <span class="text-4xl"> Plan Gratuito</span>
           </div>
-
-          <!-- Slide 2: Planes para Empresas -->
-          <div class="swiper-slide p-6">
-            <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Planes para Empresas</h2>
-            <p class="text-lg text-gray-600 mt-4">
-              Si tienes una empresa o negocio, nuestros planes empresariales te ofrecen soluciones completas y
-              personalizadas para tu gestión contable.
-            </p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-              <!-- Plan Empresarial -->
-              <div class="bg-white shadow-xl rounded-lg p-6">
-                <h3 class="text-2xl font-semibold text-gray-800 text-center">Empresarial</h3>
-                <p class="text-gray-600 mt-2 mb-6 text-center">Para empresas grandes con necesidades avanzadas.</p>
-                <div class="text-4xl font-bold text-gray-900 mb-4 text-center">Plan Empresarial</div>
-                <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
-                  <li>Gestión avanzada de inventario y clientes.</li>
-                  <li>Soporte técnico especializado 24/7.</li>
-                  <li>Facturación por múltiples emisores.</li>
-                  <li>Integración con plataformas de pagos.</li>
-                </ul>
-                <a
-                  href="https://www.ejemplo.com/registro_empresa"
-                  target="_blank"
-                  class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
-                >
-                  Elegir Plan
-                </a>
-              </div>
-
-              <!-- Plan Corporativo -->
-              <div class="bg-white shadow-xl rounded-lg p-6">
-                <h3 class="text-2xl font-semibold text-gray-800 text-center">Corporativo</h3>
-                <p class="text-gray-600 mt-2 mb-6 text-center">Soluciones personalizadas para grandes corporaciones.</p>
-                <div class="text-4xl font-bold text-gray-900 mb-4 text-center">Plan Corporativo</div>
-                <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
-                  <li>Plan a medida para grandes empresas.</li>
-                  <li>Consultoría y soporte especializado.</li>
-                  <li>Acceso a herramientas de análisis de datos.</li>
-                  <li>Personalización de funciones avanzadas.</li>
-                </ul>
-                <a
-                  href="https://www.ejemplo.com/registro_corporativo"
-                  target="_blank"
-                  class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
-                >
-                  Elegir Plan
-                </a>
-              </div>
-            </div>
-          </div>
+          <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
+            <li>Obtén tu primer registro de empresa completamente GRATIS.</li>
+            <li>Acceso a todas las funciones</li>
+            <li>Facturas Electrónicas Ilimitadas</li>
+            <li>Soporte prioritario 24/7</li>
+            <li>Gestión de Clientes y Control de Inventario por emisor</li>
+            <li>Gestionar Múltiples Empresas y Generar Facturas Personalizadas por Emisor.</li>
+          </ul>
+          <a
+            routerLink="/registro_contadores"
+            class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
+          >
+            Registrase Gratis
+          </a>
         </div>
 
-        <div class="swiper-pagination"></div>
+        <div
+          class="bg-white shadow-xl rounded-lg p-8 transition-transform transform hover:scale-105 hover:shadow-2xl"
+          [ngClass]="{
+            'border-4 border-blue-600': selectedPlan === 'profesional',
+            'border-transparent': selectedPlan !== 'profesional',
+          }"
+          (click)="selectPlan('profesional')"
+        >
+          <h3 class="text-2xl font-semibold text-gray-800 text-center">Profesional</h3>
+          <p class="text-gray-600 mt-2 mb-6 text-center">Para empresas en crecimiento con mayores necesidades.</p>
+          <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
+            $4.99/ <span class="text-red-600">mensual</span>
+          </div>
+          <ul class="list-disc list-inside text-gray-600 space-y-3 mb-6 text-sm">
+            <li>Registra 3 empresas por el precio de 1 (valido para el primer registro).</li>
+            <li>Acceso a todas las funciones</li>
+            <li>Facturas Electrónicas Ilimitadas</li>
+            <li>Soporte prioritario 24/7</li>
+            <li>Gestión de Clientes y Control de Inventario por emisor</li>
+            <li>Gestionar Múltiples Empresas y Generar Facturas Personalizadas por Emisor.</li>
+          </ul>
+          <a
+            href="https://w.app/ATef2J"
+            target="_blank"
+            class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
+          >
+            Elegir Plan
+          </a>
+        </div>
+      </div>
+    </div> -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 text-center">
+      <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-4">Planes Facturación Electrónicas</h2>
+      <p class="text-lg text-gray-600 mt-4">
+        Escoge el plan que mejor se adapte a tus necesidades. ¡Obtén soluciones flexibles y fáciles de usar para tu
+        negocio!
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mt-6">
+        @for (item of plan()?.data; track $index) {
+          <div
+            class="bg-white shadow-xl rounded-lg p-8 transition-transform transform hover:scale-105 hover:shadow-2xl"
+            [ngClass]="{
+              'border-4 border-blue-600': selectedPlan === item.title,
+              'border-transparent': selectedPlan !== item.title,
+            }"
+            (click)="selectPlan(item.title)"
+          >
+          <h3 class="text-lg font-semibold text-gray-800 text-center uppercase">{{ item.title }}</h3>
+          <p class="text-gray-600 mt-2 mb-6 text-center text-sm">{{ item.description }}</p>
+            <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
+              <span>
+                {{ item.free ? '00.00' : (item.price | currency) }}/<span class="text-red-600 text-lg">Anual</span>
+              </span>
+            </div>
+            @for (item of item.characteristic; track $index) {
+              <ul class="list-disc list-inside text-gray-600 space-y-3 mb-2 text-sm text-left">
+                <li>
+                  {{ item.description }}
+                </li>
+              </ul>
+            }
 
-        <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-
-        <!-- If we need scrollbar -->
-        <div class="swiper-scrollbar"></div>
+            @if (item.free) {
+              <a
+                routerLink="/registro_empresa"
+                class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
+              >
+                Registrase Gratis
+              </a>
+            } @else {
+              <a
+                href="https://w.app/ATef2J"
+                target="_blank"
+                class="block bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors mt-6"
+              >
+                Elegir Plan
+              </a>
+            }
+          </div>
+        }
       </div>
     </div>
   </section>

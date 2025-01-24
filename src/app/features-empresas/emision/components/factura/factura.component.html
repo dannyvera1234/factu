@@ -8,19 +8,25 @@
   <div class="mb-4">
     @defer {
       <section class="bg-white rounded-lg shadow m-4">
-        <app-info-empresa/>
+        <app-info-empresa
+        (idePersonaRol)="$event && setPersonaRol($event)"
+        />
       </section>
     }
     @defer {
       <section class="bg-white rounded-lg shadow m-4">
-        <app-info-cliente-empresa/>
+        <app-info-cliente-empresa
+        [setPersonaRol]="ide()"
+        />
       </section>
     }
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 m-4">
     @defer {
       <section class="lg:col-span-3 space-y-4">
-       <app-info-productos/>
+       <app-info-productos
+       [setPersonaRol]="ide()"
+       />
       </section>
     }
     @defer {

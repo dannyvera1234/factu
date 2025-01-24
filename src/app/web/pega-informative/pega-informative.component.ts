@@ -1,10 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { CurrencyPipe, NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import Swiper from 'swiper';
+import { RegisterCounteWebService } from '../../services/register-counte-web.service';
+import { GeneriResp } from '../../interfaces';
+import { finalize, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-pega-informative',
-  imports: [RouterLink],
+  imports: [RouterLink, NgClass, CurrencyPipe],
   templateUrl: './pega-informative.component.html',
   styles: `
     html {
@@ -62,10 +65,14 @@ import Swiper from 'swiper';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PegaInformativeComponent implements AfterViewInit {
+export class PegaInformativeComponent {
   selectedPlan: string | null = null;
 
   isMenuOpen = false;
+
+  public readonly plan = signal<GeneriResp<any[]> | null>(null);
+
+  public readonly loanding = signal(false);
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -75,22 +82,21 @@ export class PegaInformativeComponent implements AfterViewInit {
   selectPlan(plan: string) {
     this.selectedPlan = plan;
   }
-  ngAfterViewInit(): void {
-    // Inicializa Swiper después de que la vista esté lista
-    const swiper = new Swiper('.swiper', {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-      scrollbar: {
-        el: '.swiper-scrollbar',
-      },
+  constructor(private readonly planesService: RegisterCounteWebService) {
+    this.planes();
+  }
+
+  planes() {
+    of(this.loanding.set(true)).pipe(
+      mergeMap(() => this.planesService.planes()),
+      finalize(() => this.loanding.set(false))
+    ).subscribe((resp:any) => {
+      if (resp.status === 'OK') {
+        this.plan.set(resp);
+        console.log(this.plan());
+      }
+
     });
   }
+
 }

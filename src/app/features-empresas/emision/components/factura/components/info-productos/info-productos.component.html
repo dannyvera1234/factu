@@ -94,7 +94,9 @@
       </header>
       @defer {
         <section class="p-4">
-          <app-lista-productos (addProducto)="addProduct.close()" (addProducto)="$event && addProducto($event)" />
+          <app-lista-productos (addProducto)="addProduct.close()" (addProducto)="$event && addProducto($event)"
+          [setPersonaRol]="setPersonaRol"
+          />
         </section>
       }
     </div>

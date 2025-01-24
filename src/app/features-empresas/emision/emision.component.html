@@ -58,3 +58,38 @@
     </div>
   </div>
 }
+@defer {
+  @if ((validateInfo()?.data)!.valid === false) {
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+      <div class="bg-white rounded-lg p-8 w-[30%] shadow-lg">
+        <div class="flex flex-col items-center mb-6">
+          <img src="assets/icon/alert.svg" alt="alert icon" class="size-20 mb-4" />
+          <h3 class="text-xl font-semibold text-gray-800 text-center">¡Ups! Algo salió mal</h3>
+        </div>
+        <p class="text-sm text-gray-600 mb-4 text-justify">
+          Tu cuenta no tiene la información registrada. Completa los datos necesarios para continuar con el proceso de
+          emisión de facturas.
+        </p>
+
+        <ul class="text-sm text-gray-600 p-4 text-justify">
+          <!-- <p class="text-center font-medium text-gray-700 mb-2">Observaciones:</p> -->
+          @for (item of (validateInfo()?.data)!.observations; track $index) {
+            <li class="mb-2">
+              <span class="text-red-500">*</span>
+              {{ item }}
+            </li>
+          }
+        </ul>
+
+        <div class="flex justify-center gap-4">
+          <button
+            class="text-[#4A5568] flex font-semibold px-3 py-3 ml-2 h-[95%] bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center transition-colors duration-300 hover:bg-[#CBD5E0] hover:text-[#2D3748]"
+            routerLink="/sistema_contable_empresa/configuracion"
+          >
+            Completar información
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

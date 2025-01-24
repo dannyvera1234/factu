@@ -10,7 +10,6 @@ import { DocumentosService } from '@/services/service-empresas';
 export class CreateFacturaEmpresaService {
   public readonly loading = signal(false);
 
-  public readonly setEmisor = signal<number | null>(null);
 
   public readonly idePersona = signal<number>(0);
 

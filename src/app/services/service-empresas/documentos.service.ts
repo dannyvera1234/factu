@@ -57,4 +57,12 @@ export class DocumentosService {
   }
 
 
+  validateInformation(): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, '');
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/validateInformation`, {
+      body: payload,
+    });
+  }
+
+
 }

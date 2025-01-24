@@ -3,3 +3,6 @@ export * from './clientes.service';
 export * from './inventario.service';
 export * from './documentos.service';
 export * from './empresa.service';
+export * from './proveedor.service';
+export * from './emision.service';
+export * from './home.service';

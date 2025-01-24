@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, Output, signal } from '@angular/core';
 import { of, finalize, mergeMap } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService } from '@/utils/services';
@@ -37,6 +37,8 @@ export class InfoEmpresaComponent {
 
   public readonly getListEstablishment = signal<any[]>([]);
 
+   @Output() public readonly idePersonaRol = new EventEmitter<any | null>();
+
   public readonly transformedEstabliecimient = computed<{ values: number[]; labels: string[] }>(() =>
     this.getListEstablishment().reduce(
       (acc: any, item: any) => {
@@ -65,10 +67,12 @@ export class InfoEmpresaComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+
           this.infoEmpresa.set(resp);
-          this.configFactu.setEmisor.set(resp.data.idePersonaRol);
+
           this.configFactu.infoEmisor.set(resp.data);
           this.getListEstablishmentByEmisor(resp.data.idePersonaRol);
+          this.idePersonaRol.emit(resp.data.idePersonaRol);
         }
       });
   }

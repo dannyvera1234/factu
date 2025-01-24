@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
@@ -13,6 +13,10 @@ import { CreateFacturaEmpresaService } from '../../create-factura-empresa.servic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoProductosComponent {
+   @Input({ required: true }) setPersonaRol!: any;
+
+  public readonly idePersona = signal<number | null>(null);
+
   constructor(private config: CreateFacturaEmpresaService) {}
 
   public readonly products = signal<any[]>([]);

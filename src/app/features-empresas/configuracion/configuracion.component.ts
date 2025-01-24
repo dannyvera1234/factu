@@ -7,6 +7,7 @@ import { ConfigFacturacionService } from '@/utils/services';
 import { CustomDatePipe, FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { EmpresaService } from '@/services/service-empresas';
 import {
+  BalanceComponent,
   CreateEstablecimientoComponent,
   CreateFileComponent,
   DeleteEstablecimientoComponent,
@@ -15,6 +16,7 @@ import {
   InfoCardEmpresaComponent,
   ListaClientesEmpresaComponent,
   ListaDocEmpresaComponent,
+  ProveedoresComponent,
   SequentialComponent,
   UpdateEmisorComponent,
   UpdateEmisorTributariaComponent,
@@ -47,6 +49,8 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
     ListaProductoEmpresaComponent,
     ListaDocEmpresaComponent,
     InfoCardEmpresaComponent,
+    ProveedoresComponent,
+    BalanceComponent,
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
@@ -55,7 +59,7 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes'>('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes'| 'balance' | 'Proveedores'>('clientes');
 
   public readonly loading = signal(false);
 
@@ -80,7 +84,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes'): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proveedores' | 'balance'): void {
     this.selectedTab.set(tab);
   }
 
