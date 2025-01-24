@@ -63,7 +63,6 @@ export class InfoProductosComponent {
     product.valorIVA = (product.subTotal * product.tariffIva) / 100;
     product.valorTotal = product.subTotal + product.valorIVA;
 
-    console.log(product.subTotal, product.valorIVA, product.valorTotal);
     // Actualizar el producto en el array de productos
     this.products.update((currentProducts) => {
       const existingProduct = currentProducts.find((p) => p.ide === product.ide);

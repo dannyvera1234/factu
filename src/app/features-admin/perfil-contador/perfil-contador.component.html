@@ -4,7 +4,7 @@
       <!-- Barra de acciones superior -->
       <div class="flex items-center justify-between mb-4 gap-4 flex-wrap">
         <div class="flex flex-col items-start gap-1">
-          <h3 class="text-2xl font-semibold">Lista de perfiles de contadores</h3>
+          <h3 class="text-2xl font-semibold">Lista de contadores</h3>
           <span class="text-xs text-gray-500">
             Aquí puedes ver y administrar los perfiles de contadores de tu empresa.
           </span>
@@ -34,12 +34,11 @@
           <thead>
             <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
               <th class="px-4 py-3 text-left">Nombres</th>
-              <th class="px-4 py-3 text-left">Identificación</th>
+              <th class="px-4 py-3">Identificación</th>
               <th class="text-left p-3">Telefono</th>
               <th class="text-center p-3">Estado</th>
               <th class="text-left p-3">Email</th>
-              <th class="text-center p-3">Cantidad C.</th>
-              <th class="text-left p-3">Perfil</th>
+              <th class="text-center p-3">Cantidad Empresa</th>
               <th class="text-left p-3"></th>
             </tr>
           </thead>
@@ -70,10 +69,10 @@
                         </div>
                       </a>
                     </td>
-                    <td>
+                    <td class="text-center">
                       {{ counter.identificationNumber }}
                     </td>
-                    <td>
+                    <td class="text-center">
                       {{ counter.cellPhone | formatPhone }}
                     </td>
                     <td class="text-center">
@@ -93,13 +92,11 @@
                     <td class="text-center">
                       {{ counter.amountCustomer }}
                     </td>
-                    <td>
-                      {{ counter.profileName }}
-                    </td>
+
                     <td>
                       <div class="flex gap-1">
                         <button
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                           (click)="deleteCounter.open(); viewing.set(counter.idePersonaRol)"
                         >
                           <div class="relative size-4 shrink-0">
@@ -111,7 +108,7 @@
                   </tr>
                 }
               </tbody>
-            }@else {
+            } @else {
               <tbody>
                 <td colspan="100%">
                   <div class="text-center py-4 max-w-2xl mx-auto">
@@ -127,7 +124,8 @@
                     </div>
                     <h3 class="text-2xl font-bold">No hay empresas registradas</h3>
                     <p class="text-balance">
-                      No se encontraron empresas registradas en el sistema. Puedes agregar una nueva empresa haciendo clic en el botón agregar.
+                      No se encontraron empresas registradas en el sistema. Puedes agregar una nueva empresa haciendo
+                      clic en el botón agregar.
                     </p>
                   </div>
                 </td>

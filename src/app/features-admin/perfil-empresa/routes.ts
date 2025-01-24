@@ -10,6 +10,13 @@ export default [
      path:'create',
      loadComponent: () => import('@/features-admin/create-counter-application').then((m) => m.CreateCounterApplicationComponent),
    },
+   {
+    path: ':idePersonaRolEncrypted',
+    loadComponent: () =>
+      import('../details-empresa/details-empresa.component').then(
+        (m) => m.DetailsEmpresaComponent,
+      ),
+  },
 
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ] satisfies Route[];

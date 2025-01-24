@@ -1,0 +1,231 @@
+@if (loading()) {
+  <div class="h-full text-center flex justify-center items-center">
+    <div class="loader"></div>
+  </div>
+} @else {
+  @if (counterByPersona()!.data; as byPersona) {
+    <div class="flex flex-col lg:flex-row gap-4 p-4">
+      <aside class="w-full lg:w-1/4 flex flex-col gap-4">
+        <div class="bg-white rounded-lg shadow p-4 py-6">
+          <header class="relative text-center mb-6">
+            <!-- Botón de configuración en la esquina -->
+            <div class="relative group">
+              <!-- Botón de configuración -->
+              <button
+                class="absolute -top-4 -right-2 p-1"
+                aria-label="Configuración"
+                (click)="planesModal.open(); personaRolIde.set(byPersona.idePersonaRol)"
+              >
+                <img src="assets/icon/config.svg" alt="Configuración" />
+              </button>
+            </div>
+
+            @if (byPersona.photo) {
+              <div class="relative group w-24 h-24 mx-auto">
+                <!-- Imagen de la persona -->
+                <img [src]="byPersona.photo" alt="Foto" class="rounded-full w-full h-full object-cover" />
+
+                <!-- Ícono de eliminar -->
+              </div>
+            } @else {
+              <div
+                class="relative group bg-blue-950 text-white rounded-full size-20 flex items-center justify-center mb-4 mx-auto text-2xl"
+              >
+                {{ byPersona.names + ' ' + byPersona.lastName | initials }}
+              </div>
+            }
+
+            <h2 class="text-xl truncate">{{ byPersona.names + ' ' + byPersona.lastName }}</h2>
+            @if (byPersona.dateBirth) {
+              <p class="text-neutral-500 truncate">{{ byPersona.dateBirth | customDate }}</p>
+            }
+            <span
+              class="px-2 py-1 text-xs text-white rounded-full mt-2"
+              [ngClass]="{
+                'bg-green-500': byPersona.environmentCode === '2',
+                'bg-red-500': byPersona.environmentCode === '1',
+              }"
+            >
+              {{ config.environmentCode()[byPersona.environmentCode] }}
+            </span>
+          </header>
+
+          <div class="group open" #details>
+            <div class="flex justify-between items-center">
+              <button (click)="details.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Personal</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div>
+                  <div class="mb-2">
+                    <h4 class="mb-2">Telefono</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.cellPhone | formatPhone }}
+                    </p>
+                  </div>
+                  <div class="mb-2">
+                    <h4>RUC</h4>
+
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.identificationNumber | formatId }}
+                    </p>
+                  </div>
+
+                  <div class="mb-2">
+                    <h4>Email</h4>
+                    <p class="text-neutral-500 mb-2">
+                      {{ byPersona.email }}
+                    </p>
+                  </div>
+
+                  <hr class="my-2" />
+                  <div class="flex justify-between items-center">
+                    <button class="flex gap-2 items-center">
+                      <h3 class="text-black">Establecimiento</h3>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 truncate">
+                    @for (item of byPersona.subsidiaries; track $index) {
+                      <div class="flex items-center gap-4 p-2 rounded-lg">
+                        <div class="bg-red-600 rounded-full size-8 flex items-center justify-center shrink-0">
+                          <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
+                        </div>
+
+                        <div class="grow truncate">
+                          <p class="text-gray-700 truncate">{{ item.code }}</p>
+                          <p class="text-sm text-gray-500 truncate">{{ item.address }}</p>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+          <div class="group" #filters>
+            <div class="flex justify-between items-center">
+              <button (click)="filters.classList.toggle('open')" class="flex gap-2 items-center">
+                <h3 class="text-black">Informacion Tributaria</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
+            </div>
+            <hr class="my-2" />
+            <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <div class="*:mb-4">
+                  <div>
+                    <h4>Nombre Comercial</h4>
+                    <p class="text-neutral-500">{{ byPersona.comercialName }}</p>
+                  </div>
+                  <div>
+                    <h4>Razon Social</h4>
+                    <p class="text-neutral-500">
+                      {{ byPersona.socialReason }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4>Dirección Matriz</h4>
+                    <p class="text-neutral-500">{{ byPersona.mainAddress }}</p>
+                  </div>
+
+                  <div>
+                    <div class="text-neutral-500">
+                      <p>Rimpe: {{ config.rimpe()[byPersona.rimpe.toString()] }}</p>
+                      <p>rimpe Popular: {{ config.rimpe()[byPersona.rimpePopular.toString()] }}</p>
+                      <p>Lleva Contabilidad: {{ config.rimpe()[byPersona.requiredAccounting.toString()] }}</p>
+                      <p>Tipo de Persona: {{ config.typePerson()[byPersona.typePerson] }}</p>
+                      @if (byPersona.retentionAgent) {
+                        <p>Agente de Retención: {{ byPersona.retentionAgent }}</p>
+                      }
+                      @if (byPersona.specialContributor) {
+                        <p>Contribuyente Especial: {{ byPersona.specialContributor }}</p>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow px-5 py-4">
+          <div class="flex justify-between items-center">
+            <div class="flex gap-2 items-center">
+              <h3 class="text-black">Firma Electrónica</h3>
+            </div>
+          </div>
+
+          <hr class="my-3" />
+          @if (uploadingDoc()) {
+            <div class="text-center p-4">
+              <div class="loader"></div>
+            </div>
+          } @else {
+            @if (byPersona.certificates.length) {
+              @for (item of byPersona.certificates; track $index) {
+                <div class="p-2 rounded-lg flex items-center gap-3 bg-white border border-neutral-300">
+                  <div
+                    class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer bg-orange-500"
+                  >
+                    <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
+                  </div>
+
+                  <div class="grow truncate">
+                    <a class="truncate text-sm">{{ item.name }}</a>
+                    <div class="flex gap-2 items-center">
+                      <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+            } @else {
+              <div class="p-4 text-center bg-neutral-100 rounded-lg border border-neutral-300">
+                <p class="text-neutral-500">No hay firma electrónica disponible.</p>
+              </div>
+            }
+          }
+        </div>
+      </aside>
+
+      <main class="flex flex-col gap-8 w-full lg:w-3/4 mx-auto">
+        @defer {
+          <app-info [idePersonaRol]="byPersona.idePersonaRol" />
+        }
+      </main>
+    </div>
+  }
+}
+
+<app-modal #planesModal>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Seleccionar Planes</h2>
+          <button (click)="planesModal.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+
+        @if (personaRolIde(); as ide) {
+          <section class="p-4">
+            <app-planes (plan)="planesModal.close()" [idePersonaRol]="ide" />
+          </section>
+        }
+      </div>
+    </div>
+  }
+</app-modal>

@@ -21,4 +21,11 @@ export class CompanyService {
       body: payload,
     });
   }
+
+  getCompanyByEmisor(personaRolIdeEncrypted: string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES, { personaRolIdeEncrypted });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/admin/retrieveEmisor`, {
+      body: payload,
+    });
+  }
 }

@@ -32,7 +32,6 @@ export class PerfilEmpresaComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.company.set(resp);
-          console.log(resp);
         }
       });
   }

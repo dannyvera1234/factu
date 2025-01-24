@@ -73,7 +73,6 @@ export class CreateFacturaEmpresaService {
       return;
     }
 
-    console.log('infoEmisor', this.products());
     // Obtener la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
     const formattedDate = new Intl.DateTimeFormat('en-CA', {

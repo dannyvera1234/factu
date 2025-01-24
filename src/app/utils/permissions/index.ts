@@ -9,6 +9,8 @@ export enum Modulos {
   MODULE_EJEMPLO = 'EJEMPLO',
   PAGE_SIZE = 10,
 
+MODULE_PLANES = 'PLANES', // planes
+
 
 
   // cuenta para empresas

@@ -92,7 +92,6 @@ export class ConfiguracionComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.emisorInfo.set(resp);
         }
       });
