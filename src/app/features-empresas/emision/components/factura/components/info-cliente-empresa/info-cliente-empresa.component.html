@@ -80,19 +80,16 @@
           </div>
         }
       </div>
-      @if (setPersonaRol) {
-        <button
-          class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
-          (click)="createClient.open()"
-        >
-          <div
-            class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center"
-          >
-            <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
-          </div>
-          Nuevo Cliente
-        </button>
-      }
+
+      <button
+        class="px-3 py-2 text-sm font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
+        (click)="createClient.open()"
+      >
+        <div class="relative size-4 shrink-0 mr-2 border border-gray-500 rounded-full flex items-center justify-center">
+          <img src="/assets/icon/add-product.svg" alt="Create" class="size-3" />
+        </div>
+        Nuevo Cliente
+      </button>
     </div>
   </div>
   @if (loading()) {

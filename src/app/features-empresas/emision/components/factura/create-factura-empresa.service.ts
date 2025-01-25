@@ -90,7 +90,7 @@ export class CreateFacturaEmpresaService {
         mainAddress: infoEmisor.address,
         email: infoEmisor.email,
         cellPhone: infoEmisor.cellPhone,
-        personaRolIde: infoEmisor.personaRolIde,
+        // personaRolIde: infoEmisor.personaRolIde,
       },
       infoCustomer: {
         identificationNumber: infoCustomer.identificationNumber,
@@ -104,7 +104,7 @@ export class CreateFacturaEmpresaService {
       infoSubsidiaryReqDTO: {
         establishmentCode: this.selectedEstabliecimient(),
         pointCode: this.pointCode(),
-        address: infoEmisor.address,
+        address: infoEmisor.mainAddress,
       },
       infoInvoiceReqDTO: {
         documentType: '01',
@@ -158,6 +158,7 @@ export class CreateFacturaEmpresaService {
       },
       observation: null,
     };
+
 
     // Mostrar el cargador mientras se procesa la factura
     of(this.loading.set(true))

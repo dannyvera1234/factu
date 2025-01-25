@@ -3,14 +3,14 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
 import { PaginationComponent } from '@/components/pagination';
-import { CurrencyPipe, NgClass } from '@angular/common';
+import { CurrencyPipe, NgClass, SlicePipe } from '@angular/common';
 import { CustomDatePipe } from '@/pipes';
 import { DocumentosService } from '@/services/service-empresas';
 import { DetailsService } from '@/feature-counters/details-counter-application';
 
 @Component({
   selector: 'app-lista-doc-empresa',
-  imports: [PaginationComponent, NgClass, CurrencyPipe, CustomDatePipe],
+  imports: [PaginationComponent, NgClass, CurrencyPipe, CustomDatePipe, SlicePipe],
   templateUrl: './lista-doc-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,6 +62,18 @@ export class ListaDocEmpresaComponent {
         }
       });
   }
+
+  copyToClipboard(value: string) {
+    navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        this.notification.push({
+          message: 'Clave de acceso copiada al portapapeles',
+          type: 'success',
+        });
+      })
+  }
+
   onPageChange(newPage: number): void {
     const pagination = this.listInvoices()?.data?.page;
 
@@ -78,18 +90,18 @@ export class ListaDocEmpresaComponent {
   }
 
   reeviarEmail(id: number) {
-     of(this.loading.set(true))
-       .pipe(
-         mergeMap(() => this.docService.sendNotification(id)),
-         finalize(() => this.loading.set(false)),
-       )
-       .subscribe((res) => {
-         if (res.status === 'OK') {
-           this.notification.push({
-             message: 'Correo enviado correctamente',
-             type: 'success',
-           });
-         }
-       });
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.docService.sendNotification(id)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          this.notification.push({
+            message: 'Correo enviado correctamente',
+            type: 'success',
+          });
+        }
+      });
   }
 }

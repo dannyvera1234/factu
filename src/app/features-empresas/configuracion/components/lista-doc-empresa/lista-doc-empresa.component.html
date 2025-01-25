@@ -22,13 +22,14 @@
 <hr class="my-4" />
 <section>
   <div class="relative flex items-center justify-between">
-    <table class="w-full text-left">
+    <table class="w-full text-left text-xs">
       <thead>
         <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombres</th>
           <th class="px-4 py-3 text-center">Identificación</th>
-          <th class="px-4 py-3 text-center">Fecha de Emisión</th>
-          <th class="px-4 py-3 text-center">Estado</th>
+          <th class="px-4 py-3 text-center">F Emisión</th>
+          <th class="px-3 py-2 text-center">Estado</th>
+          <th class="px-4 py-3 text-center">Clave Acceso</th>
           <th class="px-4 py-3 text-center">Ambiente</th>
           <th class="px-4 py-3 text-center">Total</th>
           <th class="px-4 py-3 text-center"></th>
@@ -48,7 +49,7 @@
         <tbody>
           @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
             @for (invoice of listInvoices()!.data!.listData; track $index) {
-              <tr class="border-b hover:bg-gray-100 text-sm">
+              <tr class="border-b hover:bg-gray-100 ">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div
@@ -60,7 +61,7 @@
 
                     <div class="flex items-center gap-2">
                       <div>
-                        <p class="font-bold">{{ invoice.socialReasonCustomer }}</p>
+                        <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
                         <div class="flex items-center gap-2">
                           <div class="relative">
                             {{ invoice.electronicDesTypeDoc }}
@@ -121,9 +122,36 @@
                 <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
-                <td class="px-4 py-3 text-center">
+                <td class="px-2 py-3 text-center lowercase">
                   {{ invoice.statusProcess }}
                 </td>
+                <td class="px-4 py-3 text-center truncate">
+                    @if (invoice.pdf !== null) {
+                    {{ invoice.keyAccess | slice: 0 : 6 }}...
+                    <button (click)="copyToClipboard(invoice.keyAccess)" class="text-blue-600 hover:text-blue-800">
+                      <svg
+                        class="w-6 h-6 text-black hover:text-green-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z"
+                          clip-rule="evenodd"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  }
+                  </td>
 
                 <td class="px-2 py-1 text-center text-xs">
                   <div

@@ -93,7 +93,6 @@ export class InfoEmpresaComponent implements OnInit {
   getListEstablishmentByEmisor(personaRolIde: number) {
     this.facturacionService.subsidiaries(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
-        console.log(resp.data);
         this.getListEstablishment.set(resp.data);
       }
     });

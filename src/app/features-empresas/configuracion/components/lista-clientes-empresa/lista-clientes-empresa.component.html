@@ -21,7 +21,7 @@
 <hr class="my-4" />
 <section>
   <div class="relative overflow-x-auto">
-    <table class="w-full text-left">
+    <table class="w-full text-left text-sm">
       <thead>
         <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombres</th>
@@ -45,7 +45,7 @@
         <tbody>
           @if (listClientes() && listClientes()!.data.length > 0) {
             @for (cliente of listClientes()!.data; track $index) {
-              <tr class="border-b hover:bg-gray-100 text-sm">
+              <tr class="border-b hover:bg-gray-100  text-xs">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
