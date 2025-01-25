@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GeneriResp } from '../../../../../../interfaces';
 import { AccountingControlSystemService } from '../../../../../../utils/services';
@@ -14,6 +14,7 @@ import { CreateFacturaEmpresaService } from '../../create-factura-empresa.servic
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResumenPagoEnpresaComponent {
+  @Input({required: true})valid!: boolean;
 public readonly listProduct = computed(() => this.configFactu.products());
 
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);

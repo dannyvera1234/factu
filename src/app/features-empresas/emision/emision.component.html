@@ -23,7 +23,9 @@
           @switch (selectedTab()) {
             @case ('facturacion') {
               @defer {
-                <app-factura />
+                <app-factura
+                [valid]="validateInfo()?.data?.valid"
+                />
               }
             }
             @case ('clientes') {

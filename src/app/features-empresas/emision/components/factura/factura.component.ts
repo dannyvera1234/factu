@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import {
   InfoClienteEmpresaComponent,
   InfoEmpresaComponent,
@@ -15,6 +15,8 @@ import { CreateFacturaEmpresaService } from './create-factura-empresa.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacturaComponent {
+  @Input({required: true})valid!: boolean;
+
   constructor(public readonly config: CreateFacturaEmpresaService) {}
 
   public readonly ide = signal<number | null>(null);
