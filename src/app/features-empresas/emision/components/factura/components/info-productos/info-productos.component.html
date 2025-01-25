@@ -55,7 +55,7 @@
           <td class="p-2">{{ product.tariffDesIva }}</td>
           <td class="p-2">{{ product.valorIVA | currency }}</td>
           <td class="p-2">{{ product.subTotal | currency }}</td>
-          <td class="p-2">${{ product.valorTotal | currency }}</td>
+          <td class="p-2">{{ product.valorTotal | currency }}</td>
           <td class="p-2">
             <button (click)="removeProduct(product.ide)" class="p-1 hover:bg-red-100 rounded">
               <img src="assets/icon/trash-icon.svg" alt="" class="size-5" />

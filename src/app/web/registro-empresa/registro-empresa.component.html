@@ -1,25 +1,51 @@
 <div class="min-h-screen bg-white text-gray-800 relative overflow-hidden">
-  <!-- Fondo decorativo -->
-  <div class="absolute inset-0">
-    <div class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-72 h-72 top-10 left-10"></div>
-    <div class="absolute bg-gray-200 opacity-20 rounded-full animate-pulse w-60 h-60 top-20 right-10"></div>
-    <div class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-72 h-72 bottom-20 left-1/2"></div>
-    <div class="absolute bg-gray-200 opacity-10 rounded-full animate-pulse w-96 h-96 top-1/4 right-1/3"></div>
-    <div class="absolute bg-gray-200 opacity-25 rounded-full animate-pulse w-60 h-60 top-40 left-1/4"></div>
+  <!-- Circles Background -->
+  <div class="absolute top-0 left-0 w-full h-full">
+    <div
+      class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-96 h-96 top-10 left-10 sm:w-72 sm:h-72"
+    ></div>
+    <div
+      class="absolute bg-gray-200 opacity-20 rounded-full animate-pulse w-80 h-80 top-20 right-10 sm:w-64 sm:h-64"
+    ></div>
+    <div
+      class="absolute bg-gray-200 opacity-30 rounded-full animate-pulse w-72 h-72 bottom-20 left-1/4 sm:w-56 sm:h-56"
+    ></div>
+    <div
+      class="absolute bg-gray-200 opacity-10 rounded-full animate-pulse w-96 h-96 top-1/4 right-1/4 sm:w-64 sm:h-64"
+    ></div>
+    <div
+      class="absolute bg-gray-200 opacity-25 rounded-full animate-pulse w-60 h-60 top-40 left-1/2 sm:w-48 sm:h-48"
+    ></div>
   </div>
 
   <!-- Navbar -->
-  <header class="flex justify-between items-center px-6 py-4 md:px-10 bg-white shadow-md relative z-10">
-    <div class="text-lg font-bold">
+  <header class="flex justify-between items-center p-4 md:px-8 shadow-md relative z-20 bg-white">
+    <!-- Logo -->
+    <a  href="" class="text-lg font-bold">
       <img src="assets/olimpush.png" alt="logo" class="h-14" />
-    </div>
-    <nav class="hidden md:flex space-x-8 items-center">
-      <a href="" class="hover:text-blue-600 transition-colors duration-200">Inicio</a>
+    </a>
 
+    <!-- Botón hamburguesa (solo visible en móviles) -->
+    <button class="block md:hidden text-black focus:outline-none z-30" aria-label="Abrir menú" (click)="toggleMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+      </svg>
+    </button>
+
+    <!-- Menú de navegación -->
+    <nav
+      [class.hidden]="!isMenuOpen"
+      class="absolute top-full left-0 w-full bg-white shadow-md md:static md:flex md:space-x-8 items-center md:shadow-none md:w-auto"
+    >
+      <a
+        href=""
+        class="block border z-30 border-gray-400 text-black px-6 py-2 rounded-lg hover:bg-blue-700 hover:bg-opacity-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 md:inline-block md:border-0 md:hover:bg-transparent md:hover:text-black"
+      >
+        Inicio
+      </a>
       <a
         routerLink="/login"
-        class="border border-gray-400 text-black px-6 py-2 rounded-lg hover:bg-blue-700 hover:bg-opacity-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-        aria-label="Iniciar sesión"
+        class="block border z-30 border-gray-400 text-black px-6 py-2 rounded-lg hover:bg-blue-700 hover:bg-opacity-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 md:inline-block"
       >
         Login
       </a>
@@ -71,7 +97,7 @@
               >
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
-              Gestión de Clientes y Control de Inventario por emisor.
+              Gestión de Clientes y Control de Inventario.
             </li>
             <li class="flex items-center">
               <svg
@@ -108,7 +134,7 @@
         } @else {
           <div class="bg-white rounded-2xl shadow-lg p-8 z-10">
             <h2 class="text-2xl text-center font-semibold text-gray-800">
-              Registro de Cuenta Gratuita para general Facturas Electrónicas
+              Regístrate y Genera Facturas Electrónicas Gratis
             </h2>
 
             <form [formGroup]="form" class="mt-6 space-y-4">

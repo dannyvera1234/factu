@@ -15,9 +15,11 @@ import { EmpresaService } from '@/services/service-empresas';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateEstablecimientoComponent {
-  @Input({ required: true }) set ruc(value: string) {
+  @Input({ required: true }) set ruc(value: any) {
     this.form.patchValue({
-      ruc: value,
+      ruc: value.identificationNumber,
+      email: value.email,
+      cellPhone: value.cellPhone,
     });
   }
 

@@ -56,9 +56,10 @@
                 <div class="rounded-lg bg-blue-50 p-2">
                   <img src="assets/icon/address.svg" alt="" />
                 </div>
+
                 <div class="space-y-1 min-w-0">
                   <p class="text-sm text-gray-500">Dirección</p>
-                  <p class="font-medium truncate">{{ empresa.address }}</p>
+                  <p class="font-medium truncate">{{ empresa.mainAddress }}</p>
                 </div>
               </div>
 
@@ -104,6 +105,7 @@
                           placeholder="Seleccione un establecimiento"
                           [options]="transformedEstabliecimient().values"
                           [labels]="transformedEstabliecimient().labels"
+                          (ngModelChange)="onEstablishmentSelect()"
                         />
                         <button
                           (click)="toggleEdit('establishment')"

@@ -18,6 +18,17 @@
   </div>
 
   <div class="relative hidden lg:flex items-center space-x-2">
+    <div class="mr-6">
+      <a
+        class="flex items-center rounded p-1 hover:bg-gray-50 border border-gray-50"
+        href="https://youtu.be/cVifD5UbF-E?si=OpgPS6pxeYiunrB9"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="assets/icon/tooltip.svg" alt="Tutorial" class="w-5 h-5" />
+        <span class="ml-2 text-sm">Ver tutorial</span>
+      </a>
+    </div>
     @if (userData(); as user) {
       <div class="relative">
         <button
@@ -39,24 +50,6 @@
           class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-50"
           [class.hidden]="!isDropdownOpen()"
         >
-          <!-- <li>
-            <a routerLink="/establishment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <img src="assets/icon/establecimiento.svg" alt="User" class="inline-block w-4 h-4 mr-2" />
-              Establecimiento
-            </a>
-          </li>
-          <li>
-            <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <img src="assets/icon/config.svg" alt="Config" class="inline-block w-4 h-4 mr-2" />
-              Configuración
-            </a>
-          </li>
-          <li>
-            <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <img src="assets/icon/perfil.svg" alt="Perfil" class="inline-block w-4 h-4 mr-2" />
-              Perfil
-            </a>
-          </li> -->
           <li>
             <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
               Salir

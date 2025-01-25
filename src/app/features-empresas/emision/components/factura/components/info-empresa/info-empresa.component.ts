@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { of, finalize, mergeMap } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService } from '@/utils/services';
@@ -26,7 +26,7 @@ import { CreateFacturaEmpresaService } from '../../create-factura-empresa.servic
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InfoEmpresaComponent {
+export class InfoEmpresaComponent implements OnInit {
   public readonly isEditing = signal(false);
 
   public readonly isEditingEstabliecimient = signal(false);
@@ -35,9 +35,9 @@ export class InfoEmpresaComponent {
 
   public readonly infoEmpresa = signal<GeneriResp<any> | null>(null);
 
-  public readonly getListEstablishment = signal<any[]>([]);
+  public readonly getListEstablishment = signal<any>([]);
 
-   @Output() public readonly idePersonaRol = new EventEmitter<any | null>();
+  @Output() public readonly idePersonaRol = new EventEmitter<any | null>();
 
   public readonly transformedEstabliecimient = computed<{ values: number[]; labels: string[] }>(() =>
     this.getListEstablishment().reduce(
@@ -57,6 +57,20 @@ export class InfoEmpresaComponent {
     public readonly facturacionService: DocumentosService,
   ) {
     this.retrieveEmisor();
+    this.configFactu.selectedEstabliecimient.set('');
+  }
+
+  ngOnInit(): void {}
+
+  onEstablishmentSelect() {
+    const selected = this.getListEstablishment().find(
+      (item: any) => item.code === this.configFactu.selectedEstabliecimient(),
+    );
+
+    if (selected) {
+      const data = this.infoEmpresa()!.data;
+      data.mainAddress = selected.address;
+    }
   }
 
   retrieveEmisor() {
@@ -67,7 +81,6 @@ export class InfoEmpresaComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-
           this.infoEmpresa.set(resp);
 
           this.configFactu.infoEmisor.set(resp.data);
@@ -80,6 +93,7 @@ export class InfoEmpresaComponent {
   getListEstablishmentByEmisor(personaRolIde: number) {
     this.facturacionService.subsidiaries(personaRolIde).subscribe((resp) => {
       if (resp.status === 'OK') {
+        console.log(resp.data);
         this.getListEstablishment.set(resp.data);
       }
     });

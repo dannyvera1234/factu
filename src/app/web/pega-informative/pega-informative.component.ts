@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Renderer2, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { GeneriResp } from '../../interfaces';
@@ -82,21 +82,30 @@ export class PegaInformativeComponent {
   selectPlan(plan: string) {
     this.selectedPlan = plan;
   }
-  constructor(private readonly planesService: RegisterCounteWebService) {
+  constructor(
+    private readonly planesService: RegisterCounteWebService,
+    private renderer: Renderer2,
+  ) {
     this.planes();
   }
 
-  planes() {
-    of(this.loanding.set(true)).pipe(
-      mergeMap(() => this.planesService.planes()),
-      finalize(() => this.loanding.set(false))
-    ).subscribe((resp:any) => {
-      if (resp.status === 'OK') {
-        this.plan.set(resp);
-        console.log(this.plan());
-      }
-
-    });
+  preventTouchEvents(event: TouchEvent) {
+    if (event.cancelable) {
+      event.preventDefault();
+    }
   }
 
+  planes() {
+    of(this.loanding.set(true))
+      .pipe(
+        mergeMap(() => this.planesService.planes()),
+        finalize(() => this.loanding.set(false)),
+      )
+      .subscribe((resp: any) => {
+        if (resp.status === 'OK') {
+          this.plan.set(resp);
+
+        }
+      });
+  }
 }

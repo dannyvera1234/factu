@@ -4,13 +4,12 @@ import { GeneriResp, PersonData } from '@/interfaces';
 import { PerfilesService } from '@/services';
 import { NgOptimizedImage, NgClass } from '@angular/common';
 import { ModalComponent } from '@/components';
-import { CreatePerfilComponent } from '@/features/create-perfil';
 import { TextInitialsPipe } from '@/pipes';
 import { DeletePerfilComponent } from './components';
 
 @Component({
   selector: 'app-perfil-usuarios',
-  imports: [NgOptimizedImage, ModalComponent, CreatePerfilComponent, TextInitialsPipe, NgClass, DeletePerfilComponent],
+  imports: [NgOptimizedImage, ModalComponent, TextInitialsPipe, NgClass, DeletePerfilComponent],
   templateUrl: './perfil-usuarios.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

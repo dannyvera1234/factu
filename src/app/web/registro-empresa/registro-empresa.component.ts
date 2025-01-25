@@ -18,12 +18,18 @@ export class RegistroEmpresaComponent {
 
   public readonly confirmarRegistro = signal(false);
 
+  isMenuOpen = false;
+
   constructor(
     private readonly _fb: FormBuilder,
     private readonly registeCounter: RegisterCounteWebService,
     private router: Router,
   ) {}
 
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
   form = this._fb.group({
     typePerson: null,
     socialReason: null,

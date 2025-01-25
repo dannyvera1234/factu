@@ -31,7 +31,7 @@ export class HomeComponent {
     if (idPersonRol) {
       this.homeServie.retrievePlan(idPersonRol).subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
+
           this.infoPlan.set(resp);
         }
       });

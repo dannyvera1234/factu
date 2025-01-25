@@ -67,7 +67,7 @@ export class ConfiguracionComponent {
 
   public readonly emisorInfo = signal<GeneriResp<ByApplicationCounter> | null>(null);
 
-  public readonly viewingRuc = signal<string | null>(null);
+  public readonly viewingRuc = signal<any | null>(null);
 
   public readonly viewingIdeSubsidiary = signal<number | null>(null);
 
