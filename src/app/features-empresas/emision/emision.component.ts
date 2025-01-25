@@ -31,6 +31,7 @@ export class EmisionComponent {
     this.docService.validateInformation().subscribe((response) => {
       if (response.status === 'OK') {
         this.validateInfo.set(response);
+        console.log(response);
       }
     });
   }
