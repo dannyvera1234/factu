@@ -8,8 +8,8 @@ import { ModalComponent } from '@/components';
 import { FormatPhonePipe } from '@/pipes';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 import { EmisionService } from '@/services/service-empresas/emision.service';
-import { CreateClienteEmpresaComponent } from '../../../../../configuracion/components/lista-clientes-empresa/components';
 import { consumidorFinal } from '@/interfaces/common/constante';
+import { CreateClienteComponent } from './components';
 
 @Component({
   selector: 'app-info-cliente-empresa',
@@ -19,7 +19,7 @@ import { consumidorFinal } from '@/interfaces/common/constante';
     FormsModule,
     NgOptimizedImage,
     FormatPhonePipe,
-    CreateClienteEmpresaComponent,
+    CreateClienteComponent,
   ],
   templateUrl: './info-cliente-empresa.component.html',
   styles: ``,
@@ -118,9 +118,7 @@ export class InfoClienteEmpresaComponent {
   constructor(
     private readonly emisionService: EmisionService,
     public readonly configFactu: CreateFacturaEmpresaService,
-  ) {
-
-  }
+  ) {}
 
   getCustomer(idePersona: number) {
     this.emisionService.listCustomer(idePersona).subscribe((resp) => {

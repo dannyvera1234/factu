@@ -50,9 +50,9 @@
 @defer {
   @if ((validateInfo()?.data)!.valid === false) {
     <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-      <div class="bg-white rounded-lg p-8 w-[30%] shadow-lg">
+      <div class="bg-white rounded-lg p-8 max-w-sm w-full shadow-lg">
         <div class="flex flex-col items-center mb-6">
-          <img src="assets/icon/alert.svg" alt="alert icon" class="size-20 mb-4" />
+          <img src="assets/icon/alert.svg" alt="alert icon" class="size-20 mb-4 w-16 h-16 sm:w-20 sm:h-20" />
           <h3 class="text-xl font-semibold text-gray-800 text-center">¡Ups! Algo salió mal</h3>
         </div>
         <p class="text-sm text-gray-600 mb-2 text-justify">
@@ -82,7 +82,7 @@
                 {{ item }}
               </li>
             }
-            <div class="flex justify-center mt-6 gap-3">
+            <div class="flex flex-col sm:flex-row justify-center mt-6 gap-3">
               <a
                 class="flex items-center px-4 py-3 text-sm font-semibold text-gray-700 bg-gray-200 rounded-md transition-colors duration-300 hover:bg-gray-300 hover:text-gray-800"
                 href="https://w.app/ATef2J"
@@ -96,13 +96,14 @@
                 class="flex items-center px-4 py-3 text-sm font-semibold text-white bg-blue-500 rounded-md transition-colors duration-300 hover:bg-blue-700"
                 routerLink="/sistema_contable_empresa/configuracion"
               >
-               Inicio
+                Inicio
               </button>
             </div>
-
           }
         </ul>
       </div>
     </div>
+
+
   }
 }

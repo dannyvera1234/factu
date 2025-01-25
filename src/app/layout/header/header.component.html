@@ -59,4 +59,16 @@
       </div>
     }
   </div>
+
+  <!-- Botón de "Salir" (solo visible en pantallas pequeñas) -->
+  <div class="lg:hidden flex items-center">
+    @if (userData(); as user) {
+      <button
+        class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+        (click)="logout()"
+      >
+       Cerrar sesión
+      </button>
+    }
+  </div>
 </header>
