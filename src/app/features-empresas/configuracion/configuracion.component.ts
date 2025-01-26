@@ -59,7 +59,7 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes'| 'balance' | 'Proveedores'>('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance' | 'Proveedores'>('clientes');
 
   public readonly loading = signal(false);
 

@@ -5,23 +5,27 @@
 } @else {
   <div class="space-y-4 m-2">
     @for (doc of docsType(); track $index) {
-      <div class="flex items-center justify-between gap-4">
-        <label class="flex items-center gap-2">
-          <input type="checkbox" [(ngModel)]="doc.selected" class="form-checkbox text-blue-600 rounded" />
-          {{ doc.description }}
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <label class="flex items-center gap-2 w-full sm:w-auto">
+          <input
+            type="checkbox"
+            [(ngModel)]="doc.selected"
+            class="form-checkbox text-blue-600 rounded focus:ring-2 focus:ring-sky-500"
+          />
+          <span class="text-sm font-medium text-gray-700">{{ doc.description }}</span>
         </label>
         @if (doc.selected) {
           <input
-            type="text"
+            type="number"
             placeholder="Ingrese el secuencial"
             [(ngModel)]="doc.value"
-            type="number"
-            class="form-input w-30 px-4 py-1 mt-2 text-gray-700 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder:text-gray-400 transition duration-150 ease-in-out"
+            class="form-input w-full sm:w-auto px-4 py-2 text-gray-700 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder:text-gray-400 transition duration-150 ease-in-out"
           />
         }
       </div>
     }
   </div>
+
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {
       <button

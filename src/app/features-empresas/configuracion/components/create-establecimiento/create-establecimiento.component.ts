@@ -95,7 +95,7 @@ export class CreateEstablecimientoComponent {
             ideSubsidiary: Number(resp.data),
             email: newEstablishment.email,
             cellPhone: newEstablishment.cellPhone,
-            ruc: this.ruc,
+            ruc: this.form.controls.ruc.value,
           });
         }
       });

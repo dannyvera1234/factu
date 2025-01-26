@@ -4,22 +4,41 @@ import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
 import { ListaProductosComponent } from './components';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
+import { NotificationService } from '../../../../../../utils/services';
 
 @Component({
   selector: 'app-info-productos',
   imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule, ListaProductosComponent],
   templateUrl: './info-productos.component.html',
-  styles: ``,
+  styles: `
+    input[type='number'] {
+      appearance: textfield;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoProductosComponent {
-   @Input({ required: true }) setPersonaRol!: any;
+  Math = Math;
+  @Input({ required: true }) setPersonaRol!: any;
 
   public readonly idePersona = signal<number | null>(null);
 
-  constructor(private config: CreateFacturaEmpresaService) {}
+  constructor(
+    private config: CreateFacturaEmpresaService,
+    private readonly notification: NotificationService,
+  ) {}
 
   public readonly products = signal<any[]>([]);
+
+  decrementCantidad(product: any): void {
+    product.cantidad = Math.max(1, product.cantidad - 1);
+    this.updateProduct(product); // Actualiza el producto al decrementar
+  }
+
+  incrementCantidad(product: any): void {
+    product.cantidad = Math.min(product.availableStock, product.cantidad + 1);
+    this.updateProduct(product); // Actualiza el producto al incrementar
+  }
 
   addProducto(product: any) {
     this.products.update((currentProducts) => {
@@ -47,6 +66,10 @@ export class InfoProductosComponent {
     this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
 
     this.config.products.set([...this.products()]);
+    this.notification.push({
+      message: 'Producto eliminado correctamente',
+      type: 'success',
+    });
   }
 
   updateProduct(product: any) {
