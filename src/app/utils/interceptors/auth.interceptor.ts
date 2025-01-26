@@ -34,13 +34,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         // console.log('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
 
         // Si quieres mostrar la notificación, puedes descomentar la siguiente línea
+        let message = error.status === 401 ? 'Credenciales inválidas' : 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.';
          notification.push({
-           message: 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.',
+           message: message,
            type: 'error',
-         })
 
-        // Si no quieres que el error se propague más, simplemente no retornes `of(error)`.
-        // return of(); // Esto evita que el error se vuelva a lanzar.
+         });
+        return of(); // Esto evita que el error se vuelva a lanzar.
       }
 
       // Re-lanzar el error para que otros manejadores de error lo procesen si no es 401 o 403
