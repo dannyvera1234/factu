@@ -5,7 +5,7 @@
 } @else {
   @if (emisorInfo()!.data; as byPersona) {
     <div class="flex flex-col lg:flex-row gap-4 p-4">
-      <aside class="w-full lg:w-1/4 flex flex-col gap-4">
+      <aside class="w-full lg:w-1/5 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
           <header class="relative text-center mb-6">
             <!-- Botón de configuración en la esquina -->
@@ -103,12 +103,7 @@
 
           <div class="group open" #details>
             <div class="flex justify-between items-center">
-              <button (click)="details.classList.toggle('open')" class="flex gap-2 items-center">
-                <h3 class="text-black">Informacion Personal</h3>
-                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
-                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
-                </div>
-              </button>
+              <h3 class="text-black">Informacion Personal</h3>
 
               <button
                 class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
@@ -192,14 +187,9 @@
         </div>
 
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="group" #filters>
+          <div class="group open" #details>
             <div class="flex justify-between items-center">
-              <button (click)="filters.classList.toggle('open')" class="flex gap-2 items-center">
-                <h3 class="text-black">Informacion Tributaria</h3>
-                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
-                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
-                </div>
-              </button>
+              <h3 class="text-black">Informacion Tributaria</h3>
 
               <button
                 class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
@@ -211,7 +201,7 @@
             <hr class="my-2" />
             <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
               <div class="overflow-hidden">
-                <div class="*:mb-4">
+                <div>
                   <div>
                     <h4>Nombre Comercial</h4>
                     <p class="text-neutral-500">{{ byPersona.comercialName }}</p>
@@ -279,10 +269,15 @@
                       <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
                     </div>
                   </div>
-
-                  <button class="px-2 py-1 rounded-md" (click)="deleteDoc.open(); viewingFile.set(item.ide)">
-                    <img src="/assets/icon/trash-icon.svg" class="size-6" alt="Delete" />
+                  <div class="flex gap-1">
+                    <button
+                    class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                    (click)="deleteDoc.open(); viewingFile.set(item.ide)"
+                  >
+                    <img src="/assets/icon/trash-icon.svg" class="w-11 sm:w-6 md:w-5 lg:w-20" alt="Delete" />
                   </button>
+                    </div>
+
                 </div>
               }
             } @else {
@@ -294,7 +289,7 @@
         </div>
       </aside>
 
-      <main class="flex flex-col gap-4 w-full lg:w-3/4">
+      <main class="flex flex-col gap-4 w-full lg:w-3/3">
         @defer {
           <app-info-card-empresa />
         }

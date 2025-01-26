@@ -10,7 +10,6 @@ import { DocumentosService } from '@/services/service-empresas';
 export class CreateFacturaEmpresaService {
   public readonly loading = signal(false);
 
-
   public readonly idePersona = signal<number>(0);
 
   public readonly infoEmisor = signal<any | null>(null);
@@ -159,19 +158,11 @@ export class CreateFacturaEmpresaService {
       observation: null,
     };
 
-
     // Mostrar el cargador mientras se procesa la factura
     of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)),
-        finalize(() => this.loading.set(false)),
-      )
+      .pipe(mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)))
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.notification.push({
-            message: 'Factura generada correctamente',
-            type: 'success',
-          });
           this.selectedPaymentMethod.set('');
         } else {
           this.notification.push({

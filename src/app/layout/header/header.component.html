@@ -62,6 +62,17 @@
 
   <!-- Botón de "Salir" (solo visible en pantallas pequeñas) -->
   <div class="lg:hidden flex items-center">
+    <div class="mr-6">
+      <a
+        class="flex items-center rounded p-1 hover:bg-gray-50 border border-gray-50"
+        href="https://youtu.be/cVifD5UbF-E?si=OpgPS6pxeYiunrB9"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="assets/icon/tooltip.svg" alt="Tutorial" class="w-5 h-5" />
+        <span class="ml-2 text-sm">Ver tutorial</span>
+      </a>
+    </div>
     @if (userData(); as user) {
       <button
         class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"

@@ -23,12 +23,13 @@
   <div class="relative overflow-x-auto">
     <table class="w-full text-left text-sm">
       <thead>
-        <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+        <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombres</th>
           <th class="px-4 py-3 text-center">Identificación</th>
           <th class="px-4 py-3 text-center">Dirección</th>
           <th class="px-4 py-3 text-center">Telefono</th>
-          <th class="px-4 py-3 text-center"></th>
+          <th class="px-4 py-4 text-center"></th>
+          <th class="px-4 py-4 text-center"></th>
         </tr>
       </thead>
       @if (loading()) {
@@ -45,7 +46,7 @@
         <tbody>
           @if (listClientes() && listClientes()!.data.length > 0) {
             @for (cliente of listClientes()!.data; track $index) {
-              <tr class="border-b hover:bg-gray-100  text-xs">
+              <tr class="border-b hover:bg-gray-100 text-xs">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
@@ -53,7 +54,6 @@
                     </div>
                     <div>
                       <p class="font-bold">{{ cliente.names }} {{ cliente.lastName }}</p>
-
                       <div class="flex items-center gap-2">
                         <div class="relative">
                           {{ cliente.email }}
@@ -77,14 +77,19 @@
                       class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       (click)="editClient.open(); updateClient.set(cliente)"
                     >
-                      <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                      <img src="/assets/icon/edit.svg" class=" sm:w-4 md:w-5" alt="Edit" />
                     </button>
-                    <button
-                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
-                    >
-                      <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
-                    </button>
+
+                  </div>
+                </td>
+                <td>
+                  <div class="flex gap-1">
+                  <button
+                  class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                  (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
+                >
+                  <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                </button>
                   </div>
                 </td>
               </tr>
@@ -105,6 +110,8 @@
       }
     </table>
   </div>
+
+
   @defer {
     <!-- @if (applications()?.pagination) { -->
     <!-- <div class="mt-4">

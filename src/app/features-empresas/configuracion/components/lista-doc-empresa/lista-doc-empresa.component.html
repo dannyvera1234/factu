@@ -21,17 +21,18 @@
 
 <hr class="my-4" />
 <section>
-  <div class="relative flex items-center justify-between">
+  <div class="relative flex items-center justify-between overflow-x-auto">
     <table class="w-full text-left text-xs">
       <thead>
         <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
           <th class="px-4 py-3">Nombres</th>
-          <th class="px-4 py-3 text-center">Identificación</th>
           <th class="px-4 py-3 text-center">F Emisión</th>
           <th class="px-3 py-2 text-center">Estado</th>
           <th class="px-4 py-3 text-center">Clave Acceso</th>
           <th class="px-4 py-3 text-center">Ambiente</th>
           <th class="px-4 py-3 text-center">Total</th>
+          <th class="px-4 py-3 text-center"></th>
+          <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
         </tr>
       </thead>
@@ -49,7 +50,7 @@
         <tbody>
           @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
             @for (invoice of listInvoices()!.data!.listData; track $index) {
-              <tr class="border-b hover:bg-gray-100 ">
+              <tr class="border-b hover:bg-gray-100">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div
@@ -64,7 +65,7 @@
                         <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
                         <div class="flex items-center gap-2">
                           <div class="relative">
-                            {{ invoice.electronicDesTypeDoc }}
+                            {{ invoice.identificationCustomer }}
                           </div>
                         </div>
                       </div>
@@ -117,16 +118,13 @@
                 </th>
 
                 <td class="px-4 py-3 text-center">
-                  {{ invoice.identificationCustomer }}
-                </td>
-                <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
                 <td class="px-2 py-3 text-center lowercase">
                   {{ invoice.statusProcess }}
                 </td>
                 <td class="px-4 py-3 text-center truncate">
-                    @if (invoice.pdf !== null) {
+                  @if (invoice.pdf !== null) {
                     {{ invoice.keyAccess | slice: 0 : 6 }}...
                     <button (click)="copyToClipboard(invoice.keyAccess)" class="text-blue-600 hover:text-blue-800">
                       <svg
@@ -151,7 +149,7 @@
                       </svg>
                     </button>
                   }
-                  </td>
+                </td>
 
                 <td class="px-2 py-1 text-center text-xs">
                   <div
@@ -186,7 +184,12 @@
                           Ver PDF
                         </div>
                       </div>
-
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="flex justify-center">
+                    @if (invoice.pdf !== null) {
                       <div class="group relative">
                         <a
                           [href]="invoice.xml"
@@ -202,7 +205,12 @@
                           Ver XML
                         </div>
                       </div>
-
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="flex justify-center">
+                    @if (invoice.pdf !== null) {
                       <div class="group relative">
                         <button
                           (click)="reeviarEmail(invoice.ide)"

@@ -17,6 +17,7 @@ import { CreateFacturaEmpresaService } from './create-factura-empresa.service';
 export class FacturaComponent {
   @Input({required: true})valid!: boolean;
 
+
   constructor(public readonly config: CreateFacturaEmpresaService) {}
 
   public readonly ide = signal<number | null>(null);
