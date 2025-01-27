@@ -1,0 +1,121 @@
+@if (!loanding()) {
+  <div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left side - Login Form -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div class="w-full max-w-md space-y-8">
+        <div class="absolute top-4 left-4">
+          <a routerLink="" class="flex items-center text-gray-600 hover:text-gray-700 focus:outline-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span class="text-sm">Atrás</span>
+          </a>
+        </div>
+        <!-- Logo -->
+        <div class="space-y-2">
+          <img src="assets/olimpush.png" alt="logo" />
+          <h1 class="text-2xl font-semibold text-gray-900 text-center">Sistema Contable</h1>
+        </div>
+
+        <!-- Login Form -->
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-6">
+          <div class="space-y-4">
+            <div>
+              <label for="username" class="block text-sm font-medium text-gray-700">Usuario</label>
+              <div class="mt-1 relative">
+                <input
+                  id="username"
+                  type="username"
+                  formControlName="username"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                  (input)="onUsernameInput($event)"
+                  required
+                />
+              </div>
+              @if (form.controls.username.touched && form.controls.username.invalid) {
+                <div class="text-red-500">
+                  @if (form.controls.username.errors?.['required']) {
+                    <span class="text-xs font-medium"> El usuario es obligatorio. </span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+              <div class="mt-1 relative">
+                <input
+                  [type]="showPassword() ? 'text' : 'password'"
+                  id="password"
+                  formControlName="password"
+                  class="block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                  (copy)="onCopy($event)"
+                  required
+                />
+                <button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  @if (!showPassword()) {
+                    <img src="/assets/icon/show-password.svg" alt="Show Password" />
+                  } @else {
+                    <img src="/assets/icon/eye-slash.svg" alt="eye-slash" />
+                  }
+                </button>
+              </div>
+              @if (form.controls.password.touched && form.controls.password.invalid) {
+                <div class="text-red-500">
+                  @if (form.controls.password.errors?.['required']) {
+                    <span class="text-xs font-medium"> El password es obligatorio. </span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          >
+            Iniciar Sesión
+          </button>
+
+          <!-- <div class="text-center">
+            <a href="#" class="text-sm text-blu-600 hover:text-orange-500"> ¿Olvidaste tu contraseña? </a>
+          </div> -->
+        </form>
+
+        <!-- Sign Up Link -->
+        <!-- <div class="text-center text-sm">
+          ¿No tienes una cuenta?
+          <a href="#" class="text-orange-600 hover:text-orange-500"> Regístrate aquí </a>
+        </div> -->
+
+        <!-- Footer -->
+        <div class="pt-8 text-center text-xs text-gray-500 space-y-2">
+          <app-footer />
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side - Illustration -->
+    <div class="hidden md:block w-full md:w-1/2 relative overflow-hidden">
+      <div class="absolute inset-0">
+        <img src="assets/public.png" alt="Login Illustration" class="w-full h-full" />
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="w-full text-center flex items-center justify-center h-screen bg-primary">
+    <div class="size-32 relative">
+      <img src="assets/olimpush-blanco.png" fill alt="loading..." class="animate-ping" priority />
+    </div>
+  </div>
+}

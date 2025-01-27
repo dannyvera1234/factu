@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { cedulaValidator, emailValidator } from '../../utils/validators';
-import { FormErrorMessageComponent } from '../../components';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { finalize, mergeMap, of } from 'rxjs';
-import { NotificationService } from '@/utils/services';
+import { FormErrorMessageComponent } from '../../components';
 
 @Component({
   selector: 'app-registro-contadores',
@@ -17,11 +16,12 @@ import { NotificationService } from '@/utils/services';
 export class RegistroContadoresComponent {
   public readonly loanding = signal(false);
 
+  public readonly confirmarRegistro = signal(false);
+
   constructor(
     private readonly _fb: FormBuilder,
     private readonly registeCounter: RegisterCounteWebService,
     private router: Router,
-    private notification: NotificationService,
   ) {}
 
   form = this._fb.group({
@@ -57,20 +57,30 @@ export class RegistroContadoresComponent {
   public onletterInput(event: any, sourceField: string): void {
     const inputValue = event.target.value;
 
-    const newValue = inputValue.replace(/[^a-zA-Z]/g, '');
+    // Permitir solo letras y espacios
+    const newValue = inputValue.replace(/[^a-zA-Z\s]/g, '');
 
+    // Actualizar el valor del campo de entrada en el DOM
     event.target.value = newValue;
 
+    // Obtener el control asociado en el formulario reactivo
     const control = this.form.get(sourceField);
 
     if (control) {
+      // Actualizar el valor del control en el formulario reactivo
       control.setValue(newValue);
     }
+  }
+
+  onInput(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return control ? control.invalid && control.dirty : false;
   }
 
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+
       return;
     }
 
@@ -81,12 +91,13 @@ export class RegistroContadoresComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          this.notification.push({
-            message: 'Factura generada correctamente',
-            type: 'success',
-          });
-          this.router.navigate(['/login']);
+          this.confirmarRegistro.set(true);
         }
       });
+  }
+
+  login() {
+    this.confirmarRegistro.set(false);
+    this.router.navigate(['/login']);
   }
 }

@@ -4,7 +4,6 @@ import { PayloadService } from '../utils/services/payload.service';
 import { Modulos } from '../utils/permissions';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { CreateProduct } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -261,41 +260,58 @@ export class CountersService {
     });
   }
 
-  getListInvoices(personaRolIde: number): Observable<any> {
+  getListInvoices(personaRolIde: number, page: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       personaRolIde: personaRolIde,
+      paginator: {
+        size: Modulos.PAGE_SIZE,
+        page: page,
+      },
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listInvoices`, {
       body: payload,
     });
   }
 
-  addSequential( personaRolIde: number, sequential: Partial<any>): Observable<any> {
+  addSequential(personaRolIde: number, sequential: Partial<any>, enviro: string): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       personaRolIde: personaRolIde,
       docsSequential: sequential,
+      environment: enviro,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/addSequential`, {
       body: payload,
     });
   }
 
-  listSequential(personaRolIde: number): Observable<any> {
+  listSequential(personaRolIde: number ,enviro: string ): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES, {
       personaRolIde: personaRolIde,
+      environment: enviro,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/listSequential`, {
       body: payload,
     });
   }
 
-
   sendNotification(personaRolIde: number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_EMISORES_CONTADORES,
-       personaRolIde,
+    const payload = this.genericPayloadService.createPayload(
+      Modulos.MODULE_REGISTRO_EMISORES_CONTADORES,
+      personaRolIde,
     );
-    console.log(payload);
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/sendNotification`, {
+    return this._http.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/sendNotification`,
+      {
+        body: payload,
+      },
+    );
+  }
+
+  detailsHome(personaRolIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_REGISTRO_CONTADORES, {
+      personaRolIde: personaRolIde,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/counter/updateEmisor/detailsHome`, {
       body: payload,
     });
   }

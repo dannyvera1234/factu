@@ -1,0 +1,182 @@
+<nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+  <div></div>
+
+  <div class="flex items-center gap-4">
+    <div>
+      <!-- <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-full md:w-[200px] border rounded" /> -->
+    </div>
+
+    <button
+      class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center"
+      (click)="createClient.open()"
+    >
+      <div class="relative size-5 shrink-0 mr-2">
+        <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
+      </div>
+      Agregar
+    </button>
+  </div>
+</nav>
+
+<hr class="my-4" />
+<section>
+  <div class="relative overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+          <th class="px-4 py-3">Nombres</th>
+          <th class="px-4 py-3 text-center">Identificación</th>
+          <th class="px-4 py-3 text-center">Dirección</th>
+          <th class="px-4 py-3 text-center">Telefono</th>
+          <th class="px-4 py-4 text-center"></th>
+          <th class="px-4 py-4 text-center"></th>
+        </tr>
+      </thead>
+      @if (loading()) {
+        <tbody>
+          <tr>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @if (listClientes() && listClientes()!.data.length > 0) {
+            @for (cliente of listClientes()!.data; track $index) {
+              <tr class="border-b hover:bg-gray-100 text-xs">
+                <th scope="row" class="font-normal p-2">
+                  <div class="flex gap-4 items-center">
+                    <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                      {{ cliente.names + ' ' + cliente.lastName | initials }}
+                    </div>
+                    <div>
+                      <p class="font-bold">{{ cliente.names }} {{ cliente.lastName }}</p>
+                      <div class="flex items-center gap-2">
+                        <div class="relative">
+                          {{ cliente.email }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <td class="px-4 py-3 text-center">
+                  {{ cliente.identificationNumber | formatId }}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  {{ cliente.address }}
+                </td>
+                <td class="px-4 py-3 text-center">
+                  {{ cliente.cellPhone | formatPhone }}
+                </td>
+                <td>
+                  <div class="flex gap-1">
+                    <button
+                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      (click)="editClient.open(); updateClient.set(cliente)"
+                    >
+                      <img src="/assets/icon/edit.svg" class=" sm:w-4 md:w-5" alt="Edit" />
+                    </button>
+
+                  </div>
+                </td>
+                <td>
+                  <div class="flex gap-1">
+                  <button
+                  class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                  (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
+                >
+                  <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún cliente encontrado</p>
+                  <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+
+
+  @defer {
+    <!-- @if (applications()?.pagination) { -->
+    <!-- <div class="mt-4">
+            <app-pagination />
+          </div> -->
+    <!-- } -->
+  }
+</section>
+
+<app-modal #createClient>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Agregar Cliente</h2>
+          <button (click)="createClient.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-6">
+          <app-create-cliente-empresa (created)="createClient.close(); $event && createCliente($event)" />
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #deleteCounterClient>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingIdeCustomer(); as ideClient) {
+            <app-delete-cliente-empresa
+              [ideCustomer]="ideClient"
+              (deleted)="deleteCounterClient.close(); viewingIdeCustomer.set(null)"
+              (deleted)="$event && deleteCliente($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #editClient>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Editar Cliente</h2>
+          <button (click)="editClient.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+        <section class="p-6">
+          @if (updateClient(); as update) {
+            <app-update-cliente-empresa
+              [updatePersona]="update"
+              (created)="editClient.close(); updateClient.set(null)"
+              (created)="$event && updateCliente($event)"
+            />
+          }
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>

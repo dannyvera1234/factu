@@ -1,0 +1,71 @@
+<form [formGroup]="form">
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
+    <div>
+      <app-custom-input
+        label="RUC"
+        formControlName="identificationNumber"
+        (input)="onUsernameInput($event, 'identificationNumber')"
+      />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <app-custom-input
+        label="Nombres"
+        formControlName="names"
+        subLabel="Por favor escribe tus nombres completos"
+        (input)="onletterInput($event, 'names')"
+      />
+    </div>
+    <div>
+      <app-custom-input
+        label="Apellidos"
+        formControlName="lastName"
+        (input)="onletterInput($event, 'lastName')"
+        subLabel="Por favor escribe tus apellidos completos"
+      />
+    </div>
+
+    <div>
+      <app-custom-input
+        label="Telefono"
+        formControlName="cellPhone"
+        class="grow"
+        (input)="onUsernameInput($event, 'cellPhone')"
+      />
+    </div>
+
+    <div>
+      <app-custom-input label="Fecha de nacimiento" formControlName="dateBirth" type="date" [max]="maxDate()" />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
+    <div>
+      <app-custom-input type="email" label="Email" formControlName="email" class="grow" />
+    </div>
+  </div>
+
+  <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+    @if (!loading()) {
+      <button
+        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+        type="button"
+        (click)="updateEmisor.emit(null)"
+      >
+        Cerrar
+      </button>
+      <button
+        class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex"
+        (click)="submit()"
+        [disabled]="form.pristine || form.invalid"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed': form.pristine || form.invalid }"
+      >
+        Guardar
+      </button>
+    } @else {
+      <div class="flex justify-center items-center h-full mt-4">
+        <div class="loader"></div>
+      </div>
+    }
+  </div>
+</form>

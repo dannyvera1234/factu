@@ -1,0 +1,56 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Ejemplo de condiciones con *ngIf -->
+
+  <!-- Card 1: Mostrar si se cumple una condición -->
+  @if (infoEmpresa()?.data; as info) {
+    <div class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center gap-4">
+      <div class="p-3 bg-green-100 rounded-lg">
+        <img src="/assets/icons/stat3.svg" alt="Stat 3" class="w-8 h-8" />
+      </div>
+      <div>
+        <p class="text-gray-500 text-sm">Fecha de creación</p>
+        <h3 class="text-lg font-bold text-green-600">
+          {{ info.dateCreate | customDate }}
+        </h3>
+      </div>
+    </div>
+
+    <div class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center gap-4">
+      <div class="p-3 bg-orange-100 rounded-lg">
+        <img src="/assets/icons/stat1.svg" alt="Stat 1" class="w-8 h-8" />
+      </div>
+      <div>
+        <p class="text-gray-500 text-sm">Plan</p>
+        <h3 class="text-lg font-bold text-orange-600">{{ info.titlePlan }}</h3>
+      </div>
+    </div>
+
+    <!-- Card 2: Mostrar si se cumple otra condición -->
+    <div class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center gap-4">
+      <div class="p-3 bg-blue-100 rounded-lg">
+        <img src="/assets/icons/stat2.svg" alt="Stat 2" class="w-8 h-8" />
+      </div>
+      <div>
+        <p class="text-gray-500 text-sm">Documentos generados</p>
+        <h3 class="text-lg font-bold text-blue-600">
+          {{ info.amountDocsGenerated }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Card 3: Condición adicional -->
+
+    <!-- Card 4: Otra condición -->
+    <div class="p-4 bg-white shadow-md rounded-lg border border-gray-200 flex items-center gap-4">
+      <div class="p-3 bg-purple-100 rounded-lg">
+        <img src="/assets/icons/stat4.svg" alt="Stat 4" class="w-8 h-8" />
+      </div>
+      <div>
+        <p class="text-gray-500 text-sm">Fecha de finalización</p>
+        <h3 class="text-lg font-bold text-purple-600">
+          {{ info.endDatePlan | customDate }}
+        </h3>
+      </div>
+    </div>
+  }
+</div>
