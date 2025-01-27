@@ -5,10 +5,11 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { ListClientes, GeneriResp } from '@/interfaces';
 import { ProveedorService } from '@/services/service-empresas';
 import { NgOptimizedImage } from '@angular/common';
+import { AggXmlComponent } from '../agg-xml';
 
 @Component({
   selector: 'app-proveedores',
-  imports: [ModalComponent, TextInitialsPipe, FormatIdPipe, FormatPhonePipe, NgOptimizedImage],
+  imports: [ModalComponent, TextInitialsPipe, FormatIdPipe, FormatPhonePipe, NgOptimizedImage, AggXmlComponent],
   templateUrl: './proveedores.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
