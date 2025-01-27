@@ -12,7 +12,17 @@ import { DetailsService } from '@/feature-counters/details-counter-application';
   selector: 'app-lista-doc-empresa',
   imports: [PaginationComponent, NgClass, CurrencyPipe, CustomDatePipe, SlicePipe],
   templateUrl: './lista-doc-empresa.component.html',
-  styles: ``,
+  styles: `
+  .tooltip {
+  position: fixed; /* Permite que el tooltip ignore el overflow */
+  z-index: 50; /* Asegura que esté encima de otros elementos */
+  transition: opacity 0.2s ease-in-out; /* Suaviza la entrada/salida */
+}
+
+.group:hover .tooltip {
+  opacity: 1;
+}
+`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaDocEmpresaComponent {
@@ -21,6 +31,8 @@ export class ListaDocEmpresaComponent {
   public readonly loading = signal(false);
 
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
+
+
 
   constructor(
     private readonly docService: DocumentosService,
@@ -31,9 +43,11 @@ export class ListaDocEmpresaComponent {
     this.getListInvoices(0);
   }
 
+
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
     this.showTooltip.set({ ...currentState, [id]: isVisible });
+    console.log(this.showTooltip());
   }
 
   isTooltipVisible(id: number): boolean {

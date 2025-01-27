@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                      <div>
+                      <div class="truncate">
                         <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
                         <div class="flex items-center gap-2">
                           <div class="relative">
@@ -83,8 +83,9 @@
 
                         <!-- Tooltip -->
                         @if (isTooltipVisible(invoice.ide)) {
+
                           <div
-                            class="absolute z-10 top-[-1000%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                             (mouseenter)="toggleTooltip(invoice.ide, true)"
                             (mouseleave)="toggleTooltip(invoice.ide, false)"
                           >

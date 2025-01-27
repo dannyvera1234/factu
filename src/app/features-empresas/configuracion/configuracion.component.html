@@ -103,7 +103,7 @@
 
           <div class="group open" #details>
             <div class="flex justify-between items-center">
-              <h3 class="text-black">Informacion Personal</h3>
+              <h3 class="text-black">información Personal</h3>
 
               <button
                 class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
@@ -158,9 +158,9 @@
                           <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
                         </div>
 
-                        <div class="grow truncate">
+                        <div class="flex-1 overflow-hidden">
                           <p class="text-gray-700 truncate">{{ item.code }}</p>
-                          <p class="text-sm text-gray-500 truncate">{{ item.address }}</p>
+                          <p class="text-sm text-gray-500 truncate overflow-ellipsis whitespace-nowrap">{{ item.address }}</p>
                         </div>
 
                         <div class="flex gap-2 items-center">
@@ -168,16 +168,17 @@
                             class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                             (click)="updateEstablecimiento.open(); viewingEstablecimiento.set(item)"
                           >
-                            <img src="/assets/icon/edit.svg" class="size-6" alt="Edit" />
+                            <img src="/assets/icon/edit.svg" class="w-5 sm:w-5 md:w-5" alt="Edit" />
                           </button>
                           <button
                             class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                             (click)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(item.ideSubsidiary)"
                           >
-                            <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
+                            <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-5 md:w-4" alt="Delete" />
                           </button>
                         </div>
                       </div>
+
                     }
                   </div>
                 </div>
@@ -187,9 +188,14 @@
         </div>
 
         <div class="bg-white rounded-lg shadow p-4">
-          <div class="group open" #details>
+          <div class="group" #filters>
             <div class="flex justify-between items-center">
-              <h3 class="text-black">Informacion Tributaria</h3>
+              <button (click)="filters.classList.toggle('open')" class="flex gap-2 items-center mr-4">
+                <h3 class="text-black">información Tributaria</h3>
+                <div class="relative size-3 rotate-180 group-[.open]:rotate-0 transition-all">
+                  <img ngSrc="/assets/icon/arrow.svg" fill alt="" />
+                </div>
+              </button>
 
               <button
                 class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
@@ -201,7 +207,7 @@
             <hr class="my-2" />
             <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
               <div class="overflow-hidden">
-                <div>
+                <div class="*:mb-4">
                   <div>
                     <h4>Nombre Comercial</h4>
                     <p class="text-neutral-500">{{ byPersona.comercialName }}</p>
@@ -271,13 +277,12 @@
                   </div>
                   <div class="flex gap-1">
                     <button
-                    class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                    (click)="deleteDoc.open(); viewingFile.set(item.ide)"
-                  >
-                    <img src="/assets/icon/trash-icon.svg" class="w-11 sm:w-6 md:w-5 lg:w-20" alt="Delete" />
-                  </button>
-                    </div>
-
+                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      (click)="deleteDoc.open(); viewingFile.set(item.ide)"
+                    >
+                      <img src="/assets/icon/trash-icon.svg" class="w-11 sm:w-6 md:w-5 lg:w-20" alt="Delete" />
+                    </button>
+                  </div>
                 </div>
               }
             } @else {
