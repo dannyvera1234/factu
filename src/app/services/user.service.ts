@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../utils/services';
 import { PayloadService } from '../utils/services/payload.service';
-import { environment } from '../../environments/environment.development';
 import { Observable, tap } from 'rxjs';
 import { LoginResponse } from '../interfaces';
 import { Router } from '@angular/router';
 import { Modulos } from '../utils/permissions';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
