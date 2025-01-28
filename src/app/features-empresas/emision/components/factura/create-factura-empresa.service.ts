@@ -35,10 +35,16 @@ export class CreateFacturaEmpresaService {
 
   public readonly saveDataFactura = signal(false);
 
+  /**
+   * Guarda los datos de la factura
+   * Verifica si hay productos disponibles, si todos los campos obligatorios están completos
+   * y si el consumidor final no puede tener una factura con valor mayor a $50.00
+   */
   saveDatos() {
     const infoEmisor = this.infoEmisor();
     const infoCustomer = this.infoCustomer();
     const selectedPaymentMethod = this.selectedPaymentMethod();
+
     // Verificar si hay productos disponibles
     if (this.products()?.length === 0) {
       this.notification.push({
@@ -63,6 +69,7 @@ export class CreateFacturaEmpresaService {
       return;
     }
 
+    // Verificar si el consumidor final puede tener una factura con valor mayor a $50.00
     if (infoCustomer.identificationNumber === '9999999999999' && this.infoVoucherReqDTO().importeTotal > 50) {
       this.notification.push({
         message: 'No se puede realizar una factura con valor mayor a $50.00 para consumidor final',
@@ -70,10 +77,16 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
+    // Si todo está bien, guardar los datos de la factura
     this.saveDataFactura.set(true);
   }
 
-  infoDataFactura() {
+  /**
+   * Obtiene la información de la factura con los datos del emisor,
+   * cliente, método de pago y productos seleccionados.
+   * @returns La información de la factura en formato JSON.
+   */
+  infoDataFactura(): any {
     // Obtener la información del emisor, cliente y método de pago seleccionado
     const infoEmisor = this.infoEmisor();
     const infoCustomer = this.infoCustomer();
@@ -168,35 +181,35 @@ export class CreateFacturaEmpresaService {
 
     return dataFacturacion;
   }
-
-  saveProforma() {
+  /**
+   * Guarda la factura en el servidor como proforma o como factura según sea
+   * especificado.
+   * @param type Tipo de documento a guardar. Puede ser 'proforma' o 'factura'.
+   */
+  saveDocument(type: 'proforma' | 'factura') {
     const dataFacturacion = this.infoDataFactura();
+    const serviceCall =
+      type === 'proforma'
+        ? this.facturacionService.generateProforma(dataFacturacion)
+        : this.facturacionService.generateInvoice(dataFacturacion);
+
     of(this.loading.set(true))
-      .pipe(mergeMap(() => this.facturacionService.generateProforma(dataFacturacion)))
+      .pipe(
+        mergeMap(() => serviceCall),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe((response) => {
         if (response.status === 'OK') {
           this.saveDataFactura.set(false);
-          location.reload();
-        } else {
+          this.selectedEstabliecimient.set('');
+          this.selectedPaymentMethod.set('');
           this.notification.push({
-            message: 'Error al generar la proforma. Intente nuevamente.',
-            type: 'error',
+            message: `La ${type} ha sido generada con éxito.`,
+            type: 'info',
           });
-        }
-      });
-  }
-
-  saveFactura() {
-    const dataFacturacion = this.infoDataFactura();
-    of(this.loading.set(true))
-      .pipe(mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)))
-      .subscribe((response) => {
-        if (response.status === 'OK') {
-          this.saveDataFactura.set(false);
-          location.reload();
         } else {
           this.notification.push({
-            message: 'Error al generar la factura. Intente nuevamente.',
+            message: `Error al generar la ${type}. Intente nuevamente.`,
             type: 'error',
           });
         }

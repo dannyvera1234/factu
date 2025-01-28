@@ -22,6 +22,10 @@ export class ListaProformaEmpresaComponent {
 
   public readonly listProformas = signal<GeneriResp<any> | null>(null);
 
+  public readonly allSelected = signal(false);
+
+  searchQuery: string = '';
+
   constructor(
     public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService,
@@ -29,18 +33,74 @@ export class ListaProformaEmpresaComponent {
   ) {
     this.getListInvoices(0);
   }
-  allSelected = false;
+
+  onSearchChange(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (this.listProformas() && query) {
+      // Verifica que 'listData' sea un array y tenga elementos
+      const listData = this.listProformas()!.data.listData;
+
+        // Filtra las proformas según el texto ingresado, por cada letra
+        const filteredProformas = listData.filter((invoice: any) => {
+          const socialReasonMatch = invoice.socialReasonCustomer
+            ? invoice.socialReasonCustomer.toLowerCase().includes(query)
+            : false;
+          const identificationMatch = invoice.identificationCustomer
+            ? invoice.identificationCustomer.toString().includes(query)
+            : false;
+
+          return socialReasonMatch || identificationMatch;
+        });
+
+        // Actualiza el estado con las proformas filtradas
+        this.listProformas.set({
+          ...this.listProformas()!,
+          data: {
+            ...this.listProformas()!.data,
+            listData: filteredProformas
+          }
+        });
+
+    } else {
+      // Si el campo de búsqueda está vacío, mostramos todas las proformas
+      this.getListInvoices(0);
+    }
+  }
+
 
   selectAll(event: any) {
-    const checked = event.target.checked;
-    console.log(checked)
-    this.listProformas()!.data.listData.forEach((invoice:any) => {
-      invoice.selected = checked;
+    const checked = event.target.checked; // Obtiene el estado del checkbox "Seleccionar todo"
+    this.listProformas()!.data.listData.forEach((invoice: any) => {
+      invoice.selected = checked; // Asigna el estado al checkbox de cada fila
     });
+
+    this.updateSelectAll();
   }
+
   updateSelectAll() {
-    this.allSelected = this.listProformas()!.data.listData.every((invoice:any) => invoice.selected);
+    // Verifica si todos los elementos están seleccionados
+    const allSelectedValue = this.listProformas()!.data.listData.every((invoice: any) => invoice.selected);
+
+    // Actualiza el estado de "Seleccionar todo" con el valor calculado
+    this.allSelected.set(allSelectedValue);
   }
+
+  convertirProforma() {
+    const proformasSeleccionadas = this.listProformas()!.data.listData.filter((invoice: any) => invoice.selected);
+
+    if (proformasSeleccionadas.length) {
+      // Si hay proformas seleccionadas, muestra sus ide
+      proformasSeleccionadas.forEach((invoice: any) => console.log(invoice.ide));
+    } else {
+      // Si no hay proformas seleccionadas, muestra una notificación
+      this.notification.push({
+        message: 'Por favor, seleccione al menos una proforma para continuar.',
+        type: 'error'
+      });
+    }
+  }
+
 
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
@@ -59,10 +119,6 @@ export class ListaProformaEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
-          // this.detailsService.info.set({
-          //   personaRolIde: 1,
-          // });
           this.listProformas.set(res);
         }
       });

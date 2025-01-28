@@ -27,10 +27,10 @@
       <thead>
         <tr class="font-normal text-neutral-400 px-6 py-3">
           <th class="px-4 py-3">Nombres</th>
-          <th class="px-4 py-3 text-center">F Emisión</th>
+          <th class="px-4 py-3 text-center">Fecha Emisión</th>
           <th class="px-3 py-2 text-center">Estado</th>
           <th class="px-4 py-3 text-center">Clave Acceso</th>
-          <th class="px-4 py-3 text-center">Ambiente</th>
+          <!-- <th class="px-4 py-3 text-center">Ambiente</th> -->
           <th class="px-4 py-3 text-center">Total</th>
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
@@ -152,7 +152,7 @@
                   }
                 </td>
 
-                <td class="px-2 py-1 text-center text-xs">
+                <!-- <td class="px-2 py-1 text-center text-xs">
                   <div
                     class="flex items-center justify-center px-1 py-0.5 rounded-full text-white"
                     [ngClass]="{
@@ -162,7 +162,7 @@
                   >
                     {{ config.environmentCode()[invoice.envCod] }}
                   </div>
-                </td>
+                </td> -->
 
                 <td class="px-4 py-3 text-center">
                   {{ invoice.total | currency }}
@@ -195,7 +195,7 @@
                         <a
                           [href]="invoice.xml"
                           target="_blank"
-                          class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                         >
                           <img src="assets/icon/xml.svg" alt="Descargar" />
                         </a>

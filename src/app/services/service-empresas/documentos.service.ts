@@ -34,7 +34,6 @@ export class DocumentosService {
     });
   }
 
-
   subsidiaries(personaRolIde: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       personaRolIde: personaRolIde,
@@ -66,13 +65,12 @@ export class DocumentosService {
       body: payload,
     });
   }
-  sendNotification(id:number): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id );
+  sendNotification(id: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/sendNotification`, {
       body: payload,
     });
   }
-
 
   validateInformation(): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, '');
@@ -80,6 +78,4 @@ export class DocumentosService {
       body: payload,
     });
   }
-
-
 }
