@@ -16,7 +16,6 @@ import {
   InfoCardEmpresaComponent,
   ListaClientesEmpresaComponent,
   ListaDocEmpresaComponent,
-  ProveedoresComponent,
   SequentialComponent,
   UpdateEmisorComponent,
   UpdateEmisorTributariaComponent,
@@ -49,7 +48,6 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
     ListaProductoEmpresaComponent,
     ListaDocEmpresaComponent,
     InfoCardEmpresaComponent,
-    ProveedoresComponent,
     BalanceComponent,
   ],
   templateUrl: './configuracion.component.html',
@@ -59,7 +57,7 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance' | 'Proveedores'>('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'balance'>('clientes');
 
   public readonly loading = signal(false);
 
@@ -84,7 +82,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proveedores' | 'balance'): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes'  | 'balance'): void {
     this.selectedTab.set(tab);
   }
 
