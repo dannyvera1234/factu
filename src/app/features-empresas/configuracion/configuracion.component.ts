@@ -22,6 +22,7 @@ import {
   UpdateLogoComponent,
 } from './components';
 import { ListaProductoEmpresaComponent } from './components/lista-producto-empresa';
+import { ListaProformaEmpresaComponent } from './components/lista-proforma-empresa/lista-proforma-empresa.component';
 
 @Component({
   selector: 'app-configuracion',
@@ -47,6 +48,7 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
     ListaProductoEmpresaComponent,
     ListaDocEmpresaComponent,
     InfoCardEmpresaComponent,
+    ListaProformaEmpresaComponent,
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
@@ -55,7 +57,7 @@ import { ListaProductoEmpresaComponent } from './components/lista-producto-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' >('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'Proforma' >('clientes');
 
   public readonly loading = signal(false);
 
@@ -80,7 +82,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes'  ): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proforma'  ): void {
     this.selectedTab.set(tab);
   }
 

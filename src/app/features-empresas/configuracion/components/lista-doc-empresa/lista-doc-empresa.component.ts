@@ -47,7 +47,6 @@ export class ListaDocEmpresaComponent {
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
     this.showTooltip.set({ ...currentState, [id]: isVisible });
-    console.log(this.showTooltip());
   }
 
   isTooltipVisible(id: number): boolean {
@@ -69,6 +68,7 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });

@@ -24,6 +24,17 @@ export class DocumentosService {
     });
   }
 
+  listProforma(page: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      size: Modulos.PAGE_SIZE,
+      page: page,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoicesProforma`, {
+      body: payload,
+    });
+  }
+
+
   subsidiaries(personaRolIde: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       personaRolIde: personaRolIde,
@@ -49,6 +60,12 @@ export class DocumentosService {
     });
   }
 
+  generateProforma(data: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/generateProforma`, {
+      body: payload,
+    });
+  }
   sendNotification(id:number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id );
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/sendNotification`, {

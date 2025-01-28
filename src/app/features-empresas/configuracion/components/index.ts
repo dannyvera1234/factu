@@ -11,4 +11,5 @@ export * from './delete-logo';
 export * from './lista-clientes-empresa';
 export * from './lista-doc-empresa';
 export * from './info-card-empresa';
-
+export * from './lista-producto-empresa';
+export * from './lista-proforma-empresa';

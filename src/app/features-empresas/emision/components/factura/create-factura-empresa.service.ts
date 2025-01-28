@@ -33,12 +33,12 @@ export class CreateFacturaEmpresaService {
     private readonly facturacionService: DocumentosService,
   ) {}
 
-  submit() {
-    // Obtener la información del emisor, cliente y método de pago seleccionado
+  public readonly saveDataFactura = signal(false);
+
+  saveDatos() {
     const infoEmisor = this.infoEmisor();
     const infoCustomer = this.infoCustomer();
     const selectedPaymentMethod = this.selectedPaymentMethod();
-
     // Verificar si hay productos disponibles
     if (this.products()?.length === 0) {
       this.notification.push({
@@ -70,6 +70,14 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
+    this.saveDataFactura.set(true);
+  }
+
+  infoDataFactura() {
+    // Obtener la información del emisor, cliente y método de pago seleccionado
+    const infoEmisor = this.infoEmisor();
+    const infoCustomer = this.infoCustomer();
+    const selectedPaymentMethod = this.selectedPaymentMethod();
 
     // Obtener la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
@@ -158,12 +166,34 @@ export class CreateFacturaEmpresaService {
       observation: null,
     };
 
-    // Mostrar el cargador mientras se procesa la factura
+    return dataFacturacion;
+  }
+
+  saveProforma() {
+    const dataFacturacion = this.infoDataFactura();
+    of(this.loading.set(true))
+      .pipe(mergeMap(() => this.facturacionService.generateProforma(dataFacturacion)))
+      .subscribe((response) => {
+        if (response.status === 'OK') {
+          this.saveDataFactura.set(false);
+          location.reload();
+        } else {
+          this.notification.push({
+            message: 'Error al generar la proforma. Intente nuevamente.',
+            type: 'error',
+          });
+        }
+      });
+  }
+
+  saveFactura() {
+    const dataFacturacion = this.infoDataFactura();
     of(this.loading.set(true))
       .pipe(mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)))
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.selectedPaymentMethod.set('');
+          this.saveDataFactura.set(false);
+          location.reload();
         } else {
           this.notification.push({
             message: 'Error al generar la factura. Intente nuevamente.',

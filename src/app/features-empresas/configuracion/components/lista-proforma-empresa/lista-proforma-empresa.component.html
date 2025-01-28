@@ -8,16 +8,14 @@
 
     <button
       class="text-[#4A5568] flex font-semibold px-3 py-1 ml-2 h-[95%] bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto"
-      (click)="onSyncClick()"
     >
-      <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+      <!-- <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
         <img src="assets/icon/sync.svg" class="w-[67%]" />
-      </div>
+      </div> -->
 
-      Sincronizar
+      Facturar Proformas
     </button>
   </div>
-
 </nav>
 
 <hr class="my-4" />
@@ -26,16 +24,21 @@
     <table class="w-full text-left text-xs">
       <thead>
         <tr class="font-normal text-neutral-400 px-6 py-3">
-          <th class="px-4 py-3">Nombres</th>
-          <th class="px-4 py-3 text-center">F Emisión</th>
-          <th class="px-3 py-2 text-center">Estado</th>
-          <th class="px-4 py-3 text-center">Clave Acceso</th>
-          <th class="px-4 py-3 text-center">Ambiente</th>
+          <th class="px-4 py-3 flex items-center gap-2">
+            <!-- Checkbox para seleccionar todo -->
+            <input type="checkbox" (change)="selectAll($event)" [checked]="allSelected" />
+            <span>Seleccionar todo</span>
+          </th>
+          <th class="px-4 py-3 text-left">Nombres</th>
+          <th class="px-4 py-3 text-center">F. Emisión</th>
+          <th class="px-3 py-2 text-center">Secuencial</th>
           <th class="px-4 py-3 text-center">Total</th>
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
         </tr>
+
+
       </thead>
       @if (loading()) {
         <tbody>
@@ -49,15 +52,16 @@
         </tbody>
       } @else {
         <tbody>
-          @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
-            @for (invoice of listInvoices()!.data!.listData; track $index) {
+          @if (listProformas() && listProformas()!.data!.listData.length > 0) {
+            @for (invoice of listProformas()!.data!.listData; track $index) {
               <tr class="border-b hover:bg-gray-100">
-                <th scope="row" class="font-normal p-2">
+                <td class="px-4 py-3">
+                  <!-- Checkbox para cada fila -->
+                  <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
+                </td>
+                <td scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
-                    <div
-                      class="rounded-md size-10 flex items-center justify-center shrink-0"
-                      [ngClass]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).bgColor"
-                    >
+                    <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-400">
                       <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
                     </div>
 
@@ -70,8 +74,6 @@
                           </div>
                         </div>
                       </div>
-
-                      <!-- Tooltip Section -->
                       <div class="relative group inline-block">
                         <!-- Botón que muestra el tooltip -->
                         <button
@@ -116,52 +118,14 @@
                       </div>
                     </div>
                   </div>
-                </th>
+                </td>
 
                 <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
-                <td class="px-2 py-3 text-center lowercase">
-                  {{ invoice.statusProcess }}
-                </td>
-                <td class="px-4 py-3 text-center truncate">
-                  @if (invoice.pdf !== null) {
-                    {{ invoice.keyAccess | slice: 0 : 6 }}...
-                    <button (click)="copyToClipboard(invoice.keyAccess)" class="text-blue-600 hover:text-blue-800">
-                      <svg
-                        class="w-6 h-6 text-black hover:text-green-500"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z"
-                          clip-rule="evenodd"
-                        />
-                        <path
-                          fill-rule="evenodd"
-                          d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  }
-                </td>
 
                 <td class="px-2 py-1 text-center text-xs">
-                  <div
-                    class="flex items-center justify-center px-1 py-0.5 rounded-full text-white"
-                    [ngClass]="{
-                      'bg-green-500': invoice.envCod === '2',
-                      'bg-blue-400': invoice.envCod === '1',
-                    }"
-                  >
-                    {{ config.environmentCode()[invoice.envCod] }}
-                  </div>
+                  {{ invoice.sequentialDoc }}
                 </td>
 
                 <td class="px-4 py-3 text-center">
@@ -169,64 +133,61 @@
                 </td>
                 <td>
                   <div class="flex justify-center">
-                    @if (invoice.pdf !== null) {
-                      <div class="group relative">
-                        <a
-                          [href]="invoice.pdf"
-                          target="_blank"
-                          class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/downlad.svg" alt="Descargar" />
-                        </a>
-                        <!-- Tooltip para PDF -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver PDF
-                        </div>
+                    <div class="group relative">
+                      <a
+                        [href]="invoice.pdf"
+                        target="_blank"
+                        class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      >
+                        <img src="assets/icon/downlad.svg" alt="Descargar" />
+                      </a>
+                      <!-- Tooltip para PDF -->
+                      <div
+                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      >
+                        Ver PDF
                       </div>
-                    }
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="flex justify-center">
+                    <div class="group relative">
+                      <button
+                        (click)="reeviarEmail(invoice.ide)"
+                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      >
+                        <img src="assets/icon/email.svg" alt="email" />
+                      </button>
+                      <!-- Tooltip para Email -->
+                      <div
+                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      >
+                        Enviar por correo
+                      </div>
+                    </div>
                   </div>
                 </td>
                 <td>
                   <div class="flex justify-center">
-                    @if (invoice.pdf !== null) {
-                      <div class="group relative">
-                        <a
-                          [href]="invoice.xml"
-                          target="_blank"
-                          class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/xml.svg" alt="Descargar" />
-                        </a>
-                        <!-- Tooltip para XML -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver XML
-                        </div>
+
+                    <!-- @if (invoice.pdf !== null) { -->
+                    <div class="group relative">
+                      <button
+                        (click)="reeviarEmail(invoice.ide)"
+                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      >
+                      <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                      </button>
+                      <!-- Tooltip para Email -->
+                      <div
+                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      >
+                        Eliminar
                       </div>
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdf !== null) {
-                      <div class="group relative">
-                        <button
-                          (click)="reeviarEmail(invoice.ide)"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/email.svg" alt="email" />
-                        </button>
-                        <!-- Tooltip para Email -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Enviar por correo
-                        </div>
-                      </div>
-                    }
+                    </div>
+                    <!-- } -->
                   </div>
                 </td>
               </tr>
@@ -237,7 +198,7 @@
                 <div
                   class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
                 >
-                  <p class="font-medium">Ningún documento encontrado</p>
+                  <p class="font-medium">Ningún Proforma encontrado</p>
                   <span class="text-sm">Por favor, genere un documento para ver su información</span>
                 </div>
               </td>
@@ -249,8 +210,8 @@
   </div>
   @defer {
     <div class="mt-4">
-      @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
-        <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
+      @if (listProformas() && listProformas()!.data!.page.totalPages > 0) {
+        <app-pagination [paginationData]="listProformas()!.data!.page" (pageChange)="onPageChange($event)" />
       }
     </div>
   }
