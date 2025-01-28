@@ -30,7 +30,27 @@
     <div>
       <app-custom-input label="Precio*" formControlName="unitPrice" />
     </div>
-    <div>
+    <!-- <div>
+      <app-custom-input
+        label="Cantidad"
+        formControlName="stock"
+        (input)="onUsernameInput($event, 'stock')"
+
+      />
+    </div> -->
+
+    <!-- <div>
+      <app-custom-select
+        formControlName="tariffCodeIce"
+        placeholder="Tarifa ICE"
+        [options]="codeTariffICE().values"
+        [labels]="codeTariffICE().labels"
+      />
+    </div> -->
+  </div>
+
+  <div class="mt-4">
+    <div class="mb-4">
       <app-custom-input
         label="Cantidad"
         formControlName="stock"
@@ -38,18 +58,6 @@
 
       />
     </div>
-
-    <div>
-      <app-custom-select
-        formControlName="tariffCodeIce"
-        placeholder="Tarifa ICE"
-        [options]="codeTariffICE().values"
-        [labels]="codeTariffICE().labels"
-      />
-    </div>
-  </div>
-
-  <div class="mt-4">
     <textarea
       id="nota-textarea"
       rows="4"
