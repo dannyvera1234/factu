@@ -12,5 +12,4 @@ export * from './lista-clientes-empresa';
 export * from './lista-doc-empresa';
 export * from './info-card-empresa';
 export * from './balance';
-export * from './proveedores';
-export * from './agg-xml';
+

@@ -49,6 +49,16 @@ export const routes: Routes & {
         loadChildren: () => import('./features-empresas/emision/routes'),
       },
       {
+        path: 'proveedores',
+        loadChildren: () => import('./features-empresas/proveedores/routes'),
+      },
+      {
+        path: 'detalle_proveedor',
+        loadChildren: () => import('./features-empresas/proveedores/components/details-xml/routes'),
+      },
+
+
+      {
         path: '**',
         redirectTo: 'inicio',
         pathMatch: 'full',

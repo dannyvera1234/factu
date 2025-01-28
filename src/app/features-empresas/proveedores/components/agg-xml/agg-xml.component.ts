@@ -7,15 +7,14 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { of, mergeMap, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
-import { CustomSelectComponent } from '@/components';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, mergeMap, finalize } from 'rxjs';
+import { ProveedorService } from '@/services/service-empresas';
 
 @Component({
   selector: 'app-agg-xml',
-  imports: [CustomSelectComponent, ReactiveFormsModule],
+  imports: [],
   templateUrl: './agg-xml.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +26,7 @@ export class AggXmlComponent {
 
   public readonly nameFile = signal<string | null>(null);
 
-  // public readonly file = signal<File | null>(null);
-
-  @Output() public readonly created = new EventEmitter<GeneriResp<any> | null>();
+  @Output() public readonly infoXML = new EventEmitter<GeneriResp<any> | null>();
 
   public readonly categoriaProduct = computed<{ values: string[]; labels: string[] }>(() => {
     return Object.entries(this.configFacturacion.CategoriaCostoEnum()).reduce(
@@ -47,12 +44,9 @@ export class AggXmlComponent {
     private cdr: ChangeDetectorRef,
     private readonly notification: NotificationService,
     private readonly configFacturacion: ConfigFacturacionService,
-    private readonly _fb: FormBuilder,
-  ) {}
+    private readonly proveedorService: ProveedorService,
 
-  form = this._fb.group({
-    categoriaProduct: ['', [Validators.required]],
-  });
+  ) {}
 
   onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -86,28 +80,28 @@ export class AggXmlComponent {
   }
 
   submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (!this.fileUrl()) {
+      this.notification.push({
+        message: 'Debe seleccionar un archivo XML.',
+        type: 'error',
+      });
       return;
     }
 
-    console.log(this.form.value, this.fileUrl());
-
-    // of(this.loading.set(true))
-    //   .pipe(
-    //     mergeMap(() => this.emisorService.updateLogo(this.file())),
-    //     finalize(() => this.loading.set(false)),
-    //   )
-    //   .subscribe((resp) => {
-    //     if (resp.status === 'OK') {
-    //       this.created.emit(resp);
-    //       this.notification.push({
-    //         message: 'Archivo XML actualizado correctamente.',
-    //         type: 'success',
-    //       });
-
-    //       this.fileUrl.set(null);
-    //     }
-    //   });
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.proveedorService.cargarXML(this.fileUrl())),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.infoXML.emit(resp.data);
+          this.notification.push({
+            message: 'Archivo XML cargado correctamente.',
+            type: 'success',
+          });
+          this.fileUrl.set(null);
+        }
+      });
   }
 }

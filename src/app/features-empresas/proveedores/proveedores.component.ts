@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ModalComponent } from '@/components';
-import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { of, mergeMap, finalize } from 'rxjs';
 import { ListClientes, GeneriResp } from '@/interfaces';
-import { ProveedorService } from '@/services/service-empresas';
-import { NgOptimizedImage } from '@angular/common';
-import { AggXmlComponent } from '../agg-xml';
+import { ProveedorService } from '../../services/service-empresas';
+import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
+import { NgClass, NgOptimizedImage } from '@angular/common';
+import { AggXmlComponent, DetailsXmlComponent } from './components';
 
 @Component({
   selector: 'app-proveedores',
-  imports: [ModalComponent, TextInitialsPipe, FormatIdPipe, FormatPhonePipe, NgOptimizedImage, AggXmlComponent],
+  imports: [ModalComponent, TextInitialsPipe, FormatIdPipe, FormatPhonePipe, NgOptimizedImage, AggXmlComponent, DetailsXmlComponent],
   templateUrl: './proveedores.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProveedoresComponent {
-  public readonly loading = signal(false);
+ public readonly loading = signal(false);
 
   public readonly updateClient = signal<ListClientes | null>(null);
 
@@ -24,6 +24,8 @@ export class ProveedoresComponent {
   public readonly listProveedor = signal<GeneriResp<ListClientes[]> | null>(null);
 
   public readonly viewingIdeCustomer = signal<number | null>(null);
+
+  public readonly infoXML = signal<any | null>(null);
 
   constructor(private readonly proveedorService: ProveedorService) {
     this.getListProveedor();
@@ -42,18 +44,18 @@ export class ProveedoresComponent {
       });
   }
 
-  createCliente(create: ListClientes) {
-    const currentCliente = this.listProveedor();
+  cargar(evet: any) {
+    console.log(evet);
+    this.infoXML.set(null);
+  }
 
-    if (currentCliente) {
-      const updatedCliente = {
-        ...currentCliente,
-        data: [...currentCliente.data, create],
-      };
 
-      this.listProveedor.set(updatedCliente);
+  cargarArchivo(data: any){
+    if(data){
+      this.infoXML.set(data);
     }
   }
+
 
   deleteCliente(ideCustomer: number) {
     const currentCliente = this.listProveedor();
@@ -68,22 +70,5 @@ export class ProveedoresComponent {
     }
   }
 
-  updateCliente(update: any) {
-    const currentCliente = this.listProveedor();
 
-    if (currentCliente) {
-      const updatedCliente = {
-        ...currentCliente,
-        data: currentCliente.data.map((cliente) => {
-          if (cliente.ideCustomer === update.ideCustomer) {
-            return update;
-          }
-
-          return cliente;
-        }),
-      };
-
-      this.listProveedor.set(updatedCliente);
-    }
-  }
 }
