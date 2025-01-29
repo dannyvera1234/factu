@@ -15,8 +15,9 @@ import { CreateFacturaEmpresaService } from './create-factura-empresa.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacturaComponent {
-  @Input({required: true})valid!: boolean;
+  @Input({ required: true }) valid!: boolean;
 
+  @Input() editarProforma!: any;
 
   constructor(public readonly config: CreateFacturaEmpresaService) {}
 

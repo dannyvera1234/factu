@@ -48,6 +48,8 @@ export const routes: Routes & {
         path: 'emision_empresas',
         loadChildren: () => import('./features-empresas/emision/routes'),
       },
+
+
       {
         path: '**',
         redirectTo: 'inicio',

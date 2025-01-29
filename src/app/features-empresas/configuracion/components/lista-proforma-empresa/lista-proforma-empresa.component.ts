@@ -1,3 +1,4 @@
+import { routes } from './../../../../app.routes';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { PaginationComponent } from '@/components/pagination';
 import { CurrencyPipe } from '@angular/common';
@@ -7,6 +8,7 @@ import { CustomDatePipe } from '@/pipes';
 import { of, mergeMap, finalize } from 'rxjs';
 import { DocumentosService } from '@/services/service-empresas';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lista-proforma-empresa',
@@ -30,6 +32,7 @@ export class ListaProformaEmpresaComponent {
     public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService,
     private readonly notification: NotificationService,
+    private router: Router,
   ) {
     this.getListInvoices(0);
   }
@@ -41,33 +44,31 @@ export class ListaProformaEmpresaComponent {
       // Verifica que 'listData' sea un array y tenga elementos
       const listData = this.listProformas()!.data.listData;
 
-        // Filtra las proformas según el texto ingresado, por cada letra
-        const filteredProformas = listData.filter((invoice: any) => {
-          const socialReasonMatch = invoice.socialReasonCustomer
-            ? invoice.socialReasonCustomer.toLowerCase().includes(query)
-            : false;
-          const identificationMatch = invoice.identificationCustomer
-            ? invoice.identificationCustomer.toString().includes(query)
-            : false;
+      // Filtra las proformas según el texto ingresado, por cada letra
+      const filteredProformas = listData.filter((invoice: any) => {
+        const socialReasonMatch = invoice.socialReasonCustomer
+          ? invoice.socialReasonCustomer.toLowerCase().includes(query)
+          : false;
+        const identificationMatch = invoice.identificationCustomer
+          ? invoice.identificationCustomer.toString().includes(query)
+          : false;
 
-          return socialReasonMatch || identificationMatch;
-        });
+        return socialReasonMatch || identificationMatch;
+      });
 
-        // Actualiza el estado con las proformas filtradas
-        this.listProformas.set({
-          ...this.listProformas()!,
-          data: {
-            ...this.listProformas()!.data,
-            listData: filteredProformas
-          }
-        });
-
+      // Actualiza el estado con las proformas filtradas
+      this.listProformas.set({
+        ...this.listProformas()!,
+        data: {
+          ...this.listProformas()!.data,
+          listData: filteredProformas,
+        },
+      });
     } else {
       // Si el campo de búsqueda está vacío, mostramos todas las proformas
       this.getListInvoices(0);
     }
   }
-
 
   selectAll(event: any) {
     const checked = event.target.checked; // Obtiene el estado del checkbox "Seleccionar todo"
@@ -96,11 +97,10 @@ export class ListaProformaEmpresaComponent {
       // Si no hay proformas seleccionadas, muestra una notificación
       this.notification.push({
         message: 'Por favor, seleccione al menos una proforma para continuar.',
-        type: 'error'
+        type: 'error',
       });
     }
   }
-
 
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
@@ -111,6 +111,12 @@ export class ListaProformaEmpresaComponent {
     return !!this.showTooltip()[id];
   }
 
+  editarProforma(id: number) {
+    if (id) {
+      this.router.navigate(['/sistema_contable_empresa/emision_empresas', id]);
+    }
+  }
+
   getListInvoices(page: number): void {
     of(this.loading.set(true))
       .pipe(
@@ -119,6 +125,7 @@ export class ListaProformaEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log(res);
           this.listProformas.set(res);
         }
       });
@@ -127,7 +134,7 @@ export class ListaProformaEmpresaComponent {
   reeviarEmail(id: number) {
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.docService.sendNotification(id)),
+        mergeMap(() => this.docService.sendNotificationProforma(id)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {

@@ -139,26 +139,26 @@
                   {{ invoice.total | currency }}
                 </td>
                 <td>
+
                   <div class="flex justify-center">
                     <div class="group relative">
-                      <a
-                        [href]="invoice.pdf"
-                        target="_blank"
+                      <button
+                        (click)="editarProforma(invoice.ide)"
                         class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       >
-                        <img src="assets/icon/downlad.svg" alt="Descargar" />
-                      </a>
-                      <!-- Tooltip para PDF -->
+                        <img src="assets/icon/email.svg" alt="email" />
+                      </button>
+                      <!-- Tooltip para Email -->
                       <div
                         class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                       >
-                        Ver PDF
+                        Editar Proforma
                       </div>
                     </div>
                   </div>
-                </td>
 
                 <td>
+                  @if (invoice.pdfProforma !== null) {
                   <div class="flex justify-center">
                     <div class="group relative">
                       <button
@@ -175,7 +175,31 @@
                       </div>
                     </div>
                   </div>
+                }
                 </td>
+                <td>
+                  <div class="flex justify-center">
+                    @if (invoice.pdfProforma !== null) {
+                    <div class="group relative">
+                      <a
+                        [href]="invoice.pdfProforma"
+                        target="_blank"
+                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      >
+                        <img src="assets/icon/downlad.svg" alt="Descargar" />
+                      </a>
+                      <!-- Tooltip para PDF -->
+                      <div
+                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      >
+                        Ver PDF
+                      </div>
+                    </div>
+                  }
+                  </div>
+                </td>
+
+
                 <td>
                   <div class="flex justify-center">
 
