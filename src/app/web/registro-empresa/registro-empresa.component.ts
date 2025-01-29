@@ -5,10 +5,12 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { FormErrorMessageComponent } from '../../components';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { cedulaValidator, emailValidator } from '../../utils/validators';
+import { NgClass } from '@angular/common';
+import { linkWhast } from '../../utils/permissions';
 
 @Component({
   selector: 'app-registro-empresa',
-  imports: [RouterLink, ReactiveFormsModule, FormErrorMessageComponent],
+  imports: [RouterLink, ReactiveFormsModule, FormErrorMessageComponent, NgClass],
   templateUrl: './registro-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +20,10 @@ export class RegistroEmpresaComponent {
 
   public readonly confirmarRegistro = signal(false);
 
-  isMenuOpen = false;
+  menuOpen = false;
+
+    public readonly link = signal(linkWhast);
+
 
   constructor(
     private readonly _fb: FormBuilder,
@@ -28,7 +33,7 @@ export class RegistroEmpresaComponent {
 
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.menuOpen = !this.menuOpen;
   }
   form = this._fb.group({
     typePerson: null,

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { GeneriResp } from '../../interfaces';
 import { finalize, mergeMap, of } from 'rxjs';
+import { linkWhast } from '../../utils/permissions';
 
 @Component({
   selector: 'app-pega-informative',
@@ -68,14 +69,16 @@ import { finalize, mergeMap, of } from 'rxjs';
 export class PegaInformativeComponent {
   selectedPlan: string | null = null;
 
-  isMenuOpen = false;
 
   public readonly plan = signal<GeneriResp<any[]> | null>(null);
 
   public readonly loanding = signal(false);
+  menuOpen = false;
+
+  public readonly link = signal(linkWhast);
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    this.menuOpen = !this.menuOpen;
   }
 
   // Función para seleccionar un plan
@@ -104,7 +107,6 @@ export class PegaInformativeComponent {
       .subscribe((resp: any) => {
         if (resp.status === 'OK') {
           this.plan.set(resp);
-
         }
       });
   }
