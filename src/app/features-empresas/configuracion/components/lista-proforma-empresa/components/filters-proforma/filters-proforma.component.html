@@ -1,71 +1,45 @@
-
 <div class="relative">
-  <button class="flex  items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg w-full" (click)="open.set(!open())">
+  <button class="flex items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg w-full" (click)="open.set(!open())">
     <div class="relative size-5 shrink-0"><img ngSrc="assets/icon/filters.svg" alt="Create" fill /></div>
     Filtros
   </button>
 
   <form
     [formGroup]="form"
-
     class="bg-white absolute shadow min-w-full p-4 right-0 overflow-clip z-20 *:mb-2 md:min-w-64 flex flex-col gap-2"
     [ngClass]="{ hidden: !open() }"
   >
     <div>
-      <h3 class="font-bold">
-        Clasificacion
-      </h3>
+      <h3 class="font-bold">Clasificación</h3>
       <hr class="mb-2" />
 
-      <div class="flex gap-2 flex-wrap">
-          <div class="flex items-center gap-1">
-            <input
-              [id]="'classification_' "
-
-              type="checkbox"
-
-              [checked]="false"
-              class="size-4 bg-gray-100 border-gray-300 rounded"
-            />
-            <label [for]="'classification_'" class="text-sm font-medium text-gray-900">
-              Proforma Registrada
-            </label>
-          </div>
-
-      </div>
       <div class="flex gap-2 flex-wrap">
         <div class="flex items-center gap-1">
           <input
-            [id]="'classification_' "
-
-            type="checkbox"
-
-            [checked]="false"
+            type="radio"
+            id="proformaRegistrada"
+            formControlName="clasificacion"
+            value="proformaRegistrada"
             class="size-4 bg-gray-100 border-gray-300 rounded"
           />
-          <label [for]="'classification_'" class="text-sm font-medium text-gray-900">
-            Proforma en Proceso
-          </label>
+          <label for="proformaRegistrada" class="text-sm font-medium text-gray-900">Proforma Registrada</label>
         </div>
 
+        <div class="flex items-center gap-1">
+          <input
+            type="radio"
+            id="proformaEnProceso"
+            formControlName="clasificacion"
+            value="proformaEnProceso"
+            class="size-4 bg-gray-100 border-gray-300 rounded"
+          />
+          <label for="proformaEnProceso" class="text-sm font-medium text-gray-900">Proforma en Proceso</label>
+        </div>
+      </div>
     </div>
-    </div>
 
-
-
-    <!-- <div>
-      <h3 class="font-bold">Status</h3>
-      <hr class="mb-2" />
-      <label for="status">
-        <select name="status"  id="status" class="w-full">
-          <option value="">Select status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select></label
-      >
-    </div> -->
     <div>
-      <button class="w-full px-2 py-1 bg-primary text-white rounded-md mb-1" type="submit">Buscar</button>
+      <button class="w-full px-2 py-1 bg-primary text-white rounded-md mb-1" (click)="buscar()">Buscar</button>
       <!-- <button
         class="w-full px-2 py-1 outline outline-primary outline-1 text-outline rounded-md"
         type="reset"

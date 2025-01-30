@@ -14,252 +14,42 @@
 
     <div class="flex gap-4 md:flex-row flex-col max-md:w-full">
       @defer {
-        <app-filters-proforma />
+        <app-filters-proforma (buscarResult)="$event && buscarTablaProforma($event)" />
       }
     </div>
-    <button
-      class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
-      (click)="convertirProforma()"
-    >
-      <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
-        <img src="/assets/icon/file.svg" class="w-[67%]" />
-      </div>
-      Facturar Proformas
-    </button>
+    @if (showTableProforma() !== 'tablaProformaEnProceso') {
+      @defer {
+        <button
+          class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
+          (click)="convertirProformas()"
+        >
+          <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+            <img src="/assets/icon/file.svg" class="w-[67%]" />
+          </div>
+          Facturar Proformas
+        </button>
+      }
+    }
   </div>
 </nav>
 
 <hr class="my-4" />
-<section>
-  <div class="relative flex items-center justify-between overflow-x-auto">
-    <table class="w-full text-left text-xs">
-      <thead>
-        <tr class="font-normal text-neutral-400 px-6 py-3">
-          <th class="px-4 py-3">
-            <!-- Checkbox para seleccionar todo -->
-            <input type="checkbox" (change)="selectAll($event)" [checked]="allSelected()" />
-            <!-- <span>Seleccionar todo</span> -->
-          </th>
-          <th class="px-4 py-3 text-left">Nombres</th>
-          <th class="px-4 py-3 text-center">Fecha Emisión</th>
-          <th class="px-3 py-2 text-center">Secuencial</th>
-          <th class="px-4 py-3 text-center">Total</th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-        </tr>
-      </thead>
-      @if (loading()) {
-        <tbody>
-          <tr>
-            <td colspan="100%">
-              <div class="text-center py-9">
-                <div class="loader"></div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      } @else {
-        <tbody>
-          @if (listProformas() && listProformas()!.data!.listData.length > 0) {
-            @for (invoice of listProformas()!.data!.listData; track $index) {
-              <tr class="border-b hover:bg-gray-100">
-                <td class="px-4 py-3">
-                  <!-- Checkbox para cada fila -->
-                  <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
-                </td>
-                <td class="font-normal p-2">
-                  <div class="flex gap-4 items-center">
-                    <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-400">
-                      <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                      <div class="truncate">
-                        <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
-                        <div class="flex items-center gap-2">
-                          <div class="relative">
-                            {{ invoice.identificationCustomer }}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="relative group inline-block">
-                        <!-- Botón que muestra el tooltip -->
-                        <button
-                          class="m-0"
-                          (mouseenter)="toggleTooltip(invoice.ide, true)"
-                          (mouseleave)="toggleTooltip(invoice.ide, false)"
-                        >
-                          <img src="assets/icon/tooltip.svg" alt="Tooltip" />
-                        </button>
-
-                        <!-- Tooltip -->
-                        @if (isTooltipVisible(invoice.ide)) {
-                          <div
-                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
-                            (mouseenter)="toggleTooltip(invoice.ide, true)"
-                            (mouseleave)="toggleTooltip(invoice.ide, false)"
-                          >
-                            <!-- Header -->
-                            <div class="flex justify-between items-center mb-3">
-                              <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                              <button
-                                class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                                (click)="toggleTooltip(invoice.ide, false)"
-                              >
-                                &times;
-                              </button>
-                            </div>
-
-                            <!-- Histories -->
-                            <ul class="space-y-2">
-                              @for (history of invoice.histories; track $index) {
-                                <li class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs">
-                                  <!-- First Row -->
-                                  <div class="flex justify-between items-center text-gray-700">
-                                    <span>{{ history.description }}</span>
-                                  </div>
-                                </li>
-                              }
-                            </ul>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="px-4 py-3 text-center">
-                  {{ invoice.emissionDate | customDate }}
-                </td>
-
-                <td class="px-2 py-1 text-center text-xs">
-                  {{ invoice.sequentialDoc }}
-                </td>
-
-                <td class="px-4 py-3 text-center">
-                  {{ invoice.total | currency }}
-                </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <button
-                          (click)="editarProforma(invoice.ideEncrypted)"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/edit.svg" alt="email" />
-                        </button>
-                        <!-- Tooltip para Email -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Editar Proforma
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <button
-                          (click)="reeviarEmail(invoice.ide)"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/email.svg" alt="email" />
-                        </button>
-                        <!-- Tooltip para Email -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Enviar por correo
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <a
-                          [href]="invoice.pdfProforma"
-                          target="_blank"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/downlad.svg" alt="Descargar" />
-                        </a>
-                        <!-- Tooltip para PDF -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver PDF
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center gap-1 group relative">
-                    <div class="group relative">
-                      <button
-                        (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      >
-                        <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
-                      </button>
-
-                      <div
-                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      >
-                        Eliminar
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            }
-          } @else {
-            <tr>
-              <td colspan="100%">
-                <div
-                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
-                >
-                  <p class="font-medium">Ningún Proforma encontrado</p>
-                  <span class="text-sm">Por favor, genere un documento para ver su información</span>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      }
-    </table>
-  </div>
+@if (showTableProforma() === 'tablaProformaRegistrada' || showTableProforma() === '') {
   @defer {
-    <div class="mt-4">
-      @if (listProformas() && listProformas()!.data!.page.totalPages > 0) {
-        <app-pagination [paginationData]="listProformas()!.data!.page" (pageChange)="onPageChange($event)" />
-      }
-    </div>
+    <app-tabla-registrada (ideProformas)="$event && ideProformas($event)" />
   }
-</section>
+} @else {
+  @defer {
+    <app-tabla-proceso />
+  }
+}
 
-<app-modal #deleteProforma>
+<app-modal #facturarProforma>
   <div class="h-screen w-full flex items-center justify-center">
     <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
       <section class="p-4">
         @defer {
-          @if (ideDeleteProdorma(); as ide) {
-            <app-delete-proforma
-              [ideProforma]="ide"
-              (deleted)="deleteProforma.close()"
-              (deleted)="$event && eliminarProforma($event)"
-            />
-          }
+          <app-facturar-proformas (facturarProforma)="facturarProforma.close()" [ideProformas]="ideProforma()" />
         }
       </section>
     </div>

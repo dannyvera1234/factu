@@ -3,3 +3,4 @@ export * from './registro-contadores';
 export * from './sobre-nosotros';
 export * from './heard';
 export * from './footer-web';
+export * from './whatsapp';

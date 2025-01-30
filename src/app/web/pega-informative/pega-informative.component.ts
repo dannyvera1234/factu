@@ -7,10 +7,11 @@ import { finalize, mergeMap, of } from 'rxjs';
 import { linkWhast } from '../../utils/permissions';
 import { HeardComponent } from '../heard';
 import { FooterWebComponent } from '../footer-web';
+import { WhatsappComponent } from '../whatsapp';
 
 @Component({
   selector: 'app-pega-informative',
-  imports: [RouterLink, NgClass, CurrencyPipe, HeardComponent, HeardComponent, FooterWebComponent],
+  imports: [RouterLink, NgClass, CurrencyPipe, HeardComponent, HeardComponent, FooterWebComponent,WhatsappComponent ],
   templateUrl: './pega-informative.component.html',
   styles: `
     html {

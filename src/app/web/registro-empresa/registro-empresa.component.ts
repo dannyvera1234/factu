@@ -8,10 +8,11 @@ import { cedulaValidator, emailValidator } from '../../utils/validators';
 import { linkWhast } from '../../utils/permissions';
 import { HeardComponent } from '../heard';
 import { FooterWebComponent } from '../footer-web';
+import { WhatsappComponent } from '../whatsapp';
 
 @Component({
   selector: 'app-registro-empresa',
-  imports: [ReactiveFormsModule, FormErrorMessageComponent, HeardComponent, FooterWebComponent],
+  imports: [ReactiveFormsModule, FormErrorMessageComponent, HeardComponent, FooterWebComponent, WhatsappComponent],
   templateUrl: './registro-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
