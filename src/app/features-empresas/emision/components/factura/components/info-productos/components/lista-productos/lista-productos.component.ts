@@ -13,7 +13,7 @@ import { NotificationService } from '@/utils/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaProductosComponent {
-  @Input({ required: true }) set setPersonaRol(value: any) {
+  @Input() set setPersonaRol(value: any) {
     if (value !== null) {
       this.listProductos(value);
     }
@@ -31,6 +31,7 @@ export class ListaProductosComponent {
     this.facturacionService.listProduct(emisor).subscribe((resp) => {
       if (resp.status === 'OK') {
         this.listProducts.set(resp);
+        console.log(this.listProducts());
       }
     });
   }

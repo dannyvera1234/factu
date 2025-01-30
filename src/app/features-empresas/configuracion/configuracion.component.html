@@ -158,7 +158,7 @@
                           <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
                         </div>
 
-                        <div class="flex-1 overflow-hidden">
+                        <div class="flex-1 overflow-hidden group relative">
                           <p class="text-gray-700 truncate">{{ item.code }}</p>
                           <p class="text-sm text-gray-500 truncate overflow-ellipsis whitespace-nowrap">{{ item.address }}</p>
                         </div>
@@ -177,6 +177,8 @@
                             <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-5 md:w-4" alt="Delete" />
                           </button>
                         </div>
+
+
                       </div>
 
                     }
@@ -275,14 +277,21 @@
                       <p class="text-neutral-400 text-sm">.{{ item.fileTypeExtension }}</p>
                     </div>
                   </div>
-                  <div class="flex gap-1">
+                  <div class="flex gap-1 group relative">
                     <button
                       class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       (click)="deleteDoc.open(); viewingFile.set(item.ide)"
                     >
                       <img src="/assets/icon/trash-icon.svg" class="w-11 sm:w-6 md:w-5 lg:w-20" alt="Delete" />
                     </button>
+                    <div
+                      class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                    >
+                      Eliminar
+                    </div>
                   </div>
+
+
                 </div>
               }
             } @else {
@@ -341,7 +350,7 @@
                 'text-gray-600': selectedTab() !== 'Proforma',
               }"
             >
-            BORROR DOC
+              Proforma
             </button>
 
           </nav>

@@ -1,5 +1,5 @@
 import { routes } from './../../../../app.routes';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal } from '@angular/core';
 import { PaginationComponent } from '@/components/pagination';
 import { CurrencyPipe } from '@angular/common';
 import { GeneriResp } from '@/interfaces';
@@ -8,11 +8,13 @@ import { CustomDatePipe } from '@/pipes';
 import { of, mergeMap, finalize } from 'rxjs';
 import { DocumentosService } from '@/services/service-empresas';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { ModalComponent } from '@/components';
+import { DeleteProformaComponent } from '../delete-proforma';
 
 @Component({
   selector: 'app-lista-proforma-empresa',
-  imports: [PaginationComponent, CustomDatePipe, CurrencyPipe, FormsModule],
+  imports: [PaginationComponent, CustomDatePipe, CurrencyPipe, FormsModule, ModalComponent, DeleteProformaComponent],
   templateUrl: './lista-proforma-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,12 +28,15 @@ export class ListaProformaEmpresaComponent {
 
   public readonly allSelected = signal(false);
 
+  public readonly ideDeleteProdorma = signal<number | null>(null);
+
   searchQuery: string = '';
 
   constructor(
     public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService,
     private readonly notification: NotificationService,
+    private cdr: ChangeDetectorRef,
     private router: Router,
   ) {
     this.getListInvoices(0);
@@ -111,9 +116,9 @@ export class ListaProformaEmpresaComponent {
     return !!this.showTooltip()[id];
   }
 
-  editarProforma(id: number) {
-    if (id) {
-      this.router.navigate(['/sistema_contable_empresa/emision_empresas', id]);
+  editarProforma(ideEncrypted: number) {
+    if (ideEncrypted) {
+      this.router.navigate(['/sistema_contable_empresa/emision_empresas', ideEncrypted]);
     }
   }
 
@@ -125,7 +130,6 @@ export class ListaProformaEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.listProformas.set(res);
         }
       });
@@ -159,6 +163,12 @@ export class ListaProformaEmpresaComponent {
 
       this.getListInvoices(newPage);
       // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
+    }
+  }
+
+  eliminarProforma(id: number) {
+    if (id) {
+      this.getListInvoices(0);
     }
   }
 }

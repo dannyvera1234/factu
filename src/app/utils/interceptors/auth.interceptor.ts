@@ -25,27 +25,25 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((resp) => {
       // Si recibimos un error 401 o 403, redirigimos a la página de inicio
-
       var error = resp.error;
       if (error.code === 401 || error.code === 403) {
         // Eliminar el token del almacenamiento local
         localStorage.removeItem('UserData');
         // Redirigir al usuario a la página de inicio
         router.navigate(['/login']); // Ajusta la ruta según lo necesites
-        // console.log('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
 
         // Si quieres mostrar la notificación, puedes descomentar la siguiente línea
-        let message = error.code === 401 ? 'Credenciales inválidas' : 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.';
-         notification.push({
-           message: message,
-           type: 'error',
-
-         });
+        let message =
+          error.code === 401 ? 'Credenciales inválidas' : 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo.';
+        notification.push({
+          message: message,
+          type: 'error',
+        });
         return of(); // Esto evita que el error se vuelva a lanzar.
       }
 
       // Re-lanzar el error para que otros manejadores de error lo procesen si no es 401 o 403
       return of(error);
-    })
+    }),
   );
 };

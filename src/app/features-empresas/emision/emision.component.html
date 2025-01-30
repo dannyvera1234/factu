@@ -24,7 +24,7 @@
             @case ('facturacion') {
               @defer {
                 <app-factura [valid]="validateInfo()?.data?.valid"
-                  [editarProforma]="dataProforma()"
+                  [editarProforma]="infoEditProforma()?.data"
                 />
               }
             }

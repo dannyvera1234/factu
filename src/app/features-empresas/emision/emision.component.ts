@@ -19,6 +19,8 @@ export class EmisionComponent implements OnInit {
 
   public readonly dataProforma = signal<GeneriResp<any> | null>(null);
 
+  public readonly infoEditProforma = signal<GeneriResp<any> | null>(null);
+
   public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'facturacion'): void {
     this.selectedTab.set(tab);
   }
@@ -34,9 +36,19 @@ export class EmisionComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
-      const id = Number(params.get('id'));
-      if (id > 0) {
-        console.log('ID recibido:', id);
+      // Verificamos si 'ideEncrypted' existe en los parámetros de la URL
+      const ideEncrypted = params.get('ideEncrypted');
+      if (ideEncrypted) {
+        // Si el parámetro 'ideEncrypted' está presente, realizamos la acción correspondiente
+        this.docService.editProforma(ideEncrypted).subscribe((response) => {
+          // Verificamos el estado de la respuesta antes de realizar cualquier acción
+          if (response.status === 'OK') {
+            console.log('Información de la proforma obtenida:', response);
+              this.infoEditProforma.set(response); // Establece la información de la proforma para su edición
+          } else {
+            console.error('Error al obtener la información de la proforma.');
+          }
+        });
       }
     });
   }

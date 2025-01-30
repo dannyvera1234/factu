@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal, ViewChild } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
@@ -18,8 +18,26 @@ import { NotificationService } from '../../../../../../utils/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoProductosComponent {
-  Math = Math;
   @Input({ required: true }) setPersonaRol!: any;
+
+  @Input({ required: true }) set editProformaProducto(product: any[]) {
+    console.log(product);
+    if (product) {
+      product.forEach((item: any) => {
+        item.cantidad = item.amount;
+        item.valorTotal = item.total;
+        item.subTotal = item.subtotal;
+        item.valorIVA = item.valueIva;
+        item.ide = item.productIde;
+        item.auxiliaryCode = item.auxilaryCode;
+        this.products().push(item);
+      });
+      this.config.detailProducts.set([...this.products()]);
+      this.config.products.set([...this.products()]);
+    }
+  }
+
+  Math = Math;
 
   public readonly idePersona = signal<number | null>(null);
 
@@ -37,6 +55,8 @@ export class InfoProductosComponent {
 
   incrementCantidad(product: any): void {
     product.cantidad = Math.min(product.availableStock, product.cantidad + 1);
+    if (product.cantidad > product.availableStock) {
+    }
     this.updateProduct(product); // Actualiza el producto al incrementar
   }
 
@@ -74,7 +94,6 @@ export class InfoProductosComponent {
 
   updateProduct(product: any) {
     // Verificar si la cantidad ingresada es mayor que el stock disponible
-
     if (product.cantidad > product.availableStock) {
       // Ajustar la cantidad al stock disponible
       product.cantidad = product.availableStock;

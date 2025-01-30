@@ -7,7 +7,7 @@ export default [
     component: EmisionComponent,
   },
   {
-    path: ':id',
+    path: ':ideEncrypted',
     component: EmisionComponent,
   },
 

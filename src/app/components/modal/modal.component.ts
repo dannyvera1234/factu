@@ -47,6 +47,8 @@ export class ModalComponent {
     this.modalService.open(this);
   }
 
+
+
   public close(): void {
     this.modalService.close(this);
   }

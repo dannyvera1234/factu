@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
 import { ListClientes, GeneriResp } from '@/interfaces';
 import { ModalComponent } from '@/components';
-import { FormatPhonePipe, FormatIdPipe, TextInitialsPipe } from '@/pipes';
+import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { NgOptimizedImage } from '@angular/common';
 import { ClientesService } from '@/services/service-empresas';
 import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent, UpdateClienteEmpresaComponent } from './components';
@@ -12,7 +12,6 @@ import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent, UpdateCli
   imports: [
     ModalComponent,
     FormatPhonePipe,
-    FormatIdPipe,
     TextInitialsPipe,
     NgOptimizedImage,
     CreateClienteEmpresaComponent,

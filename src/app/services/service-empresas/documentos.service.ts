@@ -59,6 +59,14 @@ export class DocumentosService {
     });
   }
 
+  updateProforma(data: Partial<any>, invoiceIde: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {    invoiceIde, dataToUpdate:data});
+    console.log(payload);
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/updateProforma`, {
+      body: payload,
+    });
+  }
+
   generateProforma(data: Partial<any>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/generateProforma`, {
@@ -82,6 +90,21 @@ export class DocumentosService {
   validateInformation(): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, '');
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/validateInformation`, {
+      body: payload,
+    });
+  }
+
+  editProforma(id: string): Observable<any> {
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/retrieveProforma`, {
+      body: payload,
+    });
+  }
+
+  deleteProforma(id: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ideRegister: id });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/deleteProforma`, {
       body: payload,
     });
   }

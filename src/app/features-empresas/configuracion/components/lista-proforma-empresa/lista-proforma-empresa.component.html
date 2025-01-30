@@ -43,6 +43,7 @@
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
+          <th class="px-4 py-3 text-center"></th>
         </tr>
 
 
@@ -141,12 +142,13 @@
                 <td>
 
                   <div class="flex justify-center">
+                    @if (invoice.pdfProforma !== null) {
                     <div class="group relative">
                       <button
-                        (click)="editarProforma(invoice.ide)"
+                        (click)="editarProforma(invoice.ideEncrypted)"
                         class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       >
-                        <img src="assets/icon/email.svg" alt="email" />
+                        <img src="assets/icon/edit.svg" alt="email" />
                       </button>
                       <!-- Tooltip para Email -->
                       <div
@@ -155,11 +157,12 @@
                         Editar Proforma
                       </div>
                     </div>
+                  }
                   </div>
 
                 <td>
-                  @if (invoice.pdfProforma !== null) {
                   <div class="flex justify-center">
+                    @if (invoice.pdfProforma !== null) {
                     <div class="group relative">
                       <button
                         (click)="reeviarEmail(invoice.ide)"
@@ -174,8 +177,8 @@
                         Enviar por correo
                       </div>
                     </div>
+                  }
                   </div>
-                }
                 </td>
                 <td>
                   <div class="flex justify-center">
@@ -198,27 +201,25 @@
                   }
                   </div>
                 </td>
-
-
                 <td>
-                  <div class="flex justify-center">
+                  <div class="flex justify-center gap-1 group relative">
 
-                    <!-- @if (invoice.pdf !== null) { -->
+
                     <div class="group relative">
                       <button
-                        (click)="reeviarEmail(invoice.ide)"
+                        (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
                         class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       >
-                      <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                      <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
                       </button>
-                      <!-- Tooltip para Email -->
+
                       <div
                         class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                       >
                         Eliminar
                       </div>
                     </div>
-                    <!-- } -->
+
                   </div>
                 </td>
               </tr>
@@ -247,3 +248,23 @@
     </div>
   }
 </section>
+
+
+<app-modal #deleteProforma>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (ideDeleteProdorma(); as ide) {
+
+            <app-delete-proforma
+              [ideProforma]="ide"
+              (deleted)="deleteProforma.close()"
+              (deleted)="$event && eliminarProforma($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>

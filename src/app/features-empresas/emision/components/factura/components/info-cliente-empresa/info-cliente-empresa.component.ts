@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, HostListener, Input, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { of, delay, finalize } from 'rxjs';
+import { of, delay, finalize, last } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -26,6 +26,23 @@ import { CreateClienteComponent } from './components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoClienteEmpresaComponent {
+  @Input({ required: true }) set proformaCliente(value: any) {
+    if (value !== null) {
+      this.selectedCliente.set({
+        address: value.mainAddress,
+        names: value.socialReason,
+        lastName: '',
+        ...value,
+      });
+      this.configFactu.infoCustomer.set({
+        ...value,
+        address: value.mainAddress,
+        names: value.socialReason,
+        lastName: '',
+      });
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   closeDropdown(event: MouseEvent): void {
     const dropdownContainer = document.querySelector('.dropdown');
@@ -34,17 +51,13 @@ export class InfoClienteEmpresaComponent {
     }
   }
 
-  @Input({ required: true }) set setPersonaRol(value: any) {
-    if (value !== null) {
-      this.getCustomer(value);
-    }
-  }
+  @Input({ required: true }) setPersonaRol!: any;
+
   public readonly loading = signal(false);
   public readonly dropdownOpen = signal(false);
   public readonly loadingCombo = signal(false);
   public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
   public readonly selectedCliente = signal<any | null>(null);
-  public readonly previousEmisor = signal<number>(0);
   public readonly searchTerm = signal('');
 
   // Variable para almacenar las opciones originales
@@ -90,7 +103,6 @@ export class InfoClienteEmpresaComponent {
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
     this.loading.set(true);
-
     of(null)
       .pipe(
         delay(500),
@@ -120,22 +132,25 @@ export class InfoClienteEmpresaComponent {
     public readonly configFactu: CreateFacturaEmpresaService,
   ) {}
 
-  getCustomer(idePersona: number) {
-    this.emisionService.listCustomer(idePersona).subscribe((resp) => {
-      if (resp.status === 'OK') {
-        resp.data.unshift(consumidorFinal);
-        this.originalOptions = resp; // Guardamos las opciones originales nuevamente
-        this.filteredOptions.set(resp);
-      }
-    });
+  getCustomer() {
+    this.dropdownOpen.set(true);
+    if (this.filteredOptions() === null || this.filteredOptions() === undefined) {
+      this.emisionService.listCustomer(this.setPersonaRol).subscribe((resp) => {
+        if (resp.status === 'OK') {
+          resp.data.unshift(consumidorFinal);
+          this.originalOptions = resp;
+          this.filteredOptions.set(resp);
+        }
+      });
+    }
   }
 
   createCliente(event: any) {
     if (event.status === 'OK') {
-      this.emisionService.listCustomer(this.previousEmisor()).subscribe((resp) => {
+      this.emisionService.listCustomer(this.setPersonaRol).subscribe((resp) => {
         if (resp.status === 'OK') {
           resp.data.unshift(consumidorFinal);
-          this.originalOptions = resp; // Guardamos las opciones originales nuevamente
+          this.originalOptions = resp;
           this.filteredOptions.set(resp);
         }
       });

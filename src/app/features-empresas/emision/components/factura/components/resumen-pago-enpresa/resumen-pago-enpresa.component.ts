@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
 import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { GeneriResp } from '../../../../../../interfaces';
-import { AccountingControlSystemService } from '../../../../../../utils/services';
+import { GeneriResp } from '@/interfaces';
+import { AccountingControlSystemService } from '@/utils/services';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
@@ -11,11 +11,32 @@ import { CreateFacturaEmpresaService } from '../../create-factura-empresa.servic
   imports: [FormsModule, CurrencyPipe],
   templateUrl: './resumen-pago-enpresa.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResumenPagoEnpresaComponent {
-  @Input({required: true})valid!: boolean;
-public readonly listProduct = computed(() => this.configFactu.products());
+  @Input({ required: true }) valid!: boolean;
+
+  @Input({ required: true })
+  set editarResumenPago(event: any) {
+    if (event) {
+      this.procesoResumenPago(event);
+      if (!this.ejecutarFormPago()) {
+        this.getPayForms()
+          .then(() => {
+            this.procesarPayForms(event);
+          })
+          .catch((error) => {
+            console.error('Error al obtener formas de pago:', error);
+          });
+      } else {
+        this.procesarPayForms(event);
+      }
+    }
+  }
+
+  public readonly ejecutarFormPago = signal(false);
+
+  public readonly listProduct = computed(() => this.configFactu.products());
 
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);
 
@@ -27,7 +48,10 @@ public readonly listProduct = computed(() => this.configFactu.products());
     private readonly controlService: AccountingControlSystemService,
     public readonly configFactu: CreateFacturaEmpresaService,
   ) {
-    this.getPayForms();
+    if (!this.ejecutarFormPago()) {
+      this.getPayForms();
+    }
+
     this.getImpuestoIVA();
 
     toObservable(this.listProduct)
@@ -109,20 +133,92 @@ public readonly listProduct = computed(() => this.configFactu.products());
       });
   }
 
-  private getPayForms() {
-    this.controlService.getTypesPayForm().subscribe((response) => {
-      if (response.status === 'OK') {
-        this.paymentMethods.set(response);
-      }
+  private procesarPayForms(event: any) {
+    event.paysForms.forEach((item: any) => {
+      this.paymentMethods()?.data.forEach((method: any) => {
+        if (method.code === item.code) {
+          this.configFactu.selectedPaymentMethod.set(method);
+        }
+      });
     });
   }
-  getImpuestoIVA(): void {
+
+  public async procesoResumenPago(vouncher: any) {
+    try {
+      await this.getImpuestoIVA();
+      const taxes = vouncher.infoVoucherReqDTO?.taxes;
+      taxes.forEach((tax: any) => {
+        this.valuesCalculates.update((state: any) => {
+          const optionIvas = state.filter((item: any) => item.key === 'tarifaIva')[0].values;
+          optionIvas.map((tipoIva: any) => {
+            if (tipoIva.key === tax.tariffCode) {
+              tipoIva.value = tax.imponibleBase;
+            }
+          });
+
+          return state;
+        });
+      });
+
+      this.valuesCalculates.update((state: any) => {
+        const totalIva = state.filter((item: any) => item.key === 'IVA')[0];
+        totalIva.values = vouncher.infoVoucherReqDTO.valorIva;
+        const valorIce = state.filter((item: any) => item.key === 'ICE')[0];
+        valorIce.values = vouncher.infoVoucherReqDTO.valorIce;
+        const subTotal = state.filter((item: any) => item.key === 'SUBTOTAL')[0];
+        subTotal.values = vouncher.infoVoucherReqDTO.totalSinImpuestos;
+        const propina = state.filter((item: any) => item.key === 'PROPINA')[0];
+        propina.values = vouncher.infoVoucherReqDTO.propina;
+        const total = state.filter((item: any) => item.key === 'TOTAL')[0];
+        total.values = vouncher.infoVoucherReqDTO.importeTotal;
+
+        this.configFactu.infoVoucherReqDTO.set({
+          inpuestoIva: this.valuesCalculates()?.filter((value) => value.key === 'tarifaIva')[0],
+          totalSinImpuestos: vouncher.infoVoucherReqDTO.totalSinImpuestos,
+          valorIva: vouncher.infoVoucherReqDTO.valorIva,
+          valorIce: vouncher.infoVoucherReqDTO.valorIce,
+          importeTotal: vouncher.infoVoucherReqDTO.importeTotal,
+          propina: vouncher.infoVoucherReqDTO.propina,
+        });
+
+        return state;
+      });
+    } catch (error) {}
+  }
+  private getPayForms(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.controlService.getTypesPayForm().subscribe({
+        next: (response) => {
+          if (response.status === 'OK') {
+            this.paymentMethods.set(response);
+            this.ejecutarFormPago.set(true);
+            resolve(); // Resolución exitosa
+          } else {
+            reject('Respuesta no válida');
+          }
+        },
+        error: (err) => {
+          reject(`Error en la solicitud: ${err.message}`);
+        },
+      });
+    });
+  }
+
+  getImpuestoIVA(): Promise<void> {
     const IVA = 'IVA';
-    this.controlService.impuestoIVA(IVA).subscribe((response) => {
-      if (response.status === 'OK') {
-        this.listIva.set(response);
-        this.createDetailsPay();
-      }
+    return new Promise((resolve, reject) => {
+      this.controlService.impuestoIVA(IVA).subscribe({
+        next: (response) => {
+          if (response.status === 'OK') {
+            this.listIva.set(response);
+            this.createDetailsPay();
+            resolve(); // Resuelve la promesa exitosamente
+          } else {
+            reject('Error: Respuesta no OK.');
+          }
+        },
+        error: (err) => reject(err), // Rechaza la promesa si hay un error
+      });
     });
   }
 

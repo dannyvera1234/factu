@@ -28,6 +28,8 @@ export class CreateFacturaEmpresaService {
 
   public readonly infoVoucherReqDTO = signal<any | null>(null);
 
+  public readonly ideUpdateReporte = signal<number>(0);
+
   constructor(
     private readonly notification: NotificationService,
     private readonly facturacionService: DocumentosService,
@@ -46,20 +48,20 @@ export class CreateFacturaEmpresaService {
     const selectedPaymentMethod = this.selectedPaymentMethod();
 
     // Verificar si hay productos disponibles
-    if (this.products()?.length === 0) {
-      this.notification.push({
-        message: 'No hay productos disponibles para registrar la venta',
-        type: 'error',
-      });
-      return;
-    }
+     if (this.products()?.length === 0) {
+       this.notification.push({
+         message: 'No hay productos disponibles para registrar la venta',
+         type: 'error',
+       });
+       return;
+     }
 
     // Verificar si todos los campos obligatorios están completos
     if (
       !infoEmisor ||
       !infoCustomer ||
-      !selectedPaymentMethod ||
-      !this.selectedEstabliecimient() ||
+       !selectedPaymentMethod ||
+       !this.selectedEstabliecimient() ||
       !this.pointCode()
     ) {
       this.notification.push({
@@ -186,12 +188,25 @@ export class CreateFacturaEmpresaService {
    * especificado.
    * @param type Tipo de documento a guardar. Puede ser 'proforma' o 'factura'.
    */
-  saveDocument(type: 'proforma' | 'factura') {
+  saveDocument(type: 'proforma' | 'factura' | 'guardar') {
     const dataFacturacion = this.infoDataFactura();
-    const serviceCall =
-      type === 'proforma'
-        ? this.facturacionService.generateProforma(dataFacturacion)
-        : this.facturacionService.generateInvoice(dataFacturacion);
+    let serviceCall;
+
+
+    switch (type) {
+      case 'proforma':
+        serviceCall = this.facturacionService.generateProforma(dataFacturacion);
+        break;
+      case 'factura':
+        serviceCall = this.facturacionService.generateInvoice(dataFacturacion);
+        break;
+      case 'guardar':
+        serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.ideUpdateReporte());
+        break;
+      default:
+        console.error(`Tipo de documento no soportado: ${type}`);
+        return;
+    }
 
     of(this.loading.set(true))
       .pipe(
@@ -203,6 +218,7 @@ export class CreateFacturaEmpresaService {
           this.saveDataFactura.set(false);
           this.selectedEstabliecimient.set('');
           this.selectedPaymentMethod.set('');
+
           this.notification.push({
             message: `La ${type} ha sido generada con éxito.`,
             type: 'info',
