@@ -21,7 +21,6 @@ export class InfoProductosComponent {
   @Input({ required: true }) setPersonaRol!: any;
 
   @Input({ required: true }) set editProformaProducto(product: any[]) {
-    console.log(product);
     if (product) {
       product.forEach((item: any) => {
         item.cantidad = item.amount;

@@ -5,10 +5,12 @@ import { RegisterCounteWebService } from '../../services/register-counte-web.ser
 import { GeneriResp } from '../../interfaces';
 import { finalize, mergeMap, of } from 'rxjs';
 import { linkWhast } from '../../utils/permissions';
+import { HeardComponent } from '../heard';
+import { FooterWebComponent } from '../footer-web';
 
 @Component({
   selector: 'app-pega-informative',
-  imports: [RouterLink, NgClass, CurrencyPipe],
+  imports: [RouterLink, NgClass, CurrencyPipe, HeardComponent, HeardComponent, FooterWebComponent],
   templateUrl: './pega-informative.component.html',
   styles: `
     html {
@@ -73,13 +75,10 @@ export class PegaInformativeComponent {
   public readonly plan = signal<GeneriResp<any[]> | null>(null);
 
   public readonly loanding = signal(false);
-  menuOpen = false;
 
   public readonly link = signal(linkWhast);
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
+
 
   // Función para seleccionar un plan
   selectPlan(plan: string) {

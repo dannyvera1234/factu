@@ -1,54 +1,5 @@
 <!-- Navegación -->
-<nav class="flex flex-wrap items-center justify-between p-6 bg-white">
-  <img src="assets/olimpush.png" alt="Logo" class="h-10 mr-4" />
-
-  <!-- Botón para abrir/cerrar el menú -->
-  <button
-    class="lg:hidden block text-gray-500 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
-    (click)="toggleMenu()"
-  >
-    <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-      <path
-        d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
-      />
-    </svg>
-  </button>
-
-  <!-- Menú desplegable -->
-  <div [ngClass]="{ hidden: !menuOpen, block: menuOpen }" class="w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
-    <div class="text-sm lg:flex-grow"></div>
-
-    <!-- Contenedor de botones en columnas para la versión móvil -->
-    <div class="mt-8 lg:mt-0 w-full grid gap-4 lg:flex lg:space-x-4 lg:w-auto items-center">
-      <!-- Botón de Tutorial -->
-      <a
-        class="flex items-center rounded-md p-2 hover:bg-gray-50 sm:w-auto text-center"
-        href="https://youtu.be/cVifD5UbF-E?si=OpgPS6pxeYiunrB9"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img src="assets/icon/tooltip.svg" alt="Tutorial" class="w-5 h-5" />
-        <span class="ml-2 text-sm text-gray-700 font-medium">Ver tutorial</span>
-      </a>
-
-      <!-- Botón de Iniciar Sesión -->
-      <a
-        routerLink="/login"
-        class="inline-block px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-100 w-full sm:w-auto text-center"
-      >
-        Iniciar sesión
-      </a>
-
-      <!-- Botón de Comenzar Gratis -->
-      <a
-        routerLink="/registro_empresa"
-        class="inline-block px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 w-full sm:w-auto text-center"
-      >
-        Comenzar gratis
-      </a>
-    </div>
-  </div>
-</nav>
+<app-heard/>
 
 <!-- Hero Section -->
 <section class="relative bg-gradient-to-b from-blue-50 to-white py-32 px-4 sm:px-6">
@@ -387,72 +338,7 @@
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-gray-50 py-12 px-4 sm:px-6">
-  <div class="container mx-auto">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-      <div>
-        <h3 class="mb-4 font-semibold">Producto</h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Características</a></li>
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Precios</a></li>
-          <li>
-            <a
-              href="https://youtu.be/cVifD5UbF-E?si=OpgPS6pxeYiunrB9"
-              target="_blank"
-              class="text-gray-600 hover:text-gray-900"
-              >Tutoriales</a
-            >
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="mb-4 font-semibold">Compañía</h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Sobre nosotros</a></li>
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Blog</a></li>
-          <li><a [href]="link()" target="_blank" class="text-gray-600 hover:text-gray-900">Contacto</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="mb-4 font-semibold">Legal</h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Privacidad</a></li>
-          <li><a href="#" class="text-gray-600 hover:text-gray-900">Términos</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="mb-4 font-semibold">Social</h3>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="https://www.tiktok.com/@olimpushinfo?_t=ZM-8tMcDXpKztG&_r=1"
-              target="_blank"
-              class="text-gray-600 hover:text-gray-900"
-              >Tik Tok</a
-            >
-          </li>
-          <li>
-            <a href="https://www.youtube.com/@OlimPush-d4f" target="_blank" class="text-gray-600 hover:text-gray-900"
-              >YouTube</a
-            >
-          </li>
-          <li>
-            <a
-              href="https://www.facebook.com/people/OlimPush-Sistema-Contable/61572475136861/?sk=about"
-              target="_blank"
-              class="text-gray-600 hover:text-gray-900"
-              >Facebook</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="mt-12 border-t border-gray-200 pt-8">
-      <p class="text-center text-gray-600">© 2025 Desarrollado por OlimPush, Todos los derechos reservados.</p>
-    </div>
-  </div>
-</footer>
+  <app-footer-web/>
 
 <section>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -485,3 +371,5 @@
     </a>
   </div>
 </section>
+
+

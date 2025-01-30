@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, Input, signal } from '@angular/core';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { of, delay, finalize, last } from 'rxjs';
+import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
+import { of, delay, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { NgOptimizedImage } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';

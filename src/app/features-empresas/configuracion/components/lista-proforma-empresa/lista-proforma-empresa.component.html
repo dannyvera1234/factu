@@ -4,16 +4,21 @@
   <div class="flex flex-col md:flex-row items-center gap-4 w-full">
     <div class="w-full md:max-w-[200px]">
       <input
-      type="text"
-      placeholder="Buscar"
-      class="pl-8 pr-2 py-1 w-full border rounded"
-      [(ngModel)]="searchQuery"
-      (ngModelChange)="onSearchChange()"
-    />
+        type="text"
+        placeholder="Buscar"
+        class="pl-8 pr-2 py-1 w-full border rounded"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+      />
     </div>
 
+    <div class="flex gap-4 md:flex-row flex-col max-md:w-full">
+      @defer {
+        <app-filters-proforma />
+      }
+    </div>
     <button
-      class="text-[#4A5568] flex font-semibold px-3 py-1 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
+      class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
       (click)="convertirProforma()"
     >
       <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
@@ -24,14 +29,13 @@
   </div>
 </nav>
 
-
 <hr class="my-4" />
 <section>
   <div class="relative flex items-center justify-between overflow-x-auto">
     <table class="w-full text-left text-xs">
       <thead>
         <tr class="font-normal text-neutral-400 px-6 py-3">
-          <th class="px-4 py-3 ">
+          <th class="px-4 py-3">
             <!-- Checkbox para seleccionar todo -->
             <input type="checkbox" (change)="selectAll($event)" [checked]="allSelected()" />
             <!-- <span>Seleccionar todo</span> -->
@@ -45,8 +49,6 @@
           <th class="px-4 py-3 text-center"></th>
           <th class="px-4 py-3 text-center"></th>
         </tr>
-
-
       </thead>
       @if (loading()) {
         <tbody>
@@ -65,9 +67,9 @@
               <tr class="border-b hover:bg-gray-100">
                 <td class="px-4 py-3">
                   <!-- Checkbox para cada fila -->
-                  <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()"  />
+                  <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
                 </td>
-                <td  class="font-normal p-2">
+                <td class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-400">
                       <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
@@ -140,77 +142,75 @@
                   {{ invoice.total | currency }}
                 </td>
                 <td>
-
                   <div class="flex justify-center">
                     @if (invoice.pdfProforma !== null) {
-                    <div class="group relative">
-                      <button
-                        (click)="editarProforma(invoice.ideEncrypted)"
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      >
-                        <img src="assets/icon/edit.svg" alt="email" />
-                      </button>
-                      <!-- Tooltip para Email -->
-                      <div
-                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      >
-                        Editar Proforma
+                      <div class="group relative">
+                        <button
+                          (click)="editarProforma(invoice.ideEncrypted)"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/edit.svg" alt="email" />
+                        </button>
+                        <!-- Tooltip para Email -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Editar Proforma
+                        </div>
                       </div>
-                    </div>
-                  }
+                    }
                   </div>
+                </td>
 
                 <td>
                   <div class="flex justify-center">
                     @if (invoice.pdfProforma !== null) {
-                    <div class="group relative">
-                      <button
-                        (click)="reeviarEmail(invoice.ide)"
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      >
-                        <img src="assets/icon/email.svg" alt="email" />
-                      </button>
-                      <!-- Tooltip para Email -->
-                      <div
-                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      >
-                        Enviar por correo
+                      <div class="group relative">
+                        <button
+                          (click)="reeviarEmail(invoice.ide)"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/email.svg" alt="email" />
+                        </button>
+                        <!-- Tooltip para Email -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Enviar por correo
+                        </div>
                       </div>
-                    </div>
-                  }
+                    }
                   </div>
                 </td>
                 <td>
                   <div class="flex justify-center">
                     @if (invoice.pdfProforma !== null) {
-                    <div class="group relative">
-                      <a
-                        [href]="invoice.pdfProforma"
-                        target="_blank"
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      >
-                        <img src="assets/icon/downlad.svg" alt="Descargar" />
-                      </a>
-                      <!-- Tooltip para PDF -->
-                      <div
-                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      >
-                        Ver PDF
+                      <div class="group relative">
+                        <a
+                          [href]="invoice.pdfProforma"
+                          target="_blank"
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                        >
+                          <img src="assets/icon/downlad.svg" alt="Descargar" />
+                        </a>
+                        <!-- Tooltip para PDF -->
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Ver PDF
+                        </div>
                       </div>
-                    </div>
-                  }
+                    }
                   </div>
                 </td>
                 <td>
                   <div class="flex justify-center gap-1 group relative">
-
-
                     <div class="group relative">
                       <button
                         (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
                         class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       >
-                      <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
+                        <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
                       </button>
 
                       <div
@@ -219,7 +219,6 @@
                         Eliminar
                       </div>
                     </div>
-
                   </div>
                 </td>
               </tr>
@@ -249,14 +248,12 @@
   }
 </section>
 
-
 <app-modal #deleteProforma>
   <div class="h-screen w-full flex items-center justify-center">
     <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
       <section class="p-4">
         @defer {
           @if (ideDeleteProdorma(); as ide) {
-
             <app-delete-proforma
               [ideProforma]="ide"
               (deleted)="deleteProforma.close()"

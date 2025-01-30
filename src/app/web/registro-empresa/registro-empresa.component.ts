@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { of, mergeMap, finalize } from 'rxjs';
 import { FormErrorMessageComponent } from '../../components';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { cedulaValidator, emailValidator } from '../../utils/validators';
-import { NgClass } from '@angular/common';
 import { linkWhast } from '../../utils/permissions';
+import { HeardComponent } from '../heard';
+import { FooterWebComponent } from '../footer-web';
 
 @Component({
   selector: 'app-registro-empresa',
-  imports: [RouterLink, ReactiveFormsModule, FormErrorMessageComponent, NgClass],
+  imports: [ReactiveFormsModule, FormErrorMessageComponent, HeardComponent, FooterWebComponent],
   templateUrl: './registro-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,10 +21,7 @@ export class RegistroEmpresaComponent {
 
   public readonly confirmarRegistro = signal(false);
 
-  menuOpen = false;
-
-    public readonly link = signal(linkWhast);
-
+  public readonly link = signal(linkWhast);
 
   constructor(
     private readonly _fb: FormBuilder,
@@ -31,10 +29,6 @@ export class RegistroEmpresaComponent {
     private router: Router,
   ) {}
 
-
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
   form = this._fb.group({
     typePerson: null,
     socialReason: null,

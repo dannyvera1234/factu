@@ -3,6 +3,7 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { NotificationService } from '@/utils/services';
 import { DetailsProducto } from '@/interfaces';
 import { DocumentosService } from '@/services/service-empresas';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +29,12 @@ export class CreateFacturaEmpresaService {
 
   public readonly infoVoucherReqDTO = signal<any | null>(null);
 
-  public readonly ideUpdateReporte = signal<number>(0);
+  public readonly infoProforma = signal<any | null>(null);
 
   constructor(
     private readonly notification: NotificationService,
     private readonly facturacionService: DocumentosService,
+    private readonly router: Router,
   ) {}
 
   public readonly saveDataFactura = signal(false);
@@ -48,20 +50,20 @@ export class CreateFacturaEmpresaService {
     const selectedPaymentMethod = this.selectedPaymentMethod();
 
     // Verificar si hay productos disponibles
-     if (this.products()?.length === 0) {
-       this.notification.push({
-         message: 'No hay productos disponibles para registrar la venta',
-         type: 'error',
-       });
-       return;
-     }
+    if (this.products()?.length === 0) {
+      this.notification.push({
+        message: 'No hay productos disponibles para registrar la venta',
+        type: 'error',
+      });
+      return;
+    }
 
     // Verificar si todos los campos obligatorios están completos
     if (
       !infoEmisor ||
       !infoCustomer ||
-       !selectedPaymentMethod ||
-       !this.selectedEstabliecimient() ||
+      !selectedPaymentMethod ||
+      !this.selectedEstabliecimient() ||
       !this.pointCode()
     ) {
       this.notification.push({
@@ -190,8 +192,8 @@ export class CreateFacturaEmpresaService {
    */
   saveDocument(type: 'proforma' | 'factura' | 'guardar') {
     const dataFacturacion = this.infoDataFactura();
-    let serviceCall;
 
+    let serviceCall;
 
     switch (type) {
       case 'proforma':
@@ -201,7 +203,7 @@ export class CreateFacturaEmpresaService {
         serviceCall = this.facturacionService.generateInvoice(dataFacturacion);
         break;
       case 'guardar':
-        serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.ideUpdateReporte());
+        serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
         break;
       default:
         console.error(`Tipo de documento no soportado: ${type}`);
@@ -218,11 +220,19 @@ export class CreateFacturaEmpresaService {
           this.saveDataFactura.set(false);
           this.selectedEstabliecimient.set('');
           this.selectedPaymentMethod.set('');
+          this.infoProforma.set(null);
 
           this.notification.push({
-            message: `La ${type} ha sido generada con éxito.`,
+            message: `El documento ha sido generado correctamente`,
             type: 'info',
           });
+
+          if (type === 'guardar') {
+            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          }
+          if (type === 'factura') {
+            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          }
         } else {
           this.notification.push({
             message: `Error al generar la ${type}. Intente nuevamente.`,

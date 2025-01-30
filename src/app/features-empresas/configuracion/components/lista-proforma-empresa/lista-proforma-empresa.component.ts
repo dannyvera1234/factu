@@ -1,5 +1,4 @@
-import { routes } from './../../../../app.routes';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { PaginationComponent } from '@/components/pagination';
 import { CurrencyPipe } from '@angular/common';
 import { GeneriResp } from '@/interfaces';
@@ -11,10 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalComponent } from '@/components';
 import { DeleteProformaComponent } from '../delete-proforma';
+import { FiltersProformaComponent } from './components';
 
 @Component({
   selector: 'app-lista-proforma-empresa',
-  imports: [PaginationComponent, CustomDatePipe, CurrencyPipe, FormsModule, ModalComponent, DeleteProformaComponent],
+  imports: [PaginationComponent, CustomDatePipe, CurrencyPipe, FormsModule, ModalComponent, DeleteProformaComponent, FiltersProformaComponent],
   templateUrl: './lista-proforma-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,7 +36,6 @@ export class ListaProformaEmpresaComponent {
     public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService,
     private readonly notification: NotificationService,
-    private cdr: ChangeDetectorRef,
     private router: Router,
   ) {
     this.getListInvoices(0);
@@ -171,4 +170,6 @@ export class ListaProformaEmpresaComponent {
       this.getListInvoices(0);
     }
   }
+
+
 }

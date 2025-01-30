@@ -59,9 +59,10 @@ export class DocumentosService {
     });
   }
 
+
+
   updateProforma(data: Partial<any>, invoiceIde: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {    invoiceIde, dataToUpdate:data});
-    console.log(payload);
     return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/updateProforma`, {
       body: payload,
     });

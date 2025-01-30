@@ -31,7 +31,6 @@ export class ListaProductosComponent {
     this.facturacionService.listProduct(emisor).subscribe((resp) => {
       if (resp.status === 'OK') {
         this.listProducts.set(resp);
-        console.log(this.listProducts());
       }
     });
   }
