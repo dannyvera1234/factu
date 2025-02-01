@@ -113,7 +113,7 @@ export class DocumentosService {
   generateLoteProforma(data: Partial<number>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { idsInvoices:data });
     console.log(payload);
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/generateLoteProforma`, {
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/generateLoteProforma`, {
       body: payload,
     });
   }

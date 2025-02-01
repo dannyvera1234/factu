@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
 import { CurrencyPipe } from '@angular/common';
@@ -19,6 +19,13 @@ import { DeleteProformaComponent } from '../../../delete-proforma';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablaRegistradaComponent {
+  @Input({ required: true }) set ideIvoices(value: any) {
+    if (value) {
+      this.getListInvoices(0);
+      this.finalizarProceso();
+    }
+  }
+
   public readonly listProformas = signal<GeneriResp<any> | null>(null);
 
   public readonly showTooltip = signal<{ [key: string]: boolean }>({});
@@ -31,6 +38,8 @@ export class TablaRegistradaComponent {
 
   @Output() public readonly ideProformas = new EventEmitter<number[] | null>();
 
+  @Output() finalizar = new EventEmitter<void>();
+
   constructor(
     public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService,
@@ -38,6 +47,10 @@ export class TablaRegistradaComponent {
     private readonly router: Router,
   ) {
     this.getListInvoices(0);
+  }
+
+  finalizarProceso() {
+    this.finalizar.emit(); // Notificar al emisor
   }
 
   onPageChange(newPage: number): void {
@@ -111,15 +124,15 @@ export class TablaRegistradaComponent {
 
   convertirProforma() {
     // Filtra las proformas seleccionadas
-  const proformasSeleccionadas = this.listProformas()!.data.listData.filter((invoice: any) => invoice.selected);
+    const proformasSeleccionadas = this.listProformas()!.data.listData.filter((invoice: any) => invoice.selected);
 
-  // Si hay cambios en la selección, emite la lista de IDs
-  const ideList = proformasSeleccionadas.map((invoice: any) => invoice.ide);
+    // Si hay cambios en la selección, emite la lista de IDs
+    const ideList = proformasSeleccionadas.map((invoice: any) => invoice.ide);
 
-  // Solo emite si la lista de IDs ha cambiado (optimización)
-  if (this.ideProformas.emit() !== ideList) {
-    this.ideProformas.emit(ideList);
-  }
+    // Solo emite si la lista de IDs ha cambiado (optimización)
+    if (this.ideProformas.emit() !== ideList) {
+      this.ideProformas.emit(ideList);
+    }
   }
 
   editarProforma(ideEncrypted: number) {
@@ -146,6 +159,4 @@ export class TablaRegistradaComponent {
         }
       });
   }
-
-
 }

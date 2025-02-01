@@ -28,7 +28,7 @@ export class FiltersProformaComponent {
   constructor(private readonly ref: ElementRef, private readonly _fb: FormBuilder) {}
 
   form  = this._fb.group({
-    clasificacion: ['', [Validators.required]],
+    clasificacion: ['proformaRegistrada', [Validators.required]],
   });
 
   buscar() {

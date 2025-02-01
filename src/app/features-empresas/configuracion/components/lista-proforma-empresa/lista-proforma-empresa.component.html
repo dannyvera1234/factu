@@ -36,7 +36,11 @@
 <hr class="my-4" />
 @if (showTableProforma() === 'tablaProformaRegistrada' || showTableProforma() === '') {
   @defer {
-    <app-tabla-registrada (ideProformas)="$event && ideProformas($event)" />
+    <app-tabla-registrada
+      (ideProformas)="$event && ideProformas($event)"
+      [ideIvoices]="ideEnviadoProceso()"
+      (finalizar)="ideProforma.set(null)"
+    />
   }
 } @else {
   @defer {
@@ -49,7 +53,11 @@
     <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
       <section class="p-4">
         @defer {
-          <app-facturar-proformas (facturarProforma)="facturarProforma.close()" [idsInvoices]="ideProforma()" />
+          <app-facturar-proformas
+            (facturarProforma)="facturarProforma.close()"
+            [idsInvoices]="ideProforma()"
+            (facturarProforma)="ideEnviadoProceso.set($event)"
+          />
         }
       </section>
     </div>

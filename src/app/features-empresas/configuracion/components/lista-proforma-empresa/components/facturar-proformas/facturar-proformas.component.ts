@@ -23,7 +23,6 @@ export class FacturarProformasComponent {
   ) {}
 
   generateLoteProforma() {
-
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.docService.generateLoteProforma(this.idsInvoices)),
@@ -31,11 +30,12 @@ export class FacturarProformasComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.notification.push({
             message: 'Proformas en lote generadas correctamente.',
             type: 'success',
           });
-          this.facturarProforma.emit(Number(resp.data));
+          this.facturarProforma.emit(this.idsInvoices);
         }
       });
   }

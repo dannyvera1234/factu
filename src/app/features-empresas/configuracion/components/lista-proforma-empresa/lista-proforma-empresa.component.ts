@@ -33,6 +33,8 @@ export class ListaProformaEmpresaComponent {
 
   public readonly ideProforma = signal<number[] | null>(null);
 
+  public readonly ideEnviadoProceso = signal<number | null>(null);
+
   constructor(
     public readonly config: ConfigFacturacionService,
     private readonly notification: NotificationService,
@@ -40,11 +42,9 @@ export class ListaProformaEmpresaComponent {
 
   onSearchChange(): void {
     // const query = this.searchQuery.trim().toLowerCase();
-
     // if (this.listProformas() && query) {
     //   // Verifica que 'listData' sea un array y tenga elementos
     //   const listData = this.listProformas()!.data.listData;
-
     //   // Filtra las proformas según el texto ingresado, por cada letra
     //   const filteredProformas = listData.filter((invoice: any) => {
     //     const socialReasonMatch = invoice.socialReasonCustomer
@@ -53,10 +53,8 @@ export class ListaProformaEmpresaComponent {
     //     const identificationMatch = invoice.identificationCustomer
     //       ? invoice.identificationCustomer.toString().includes(query)
     //       : false;
-
     //     return socialReasonMatch || identificationMatch;
     //   });
-
     //   // Actualiza el estado con las proformas filtradas
     //   this.listProformas.set({
     //     ...this.listProformas()!,
@@ -74,6 +72,7 @@ export class ListaProformaEmpresaComponent {
   convertirProformas() {
     // Verifica si hay IDs seleccionados en `ideProforma`
     if (this.ideProforma()?.length) {
+      console.log(this.ideProforma());
       this.facturarProformaModal.open();
     } else {
       this.notification.push({
@@ -82,6 +81,8 @@ export class ListaProformaEmpresaComponent {
       });
     }
   }
+
+
 
   ideProformas(ids: number[]) {
     // Guarda los IDs seleccionados, o establece null si no hay ninguno
