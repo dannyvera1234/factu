@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
-import { EmpresaService } from '../../../../../../services/service-empresas';
+import { DocumentosService } from '@/services/service-empresas';
 import { NotificationService } from '@/utils/services';
 
 @Component({
@@ -8,36 +8,35 @@ import { NotificationService } from '@/utils/services';
   imports: [],
   templateUrl: './facturar-proformas.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacturarProformasComponent {
- @Input({ required: true })  set ideProformas(value: any) {
-   console.log(value);
- }
+  @Input({ required: true }) idsInvoices!: any;
 
   public readonly loading = signal(false);
 
   @Output() public readonly facturarProforma = new EventEmitter<number | null>();
 
   constructor(
-    private readonly emisorService: EmpresaService,
+    private readonly docService: DocumentosService,
     private readonly notification: NotificationService,
   ) {}
 
-  deleteDoc() {
-    // of(this.loading.set(true))
-    //   .pipe(
-    //     mergeMap(() => this.emisorService.deleteFile(this.ideRegister)),
-    //     finalize(() => this.loading.set(false)),
-    //   )
-    //   .subscribe((resp) => {
-    //     if (resp.status === 'OK') {
-    //       this.notification.push({
-    //         message: 'Documento eliminado del registro.',
-    //         type: 'success',
-    //       });
-    //       this.deleted.emit(Number(resp.data));
-    //     }
-    //   });
+  generateLoteProforma() {
+
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.docService.generateLoteProforma(this.idsInvoices)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.notification.push({
+            message: 'Proformas en lote generadas correctamente.',
+            type: 'success',
+          });
+          this.facturarProforma.emit(Number(resp.data));
+        }
+      });
   }
 }

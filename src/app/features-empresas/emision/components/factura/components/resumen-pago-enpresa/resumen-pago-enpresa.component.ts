@@ -21,13 +21,9 @@ export class ResumenPagoEnpresaComponent {
     if (event) {
       this.procesoResumenPago(event);
       if (!this.ejecutarFormPago()) {
-        this.getPayForms()
-          .then(() => {
-            this.procesarPayForms(event);
-          })
-          .catch((error) => {
-            console.error('Error al obtener formas de pago:', error);
-          });
+        this.getPayForms().then(() => {
+          this.procesarPayForms(event);
+        });
       } else {
         this.procesarPayForms(event);
       }

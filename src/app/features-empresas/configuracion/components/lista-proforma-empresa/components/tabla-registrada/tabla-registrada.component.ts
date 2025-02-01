@@ -143,7 +143,6 @@ export class TablaRegistradaComponent {
       .subscribe((res) => {
         if (res.status === 'OK') {
           this.listProformas.set(res);
-          console.log(this.listProformas());
         }
       });
   }

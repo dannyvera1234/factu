@@ -39,16 +39,11 @@ export class FiltersProformaComponent {
       // Mostrar la tabla correspondiente según la clasificación seleccionada
       if (clasificacion === 'proformaRegistrada') {
         this.tablaMostrar = 'tablaProformaRegistrada'; // Cambia a tu lógica de tabla
-        console.log(this.tablaMostrar, clasificacion);
       } else if (clasificacion === 'proformaEnProceso') {
         this.tablaMostrar = 'tablaProformaEnProceso'; // Cambia a tu lógica de tabla
-        console.log(this.tablaMostrar, clasificacion);
       }
       this.buscarResult.emit(this.tablaMostrar);
       this.open.set(!this.open());
-    } else {
-      // Mostrar mensaje de error si no se selecciona ninguna opción
-      console.error('Debe seleccionar una clasificación.');
     }
   }
 

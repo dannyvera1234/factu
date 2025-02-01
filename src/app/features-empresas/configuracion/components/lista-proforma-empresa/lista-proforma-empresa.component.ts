@@ -31,7 +31,7 @@ export class ListaProformaEmpresaComponent {
 
   @ViewChild('facturarProforma') facturarProformaModal: any;
 
-  public readonly ideProforma = signal<any[] | null>(null);
+  public readonly ideProforma = signal<number[] | null>(null);
 
   constructor(
     public readonly config: ConfigFacturacionService,
