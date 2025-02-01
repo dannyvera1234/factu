@@ -4,6 +4,8 @@ import { GeneriResp } from '@/interfaces';
 import { CurrencyPipe } from '@angular/common';
 import { CustomDatePipe } from '@/pipes';
 import { ConfigFacturacionService } from '@/utils/services';
+import { finalize, mergeMap, of } from 'rxjs';
+import { DocumentosService } from '../../../../../../services/service-empresas';
 
 @Component({
   selector: 'app-tabla-proceso',
@@ -19,7 +21,11 @@ export class TablaProcesoComponent {
 
   public readonly loading = signal(false);
 
-  constructor(public readonly config: ConfigFacturacionService) {}
+  constructor(public readonly config: ConfigFacturacionService,
+    private readonly docService: DocumentosService
+  ) {
+    this.listInvoicesProformaEnProceso();
+  }
 
   onPageChange(newPage: number): void {
     const pagination = this.listProformasProcess()?.data?.page;
@@ -43,5 +49,19 @@ export class TablaProcesoComponent {
 
   isTooltipVisible(id: number): boolean {
     return !!this.showTooltip()[id];
+  }
+
+  listInvoicesProformaEnProceso(){
+    of(this.loading.set(true))
+    .pipe(
+      mergeMap(() => this.docService.listInvoicesProformaEnProceso(0)),
+      finalize(() => this.loading.set(false)),
+    )
+    .subscribe((res) => {
+      if (res.status === 'OK') {
+        console.log(res);
+         this.listProformasProcess.set(res);
+      }
+    });
   }
 }

@@ -85,6 +85,7 @@ export class TablaRegistradaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+
           this.notification.push({
             message: 'Correo enviado correctamente',
             type: 'success',
@@ -155,6 +156,7 @@ export class TablaRegistradaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log(res);
           this.listProformas.set(res);
         }
       });

@@ -3,15 +3,12 @@
     <table class="w-full text-left text-xs">
       <thead>
         <tr class="font-normal text-neutral-400 px-6 py-3">
-
           <th class="px-4 py-3 text-left">Nombres</th>
-          <th class="px-4 py-3 text-center">Fecha Emisión</th>
-          <th class="px-3 py-2 text-center">Secuencial</th>
+          <th class="px-4 py-3 text-center">Lote</th>
+          <th class="px-4 py-3 text-center">Fecha Creción</th>
+          <th class="px-3 py-2 text-center">N° Proforma</th>
           <th class="px-4 py-3 text-center">Total</th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
+          <th class="px-4 py-3 text-center">Estado</th>
         </tr>
       </thead>
       @if (loading()) {
@@ -29,10 +26,9 @@
           @if (listProformasProcess() && listProformasProcess()!.data!.listData.length > 0) {
             @for (invoice of listProformasProcess()!.data!.listData; track $index) {
               <tr class="border-b hover:bg-gray-100">
-
                 <td class="font-normal p-2">
                   <div class="flex gap-4 items-center">
-                    <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-400">
+                    <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-green-500">
                       <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
                     </div>
 
@@ -92,53 +88,38 @@
                 </td>
 
                 <td class="px-4 py-3 text-center">
+                  {{ invoice.lote }}
+                </td>
+
+                <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
 
                 <td class="px-2 py-1 text-center text-xs">
-                  {{ invoice.sequentialDoc }}
+                  {{ invoice.sequentialDocProforma }}
                 </td>
 
                 <td class="px-4 py-3 text-center">
                   {{ invoice.total | currency }}
                 </td>
                 <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-
-                    }
-                  </div>
+                  @if (invoice.statusProcess === 'EN PROCESO PROFORMA') {
+                    <div class="flex items-center justify-center">
+                      <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                      </svg>
+                      <span class="ml-2 text-sm text-green-700">Procesando...</span>
+                    </div>
+                  }
                 </td>
-
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <a
-                          [href]="invoice.pdfProforma"
-                          target="_blank"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/downlad.svg" alt="Descargar" />
-                        </a>
-                        <!-- Tooltip para PDF -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver PDF
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-
               </tr>
             }
           } @else {
