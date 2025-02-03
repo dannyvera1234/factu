@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { of, mergeMap, finalize } from 'rxjs';
+import { of, mergeMap, finalize, timeout } from 'rxjs';
 import { DocumentosService } from '@/services/service-empresas';
 import { NotificationService } from '@/utils/services';
 
@@ -26,7 +26,12 @@ export class FacturarProformasComponent {
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.docService.generateLoteProforma(this.idsInvoices)),
-        finalize(() => this.loading.set(false)),
+        finalize(() => {
+          setTimeout(() => {
+            this.loading.set(false);
+            this.facturarProforma.emit(this.idsInvoices);
+          }, 1000); // Retraso de 1 segundo
+        }),
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
@@ -35,7 +40,6 @@ export class FacturarProformasComponent {
             message: 'Proformas en lote generadas correctamente.',
             type: 'success',
           });
-          this.facturarProforma.emit(this.idsInvoices);
         }
       });
   }

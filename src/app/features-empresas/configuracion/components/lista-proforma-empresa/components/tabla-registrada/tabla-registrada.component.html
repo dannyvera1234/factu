@@ -9,8 +9,10 @@
             <!-- <span>Seleccionar todo</span> -->
           </th>
           <th class="px-4 py-3 text-left">Nombres</th>
-          <th class="px-4 py-3 text-center">Fecha Creación</th>
+          <th class="px-4 py-3 text-center">Lote</th>
+          <th class="px-4 py-3 text-center">Fecha Creción</th>
           <th class="px-3 py-2 text-center">Estado</th>
+          <th class="px-4 py-3 text-center">Recepción Sri</th>
           <th class="px-3 py-2 text-center">N° Proforma</th>
           <th class="px-4 py-3 text-center">Total</th>
           <th class="px-4 py-3 text-center"></th>
@@ -36,7 +38,9 @@
               <tr class="border-b hover:bg-gray-100">
                 <td class="px-4 py-3">
                   <!-- Checkbox para cada fila -->
-                  <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
+                  @if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+                    <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
+                  }
                 </td>
                 <td class="font-normal p-2">
                   <div class="flex gap-4 items-center">
@@ -98,16 +102,77 @@
                     </div>
                   </div>
                 </td>
-
+                <td class="px-4 py-3 text-center">
+                  {{ invoice.lote }}
+                </td>
                 <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
                 <td class="px-4 py-3 text-center">
-                  <span class="rounded-full px-2 py-1 inline-block bg-green-100 text-green-700">
-                    {{ invoice.statusProcess }}
-                  </span>
+                  @if (invoice.statusProcess === 'EN PROCESO PROFORMA') {
+                    <div class="flex items-center justify-center">
+                      <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                      </svg>
+                      <span class="ml-2 text-sm text-green-700">Procesando...</span>
+                    </div>
+                  } @else {
+                    <span class="rounded-full px-2 py-1 inline-block bg-green-100 text-green-700">
+                      {{ invoice.statusProcess }}
+                    </span>
+                  }
                 </td>
+                <td class="px-4 py-3 text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.receptionStatus) {
+                      <!-- @case ('PENDIENTE') {
+                        <span class="b text-green-700">
+                        ?
+                        </span>
+                      } -->
+                      @case ('RECIBIDA') {
+                        <span class="b text-green-700">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      }
+                      @case ('NO AUTORIZADA') {
+                        <span class="text-red-700">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                            />
+                          </svg>
+                        </span>
+                      }
+                    }
 
+                  </div>
+                </td>
                 <td class="px-2 py-1 text-center text-xs">
                   {{ invoice.sequentialDocProforma }}
                 </td>
@@ -115,86 +180,88 @@
                 <td class="px-4 py-3 text-center">
                   {{ invoice.total | currency }}
                 </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
+                @if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+                  <td>
+                    <div class="flex justify-center">
+                      @if (invoice.pdfProforma !== null) {
+                        <div class="group relative">
+                          <button
+                            (click)="editarProforma(invoice.ideEncrypted)"
+                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          >
+                            <img src="assets/icon/edit.svg" alt="email" />
+                          </button>
+                          <!-- Tooltip para Email -->
+                          <div
+                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                          >
+                            Editar Proforma
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="flex justify-center">
+                      @if (invoice.pdfProforma !== null) {
+                        <div class="group relative">
+                          <button
+                            (click)="reeviarEmail(invoice.ide)"
+                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          >
+                            <img src="assets/icon/email.svg" alt="email" />
+                          </button>
+                          <!-- Tooltip para Email -->
+                          <div
+                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                          >
+                            Enviar por correo
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center">
+                      @if (invoice.pdfProforma !== null) {
+                        <div class="group relative">
+                          <a
+                            [href]="invoice.pdfProforma"
+                            target="_blank"
+                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          >
+                            <img src="assets/icon/downlad.svg" alt="Descargar" />
+                          </a>
+                          <!-- Tooltip para PDF -->
+                          <div
+                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                          >
+                            Ver PDF
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex justify-center gap-1 group relative">
                       <div class="group relative">
                         <button
-                          (click)="editarProforma(invoice.ideEncrypted)"
                           class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
                         >
-                          <img src="assets/icon/edit.svg" alt="email" />
+                          <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
                         </button>
-                        <!-- Tooltip para Email -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Editar Proforma
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
 
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <button
-                          (click)="reeviarEmail(invoice.ide)"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/email.svg" alt="email" />
-                        </button>
-                        <!-- Tooltip para Email -->
                         <div
                           class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                         >
-                          Enviar por correo
+                          Eliminar
                         </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center">
-                    @if (invoice.pdfProforma !== null) {
-                      <div class="group relative">
-                        <a
-                          [href]="invoice.pdfProforma"
-                          target="_blank"
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        >
-                          <img src="assets/icon/downlad.svg" alt="Descargar" />
-                        </a>
-                        <!-- Tooltip para PDF -->
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver PDF
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center gap-1 group relative">
-                    <div class="group relative">
-                      <button
-                        class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                        (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
-                      >
-                        <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
-                      </button>
-
-                      <div
-                        class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                      >
-                        Eliminar
                       </div>
                     </div>
-                  </div>
-                </td>
+                  </td>
+                }
               </tr>
             }
           } @else {

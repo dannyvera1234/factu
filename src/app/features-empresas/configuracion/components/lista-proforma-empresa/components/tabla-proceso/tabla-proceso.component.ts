@@ -24,7 +24,7 @@ export class TablaProcesoComponent {
   constructor(public readonly config: ConfigFacturacionService,
     private readonly docService: DocumentosService
   ) {
-    this.listInvoicesProformaEnProceso();
+    this.listInvoicesProformaEnProceso(0);
   }
 
   onPageChange(newPage: number): void {
@@ -37,7 +37,7 @@ export class TablaProcesoComponent {
       pagination.hasNext = newPage < pagination.totalPages;
       pagination.hasPrevious = newPage > 1;
 
-      // this.getListInvoices(newPage);
+      this.listInvoicesProformaEnProceso(newPage);
       // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
     }
   }
@@ -51,10 +51,10 @@ export class TablaProcesoComponent {
     return !!this.showTooltip()[id];
   }
 
-  listInvoicesProformaEnProceso(){
+  listInvoicesProformaEnProceso(page: number){
     of(this.loading.set(true))
     .pipe(
-      mergeMap(() => this.docService.listInvoicesProformaEnProceso(0)),
+      mergeMap(() => this.docService.listInvoicesProformaEnProceso(page)),
       finalize(() => this.loading.set(false)),
     )
     .subscribe((res) => {

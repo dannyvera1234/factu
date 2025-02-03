@@ -22,7 +22,7 @@ export class TablaRegistradaComponent {
   @Input({ required: true }) set ideIvoices(value: any) {
     if (value) {
       this.getListInvoices(0);
-      this.finalizarProceso();
+      this.finalizar.emit(null);
     }
   }
 
@@ -38,7 +38,7 @@ export class TablaRegistradaComponent {
 
   @Output() public readonly ideProformas = new EventEmitter<number[] | null>();
 
-  @Output() finalizar = new EventEmitter<void>();
+  @Output() finalizar = new EventEmitter<null>();
 
   constructor(
     public readonly config: ConfigFacturacionService,
@@ -47,10 +47,6 @@ export class TablaRegistradaComponent {
     private readonly router: Router,
   ) {
     this.getListInvoices(0);
-  }
-
-  finalizarProceso() {
-    this.finalizar.emit(); // Notificar al emisor
   }
 
   onPageChange(newPage: number): void {
@@ -85,7 +81,6 @@ export class TablaRegistradaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-
           this.notification.push({
             message: 'Correo enviado correctamente',
             type: 'success',
@@ -99,7 +94,9 @@ export class TablaRegistradaComponent {
 
     // Actualiza todos los elementos
     this.listProformas()!.data.listData.forEach((invoice: any) => {
-      invoice.selected = checked;
+      if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+        invoice.selected = checked;
+      }
     });
 
     this.updateSelectAll();
@@ -109,7 +106,11 @@ export class TablaRegistradaComponent {
     invoice.selected = !invoice.selected;
 
     // Verifica si todos están seleccionados para sincronizar el checkbox "Seleccionar todo"
-    const allSelected = this.listProformas()!.data.listData.every((item: any) => item.selected);
+    const allSelected = this.listProformas()!.data.listData.every((item: any) => {
+      if (item.statusProcess !== 'EN PROCESO PROFORMA') {
+        item.selected;
+      }
+    });
     this.allSelected.set(allSelected);
 
     this.convertirProforma(); // Actualiza proformas seleccionadas al hacer selección individual
@@ -158,6 +159,16 @@ export class TablaRegistradaComponent {
         if (res.status === 'OK') {
           console.log(res);
           this.listProformas.set(res);
+
+          this.allSelected.set(false);
+
+          // Deselecciona todas las proformas
+          this.listProformas()!.data.listData.forEach((invoice: any) => {
+            invoice.selected = false;
+          });
+
+          // Limpia la lista emitida si es necesario
+          this.ideProformas.emit([]);
         }
       });
   }
