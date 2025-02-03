@@ -13,6 +13,7 @@
           <th class="px-4 py-3 text-center">Fecha Creción</th>
           <th class="px-3 py-2 text-center">Estado</th>
           <th class="px-4 py-3 text-center">Recepción Sri</th>
+          <th class="px-4 py-3 text-center">Autorización</th>
           <th class="px-3 py-2 text-center">N° Proforma</th>
           <th class="px-4 py-3 text-center">Total</th>
           <th class="px-4 py-3 text-center"></th>
@@ -130,14 +131,11 @@
                     </span>
                   }
                 </td>
+
                 <td class="px-4 py-3 text-center">
                   <div class="flex justify-center items-center">
                     @switch (invoice.receptionStatus) {
-                      <!-- @case ('PENDIENTE') {
-                        <span class="b text-green-700">
-                        ?
-                        </span>
-                      } -->
+
                       @case ('RECIBIDA') {
                         <span class="b text-green-700">
                           <svg
@@ -151,7 +149,46 @@
                           </svg>
                         </span>
                       }
-                      @case ('NO AUTORIZADA') {
+                      @case ('NO AUTORIZADO') {
+                        <span class="text-red-700">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                            />
+                          </svg>
+                        </span>
+                      }
+                    }
+
+                  </div>
+                </td>
+                <td>
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.authorizationStatus) {
+
+                      @case ('RECIBIDA') {
+                        <span class="b text-green-700">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5 mr-1"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      }
+                      @case ('NO AUTORIZADO') {
                         <span class="text-red-700">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
