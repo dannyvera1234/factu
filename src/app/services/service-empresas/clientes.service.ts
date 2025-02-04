@@ -14,8 +14,12 @@ export class ClientesService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listClientes(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, null);
+  listClientes(page: number, search: string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      size: Modulos.PAGE_SIZE,
+      page: page,
+      search: search,
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listCustomer`, {
       body: payload,
     });

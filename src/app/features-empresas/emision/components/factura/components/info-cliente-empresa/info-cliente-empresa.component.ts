@@ -50,54 +50,30 @@ export class InfoClienteEmpresaComponent {
     }
   }
 
-  @Input({ required: true }) setPersonaRol!: any;
-
+  @Input({ required: true })set setPersonaRol(value: any) {
+    if (value !== null) {
+       this.idePersonal.set(value);
+    }
+  }
+  public readonly idePersonal = signal<number | null>(null);
   public readonly loading = signal(false);
   public readonly dropdownOpen = signal(false);
   public readonly loadingCombo = signal(false);
-  public readonly filteredOptions = signal<GeneriResp<any[]> | null>(null);
+  public readonly filteredOptions = signal<GeneriResp<any> | null>(null);
   public readonly selectedCliente = signal<any | null>(null);
-  public readonly searchTerm = signal('');
+  public  searchTerm = '';
 
   // Variable para almacenar las opciones originales
   private originalOptions: GeneriResp<any[]> | null = null;
 
   handleSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.searchTerm.set(target.value);
+    this.searchTerm = target.value;
     this.dropdownOpen.set(true);
-    this.filterOption();
+    this.getCustomer();
   }
 
-  filterOption(): void {
-    const searchTerm = this.searchTerm(); // Obtén el término de búsqueda
 
-    // Si hay término de búsqueda
-    if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase(); // Convertir el término a minúsculas solo una vez
-
-      // Filtra las opciones basadas en el término de búsqueda
-      const filtered =
-        this.originalOptions?.data.filter((option) => {
-          return [option.identificationNumber, option.socialReason, option.names, option.lastName].some((field) =>
-            field?.toLowerCase().includes(term),
-          );
-        }) ?? [];
-
-      // Actualiza las opciones filtradas solo si cambian
-      const message = filtered.length > 1 ? 'Búsqueda realizada correctamente' : 'No se encontraron resultados';
-      this.filteredOptions.set({
-        data: filtered,
-        status: 'OK',
-        message,
-      });
-    } else {
-      // Si el término de búsqueda está vacío, restablece las opciones a las originales
-      if (this.originalOptions) {
-        this.filteredOptions.set(this.originalOptions);
-      }
-    }
-  }
 
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
@@ -134,9 +110,10 @@ export class InfoClienteEmpresaComponent {
   getCustomer() {
     this.dropdownOpen.set(true);
     if (this.filteredOptions() === null || this.filteredOptions() === undefined) {
-      this.emisionService.listCustomer(this.setPersonaRol).subscribe((resp) => {
+      this.emisionService.listCustomer(this.idePersonal()!, this.searchTerm, 0).subscribe((resp) => {
         if (resp.status === 'OK') {
-          resp.data.unshift(consumidorFinal);
+          console.log(resp);
+           resp.data.listData.unshift(consumidorFinal);
           this.originalOptions = resp;
           this.filteredOptions.set(resp);
         }
@@ -146,7 +123,7 @@ export class InfoClienteEmpresaComponent {
 
   createCliente(event: any) {
     if (event.status === 'OK') {
-      this.emisionService.listCustomer(this.setPersonaRol).subscribe((resp) => {
+      this.emisionService.listCustomer(this.idePersonal()!, this.searchTerm, 0).subscribe((resp) => {
         if (resp.status === 'OK') {
           resp.data.unshift(consumidorFinal);
           this.originalOptions = resp;

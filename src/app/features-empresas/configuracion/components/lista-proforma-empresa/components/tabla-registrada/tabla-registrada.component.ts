@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
 import { CurrencyPipe } from '@angular/common';
@@ -15,7 +15,28 @@ import { DeleteProformaComponent } from '../../../delete-proforma';
   selector: 'app-tabla-registrada',
   imports: [PaginationComponent, CurrencyPipe, CustomDatePipe, FormsModule, ModalComponent, DeleteProformaComponent],
   templateUrl: './tabla-registrada.component.html',
-  styles: ``,
+  styles: `
+    #optionsMenu {
+      transition: opacity 0.3s ease-in-out;
+      overflow: none;
+      z-index: 999;
+    }
+
+    @media (max-width: 480px) {
+      /* En pantallas aún más pequeñas, reducimos más el tamaño de la fuente */
+      .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Para soporte en dispositivos táctiles */
+      }
+    }
+    @media (max-width: 768px) {
+      .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Para soporte en dispositivos táctiles */
+      }
+
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablaRegistradaComponent {
@@ -25,6 +46,17 @@ export class TablaRegistradaComponent {
       this.finalizar.emit(null);
     }
   }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent): void {
+    // Si el clic no es dentro de la tabla o el botón de configuración, cerramos el menú
+    const menu = (event.target as HTMLElement).closest('.group');
+    if (!menu) {
+      this.selectedRow.set(null);
+    }
+  }
+
+  public readonly selectedRow = signal<number | null>(null);
 
   public readonly listProformas = signal<GeneriResp<any> | null>(null);
 
@@ -171,5 +203,14 @@ export class TablaRegistradaComponent {
           this.ideProformas.emit([]);
         }
       });
+  }
+
+  toggleMenu(rowIndex: number): void {
+    // Si ya está abierto, lo cerramos; si no, lo abrimos
+    if (this.selectedRow() === rowIndex) {
+      this.selectedRow.set(null);
+    } else {
+      this.selectedRow.set(rowIndex);
+    }
   }
 }

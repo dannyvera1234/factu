@@ -24,6 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((resp) => {
+      console.error('Error:', resp);
       // Si recibimos un error 401 o 403, redirigimos a la página de inicio
       var error = resp.error;
       if (error.code === 401 || error.code === 403) {

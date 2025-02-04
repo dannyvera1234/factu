@@ -15,10 +15,17 @@ export class EmisionService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listCustomer(personaRolIde:number): Observable<any> {
+  listCustomer(personaRolIde:number, search: string, page: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMISON_EMPRESA, {
       personaRolIde: personaRolIde,
+      paginator:{
+        size: 5,
+        page: page,
+        search: search,
+      }
+
     });
+    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/listCustomer`, {
       body: payload,
     });

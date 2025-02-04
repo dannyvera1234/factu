@@ -31,7 +31,7 @@
 
           <button
             class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-full sm:w-auto"
-            (click)="config.saveDocument('factura')"
+            (click)="config.saveDocument(config.infoProforma() ? 'updateEnviar' : 'factura')"
           >
             Enviar SRI
           </button>

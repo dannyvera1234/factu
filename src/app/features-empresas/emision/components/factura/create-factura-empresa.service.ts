@@ -190,11 +190,10 @@ export class CreateFacturaEmpresaService {
    * especificado.
    * @param type Tipo de documento a guardar. Puede ser 'proforma' o 'factura'.
    */
-  saveDocument(type: 'proforma' | 'factura' | 'guardar') {
+  saveDocument(type: 'proforma' | 'factura' | 'guardar' | 'updateEnviar') {
     const dataFacturacion = this.infoDataFactura();
 
     let serviceCall;
-
     switch (type) {
       case 'proforma':
         serviceCall = this.facturacionService.generateProforma(dataFacturacion);
@@ -204,6 +203,9 @@ export class CreateFacturaEmpresaService {
         break;
       case 'guardar':
         serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
+        break;
+        case 'updateEnviar':
+        serviceCall = this.facturacionService.updateProformaSend(dataFacturacion, this.infoProforma().invoiceIde);
         break;
       default:
         console.error(`Tipo de documento no soportado: ${type}`);

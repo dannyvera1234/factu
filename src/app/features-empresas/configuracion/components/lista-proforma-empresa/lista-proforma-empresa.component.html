@@ -2,15 +2,13 @@
   <div class="w-full md:w-auto"></div>
 
   <div class="flex flex-col md:flex-row items-center gap-4 w-full">
-    <div class="w-full md:max-w-[200px]">
-      <input
-        type="text"
-        placeholder="Buscar"
-        class="pl-8 pr-2 py-1 w-full border rounded"
-        [(ngModel)]="searchQuery"
-        (ngModelChange)="onSearchChange()"
-      />
+    <!-- <div class="w-full md:max-w-[200px] relative">
+      <input type="text" placeholder="Buscar codigo" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
     </div>
+
+    <button class="px-4 py-2 rounded flex items-center bg-slate-200 hover:bg-slate-300" (click)="onSearchClick()">
+      Buscar
+    </button> -->
 
     <div class="flex gap-4 md:flex-row flex-col max-md:w-full">
       @defer {
@@ -20,7 +18,7 @@
     @if (showTableProforma() !== 'tablaProformaEnProceso') {
       @defer {
         <button
-          class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
+          class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2  md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
           (click)="convertirProformas()"
         >
           <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">

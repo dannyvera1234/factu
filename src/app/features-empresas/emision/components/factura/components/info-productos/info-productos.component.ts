@@ -23,6 +23,7 @@ export class InfoProductosComponent {
   @Input({ required: true }) set editProformaProducto(product: any[]) {
     if (product) {
       product.forEach((item: any) => {
+        console.log(item);
         item.cantidad = item.amount;
         item.valorTotal = item.total;
         item.subTotal = item.subtotal;
@@ -83,8 +84,9 @@ export class InfoProductosComponent {
   }
   removeProduct(id: number) {
     this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
-
+    this.config.detailProducts.set([...this.products()]);
     this.config.products.set([...this.products()]);
+
     this.notification.push({
       message: 'Producto eliminado correctamente',
       type: 'success',

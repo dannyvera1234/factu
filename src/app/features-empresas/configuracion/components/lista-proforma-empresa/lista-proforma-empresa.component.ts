@@ -15,7 +15,6 @@ import {
   imports: [
     FormsModule,
     ModalComponent,
-    FiltersProformaComponent,
     FacturarProformasComponent,
     TablaProcesoComponent,
     TablaRegistradaComponent,
@@ -35,37 +34,19 @@ export class ListaProformaEmpresaComponent {
 
   public readonly ideEnviadoProceso = signal<number | null>(null);
 
+
+
   constructor(
     public readonly config: ConfigFacturacionService,
     private readonly notification: NotificationService,
   ) {}
 
-  onSearchChange(): void {
-    // const query = this.searchQuery.trim().toLowerCase();
-    // if (this.listProformas() && query) {
-    //   // Verifica que 'listData' sea un array y tenga elementos
-    //   const listData = this.listProformas()!.data.listData;
-    //   // Filtra las proformas según el texto ingresado, por cada letra
-    //   const filteredProformas = listData.filter((invoice: any) => {
-    //     const socialReasonMatch = invoice.socialReasonCustomer
-    //       ? invoice.socialReasonCustomer.toLowerCase().includes(query)
-    //       : false;
-    //     const identificationMatch = invoice.identificationCustomer
-    //       ? invoice.identificationCustomer.toString().includes(query)
-    //       : false;
-    //     return socialReasonMatch || identificationMatch;
-    //   });
-    //   // Actualiza el estado con las proformas filtradas
-    //   this.listProformas.set({
-    //     ...this.listProformas()!,
-    //     data: {
-    //       ...this.listProformas()!.data,
-    //       listData: filteredProformas,
-    //     },
-    //   });
+  onSearchClick(): void {
+    // Si el término de búsqueda está vacío, puedes manejarlo de alguna manera, como mostrar un mensaje de error.
+    // if (this.searchQuery.trim()) {
+    //   this.getListInvoices(0, this.searchQuery); // Realiza la búsqueda desde la primera página
     // } else {
-    //   // Si el campo de búsqueda está vacío, mostramos todas las proformas
-    //   //  this.getListInvoices(0);
+    //   this.getListInvoices();
     // }
   }
 

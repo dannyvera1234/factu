@@ -1,5 +1,5 @@
 <section>
-  <div class="relative flex items-center justify-between overflow-x-auto">
+  <div class="table-container relative flex items-center justify-between">
     <table class="w-full text-left text-xs">
       <thead>
         <tr class="font-normal text-neutral-400 px-6 py-3">
@@ -9,17 +9,13 @@
             <!-- <span>Seleccionar todo</span> -->
           </th>
           <th class="px-4 py-3 text-left">Nombres</th>
-          <th class="px-4 py-3 text-center">Lote</th>
           <th class="px-4 py-3 text-center">Fecha Creción</th>
-          <th class="px-3 py-2 text-center">Estado</th>
-          <th class="px-4 py-3 text-center">Recepción Sri</th>
-          <th class="px-4 py-3 text-center">Autorización</th>
           <th class="px-3 py-2 text-center">N° Proforma</th>
           <th class="px-4 py-3 text-center">Total</th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
-          <th class="px-4 py-3 text-center"></th>
+          <th class="text-center">Estado</th>
+          <th class="text-center">Recepción Sri</th>
+          <th class="text-center">Autorización</th>
+          <th class="px-4 py-3 text-center">Acciones</th>
         </tr>
       </thead>
       @if (loading()) {
@@ -103,202 +99,275 @@
                     </div>
                   </div>
                 </td>
-                <td class="px-4 py-3 text-center">
+                <!-- <td class="px-4 py-3 text-center">
                   {{ invoice.lote }}
-                </td>
+                </td> -->
                 <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
-                <td class="px-4 py-3 text-center">
-                  @if (invoice.statusProcess === 'EN PROCESO PROFORMA') {
-                    <div class="flex items-center justify-center">
-                      <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
-                      </svg>
-                      <span class="ml-2 text-sm text-green-700">Procesando...</span>
-                    </div>
-                  } @else {
-                    <span class="rounded-full px-2 py-1 inline-block bg-green-100 text-green-700">
-                      {{ invoice.statusProcess }}
-                    </span>
-                  }
-                </td>
 
-                <td class="px-4 py-3 text-center">
-                  <div class="flex justify-center items-center">
-                    @switch (invoice.receptionStatus) {
-
-                      @case ('RECIBIDA') {
-                        <span class="b text-green-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                      }
-                      @case ('NO AUTORIZADO') {
-                        <span class="text-red-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
-                            />
-                          </svg>
-                        </span>
-                      }
-                    }
-
-                  </div>
-                </td>
-                <td>
-                  <div class="flex justify-center items-center">
-                    @switch (invoice.authorizationStatus) {
-
-                      @case ('RECIBIDA') {
-                        <span class="b text-green-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                      }
-                      @case ('NO AUTORIZADO') {
-                        <span class="text-red-700">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
-                            />
-                          </svg>
-                        </span>
-                      }
-                    }
-
-                  </div>
-                </td>
                 <td class="px-2 py-1 text-center text-xs">
                   {{ invoice.sequentialDocProforma }}
                 </td>
 
-                <td class="px-4 py-3 text-center">
+                <td class="text-center">
                   {{ invoice.total | currency }}
                 </td>
-                @if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
-                  <td>
-                    <div class="flex justify-center">
-                      @if (invoice.pdfProforma !== null) {
-                        <div class="group relative">
-                          <button
-                            (click)="editarProforma(invoice.ideEncrypted)"
-                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          >
-                            <img src="assets/icon/edit.svg" alt="email" />
-                          </button>
-                          <!-- Tooltip para Email -->
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.statusProcess) {
+                      @case ('PENDIENTE PROFORMA') {
+                        <div class="relative group">
+                          <img src="assets/icon/pendiente.svg" alt="" class="text-blue-500" />
+                          <!-- Tooltip -->
                           <div
-                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           >
-                            Editar Proforma
+                            Pendiente
                           </div>
                         </div>
                       }
-                    </div>
-                  </td>
 
-                  <td>
-                    <div class="flex justify-center">
-                      @if (invoice.pdfProforma !== null) {
-                        <div class="group relative">
-                          <button
-                            (click)="reeviarEmail(invoice.ide)"
-                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          >
-                            <img src="assets/icon/email.svg" alt="email" />
-                          </button>
-                          <!-- Tooltip para Email -->
-                          <div
-                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                          >
-                            Enviar por correo
-                          </div>
+                      @case ('EN PROCESO PROFORMA') {
+                        <div class="flex items-center justify-center">
+                          <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                            <circle
+                              class="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                          </svg>
+                          <span class="ml-2 text-sm text-green-700">Procesando...</span>
                         </div>
                       }
-                    </div>
-                  </td>
-                  <td>
-                    <div class="flex justify-center">
-                      @if (invoice.pdfProforma !== null) {
-                        <div class="group relative">
-                          <a
-                            [href]="invoice.pdfProforma"
-                            target="_blank"
-                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          >
-                            <img src="assets/icon/downlad.svg" alt="Descargar" />
-                          </a>
-                          <!-- Tooltip para PDF -->
-                          <div
-                            class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                          >
-                            Ver PDF
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  </td>
-                  <td>
-                    <div class="flex justify-center gap-1 group relative">
-                      <div class="group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
-                        >
-                          <img src="assets/icon/trash-icon.svg" class="w-20 sm:w-60 md:w-5" alt="Delete" />
-                        </button>
+                    }
+                  </div>
+                </td>
 
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.receptionStatus) {
+                      @case ('RECIBIDA') {
+                        <div class="relative group">
+                          <span class="b text-green-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
+                              Recibida
+                            </div>
+                          </span>
+                        </div>
+                      }
+
+                      @case ('DEVUELTA') {
+                        <div class="relative group">
+                          <span class="text-red-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                              />
+                            </svg>
+                          </span>
+                          <!-- Tooltip -->
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            Devuelta
+                          </div>
+                        </div>
+                      }
+                    }
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.authorizationStatus) {
+                      @case ('AUTORIZADO') {
+                        <div class="relative group">
+                          <span class="b text-green-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
+                              Autorizado
+                            </div>
+                          </span>
+                        </div>
+                      }
+
+                      @case ('NO AUTORIZADO') {
+                        <div class="relative group">
+                          <span class="text-red-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                              />
+                            </svg>
+                          </span>
+                          <!-- Tooltip -->
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            No Autorizado
+                          </div>
+                        </div>
+                      }
+                    }
+                  </div>
+                </td>
+
+                <td class="text-center">
+                  @if (invoice.pdfProforma !== null && invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+                    <div class="flex justify-center group relative">
+                      <!-- Botón de configuración, visible solo en pantallas grandes -->
+                      <button
+                        class="menu-button flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200 sm:block hidden"
+                        (click)="toggleMenu($index)"
+                      >
+                        <img src="assets/icon/config.svg" alt="Configuración" />
+                      </button>
+
+                      <!-- Menú de opciones que aparece al hacer clic, visible solo cuando se selecciona la fila -->
+                      @if (selectedRow() === $index) {
                         <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                          id="optionsMenu"
+                          class="absolute top-10 right-auto -left-11 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg z-10"
                         >
-                          Eliminar
+                          <ul>
+                            <!-- Opción Editar -->
+                            <button
+                              (click)="editarProforma(invoice.ideEncrypted)"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/edit copy.svg" alt="email" class="w-5 h-5" />
+                              Editar
+                            </button>
+
+                            <!-- Opción PDF -->
+                            <a
+                              [href]="invoice.pdfProforma"
+                              target="_blank"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
+                              PDF
+                            </a>
+
+                            <!-- Opción XML -->
+                            <li
+                              (click)="reeviarEmail(invoice.ide)"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/email.svg" alt="email" class="w-5 h-5" />
+                              Enviar
+                            </li>
+
+                            <hr class="my-2 border-gray-600" />
+
+                            <!-- Opción Eliminar -->
+                            <button
+                              (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img
+                                src="assets/icon/trash-icon copy.svg"
+                                alt="Eliminar"
+                                class="w-5 h-5"
+                                style="color: white"
+                              />
+                              Eliminar
+                            </button>
+                          </ul>
                         </div>
-                      </div>
+                      }
                     </div>
-                  </td>
-                }
+
+                    <!-- Acciones mostradas directamente en pantallas pequeñas, con un diseño de lista -->
+                    <div class="sm:hidden flex flex-row gap-2 mt-2">
+                      <!-- Acción Editar -->
+                      <button
+                        (click)="editarProforma(invoice.ideEncrypted)"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        Editar
+                      </button>
+
+                      <!-- Acción PDF -->
+                      <a
+                        [href]="invoice.pdfProforma"
+                        target="_blank"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        PDF
+                      </a>
+
+                      <!-- Acción Reenviar -->
+                      <li
+                        (click)="reeviarEmail(invoice.ide)"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        Reenviar
+                      </li>
+
+                      <!-- Acción Eliminar -->
+                      <button
+                        (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  }
+                </td>
               </tr>
             }
           } @else {

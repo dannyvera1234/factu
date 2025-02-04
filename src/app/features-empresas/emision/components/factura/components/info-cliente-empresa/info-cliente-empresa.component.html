@@ -60,7 +60,7 @@
           >
             @if (filteredOptions()) {
               <ul class="py-1">
-                @for (emisor of filteredOptions()!.data; track $index) {
+                @for (emisor of filteredOptions()!.data.listData; track $index) {
                   <li
                     (click)="selectOption(emisor)"
                     class="px-3 py-2 hover:bg-gray-100 cursor-pointer transition duration-150 ease-in-out flex items-center space-x-3"

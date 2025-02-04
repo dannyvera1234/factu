@@ -38,4 +38,5 @@ export class PaginationComponent {
     // Emitimos el cambio de página, asegurándonos de que se pasa correctamente desde 0
     this.pageChange.emit(newPage);
   }
+
 }
