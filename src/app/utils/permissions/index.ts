@@ -18,3 +18,6 @@ MODULE_PLANES = 'PLANES', // planes
   MODULE_EMPRESA_CONFI = 'CONFIGURACION_EMPRESAS',
   MODULE_EMISON_EMPRESA = 'EMISION_EMPRESA',
 }
+
+
+export const linkWhast = 'https://wa.link/m04bqt';

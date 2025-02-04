@@ -13,9 +13,9 @@ export const routes: Routes & {
       import('./web/pega-informative/pega-informative.component').then((m) => m.PegaInformativeComponent),
   },
   {
-    path: 'registro_contadores',
+    path: 'sobre_nosotros',
     loadComponent: () =>
-      import('./web/registro-contadores/registro-contadores.component').then((m) => m.RegistroContadoresComponent),
+      import('./web/sobre-nosotros/sobre-nosotros.component').then((m) => m.SobreNosotrosComponent),
   },
   {
     path: 'registro_empresa',
@@ -48,6 +48,8 @@ export const routes: Routes & {
         path: 'emision_empresas',
         loadChildren: () => import('./features-empresas/emision/routes'),
       },
+
+
       {
         path: '**',
         redirectTo: 'inicio',

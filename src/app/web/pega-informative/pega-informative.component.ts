@@ -4,10 +4,14 @@ import { RouterLink } from '@angular/router';
 import { RegisterCounteWebService } from '../../services/register-counte-web.service';
 import { GeneriResp } from '../../interfaces';
 import { finalize, mergeMap, of } from 'rxjs';
+import { linkWhast } from '../../utils/permissions';
+import { HeardComponent } from '../heard';
+import { FooterWebComponent } from '../footer-web';
+import { WhatsappComponent } from '../whatsapp';
 
 @Component({
   selector: 'app-pega-informative',
-  imports: [RouterLink, NgClass, CurrencyPipe],
+  imports: [RouterLink, NgClass, CurrencyPipe, HeardComponent, HeardComponent, FooterWebComponent,WhatsappComponent ],
   templateUrl: './pega-informative.component.html',
   styles: `
     html {
@@ -68,15 +72,14 @@ import { finalize, mergeMap, of } from 'rxjs';
 export class PegaInformativeComponent {
   selectedPlan: string | null = null;
 
-  isMenuOpen = false;
 
   public readonly plan = signal<GeneriResp<any[]> | null>(null);
 
   public readonly loanding = signal(false);
 
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
+  public readonly link = signal(linkWhast);
+
+
 
   // Función para seleccionar un plan
   selectPlan(plan: string) {
@@ -104,7 +107,6 @@ export class PegaInformativeComponent {
       .subscribe((resp: any) => {
         if (resp.status === 'OK') {
           this.plan.set(resp);
-
         }
       });
   }

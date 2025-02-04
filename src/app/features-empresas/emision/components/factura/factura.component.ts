@@ -15,8 +15,11 @@ import { CreateFacturaEmpresaService } from './create-factura-empresa.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacturaComponent {
-  @Input({required: true})valid!: boolean;
+  @Input({ required: true }) valid!: boolean;
 
+  @Input({ required: true }) set editarProforma(value: any) {
+    this.config.infoProforma.set(value ? value : null);
+  }
 
   constructor(public readonly config: CreateFacturaEmpresaService) {}
 

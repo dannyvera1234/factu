@@ -4,11 +4,11 @@ import { FooterComponent } from '@/layout/footer';
 import { UserService } from '@/services';
 import { Router, RouterLink } from '@angular/router';
 import { finalize, mergeMap, of } from 'rxjs';
-import { NotificationService } from '../../utils/services/notification.service';
+import { WhatsappComponent } from '../../web';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FooterComponent, RouterLink],
+  imports: [ReactiveFormsModule, FooterComponent, RouterLink, WhatsappComponent],
   templateUrl: './login.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

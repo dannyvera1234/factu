@@ -54,6 +54,7 @@ export class ConfigFacturacionService {
       bgColor: 'bg-purple-500',
       icon: '/assets/icon/credit-note.svg',
     },
+
     Otro: {
       bgColor: 'bg-gray-500',
       icon: '/assets/icon/other.svg',

@@ -14,8 +14,12 @@ export class InventarioService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listoProducto(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {});
+  listoProducto(page: number,search: string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      size: Modulos.PAGE_SIZE,
+      page: page,
+      search: search
+    });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listProduct`, {
       body: payload,
     });

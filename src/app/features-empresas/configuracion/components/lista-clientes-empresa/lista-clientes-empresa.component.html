@@ -1,14 +1,20 @@
 <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
-  <div></div>
+  <div class="w-full md:w-auto"></div>
 
-
-  <div class="flex items-center gap-4 w-full">
-    <div class="flex-grow">
-      <!-- Aquí iría tu campo de búsqueda o cualquier otro elemento -->
+  <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+    <div class="w-full md:max-w-[200px] relative">
+      <!-- Input con espacio para la lupa -->
+      <input type="text" placeholder="Buscar" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
+      <!-- Ícono de lupa dentro del input -->
     </div>
 
+    <!-- Botón de búsqueda -->
+    <button   class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded flex items-center w-full md:w-auto justify-center" (click)="onSearchClick()">
+      Buscar
+    </button>
+
     <button
-      class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center w-full md:w-auto"
+      class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
       (click)="createClient.open()"
     >
       <div class="relative size-5 shrink-0 mr-2">
@@ -22,9 +28,9 @@
 <hr class="my-4" />
 <section>
   <div class="relative overflow-x-auto">
-    <table class="w-full text-left text-sm">
+    <table class="w-full text-left text-xs">
       <thead>
-        <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
+        <tr class="font-normal text-neutral-400 px-6 py-3">
           <th class="px-4 py-3">Nombres</th>
           <th class="px-4 py-3 text-center">Identificación</th>
           <th class="px-4 py-3 text-center">Dirección</th>
@@ -45,8 +51,8 @@
         </tbody>
       } @else {
         <tbody>
-          @if (listClientes() && listClientes()!.data.length > 0) {
-            @for (cliente of listClientes()!.data; track $index) {
+          @if (listClientes() && listClientes()!.data!.listData!.length > 0) {
+            @for (cliente of listClientes()!.data!.listData; track $index) {
               <tr class="border-b hover:bg-gray-100 text-xs">
                 <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
@@ -57,14 +63,14 @@
                       <p class="font-bold">{{ cliente.names }} {{ cliente.lastName }}</p>
                       <div class="flex items-center gap-2">
                         <div class="relative">
-                          {{ cliente.email }}
+                          {{ cliente.identificationNumber }}
                         </div>
                       </div>
                     </div>
                   </div>
                 </th>
                 <td class="px-4 py-3 text-center">
-                  {{ cliente.identificationNumber | formatId }}
+                  {{ cliente.email }}
                 </td>
                 <td class="px-4 py-3 text-center">
                   {{ cliente.address }}
@@ -73,24 +79,33 @@
                   {{ cliente.cellPhone | formatPhone }}
                 </td>
                 <td>
-                  <div class="flex gap-1">
+                  <div class="flex gap-1 group relative">
                     <button
                       class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                       (click)="editClient.open(); updateClient.set(cliente)"
                     >
-                      <img src="/assets/icon/edit.svg" class=" sm:w-4 md:w-5" alt="Edit" />
+                      <img src="/assets/icon/edit.svg" class="sm:w-4 md:w-5" alt="Edit" />
                     </button>
-
+                    <div
+                      class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                    >
+                      Editar
+                    </div>
                   </div>
                 </td>
                 <td>
-                  <div class="flex gap-1">
-                  <button
-                  class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                  (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
-                >
-                  <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
-                </button>
+                  <div class="flex gap-1 group relative">
+                    <button
+                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                      (click)="deleteCounterClient.open(); viewingIdeCustomer.set(cliente.ideCustomer)"
+                    >
+                      <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                    </button>
+                    <div
+                      class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                    >
+                      Eliminar
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -112,13 +127,12 @@
     </table>
   </div>
 
-
   @defer {
-    <!-- @if (applications()?.pagination) { -->
-    <!-- <div class="mt-4">
-            <app-pagination />
-          </div> -->
-    <!-- } -->
+    <div class="mt-4">
+      @if (listClientes() && listClientes()!.data!.page.totalPages > 0) {
+        <app-pagination [paginationData]="listClientes()!.data!.page" (pageChange)="onPageChange($event)" />
+      }
+    </div>
   }
 </section>
 

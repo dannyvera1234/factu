@@ -3,6 +3,7 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { NotificationService } from '@/utils/services';
 import { DetailsProducto } from '@/interfaces';
 import { DocumentosService } from '@/services/service-empresas';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -28,13 +29,22 @@ export class CreateFacturaEmpresaService {
 
   public readonly infoVoucherReqDTO = signal<any | null>(null);
 
+  public readonly infoProforma = signal<any | null>(null);
+
   constructor(
     private readonly notification: NotificationService,
     private readonly facturacionService: DocumentosService,
+    private readonly router: Router,
   ) {}
 
-  submit() {
-    // Obtener la información del emisor, cliente y método de pago seleccionado
+  public readonly saveDataFactura = signal(false);
+
+  /**
+   * Guarda los datos de la factura
+   * Verifica si hay productos disponibles, si todos los campos obligatorios están completos
+   * y si el consumidor final no puede tener una factura con valor mayor a $50.00
+   */
+  saveDatos() {
     const infoEmisor = this.infoEmisor();
     const infoCustomer = this.infoCustomer();
     const selectedPaymentMethod = this.selectedPaymentMethod();
@@ -63,6 +73,7 @@ export class CreateFacturaEmpresaService {
       return;
     }
 
+    // Verificar si el consumidor final puede tener una factura con valor mayor a $50.00
     if (infoCustomer.identificationNumber === '9999999999999' && this.infoVoucherReqDTO().importeTotal > 50) {
       this.notification.push({
         message: 'No se puede realizar una factura con valor mayor a $50.00 para consumidor final',
@@ -70,6 +81,20 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
+    // Si todo está bien, guardar los datos de la factura
+    this.saveDataFactura.set(true);
+  }
+
+  /**
+   * Obtiene la información de la factura con los datos del emisor,
+   * cliente, método de pago y productos seleccionados.
+   * @returns La información de la factura en formato JSON.
+   */
+  infoDataFactura(): any {
+    // Obtener la información del emisor, cliente y método de pago seleccionado
+    const infoEmisor = this.infoEmisor();
+    const infoCustomer = this.infoCustomer();
+    const selectedPaymentMethod = this.selectedPaymentMethod();
 
     // Obtener la fecha de emisión y formatearla como YYYY-MM-DD
     const emissionDate = new Date();
@@ -158,15 +183,61 @@ export class CreateFacturaEmpresaService {
       observation: null,
     };
 
-    // Mostrar el cargador mientras se procesa la factura
+    return dataFacturacion;
+  }
+  /**
+   * Guarda la factura en el servidor como proforma o como factura según sea
+   * especificado.
+   * @param type Tipo de documento a guardar. Puede ser 'proforma' o 'factura'.
+   */
+  saveDocument(type: 'proforma' | 'factura' | 'guardar' | 'updateEnviar') {
+    const dataFacturacion = this.infoDataFactura();
+
+    let serviceCall;
+    switch (type) {
+      case 'proforma':
+        serviceCall = this.facturacionService.generateProforma(dataFacturacion);
+        break;
+      case 'factura':
+        serviceCall = this.facturacionService.generateInvoice(dataFacturacion);
+        break;
+      case 'guardar':
+        serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
+        break;
+        case 'updateEnviar':
+        serviceCall = this.facturacionService.updateProformaSend(dataFacturacion, this.infoProforma().invoiceIde);
+        break;
+      default:
+        console.error(`Tipo de documento no soportado: ${type}`);
+        return;
+    }
+
     of(this.loading.set(true))
-      .pipe(mergeMap(() => this.facturacionService.generateInvoice(dataFacturacion)))
+      .pipe(
+        mergeMap(() => serviceCall),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe((response) => {
         if (response.status === 'OK') {
+          this.saveDataFactura.set(false);
+          this.selectedEstabliecimient.set('');
           this.selectedPaymentMethod.set('');
+          this.infoProforma.set(null);
+
+          this.notification.push({
+            message: `El documento ha sido generado correctamente`,
+            type: 'info',
+          });
+
+          if (type === 'guardar') {
+            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          }
+          if (type === 'factura') {
+            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          }
         } else {
           this.notification.push({
-            message: 'Error al generar la factura. Intente nuevamente.',
+            message: `Error al generar la ${type}. Intente nuevamente.`,
             type: 'error',
           });
         }

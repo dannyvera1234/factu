@@ -2,19 +2,26 @@
   <div></div>
 
   <div class="flex items-center gap-4">
-    <div>
-      <input type="text" placeholder="Buscar" class="pl-8 pr-2 py-1 w-full md:w-[200px] border rounded" />
+    <div class="w-full md:max-w-[200px] relative">
+      <!-- Input con espacio para la lupa -->
+      <input type="text" placeholder="Buscar por codigo" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
+      <!-- Ícono de lupa dentro del input -->
     </div>
+
+    <!-- Botón de búsqueda -->
+    <button class="px-4 py-2 rounded flex items-center bg-slate-200 hover:bg-slate-300" (click)="onSearchClick()">
+      Buscar
+    </button>
   </div>
 </nav>
 
 <hr class="my-4" />
 <section>
   <div class="relative overflow-x-auto">
-    <table class="w-full text-left">
+    <table class="w-full text-left text-xs">
       <thead>
         <tr class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-          <th class="px-4 py-3">Nombre y Codigo</th>
+          <th class="px-4 py-3">Nombre</th>
           <th class="px-4 py-3 text-center">Productos Disponible.</th>
           <th class="px-4 py-3 text-center">IVA</th>
           <th class="px-4 py-3 text-center">Precio Unitario</th>
@@ -24,9 +31,9 @@
       </thead>
 
       <tbody>
-        @if (listProducts() && listProducts()!.data.length > 0) {
-          @for (product of listProducts()!.data; track $index) {
-            <tr class="border-b" class="hover:bg-gray-100 cursor-pointer text-sm" (click)="addProduct(product)">
+        @if (listProducts() && listProducts()!.data!.listData.length > 0) {
+          @for (product of listProducts()!.data.listData; track $index) {
+            <tr class="border-b" class="hover:bg-gray-100 cursor-pointer" (click)="addProduct(product)">
               <th scope="row" class="font-normal p-2">
                 <div class="flex gap-4 items-center">
                   <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
@@ -47,17 +54,13 @@
               <td class="px-4 py-3 text-center">
                 <span
                   [ngClass]="{
-                    'bg-blue-400 text-blue-700 border-blue-500': product.stock === null,
-                    'bg-green-100 text-green-700 border-green-500': product.availableStock > 0,
+                    'bg-blue-100 text-blue-700 border-blue-500': product.stock   === null,
+                    'bg-green-100 text-green-700 border-green-500': product.availableStock  > 0,
                     'bg-red-100 text-red-700 border-red-500': product.availableStock < 5,
                   }"
-                  class="inline-block px-3 py-1 text-sm font-medium border rounded-full"
+                  class="rounded-full px-2 py-1 inline-block"
                 >
-                  @if (product.availableStock === null) {
-                    No aplica
-                  } @else {
-                    {{ product.availableStock }} unidades
-                  }
+                {{ product.availableStock === null ? 'No aplica' : product.availableStock + ' unidades' }}
                 </span>
               </td>
               <td class="px-4 py-3 text-center">
@@ -84,6 +87,13 @@
       </tbody>
     </table>
   </div>
+  @defer {
+    @if (listProducts() && listProducts()!.data!.page.totalPages > 0) {
+      <div class="mt-4">
+        <app-pagination [paginationData]="listProducts()!.data!.page" (pageChange)="onPageChange($event)" />
+      </div>
+    }
+  }
 </section>
 <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
   <button
