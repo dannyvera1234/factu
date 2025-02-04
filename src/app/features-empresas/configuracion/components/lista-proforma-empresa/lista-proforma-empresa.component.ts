@@ -53,7 +53,6 @@ export class ListaProformaEmpresaComponent {
   convertirProformas() {
     // Verifica si hay IDs seleccionados en `ideProforma`
     if (this.ideProforma()?.length) {
-      console.log(this.ideProforma());
       this.facturarProformaModal.open();
     } else {
       this.notification.push({

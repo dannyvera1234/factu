@@ -1,33 +1,41 @@
-
 <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
   <div class="w-full md:w-auto"></div>
 
   <div class="flex flex-col md:flex-row items-center gap-4 w-full">
-    <div class="w-full md:max-w-[200px] relative">
-      <!-- Input con espacio para la lupa -->
-      <input type="text" placeholder="Buscar  codigo" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
-      <!-- Ícono de lupa dentro del input -->
+    <!-- Input con espacio para la lupa -->
+    <div class="w-full relative md:max-w-[200px]">
+      <input type="text" placeholder="Buscar" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
     </div>
 
     <!-- Botón de búsqueda -->
-    <button class="px-4 py-2 rounded flex items-center bg-slate-200 hover:bg-slate-300" (click)="onSearchClick()">
+    <button
+      class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded flex items-center w-full md:w-auto justify-center"
+      (click)="onSearchClick()"
+    >
       Buscar
     </button>
 
-
-
-
-    <button
-    class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
-    (click)="onSyncClick()"
-  >
-    <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
-      <img src="assets/icon/sync.svg" class="w-[67%]" />
+    <!-- Componente filtro -->
+    <div class="w-full md:w-auto">
+      @defer {
+        @if (idePersonaRol) {
+          <app-filtro [ideEmisor]="idePersonaRol" />
+        }
+      }
     </div>
 
-    Sincronizar
-  </button>
-
+    <!-- Botón sincronizar al final -->
+    <div class="w-full md:w-auto md:ml-auto">
+      <button
+        class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
+        (click)="onSyncClick()"
+      >
+        <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+          <img src="assets/icon/sync.svg" class="w-[67%]" />
+        </div>
+        Sincronizar
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -40,7 +48,7 @@
           <th class="px-4 py-3">Nombres</th>
           <th class="px-4 py-3 text-center">Origen</th>
           <th class="px-4 py-3 text-center">Clave</th>
-          <th class="px-4 py-3 text-center">Fecha Emisión</th>
+          <th class="px-4 py-3 text-center">Fecha Autorización</th>
           <th class="px-4 py-3 text-center">Total</th>
           <th class="text-center">Estado Proceso</th>
           <th class="text-center">Recepción Sri</th>
@@ -63,7 +71,7 @@
           @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
             @for (invoice of listInvoices()!.data!.listData; track $index) {
               <tr class="border-b hover:bg-gray-100">
-                <th scope="row" class="font-normal p-2 ">
+                <th scope="row" class="font-normal p-2">
                   <div class="flex gap-4 items-center">
                     <div
                       class="rounded-md size-10 flex items-center justify-center shrink-0"
@@ -96,34 +104,34 @@
                         <!-- Tooltip -->
                         @if (isTooltipVisible(invoice.ide)) {
                           <div
-                          class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm "
-                          (mouseenter)="toggleTooltip(invoice.ide, true)"
-                          (mouseleave)="toggleTooltip(invoice.ide, false)"
-                        >
-                          <!-- Header -->
-                          <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                            <button
-                              class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                              (click)="toggleTooltip(invoice.ide, false)"
-                            >
-                              &times;
-                            </button>
+                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            (mouseenter)="toggleTooltip(invoice.ide, true)"
+                            (mouseleave)="toggleTooltip(invoice.ide, false)"
+                          >
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-3">
+                              <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+                              <button
+                                class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                (click)="toggleTooltip(invoice.ide, false)"
+                              >
+                                &times;
+                              </button>
+                            </div>
+
+                            <!-- Histories -->
+                            <ul class="space-y-2">
+                              @for (history of invoice.histories; track $index) {
+                                <li
+                                  class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
+                                >
+                                  <div class="flex justify-between items-center text-gray-700">
+                                    <span>{{ history.description }}</span>
+                                  </div>
+                                </li>
+                              }
+                            </ul>
                           </div>
-
-
-                          <!-- Histories -->
-                          <!-- <ul class="space-y-2">
-                            @for (history of invoice.histories; track $index) {
-                              <li class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto">
-                                <div class="flex justify-between items-center text-gray-700">
-                                  <span>{{ history.description }}</span>
-                                </div>
-                              </li>
-                            }
-                          </ul> -->
-                        </div>
-
                         }
                       </div>
                     </div>
@@ -170,7 +178,7 @@
                 </td>
 
                 <td class="px-4 py-3 text-center">
-                  {{ invoice.emissionDate | customDate }}
+                  {{ invoice.authorizationDate | customDate }}
                 </td>
                 <td class="px-4 py-3 text-center">
                   {{ invoice.total | currency }}
@@ -263,8 +271,6 @@
                           </span>
                         </div>
                       }
-
-
 
                       @case ('PENDIENTE') {
                         <div class="relative group">
@@ -373,8 +379,6 @@
                           class="absolute top-10 right-auto -left-11 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg z-10"
                         >
                           <ul>
-
-
                             <!-- Opción PDF -->
                             <a
                               [href]="invoice.pdf"
@@ -410,8 +414,6 @@
 
                     <!-- Acciones mostradas directamente en pantallas pequeñas, con un diseño de lista -->
                     <div class="sm:hidden flex flex-row gap-2 mt-2">
-
-
                       <!-- Acción PDF -->
                       <a
                         [href]="invoice.pdfProforma"
@@ -440,10 +442,10 @@
                       <!-- Acción Eliminar -->
                     </div>
                   } @else if (invoice.statusProcess === 'PENDIENTE') {
-                    <div class="flex justify-center  items-center group relative sm:block hidden">
+                    <div class="flex justify-center items-center group relative sm:block hidden">
                       <button
                         (click)="deleteFactura.open(); ideDeleteFactura.set(invoice.ide)"
-                        class=" mr-2 p-2 rounded-md bg-red-100 hover:bg-red-200"
+                        class="mr-2 p-2 rounded-md bg-red-100 hover:bg-red-200"
                       >
                         <img src="assets/icon/trash-icon.svg" alt="Eliminar" class="w-5 h-5" style="color: white" />
                       </button>
@@ -502,5 +504,3 @@
     </div>
   </div>
 </app-modal>
-
-

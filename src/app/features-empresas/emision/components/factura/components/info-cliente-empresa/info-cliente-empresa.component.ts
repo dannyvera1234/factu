@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit, signal } from '@angular/core';
 import { of, delay, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { NgOptimizedImage } from '@angular/common';
@@ -50,9 +50,10 @@ export class InfoClienteEmpresaComponent {
     }
   }
 
-  @Input({ required: true })set setPersonaRol(value: any) {
+  @Input({ required: true }) set setPersonaRol(value: any) {
     if (value !== null) {
-       this.idePersonal.set(value);
+      this.getCustomer(value);
+      this.idePersonal.set(value);
     }
   }
   public readonly idePersonal = signal<number | null>(null);
@@ -61,17 +62,9 @@ export class InfoClienteEmpresaComponent {
   public readonly loadingCombo = signal(false);
   public readonly filteredOptions = signal<GeneriResp<any> | null>(null);
   public readonly selectedCliente = signal<any | null>(null);
-  public  searchTerm = '';
+  public searchTerm = '';
 
-  // Variable para almacenar las opciones originales
-  private originalOptions: GeneriResp<any[]> | null = null;
 
-  handleSearchChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm = target.value;
-    this.dropdownOpen.set(true);
-    this.getCustomer();
-  }
 
 
 
@@ -107,18 +100,22 @@ export class InfoClienteEmpresaComponent {
     public readonly configFactu: CreateFacturaEmpresaService,
   ) {}
 
-  getCustomer() {
+  search(event: any) {
+    const text = event.target.value;
+    this.searchTerm = text;
+    if (text.length >= 2) {
+    this.getCustomer(this.idePersonal()!);
     this.dropdownOpen.set(true);
-    if (this.filteredOptions() === null || this.filteredOptions() === undefined) {
-      this.emisionService.listCustomer(this.idePersonal()!, this.searchTerm, 0).subscribe((resp) => {
-        if (resp.status === 'OK') {
-          console.log(resp);
-           resp.data.listData.unshift(consumidorFinal);
-          this.originalOptions = resp;
-          this.filteredOptions.set(resp);
-        }
-      });
     }
+  }
+
+  getCustomer(emiror: number) {
+    this.emisionService.listCustomer(emiror, this.searchTerm, 0).subscribe((resp) => {
+      if (resp.status === 'OK') {
+        resp.data.listData.unshift(consumidorFinal);
+        this.filteredOptions.set(resp);
+      }
+    });
   }
 
   createCliente(event: any) {
@@ -126,7 +123,6 @@ export class InfoClienteEmpresaComponent {
       this.emisionService.listCustomer(this.idePersonal()!, this.searchTerm, 0).subscribe((resp) => {
         if (resp.status === 'OK') {
           resp.data.unshift(consumidorFinal);
-          this.originalOptions = resp;
           this.filteredOptions.set(resp);
         }
       });

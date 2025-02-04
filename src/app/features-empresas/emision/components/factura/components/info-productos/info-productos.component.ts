@@ -23,7 +23,6 @@ export class InfoProductosComponent {
   @Input({ required: true }) set editProformaProducto(product: any[]) {
     if (product) {
       product.forEach((item: any) => {
-        console.log(item);
         item.cantidad = item.amount;
         item.valorTotal = item.total;
         item.subTotal = item.subtotal;

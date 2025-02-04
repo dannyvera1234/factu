@@ -35,7 +35,7 @@
               <tr class="border-b hover:bg-gray-100">
                 <td class="px-4 py-3">
                   <!-- Checkbox para cada fila -->
-                  @if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+                  @if (invoice.statusProcess !== 'EN PROCESO PROFORMA' && (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')) {
                     <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
                   }
                 </td>

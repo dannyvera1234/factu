@@ -64,7 +64,6 @@ export class ListaClientesEmpresaComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.listClientes.set(resp);
         }
       });

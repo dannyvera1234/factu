@@ -35,9 +35,8 @@ export class FacturarProformasComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.notification.push({
-            message: 'Proformas en lote generadas correctamente.',
+            message: resp.message,
             type: 'success',
           });
         }

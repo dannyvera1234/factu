@@ -75,6 +75,8 @@ export class ConfiguracionComponent {
 
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
 
+  public readonly idePersonaRol = signal<number | null>(null);
+
   constructor(
     private readonly emisorService: EmpresaService,
     public readonly config: ConfigFacturacionService,
@@ -94,7 +96,9 @@ export class ConfiguracionComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+
           this.emisorInfo.set(resp);
+          this.idePersonaRol.set(resp.data.idePersonaRol);
         }
       });
   }

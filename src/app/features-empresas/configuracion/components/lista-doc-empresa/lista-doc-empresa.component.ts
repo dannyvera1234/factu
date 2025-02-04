@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
 import { of, mergeMap, finalize } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
@@ -7,10 +7,10 @@ import { CurrencyPipe, NgClass, SlicePipe } from '@angular/common';
 import { CustomDatePipe } from '@/pipes';
 import { DocumentosService } from '@/services/service-empresas';
 import { DetailsService } from '@/feature-counters/details-counter-application';
-import { Router } from '@angular/router';
-import { ModalComponent } from '../../../../components';
+import { ModalComponent } from '@/components';
 import { DeleteFacturaComponent } from '../delete-factura';
 import { FormsModule } from '@angular/forms';
+import { FiltroComponent } from './components';
 
 @Component({
   selector: 'app-lista-doc-empresa',
@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     ModalComponent,
     DeleteFacturaComponent,
     FormsModule,
+    FiltroComponent,
   ],
   templateUrl: './lista-doc-empresa.component.html',
   styles: `
@@ -56,6 +57,8 @@ export class ListaDocEmpresaComponent {
     }
   }
 
+  @Input({required:true}) idePersonaRol!: number
+
   searchQuery = '';
 
   public readonly ideDeleteFactura = signal<number | null>(null);
@@ -73,7 +76,6 @@ export class ListaDocEmpresaComponent {
     public readonly config: ConfigFacturacionService,
     private readonly detailsService: DetailsService,
     private readonly notification: NotificationService,
-    private readonly router: Router,
   ) {
     this.getListInvoices(0);
   }
@@ -129,7 +131,6 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });

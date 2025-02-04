@@ -428,7 +428,7 @@
                     />
                   </svg>
 
-                  Proforma
+                  Proformas
                 </a>
               </li>
             </ul>
@@ -448,7 +448,9 @@
               }
               @case ('doc') {
                 @defer {
-                  <app-lista-doc-empresa />
+                  @if (idePersonaRol(); as ide) {
+                    <app-lista-doc-empresa [idePersonaRol]="ide" />
+                  }
                 }
               }
               @case ('Proforma') {

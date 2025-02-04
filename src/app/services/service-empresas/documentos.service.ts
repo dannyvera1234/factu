@@ -4,6 +4,7 @@ import { Modulos } from '../../utils/permissions';
 import { HttpService } from '../../utils/services';
 import { PayloadService } from '../../utils/services/payload.service';
 import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { environment } from '../../../environments/environment';
 export class DocumentosService {
   constructor(
     private readonly _http: HttpService,
+    private readonly httpClient: HttpClient,
     private genericPayloadService: PayloadService,
   ) {}
 
@@ -53,7 +55,6 @@ export class DocumentosService {
         page: page,
       },
     });
-    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/listProduct`, {
       body: payload,
     });
@@ -81,7 +82,6 @@ export class DocumentosService {
       invoiceIde,
       dataToUpdate: data,
     });
-    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/updateProformaSend`, {
       body: payload,
     });
@@ -137,7 +137,6 @@ export class DocumentosService {
 
   generateLoteProforma(data: Partial<number>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { idsInvoices: data });
-    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/generateLoteProforma`, {
       body: payload,
     });
@@ -155,4 +154,28 @@ export class DocumentosService {
       },
     );
   }
+
+  docCount(data: Partial<any>): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      ...data,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/invoice/count`, {
+      body: payload,
+    });
+  }
+
+
+
+  generateZipWithDocuments(data: Partial<any>): Observable<Blob> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      ...data,
+    });
+
+    return this.httpClient.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/invoice/generateZipWithDocuments`,
+      payload,
+      { responseType: 'blob' }
+    );
+  }
+
 }

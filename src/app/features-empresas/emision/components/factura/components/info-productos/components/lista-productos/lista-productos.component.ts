@@ -37,15 +37,13 @@ export class ListaProductosComponent {
   listProductos(emisor: number, search: string = '', page: number = 0): void {
     this.facturacionService.listProduct(emisor, search, page).subscribe((resp) => {
       if (resp.status === 'OK') {
-        console.log(resp);
         this.listProducts.set(resp);
       }
     });
   }
 
   onSearchClick(): void {
-    console.log(this.searchQuery);
-    console.log(this.idePersonal());
+
     // Si el término de búsqueda está vacío, puedes manejarlo de alguna manera, como mostrar un mensaje de error.
     if (this.searchQuery.trim()) {
       this.listProductos(this.idePersonal()!, this.searchQuery, 0); // Realiza la búsqueda desde la primera página

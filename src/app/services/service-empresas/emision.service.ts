@@ -20,12 +20,12 @@ export class EmisionService {
       personaRolIde: personaRolIde,
       paginator:{
         size: 5,
-        page: page,
         search: search,
+        page: page,
       }
 
     });
-    console.log(payload);
+
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/listCustomer`, {
       body: payload,
     });

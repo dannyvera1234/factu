@@ -126,7 +126,7 @@ export class TablaRegistradaComponent {
 
     // Actualiza todos los elementos
     this.listProformas()!.data.listData.forEach((invoice: any) => {
-      if (invoice.statusProcess !== 'EN PROCESO PROFORMA') {
+      if (invoice.statusProcess !== 'EN PROCESO PROFORMA' && (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')) {
         invoice.selected = checked;
       }
     });
@@ -139,7 +139,7 @@ export class TablaRegistradaComponent {
 
     // Verifica si todos están seleccionados para sincronizar el checkbox "Seleccionar todo"
     const allSelected = this.listProformas()!.data.listData.every((item: any) => {
-      if (item.statusProcess !== 'EN PROCESO PROFORMA') {
+      if (item.statusProcess !== 'EN PROCESO PROFORMA' && (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')) {
         item.selected;
       }
     });
@@ -189,7 +189,6 @@ export class TablaRegistradaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.listProformas.set(res);
 
           this.allSelected.set(false);

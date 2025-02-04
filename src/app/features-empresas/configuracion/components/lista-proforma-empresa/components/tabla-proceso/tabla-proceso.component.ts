@@ -59,7 +59,6 @@ export class TablaProcesoComponent {
     )
     .subscribe((res) => {
       if (res.status === 'OK') {
-        console.log(res);
          this.listProformasProcess.set(res);
       }
     });

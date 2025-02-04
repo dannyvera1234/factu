@@ -66,7 +66,6 @@ export class ListaProductoEmpresaComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.listProducts.set(resp);
-          console.log(this.listProducts());
         }
       });
   }
