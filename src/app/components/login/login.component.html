@@ -48,7 +48,7 @@
             </div>
 
             <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+              <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
               <div class="mt-1 relative">
                 <input
                   [type]="showPassword() ? 'text' : 'password'"
@@ -73,7 +73,7 @@
               @if (form.controls.password.touched && form.controls.password.invalid) {
                 <div class="text-red-500">
                   @if (form.controls.password.errors?.['required']) {
-                    <span class="text-xs font-medium"> El password es obligatorio. </span>
+                    <span class="text-xs font-medium"> La contraseña es obligatorio. </span>
                   }
                 </div>
               }
@@ -112,7 +112,6 @@
       </div>
     </div>
   </div>
-
 } @else {
   <div class="w-full text-center flex items-center justify-center h-screen bg-primary">
     <div class="size-32 relative">
@@ -120,4 +119,4 @@
     </div>
   </div>
 }
-<app-whatsapp/>
+<app-whatsapp />

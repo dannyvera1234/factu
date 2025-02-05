@@ -117,7 +117,7 @@
               <div class="overflow-hidden">
                 <div>
                   <div class="mb-2">
-                    <h4 class="mb-2">Telefono</h4>
+                    <h4 class="mb-2">Teléfono</h4>
                     <p class="text-neutral-500 mb-2">
                       {{ byPersona.cellPhone | formatPhone }}
                     </p>
@@ -131,7 +131,7 @@
                   </div>
 
                   <div class="mb-2">
-                    <h4>Email</h4>
+                    <h4>Correo</h4>
                     <p class="text-neutral-500 mb-2">
                       {{ byPersona.email }}
                     </p>
@@ -623,7 +623,7 @@
       <header class="p-4 flex justify-between items-center border-b border-gray-300">
         <h2 class="font-bold text-xl truncate">
           {{
-            viewingInfo()?.environmentCode === '1' ? 'Agregar Secuencial de prueba' : 'Agregar Secuencial de producción'
+            viewingInfo()?.environmentCode === '1' ? 'Agregar secuencial de prueba' : 'Agregar secuencial de producción'
           }}
         </h2>
         <button (click)="addSequential.close()" class="shrink-0">
