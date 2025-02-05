@@ -113,6 +113,7 @@ export class TablaRegistradaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+
           this.notification.push({
             message: 'Correo enviado correctamente',
             type: 'success',
@@ -190,7 +191,7 @@ export class TablaRegistradaComponent {
       .subscribe((res) => {
         if (res.status === 'OK') {
           this.listProformas.set(res);
-
+          console.log(res.data);
           this.allSelected.set(false);
 
           // Deselecciona todas las proformas
