@@ -14,25 +14,23 @@ export class CustomDatePipe implements PipeTransform {
       year: 'numeric',
     };
 
-    const dateTimeFormat: Intl.DateTimeFormatOptions = {
-      ...dateFormat,
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    };
+    // Manejo de fechas en formato ISO o `YYYY-MM-DD`
+    if (typeof value === 'string') {
+      const isSimpleDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
+      const isISODate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value);
 
-    const isStringDate = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
-    if (isStringDate) {
-      const [year, month, day] = value.split('-').map(Number);
-      const date = new Date(Date.UTC(year, month - 1, day + 1));
-      return date.toLocaleDateString('en-US', dateFormat);
+      if (isSimpleDate) {
+        const [year, month, day] = value.split('-').map(Number);
+        return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('es-EC', dateFormat);
+      }
+
+      if (isISODate) {
+        return new Date(value).toLocaleDateString('es-EC', dateFormat);
+      }
     }
 
-    const isISODate = typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value);
-    const date = new Date(value);
-
-    const options = isISODate ? dateTimeFormat : dateFormat;
-
-    return date.toLocaleDateString('es-EC', options);
+    // Si es Date, formatea directamente
+    return new Date(value).toLocaleDateString('es-EC', dateFormat);
   }
+
 }

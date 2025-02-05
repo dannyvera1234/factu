@@ -134,7 +134,6 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });
