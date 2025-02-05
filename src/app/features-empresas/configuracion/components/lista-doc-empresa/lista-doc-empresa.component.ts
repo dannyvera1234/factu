@@ -57,7 +57,7 @@ export class ListaDocEmpresaComponent {
     }
   }
 
-  @Input({required:true}) idePersonaRol!: number
+  @Input({ required: true }) idePersonaRol!: number;
 
   searchQuery = '';
 
@@ -82,21 +82,18 @@ export class ListaDocEmpresaComponent {
 
   eliminarFactura(ide: number) {
     const currentInvoices = this.listInvoices();
-
     if (!currentInvoices?.data?.listData) return;
 
-    const updatedCliente = {
+    const newInvoices = {
       ...currentInvoices,
       data: {
         ...currentInvoices.data,
-        listData: currentInvoices!.data!.listData!.filter((cliente: any) => cliente.ide !== ide),
+        listData: currentInvoices!.data!.listData!.filter((invoice: any) => invoice.ide != ide),
       },
     };
 
-    this.listInvoices.set(updatedCliente);
+    this.listInvoices.set(newInvoices);
   }
-
-  onSearchChange(): void {}
 
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
@@ -131,6 +128,7 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });

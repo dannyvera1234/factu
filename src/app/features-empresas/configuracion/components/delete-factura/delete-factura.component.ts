@@ -8,10 +8,10 @@ import { NotificationService } from '@/utils/services';
   imports: [],
   templateUrl: './delete-factura.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteFacturaComponent {
-@Input({ required: true }) public ideFactura!: number;
+  @Input({ required: true }) public ideFactura!: number;
   public readonly loading = signal(false);
 
   @Output() public readonly deleted = new EventEmitter<number | null>();
@@ -21,7 +21,7 @@ export class DeleteFacturaComponent {
     private readonly notification: NotificationService,
   ) {}
 
-  deleteProforma() {
+  deleteFactura() {
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.docService.deleteInvoice(this.ideFactura)),
