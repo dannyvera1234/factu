@@ -80,10 +80,15 @@ export class ListaDocEmpresaComponent {
     this.getListInvoices(0);
   }
 
-  eliminarFactura(ide: number) {
+  /**
+   * Elimina una factura de la lista de facturas.
+   * @param ide Número de identificación de la factura a eliminar.
+   */
+  eliminarFactura(ide: number): void {
     const currentInvoices = this.listInvoices();
     if (!currentInvoices?.data?.listData) return;
 
+    // Creamos una copia de la lista actual con la factura eliminada
     const newInvoices = {
       ...currentInvoices,
       data: {
@@ -92,6 +97,7 @@ export class ListaDocEmpresaComponent {
       },
     };
 
+    // Actualizamos la lista de facturas
     this.listInvoices.set(newInvoices);
   }
 
