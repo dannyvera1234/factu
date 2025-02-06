@@ -96,10 +96,15 @@ export class InfoClienteEmpresaComponent {
     public readonly configFactu: CreateFacturaEmpresaService,
   ) {}
 
+  /**
+   * Busca los clientes que coinciden con el texto ingresado en el input
+   * @param event Evento del input
+   */
   search(event: any) {
     const text = event.target.value.trim();
     this.searchTerm = text;
 
+    // Si el texto tiene al menos 2 caracteres, buscar los clientes
     if (text.length >= 2) {
       this.getCustomer(this.idePersonal()!);
       this.dropdownOpen.set(true);
