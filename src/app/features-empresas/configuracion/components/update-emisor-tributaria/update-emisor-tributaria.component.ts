@@ -7,6 +7,7 @@ import { ConfigFacturacionService, AccountingControlSystemService } from '../../
 import { CustomInputComponent, CustomSelectComponent, FormErrorMessageComponent } from '../../../../components';
 import { NgClass } from '@angular/common';
 import { EmpresaService } from '../../../../services/service-empresas';
+import { UserService } from '../../../../services';
 
 @Component({
   selector: 'app-update-emisor-tributaria',
@@ -37,6 +38,8 @@ export class UpdateEmisorTributariaComponent {
 
   public readonly personType = signal<any[]>([]);
 
+  public readonly useId = computed(() => this.user.getUserData()!.user.isDemo);
+
   public readonly typePerson = computed<{ values: string[]; labels: string[] }>(() =>
     this.personType().reduce(
       (acc, item) => {
@@ -53,6 +56,7 @@ export class UpdateEmisorTributariaComponent {
     private readonly _fb: FormBuilder,
     private readonly emisorService: EmpresaService,
     public readonly controlService: AccountingControlSystemService,
+    private readonly user: UserService,
   ) {
     this.getPersonType();
     this.getEnvironments();
@@ -114,7 +118,15 @@ export class UpdateEmisorTributariaComponent {
   }
 
   private getEnvironments(): void {
-    this.controlService.getEnvironments().subscribe((res) => this.environmentList.set(res.data));
+    this.controlService.getEnvironments().subscribe((res) => {
+      let environmentList = res.data;
+
+      if (this.useId()) {
+        environmentList = environmentList.filter((ambiente: Environment) => ambiente.code !== '2');
+      }
+
+      this.environmentList.set(environmentList);
+    });
   }
 
   private getPersonType(): void {
