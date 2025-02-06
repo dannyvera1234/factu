@@ -35,7 +35,13 @@
             </div>
             <div class="space-y-1 min-w-0">
               <p class="text-sm text-gray-500">Correo</p>
-              <p class="font-medium truncate">44234</p>
+              @for (item of infoXML.infoAdicional.campoAdicional; track $index) {
+                @if (item.nombre === 'Correo') {
+                  <p class="font-medium truncate">
+                    {{ item.value }}
+                  </p>
+                }
+              }
             </div>
           </div>
         </div>
@@ -63,7 +69,13 @@
             </div>
             <div class="space-y-1 min-w-0">
               <p class="text-sm text-gray-500">Teléfono</p>
-              <p class="font-medium truncate">2323</p>
+              @for (item of infoXML.infoAdicional.campoAdicional; track $index) {
+                @if (item.nombre === 'Celular') {
+                  <p class="font-medium truncate">
+                    {{ item.value }}
+                  </p>
+                }
+              }
             </div>
           </div>
         </div>

@@ -96,6 +96,7 @@ export class AggXmlComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.infoXML.emit(resp.data);
+          console.log(resp.data);
           this.notification.push({
             message: 'Archivo XML cargado correctamente.',
             type: 'success',
