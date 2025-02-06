@@ -64,10 +64,6 @@ export class InfoClienteEmpresaComponent {
   public readonly selectedCliente = signal<any | null>(null);
   public searchTerm = '';
 
-
-
-
-
   selectOption(cliente: any) {
     this.dropdownOpen.set(false);
     this.loading.set(true);
@@ -101,11 +97,16 @@ export class InfoClienteEmpresaComponent {
   ) {}
 
   search(event: any) {
-    const text = event.target.value;
+    const text = event.target.value.trim();
     this.searchTerm = text;
+
     if (text.length >= 2) {
-    this.getCustomer(this.idePersonal()!);
-    this.dropdownOpen.set(true);
+      this.getCustomer(this.idePersonal()!);
+      this.dropdownOpen.set(true);
+    } else if (text.length === 0) {
+      // Si no hay texto, mostrar todos los clientes
+      this.getCustomer(this.idePersonal()!);
+      this.dropdownOpen.set(true);
     }
   }
 
