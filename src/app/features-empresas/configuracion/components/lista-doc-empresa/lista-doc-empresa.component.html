@@ -286,7 +286,7 @@
                         </div>
                       }
 
-                      @case ('PENDIENTE') {
+                      @case ('DEVUELTA') {
                         <div class="relative group">
                           <span class="text-red-700">
                             <svg
@@ -376,7 +376,7 @@
 
                 <!--  -->
                 <td class="text-center">
-                  @if (invoice.authorizationStatus !== 'NO AUTORIZADO' && invoice.statusProcess !== 'EN PROCESO' && invoice.statusProcess !== 'RETENIDA') {
+                  @if (invoice.authorizationStatus !== 'NO AUTORIZADO' && invoice.statusProcess !== 'EN PROCESO' && invoice.statusProcess !== 'RETENIDA' && invoice.receptionStatus !== 'DEVUELTA') {
                     <div class="flex justify-center group relative">
                       <!-- Botón de configuración, visible solo en pantallas grandes -->
                       <button
