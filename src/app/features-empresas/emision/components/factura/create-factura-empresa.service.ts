@@ -46,8 +46,19 @@ export class CreateFacturaEmpresaService {
   public readonly saveDataFactura = signal(false);
 
   saveDatos(buttonType: string) {
-    const infoCustomer = this.infoCustomer();
+    // Validación para verificar si el código '00' está presente
     const selectedPaymentMethod = this.selectedPaymentMethod();
+    if (buttonType === 'Credito') {
+      if (!selectedPaymentMethod?.some((method) => method.metodoPago?.code === '00')) {
+        this.notification.push({
+          message: 'Por favor, seleccione el método de pago "Crédito" para continuar.',
+          type: 'error',
+        });
+        return; // Detener la ejecución si no hay un método de pago con código '00'
+      }
+    }
+
+    const infoCustomer = this.infoCustomer();
 
     // Verificar si se ha seleccionado un establecimiento
     if (!this.selectedEstabliecimient()) {
@@ -75,6 +86,7 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
+
     if (this.products()?.length === 0) {
       this.notification.push({
         message: 'No hay productos disponibles para registrar la venta',
@@ -107,19 +119,16 @@ export class CreateFacturaEmpresaService {
         this.actionToConfirm = 'Credito';
         this.modalMessage =
           '¿Estás seguro de que quieres registrar el crédito? Al confirmar, se procederá con el registro del crédito y la actualización de los detalles relacionados en el sistema.';
-
         break;
       case 'Guardar':
         this.actionToConfirm = 'Guardar';
         this.modalMessage =
           '¿Estás seguro de que quieres guardar la factura? Esta acción también la convertirá en una proforma.';
-
         break;
       case 'Factura':
         this.actionToConfirm = 'Factura';
         this.modalMessage =
           '¿Estás seguro de que quieres enviar la factura al SRI para su autorización? Esta acción enviará los datos al sistema del SRI para su validación y procesamiento.';
-
         break;
     }
 
@@ -241,6 +250,9 @@ export class CreateFacturaEmpresaService {
       case 'Factura':
         serviceCall = this.facturacionService.generateInvoice(dataFacturacion);
         break;
+      case 'Credito':
+        serviceCall = this.facturacionService.generateCredito(dataFacturacion);
+        break;
       // case 'guardar':
       //   serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
       //   break;
@@ -248,8 +260,8 @@ export class CreateFacturaEmpresaService {
       //   serviceCall = this.facturacionService.updateProformaSend(dataFacturacion, this.infoProforma().invoiceIde);
       //   break;
       default:
-         console.error(`Tipo de documento no soportado: ${this.actionToConfirm}`);
-         return;
+        console.error(`Tipo de documento no soportado: ${this.actionToConfirm}`);
+        return;
     }
 
     of(this.loading.set(true))
@@ -263,7 +275,7 @@ export class CreateFacturaEmpresaService {
           this.selectedEstabliecimient.set('');
           // this.selectedPaymentMethod.set('');
           this.infoProforma.set(null);
-
+          console.log(response);
           this.notification.push({
             message: `El documento ha sido generado correctamente`,
             type: 'info',
@@ -275,13 +287,7 @@ export class CreateFacturaEmpresaService {
           // if (this.actionToConfirm === 'factura') {
           //   this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
           // }
-        } else {
-          this.notification.push({
-            message: `Error al generar la ${this.actionToConfirm}. Intente nuevamente.`,
-            type: 'error',
-          });
         }
       });
-
   }
 }
