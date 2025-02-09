@@ -207,7 +207,7 @@ export class CreateFacturaEmpresaService {
         subtotal: product.subTotal,
         total: product.valorTotal,
       })),
-      paysForms: this.selectedPaymentMethod()?.map((p) => ({
+      paysForms: selectedPaymentMethod?.map((p) => ({
         code: p.metodoPago.code,
         description: p.metodoPago.description,
         total: p.valor,
@@ -273,12 +273,14 @@ export class CreateFacturaEmpresaService {
         if (response.status === 'OK') {
           this.saveDataFactura.set(false);
           this.selectedEstabliecimient.set('');
-          // this.selectedPaymentMethod.set('');
+           this.selectedPaymentMethod.set([]);
+          this.detailProducts.set([]);
+          this.products.set([]);
+          this.infoCustomer.set(null);
           this.infoProforma.set(null);
-          console.log(response);
           this.notification.push({
             message: `El documento ha sido generado correctamente`,
-            type: 'info',
+            type: 'success',
           });
 
           // if (this.actionToConfirm === 'guardar') {

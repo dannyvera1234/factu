@@ -1,0 +1,501 @@
+<nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+  <div class="w-full md:w-auto"></div>
+
+  <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+    <!-- Input con espacio para la lupa -->
+    <div class="w-full relative md:max-w-[200px]">
+      <input type="text" placeholder="Buscar" class="pl-4 pr-2 py-2 w-full border rounded" [(ngModel)]="searchQuery" />
+    </div>
+
+    <!-- Botón de búsqueda -->
+    <button
+      class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded flex items-center w-full md:w-auto justify-center"
+      (click)="onSearchClick()"
+    >
+      Buscar
+    </button>
+
+    <!-- Componente filtro -->
+    <div class="w-full md:w-auto">
+      <!-- @defer {
+        @if (idePersonaRol) {
+          <app-filtro [ideEmisor]="idePersonaRol" />
+        }
+      } -->
+    </div>
+
+    <!-- Botón sincronizar al final -->
+    <div class="w-full md:w-auto md:ml-auto">
+      <button
+        class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
+        (click)="onSyncClick()"
+      >
+        <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+          <img src="assets/icon/sync.svg" class="w-[67%]" />
+        </div>
+        Sincronizar
+      </button>
+    </div>
+  </div>
+</nav>
+
+<hr class="my-4" />
+<section>
+  <div class="table-container relative flex items-center justify-between">
+    <table class="w-full text-left text-xs">
+      <thead>
+        <tr class="font-normal text-neutral-400 px-6 py-3">
+          <th class="px-4 py-3">Nombres</th>
+          <th class="px-4 py-3 text-center">Origen</th>
+          <th class="px-4 py-3 text-center">Clave</th>
+          <th class="px-4 py-3 text-center">Fecha Autorización</th>
+          <th class="px-4 py-3 text-center">Total</th>
+          <th class="text-center">Estado Proceso</th>
+          <th class="text-center">Recepción</th>
+          <th class="text-center">Autorización</th>
+          <th class="px-4 py-3 text-center">Acciones</th>
+        </tr>
+      </thead>
+      @if (loading()) {
+        <tbody>
+          <tr>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      } @else {
+        <tbody>
+          @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
+            @for (invoice of listInvoices()!.data!.listData; track $index) {
+              <tr class="border-b hover:bg-gray-100">
+                <th scope="row" class="font-normal p-2">
+                  <div class="flex gap-4 items-center">
+                    <div
+                      class="rounded-md size-10 flex items-center justify-center shrink-0"
+                      [ngClass]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).bgColor"
+                    >
+                      <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <div class="truncate">
+                        <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
+                        <div class="flex items-center gap-2">
+                          <div class="relative">
+                            {{ invoice.identificationCustomer }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tooltip Section -->
+                      <div class="relative group inline-block">
+                        <!-- Botón que muestra el tooltip -->
+                        <button
+                          class="m-0"
+                          (mouseenter)="toggleTooltip(invoice.ide, true)"
+                          (mouseleave)="toggleTooltip(invoice.ide, false)"
+                        >
+                          <img src="assets/icon/tooltip.svg" alt="Tooltip" />
+                        </button>
+
+                        <!-- Tooltip -->
+                        @if (isTooltipVisible(invoice.ide)) {
+                          <div
+                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            (mouseenter)="toggleTooltip(invoice.ide, true)"
+                            (mouseleave)="toggleTooltip(invoice.ide, false)"
+                          >
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-3">
+                              <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+                              <button
+                                class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                (click)="toggleTooltip(invoice.ide, false)"
+                              >
+                                &times;
+                              </button>
+                            </div>
+
+                            <!-- Histories -->
+                            <ul class="space-y-2">
+                              @for (history of invoice.histories; track $index) {
+                                <li
+                                  class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
+                                >
+                                  <div class="flex justify-between items-center text-gray-700">
+                                    <span>{{ history.description }}</span>
+                                  </div>
+                                </li>
+                              }
+                            </ul>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="px-4 py-3 text-center">
+                  <span
+                    [ngClass]="{
+                      'bg-blue-100 text-blue-700 border-blue-500': invoice.origen === 'FACTURA',
+                      'bg-orange-100 text-orange-700 border-orange-500': invoice.origen === 'PROFORMA',
+                    }"
+                    class="rounded-full px-2 py-1 inline-block"
+                  >
+                    {{ invoice.origen }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-center truncate">
+                  @if (invoice.pdf !== null) {
+                    <button (click)="copyToClipboard(invoice.keyAccess)" class="text-blue-600 hover:text-blue-800">
+                      <svg
+                        class="w-6 h-6 text-black hover:text-green-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z"
+                          clip-rule="evenodd"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  }
+                </td>
+
+                <td class="px-4 py-3 text-center">
+                </td>
+                <td class="px-4 py-3 text-center">
+                </td>
+
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.statusProcess) {
+                      @case ('FINALIZADA') {
+                        <div class="relative group">
+                          <span class="b text-green-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
+                              Finalizado
+                            </div>
+                          </span>
+                        </div>
+                      }
+                      @case ('EN PROCESO') {
+                        <div class="flex items-center justify-center">
+                          <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                            <circle
+                              class="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              stroke-width="4"
+                            ></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                          </svg>
+                          <span class="ml-2 text-sm text-green-700">Procesando...</span>
+                        </div>
+                      }
+
+                      @case ('PENDIENTE') {
+                        <div class="relative group">
+                          <img src="assets/icon/pendiente.svg" alt="" class="text-blue-500" />
+                          <!-- Tooltip -->
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            Pendiente
+                          </div>
+                        </div>
+                      } @case ('RETENIDA') {
+                        <div class="relative group">
+                          <svg class="w-6 h-6 text-gray-800 dark:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z" clip-rule="evenodd"/>
+                          </svg>
+
+                          <!-- Tooltip -->
+                          <div
+                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            Retenida
+                          </div>
+                        </div>
+
+                      }
+                    }
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.receptionStatus) {
+                      @case ('RECIBIDA') {
+                        <div class="relative group">
+                          <span class="b text-green-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
+                              Finalizado
+                            </div>
+                          </span>
+                        </div>
+                      }
+
+                      @case ('DEVUELTA') {
+                        <div class="relative group">
+                          <span class="text-red-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                              />
+                            </svg>
+                          </span>
+                          <!-- Tooltip -->
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            Devuelto
+                          </div>
+                        </div>
+                      }
+                    }
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div class="flex justify-center items-center">
+                    @switch (invoice.authorizationStatus) {
+                      @case ('AUTORIZADO') {
+                        <div class="relative group">
+                          <span class="b text-green-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            >
+                              Autorizado
+                            </div>
+                          </span>
+                        </div>
+                      }
+
+                      @case ('NO AUTORIZADO') {
+                        <div class="relative group">
+                          <span class="text-red-700">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                              />
+                            </svg>
+                          </span>
+                          <!-- Tooltip -->
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          >
+                            No Autorizado
+                          </div>
+                        </div>
+                      }
+                    }
+                  </div>
+                </td>
+
+                <!--  -->
+                <td class="text-center">
+                  @if (invoice.authorizationStatus !== 'NO AUTORIZADO' && invoice.statusProcess !== 'EN PROCESO' && invoice.statusProcess !== 'RETENIDA' && invoice.receptionStatus !== 'DEVUELTA') {
+                    <div class="flex justify-center group relative">
+                      <!-- Botón de configuración, visible solo en pantallas grandes -->
+                      <button
+                        class="flex items-center justify-center mr-2 p-2 rounded-md bg-gray-100 hover:bg-gray-200 sm:block hidden"
+                        (click)="toggleMenu($index)"
+                      >
+                        <img src="assets/icon/config.svg" alt="Configuración" />
+                      </button>
+
+                      <!-- Menú de opciones que aparece al hacer clic, visible solo cuando se selecciona la fila -->
+                      @if (selectedRow() === $index) {
+                        <div
+                          id="optionsMenu"
+                          class="absolute top-10 right-auto -left-11 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg z-10"
+                        >
+                          <ul>
+                            <!-- Opción PDF -->
+                            <a
+                              [href]="invoice.pdf"
+                              target="_blank"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
+                              PDF
+                            </a>
+                            <a
+                              [href]="invoice.xml"
+                              target="_blank"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
+                              XML
+                            </a>
+
+                            <hr class="my-2 border-gray-600" />
+
+                            <!-- Opción Eliminar -->
+                            <li
+                              (click)="reeviarEmail(invoice.ide)"
+                              class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                            >
+                              <img src="assets/icon/email.svg" alt="email" class="w-5 h-5" />
+                              Reenviar
+                            </li>
+                          </ul>
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Acciones mostradas directamente en pantallas pequeñas, con un diseño de lista -->
+                    <div class="sm:hidden flex flex-row gap-2 mt-2">
+                      <!-- Acción PDF -->
+                      <a
+                        [href]="invoice.pdf"
+                        target="_blank"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        PDF
+                      </a>
+
+                      <a
+                        [href]="invoice.xml"
+                        target="_blank"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        XML
+                      </a>
+                      <!-- Acción Reenviar -->
+
+                      <li
+                        (click)="reeviarEmail(invoice.ide)"
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        Reenviar
+                      </li>
+
+                      <!-- Acción Eliminar -->
+                    </div>
+                  } @else if (invoice.statusProcess === 'PENDIENTE' && invoice.statusProcess !== 'RETENIDA') {
+                    <div class="flex justify-center items-center group relative sm:block hidden">
+                      <button
+
+                        class="mr-2 p-2 rounded-md bg-red-100 hover:bg-red-200"
+                      >
+                        <img src="assets/icon/trash-icon.svg" alt="Eliminar" class="w-5 h-5" style="color: white" />
+                      </button>
+                    </div>
+                    <div class="sm:hidden flex flex-row gap-2 mt-2">
+                      <button
+
+                        class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          } @else {
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún documento encontrado</p>
+                  <span class="text-sm">Por favor, genere un documento para ver su información</span>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      }
+    </table>
+  </div>
+  @defer {
+    <div class="mt-4">
+      @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
+        <!-- <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" /> -->
+      }
+    </div>
+  }
+</section>
+
+

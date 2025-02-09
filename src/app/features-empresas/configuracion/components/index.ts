@@ -15,3 +15,4 @@ export * from './lista-producto-empresa';
 export * from './lista-proforma-empresa';
 export * from './delete-proforma';
 export * from './delete-factura';
+export * from './lista-credito';

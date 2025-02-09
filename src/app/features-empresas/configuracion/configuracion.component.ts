@@ -12,6 +12,7 @@ import {
   DeleteLogoComponent,
   InfoCardEmpresaComponent,
   ListaClientesEmpresaComponent,
+  ListaCreditoComponent,
   ListaDocEmpresaComponent,
   SequentialComponent,
   UpdateEmisorComponent,
@@ -43,6 +44,7 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
     ListaDocEmpresaComponent,
     InfoCardEmpresaComponent,
     ListaProformaEmpresaComponent,
+    ListaCreditoComponent
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
@@ -51,7 +53,7 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'Proforma'>('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'Proforma' | 'Credito'>('clientes');
 
   public readonly loading = signal(false);
 
@@ -78,7 +80,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proforma'): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proforma' | 'Credito'): void {
     this.selectedTab.set(tab);
   }
 
