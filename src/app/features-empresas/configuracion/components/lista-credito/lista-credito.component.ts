@@ -6,16 +6,17 @@ import { DocumentosService } from '../../../../services/service-empresas';
 import { ConfigFacturacionService, NotificationService } from '../../../../utils/services';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { PaginationComponent } from '../../../../components/pagination';
 
 @Component({
   selector: 'app-lista-credito',
-  imports: [FormsModule, NgClass],
+  imports: [FormsModule, NgClass, PaginationComponent],
   templateUrl: './lista-credito.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaCreditoComponent {
-// Detecta clics fuera del componente para cerrar el menú
+  // Detecta clics fuera del componente para cerrar el menú
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent): void {
     // Si el clic no es dentro de la tabla o el botón de configuración, cerramos el menú
@@ -24,7 +25,6 @@ export class ListaCreditoComponent {
       this.selectedRow.set(null);
     }
   }
-
 
   searchQuery = '';
 
@@ -47,8 +47,6 @@ export class ListaCreditoComponent {
     this.getListInvoicesCredit(0);
   }
 
-
-
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
     this.showTooltip.set({ ...currentState, [id]: isVisible });
@@ -58,12 +56,7 @@ export class ListaCreditoComponent {
     return !!this.showTooltip()[id];
   }
 
-  onSyncClick() {
-    this.getListInvoicesCredit();
-    this.detailsService.info.set({
-      personaRolIde: 1,
-    });
-  }
+
 
   onSearchClick(): void {
     // Si el término de búsqueda está vacío, puedes manejarlo de alguna manera, como mostrar un mensaje de error.
@@ -82,10 +75,6 @@ export class ListaCreditoComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
-          // this.detailsService.info.set({
-          //   personaRolIde: 1,
-          // });
           this.listInvoices.set(res);
         }
       });
@@ -146,5 +135,3 @@ export class ListaCreditoComponent {
     }
   }
 }
-
-

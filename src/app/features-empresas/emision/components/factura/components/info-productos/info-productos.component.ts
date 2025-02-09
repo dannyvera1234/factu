@@ -161,12 +161,13 @@ export class InfoProductosComponent {
     });
   }
 
-  removePayment(index: number): void {
+  removePayment(code: string): void {
+    // Obtenemos la lista actual de métodos de pago
     this.paymentMethods.update((currentPaymentMethods = []) => {
-      const updatedPaymentMethods = [...currentPaymentMethods];
+      // Filtramos los métodos de pago para eliminar el que coincida con el código
+      const updatedPaymentMethods = currentPaymentMethods.filter((method: any) => method.metodoPago?.code !== code);
 
-      updatedPaymentMethods.splice(index, 1);
-
+      // Actualizamos los métodos de pago seleccionados
       this.config.selectedPaymentMethod.set(updatedPaymentMethods);
 
       return updatedPaymentMethods;

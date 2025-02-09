@@ -25,7 +25,7 @@
     </div>
 
     <!-- Botón sincronizar al final -->
-    <div class="w-full md:w-auto md:ml-auto">
+    <!-- <div class="w-full md:w-auto md:ml-auto">
       <button
         class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
         (click)="onSyncClick()"
@@ -35,7 +35,7 @@
         </div>
         Sincronizar
       </button>
-    </div>
+    </div> -->
   </div>
 </nav>
 
@@ -492,7 +492,7 @@
   @defer {
     <div class="mt-4">
       @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
-        <!-- <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" /> -->
+        <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
       }
     </div>
   }

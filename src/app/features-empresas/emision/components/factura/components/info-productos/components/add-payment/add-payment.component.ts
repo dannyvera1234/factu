@@ -70,7 +70,7 @@ export class AddPaymentComponent {
     this.addPay.emit(this.form.value);
 
     this.form.reset({
-      valor: '',
+      valor: '00.00',
       metodoPago: '',
       plazo: '0',
       tiempo: 'dias',

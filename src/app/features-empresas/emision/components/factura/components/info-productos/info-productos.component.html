@@ -106,7 +106,7 @@
               class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
             >
               <p class="font-medium">Ningún producto seleccionado</p>
-              <span class="text-sm">Por favor, seleccione un producto para ver su información</span>
+              <span class="text-xs">Por favor, seleccione un producto para ver su información</span>
             </div>
           </td>
         </tr>
@@ -120,27 +120,27 @@
     <table class="w-full text-xs">
       <thead>
         <tr class="border-b bg-gray-50">
-          <th class="text-left p-3 font-medium">Forma de Pago</th>
-          <th class="text-center p-3 font-medium">Tiempo</th>
-          <th class="text-center p-3 font-medium">Plazo</th>
-          <th class="text-center p-3 font-medium">Valor</th>
-          <th class="px-4 py-4 text-center"></th>
+          <th class="text-left p-2 font-medium">Forma de Pago</th>
+          <th class="text-center p-2 font-medium">Tiempo</th>
+          <th class="text-center p-2 font-medium">Plazo</th>
+          <th class="text-center p-2 font-medium">Valor</th>
+          <th class="px-2 py-2 text-center"></th>
         </tr>
       </thead>
       <tbody>
         @for (payment of paymentMethods(); track $index) {
           <tr class="hover:bg-gray-100">
-            <td class="p-2">{{ payment.metodoPago.description }}</td>
-            <td class="p-2 text-center">{{ payment.plazo }}</td>
-            <td class="p-2 text-center">{{ payment.tiempo }}</td>
-            <td class="p-2 text-center">{{ payment.valor | currency }}</td>
+            <td class="p-2 text-sm">{{ payment.metodoPago.description }}</td>
+            <td class="p-2 text-center text-sm">{{ payment.plazo }}</td>
+            <td class="p-2 text-center text-sm">{{ payment.tiempo }}</td>
+            <td class="p-2 text-center text-sm">{{ payment.valor | currency }}</td>
             <td>
-              <div class="flex gap-1">
+              <div class="flex justify-center gap-1">
                 <button
-                  class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                  (click)="removePayment(payment.metodoPago.id)"
+                  class="flex items-center justify-center p-1 rounded-md bg-gray-100 hover:bg-gray-200"
+                  (click)="removePayment(payment.metodoPago.code)"
                 >
-                  <img src="assets/icon/trash-icon.svg" alt="" class="w-20 sm:w-20 md:w-5" />
+                  <img src="assets/icon/trash-icon.svg" alt="" class="w-4 sm:w-5 md:w-4" />
                 </button>
               </div>
             </td>
@@ -149,6 +149,7 @@
       </tbody>
     </table>
   </div>
+
 }
 
 <app-modal #addProduct>
