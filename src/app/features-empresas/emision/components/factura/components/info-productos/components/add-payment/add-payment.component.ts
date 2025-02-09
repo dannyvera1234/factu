@@ -36,7 +36,7 @@ export class AddPaymentComponent {
   form = this._fb.group({
     metodoPago: ['', [Validators.required]],
     plazo: ['0',[Validators.required]],
-    valor: ['', [Validators.required]],
+    valor: ['00.00', [Validators.required]],
     tiempo: ['dias', [Validators.required]],
   });
 
