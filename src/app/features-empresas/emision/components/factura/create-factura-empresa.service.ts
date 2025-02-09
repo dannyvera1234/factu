@@ -46,18 +46,30 @@ export class CreateFacturaEmpresaService {
   public readonly saveDataFactura = signal(false);
 
   saveDatos(buttonType: string) {
-    // Validación para verificar si el código '00' está presente
+    // Validación común para verificar si el código '00' está presente
     const selectedPaymentMethod = this.selectedPaymentMethod();
-    if (buttonType === 'Credito') {
-      if (!selectedPaymentMethod?.some((method) => method.metodoPago?.code === '00')) {
-        this.notification.push({
-          message: 'Por favor, seleccione el método de pago "Crédito" para continuar.',
-          type: 'error',
-        });
-        return; // Detener la ejecución si no hay un método de pago con código '00'
-      }
+    const isCreditoSelected = selectedPaymentMethod?.some((method) => method.metodoPago?.code === '00');
+
+    // Validación para 'Credito'
+    if (buttonType === 'Credito' && !isCreditoSelected) {
+      this.notification.push({
+        message: 'Por favor, seleccione el método de pago "Crédito" para continuar.',
+        type: 'error',
+      });
+      return; // Detener la ejecución si no hay un método de pago con código '00'
     }
 
+    // Validación para 'Factura' cuando el pago es 'Credito'
+    if (buttonType === 'Factura' && isCreditoSelected) {
+      this.notification.push({
+        message:
+          'No puedes emitir una factura cuando se ha seleccionado "Crédito". Selecciona otro método de pago para continuar con la factura.',
+        type: 'error',
+      });
+      return; // Detener la ejecución si el pago seleccionado es 'Credito'
+    }
+
+    // Continuar con las demás validaciones
     const infoCustomer = this.infoCustomer();
 
     // Verificar si se ha seleccionado un establecimiento
@@ -273,7 +285,7 @@ export class CreateFacturaEmpresaService {
         if (response.status === 'OK') {
           this.saveDataFactura.set(false);
           this.selectedEstabliecimient.set('');
-           this.selectedPaymentMethod.set([]);
+          this.selectedPaymentMethod.set([]);
           this.detailProducts.set([]);
           this.products.set([]);
           this.infoCustomer.set(null);
