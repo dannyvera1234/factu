@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, Input, signal, ViewChild } from '@a
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
-import { ListaProductosComponent } from './components';
+import { AddPaymentComponent, ListaProductosComponent } from './components';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 import { NotificationService } from '../../../../../../utils/services';
 
 @Component({
   selector: 'app-info-productos',
-  imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule, ListaProductosComponent],
+  imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule, ListaProductosComponent, AddPaymentComponent],
   templateUrl: './info-productos.component.html',
   styles: `
     input[type='number'] {
@@ -39,6 +39,8 @@ export class InfoProductosComponent {
   Math = Math;
 
   public readonly idePersona = signal<number | null>(null);
+
+  public readonly paymentMethods = signal<any | null>(null);
 
   constructor(
     private config: CreateFacturaEmpresaService,
@@ -133,5 +135,41 @@ export class InfoProductosComponent {
     if (!allowedKeys.includes(event.key)) {
       event.preventDefault(); // Bloquea cualquier otra tecla
     }
+  }
+  addPayment(payment: any): void {
+    if (!payment) return;
+
+    this.paymentMethods.update((currentPaymentMethods: any[] = []) => {
+      // Aseguramos que currentPaymentMethods sea un array válido
+      const methods = Array.isArray(currentPaymentMethods) ? currentPaymentMethods : [];
+
+      // Verificamos si el pago ya existe en la lista por el 'code' dentro de metodoPago
+      const paymentExists = methods.some((method) => method.metodoPago?.code === payment.metodoPago?.code);
+
+      if (paymentExists) {
+        this.notification.push({
+          message: 'La forma de pago ya está registrada. Elimínala y vuelve a intentarlo.',
+
+          type: 'error',
+        });
+        return methods; // Retornamos la lista sin modificarla
+      }
+
+      // Si no existe, agregamos el nuevo pago
+      this.config.selectedPaymentMethod.set([...methods, payment]);
+      return [...methods, payment]; // Retornamos la lista con el nuevo pago agregado
+    });
+  }
+
+  removePayment(index: number): void {
+    this.paymentMethods.update((currentPaymentMethods = []) => {
+      const updatedPaymentMethods = [...currentPaymentMethods];
+
+      updatedPaymentMethods.splice(index, 1);
+
+      this.config.selectedPaymentMethod.set(updatedPaymentMethods);
+
+      return updatedPaymentMethods;
+    });
   }
 }

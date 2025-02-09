@@ -6,3 +6,4 @@ export * from './empresa.service';
 export * from './proveedor.service';
 export * from './emision.service';
 export * from './home.service';
+export * from './subsidiary.service';

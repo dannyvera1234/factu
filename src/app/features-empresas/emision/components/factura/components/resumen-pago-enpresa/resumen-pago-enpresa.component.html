@@ -7,20 +7,9 @@
       </div>
     </div>
   </header>
-  <div class="p-4 space-y-6">
-    <div class="space-y-2">
-      <label for="metodo-pago" class="text-sm font-medium text-gray-500">Método de Pago</label>
-      <select id="metodo-pago" class="w-full p-2 border rounded" [(ngModel)]="configFactu.selectedPaymentMethod">
-        <option value="">Seleccionar método</option>
-        @for (method of paymentMethods()?.data; track $index) {
-          <option [ngValue]="method">
-            {{ method.description }}
-          </option>
-        }
-      </select>
-    </div>
 
-    <div class="border-t border-gray-200">
+  <div class="p-2 space-y-4">
+    <div>
       @if (valuesCalculates()?.length) {
         @for (item of valuesCalculates(); track item.key) {
           <div class="text-sm text-gray-700">
@@ -45,15 +34,15 @@
         </div>
       }
     </div>
-    @if (valid) {
-      <div class="relative group">
+    <!-- @if (valid) { -->
+      <!-- <div class="relative group">
         <button
           class="w-full h-12 text-lg mt-4 rounded flex items-center justify-center px-4 bg-green-500 text-white font-semibold hover:bg-green-600 transition-colors"
           (click)="configFactu.saveDatos()"
         >
           Registrar Venta
         </button>
-      </div>
-    }
+      </div> -->
+    <!-- } -->
   </div>
 </div>

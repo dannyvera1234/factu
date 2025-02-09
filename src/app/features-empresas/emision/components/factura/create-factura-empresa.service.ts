@@ -25,11 +25,17 @@ export class CreateFacturaEmpresaService {
 
   public readonly detailProducts = signal<DetailsProducto[] | null>([]);
 
-  public readonly selectedPaymentMethod = signal<any | null>('');
+  public readonly selectedPaymentMethod = signal<any[] | null>(null);
 
   public readonly infoVoucherReqDTO = signal<any | null>(null);
 
   public readonly infoProforma = signal<any | null>(null);
+
+  public readonly observation = signal<string | null>(null);
+
+  public modalMessage = '';
+
+  public actionToConfirm = '';
 
   constructor(
     private readonly notification: NotificationService,
@@ -39,17 +45,36 @@ export class CreateFacturaEmpresaService {
 
   public readonly saveDataFactura = signal(false);
 
-  /**
-   * Guarda los datos de la factura
-   * Verifica si hay productos disponibles, si todos los campos obligatorios están completos
-   * y si el consumidor final no puede tener una factura con valor mayor a $50.00
-   */
-  saveDatos() {
-    const infoEmisor = this.infoEmisor();
+  saveDatos(buttonType: string) {
     const infoCustomer = this.infoCustomer();
     const selectedPaymentMethod = this.selectedPaymentMethod();
 
-    // Verificar si hay productos disponibles
+    // Verificar si se ha seleccionado un establecimiento
+    if (!this.selectedEstabliecimient()) {
+      this.notification.push({
+        message: 'Por favor, seleccione un establecimiento',
+        type: 'error',
+      });
+      return;
+    }
+
+    // Verificar si se ha ingresado un código de punto
+    if (!this.pointCode()) {
+      this.notification.push({
+        message: 'Por favor, ingrese un código de punto',
+        type: 'error',
+      });
+      return;
+    }
+
+    // Verificar si la información del cliente está completa
+    if (!infoCustomer) {
+      this.notification.push({
+        message: 'Por favor, seleccione un cliente',
+        type: 'error',
+      });
+      return;
+    }
     if (this.products()?.length === 0) {
       this.notification.push({
         message: 'No hay productos disponibles para registrar la venta',
@@ -58,16 +83,10 @@ export class CreateFacturaEmpresaService {
       return;
     }
 
-    // Verificar si todos los campos obligatorios están completos
-    if (
-      !infoEmisor ||
-      !infoCustomer ||
-      !selectedPaymentMethod ||
-      !this.selectedEstabliecimient() ||
-      !this.pointCode()
-    ) {
+    // Verificar si se ha seleccionado un método de pago
+    if (!selectedPaymentMethod || selectedPaymentMethod.length === 0) {
       this.notification.push({
-        message: 'Por favor, complete todos los campos obligatorios',
+        message: 'Por favor, seleccione un método de pago',
         type: 'error',
       });
       return;
@@ -81,7 +100,30 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
-    // Si todo está bien, guardar los datos de la factura
+
+    // Si todas las validaciones son correctas, guardar los datos de la factura
+    switch (buttonType) {
+      case 'Credito':
+        this.actionToConfirm = 'Credito';
+        this.modalMessage =
+          '¿Estás seguro de que quieres registrar el crédito? Al confirmar, se procederá con el registro del crédito y la actualización de los detalles relacionados en el sistema.';
+
+        break;
+      case 'Guardar':
+        this.actionToConfirm = 'Guardar';
+        this.modalMessage =
+          '¿Estás seguro de que quieres guardar la factura? Esta acción también la convertirá en una proforma.';
+
+        break;
+      case 'Factura':
+        this.actionToConfirm = 'Factura';
+        this.modalMessage =
+          '¿Estás seguro de que quieres enviar la factura al SRI para su autorización? Esta acción enviará los datos al sistema del SRI para su validación y procesamiento.';
+
+        break;
+    }
+
+    // Abre el modal
     this.saveDataFactura.set(true);
   }
 
@@ -156,15 +198,14 @@ export class CreateFacturaEmpresaService {
         subtotal: product.subTotal,
         total: product.valorTotal,
       })),
-      paysForms: [
-        {
-          code: selectedPaymentMethod.code,
-          description: selectedPaymentMethod.description,
-          total: this.infoVoucherReqDTO().importeTotal,
-          timeUnit: 'dias',
-          plazo: '0',
-        },
-      ],
+      paysForms: this.selectedPaymentMethod()?.map((p) => ({
+        code: p.metodoPago.code,
+        description: p.metodoPago.description,
+        total: p.valor,
+        timeUnit: p.tiempo,
+        plazo: p.plazo,
+      })),
+
       infoVoucherReqDTO: {
         taxes: this.infoVoucherReqDTO().inpuestoIva.values.map((iva: any) => ({
           codeTaxType: '2',
@@ -180,9 +221,8 @@ export class CreateFacturaEmpresaService {
         propina: 0,
         importeTotal: this.infoVoucherReqDTO().importeTotal,
       },
-      observation: null,
+      observation: this.observation(),
     };
-
     return dataFacturacion;
   }
   /**
@@ -190,26 +230,26 @@ export class CreateFacturaEmpresaService {
    * especificado.
    * @param type Tipo de documento a guardar. Puede ser 'proforma' o 'factura'.
    */
-  saveDocument(type: 'proforma' | 'factura' | 'guardar' | 'updateEnviar') {
+  saveDocument() {
     const dataFacturacion = this.infoDataFactura();
-
+    console.log(dataFacturacion);
     let serviceCall;
-    switch (type) {
-      case 'proforma':
+    switch (this.actionToConfirm) {
+      case 'Guardar':
         serviceCall = this.facturacionService.generateProforma(dataFacturacion);
         break;
-      case 'factura':
+      case 'Factura':
         serviceCall = this.facturacionService.generateInvoice(dataFacturacion);
         break;
-      case 'guardar':
-        serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
-        break;
-        case 'updateEnviar':
-        serviceCall = this.facturacionService.updateProformaSend(dataFacturacion, this.infoProforma().invoiceIde);
-        break;
+      // case 'guardar':
+      //   serviceCall = this.facturacionService.updateProforma(dataFacturacion, this.infoProforma().invoiceIde);
+      //   break;
+      // case 'updateEnviar':
+      //   serviceCall = this.facturacionService.updateProformaSend(dataFacturacion, this.infoProforma().invoiceIde);
+      //   break;
       default:
-        console.error(`Tipo de documento no soportado: ${type}`);
-        return;
+         console.error(`Tipo de documento no soportado: ${this.actionToConfirm}`);
+         return;
     }
 
     of(this.loading.set(true))
@@ -221,7 +261,7 @@ export class CreateFacturaEmpresaService {
         if (response.status === 'OK') {
           this.saveDataFactura.set(false);
           this.selectedEstabliecimient.set('');
-          this.selectedPaymentMethod.set('');
+          // this.selectedPaymentMethod.set('');
           this.infoProforma.set(null);
 
           this.notification.push({
@@ -229,18 +269,19 @@ export class CreateFacturaEmpresaService {
             type: 'info',
           });
 
-          if (type === 'guardar') {
-            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
-          }
-          if (type === 'factura') {
-            this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
-          }
+          // if (this.actionToConfirm === 'guardar') {
+          //   this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          // }
+          // if (this.actionToConfirm === 'factura') {
+          //   this.router.navigate(['/sistema_contable_empresa/emision_empresas']);
+          // }
         } else {
           this.notification.push({
-            message: `Error al generar la ${type}. Intente nuevamente.`,
+            message: `Error al generar la ${this.actionToConfirm}. Intente nuevamente.`,
             type: 'error',
           });
         }
       });
+
   }
 }

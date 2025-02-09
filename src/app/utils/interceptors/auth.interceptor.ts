@@ -10,6 +10,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const notification = inject(NotificationService);
 
+
+
   // Obtener el token de autorización desde el servicio
   const token = userService.getAuthToken();
 
@@ -25,6 +27,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((resp) => {
       console.error('Error:', resp);
+      notification.push({
+        message: resp.error.message,
+        type: 'error',
+      })
       // Si recibimos un error 401 o 403, redirigimos a la página de inicio
       var error = resp.error;
       if (error.code === 401 || error.code === 403) {

@@ -1,0 +1,79 @@
+<form [formGroup]="form">
+  <div class="space-y-4">
+    <!-- Método de pago -->
+    <div class="grid grid-cols-1 gap-2">
+      <label for="metodo-pago" class="text-sm font-medium text-gray-500">Método de Pago</label>
+      <select id="metodo-pago" class="w-full p-2 border rounded" formControlName="metodoPago">
+        <option value="">Seleccionar método</option>
+        @for (method of paymentMethods()?.data; track $index) {
+          <option [ngValue]="method">
+            {{ method.description }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <!-- Plazo, Tiempo y Unidad -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Input para el valor del plazo -->
+      <div class="flex flex-col">
+        <label for="plazo" class="text-sm font-semibold text-gray-500">Plazo</label>
+        <input
+          id="plazo"
+          min="0"
+          max="100"
+          type="number"
+          formControlName="plazo"
+          class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ingrese el plazo"
+        />
+      </div>
+
+      <!-- Input para la unidad del tiempo (por ejemplo, días, meses, años) -->
+      <div class="flex flex-col">
+        <label for="tiempo" class="text-sm font-semibold text-gray-500">Tiempo</label>
+        <select
+          id="tiempo"
+          formControlName="tiempo"
+          class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+        >
+          <option value="" disabled selected>Seleccione</option>
+          <option value="dias">Días</option>
+          <option value="meses">Meses</option>
+          <option value="años">Años</option>
+        </select>
+      </div>
+
+      <!-- Input para el valor del tiempo -->
+      <div class="flex flex-col">
+        <label for="valor" class="text-sm font-semibold text-gray-500">Valor</label>
+        <input
+          id="valor"
+          formControlName="valor"
+          (input)="onDecimalInput($event, 'valor')"
+          class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ingrese el tiempo"
+        />
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+  @if (!loading()) {
+    <button
+      class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+      type="button"
+      (click)="addPay.emit(null)"
+    >
+      Cerrar
+    </button>
+    <button class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex" (click)="submit()">
+      Guardar
+    </button>
+  } @else {
+    <div class="flex justify-center items-center h-full mt-4">
+      <div class="loader"></div>
+    </div>
+  }
+</div>

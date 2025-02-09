@@ -20,13 +20,13 @@ export class ResumenPagoEnpresaComponent {
   set editarResumenPago(event: any) {
     if (event) {
       this.procesoResumenPago(event);
-      if (!this.ejecutarFormPago()) {
-        this.getPayForms().then(() => {
-          this.procesarPayForms(event);
-        });
-      } else {
-        this.procesarPayForms(event);
-      }
+      // if (!this.ejecutarFormPago()) {
+      //   this.getPayForms().then(() => {
+      //     this.procesarPayForms(event);
+      //   });
+      // } else {
+      //   this.procesarPayForms(event);
+      // }
     }
   }
 
@@ -39,6 +39,16 @@ export class ResumenPagoEnpresaComponent {
   public valuesCalculates = signal<any[] | null>([]);
 
   public readonly listIva = signal<GeneriResp<any[]> | null>(null);
+
+  public readonly paymentMethodsOptions = computed(() =>
+    (this.paymentMethods()?.data ?? []).map((method) => ({
+      id: method.code,
+      name: method.description,
+    }))
+  );
+
+
+
 
   constructor(
     private readonly controlService: AccountingControlSystemService,
@@ -129,15 +139,15 @@ export class ResumenPagoEnpresaComponent {
       });
   }
 
-  private procesarPayForms(event: any) {
-    event.paysForms.forEach((item: any) => {
-      this.paymentMethods()?.data.forEach((method: any) => {
-        if (method.code === item.code) {
-          this.configFactu.selectedPaymentMethod.set(method);
-        }
-      });
-    });
-  }
+  // private procesarPayForms(event: any) {
+  //   event.paysForms.forEach((item: any) => {
+  //     this.paymentMethods()?.data.forEach((method: any) => {
+  //       if (method.code === item.code) {
+  //         this.configFactu.selectedPaymentMethod.set(method);
+  //       }
+  //     });
+  //   });
+  // }
 
   public async procesoResumenPago(vouncher: any) {
     try {
@@ -187,6 +197,7 @@ export class ResumenPagoEnpresaComponent {
         next: (response) => {
           if (response.status === 'OK') {
             this.paymentMethods.set(response);
+            console.log(this.paymentMethods());
             this.ejecutarFormPago.set(true);
             resolve(); // Resolución exitosa
           } else {

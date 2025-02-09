@@ -7,9 +7,7 @@ import { ConfigFacturacionService } from '@/utils/services';
 import { CustomDatePipe, FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { EmpresaService } from '@/services/service-empresas';
 import {
-  CreateEstablecimientoComponent,
   CreateFileComponent,
-  DeleteEstablecimientoComponent,
   DeleteFileComponent,
   DeleteLogoComponent,
   InfoCardEmpresaComponent,
@@ -18,7 +16,6 @@ import {
   SequentialComponent,
   UpdateEmisorComponent,
   UpdateEmisorTributariaComponent,
-  UpdateEstablecimientoComponent,
   UpdateLogoComponent,
 } from './components';
 import { ListaProductoEmpresaComponent } from './components/lista-producto-empresa';
@@ -38,9 +35,6 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
     UpdateEmisorTributariaComponent,
     CreateFileComponent,
     DeleteFileComponent,
-    DeleteEstablecimientoComponent,
-    CreateEstablecimientoComponent,
-    UpdateEstablecimientoComponent,
     SequentialComponent,
     UpdateLogoComponent,
     DeleteLogoComponent,
@@ -57,7 +51,7 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'Proforma' >('clientes');
+  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'Proforma'>('clientes');
 
   public readonly loading = signal(false);
 
@@ -84,7 +78,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proforma'  ): void {
+  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'Proforma'): void {
     this.selectedTab.set(tab);
   }
 
@@ -96,7 +90,6 @@ export class ConfiguracionComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-
           this.emisorInfo.set(resp);
           this.idePersonaRol.set(resp.data.idePersonaRol);
         }
@@ -160,63 +153,6 @@ export class ConfiguracionComponent {
         data: {
           ...currentPersona.data,
           certificates: currentPersona.data.certificates.filter((item) => item.ide !== id),
-        },
-      };
-
-      this.emisorInfo.set(updatedPersona);
-    }
-  }
-
-  createEstable(infoEstablecimiento: any) {
-    const currentPersona = this.emisorInfo();
-
-    if (currentPersona) {
-      const updatedPersona = {
-        ...currentPersona,
-        data: {
-          ...currentPersona.data,
-          subsidiaries: [...currentPersona.data.subsidiaries, infoEstablecimiento],
-        },
-      };
-
-      this.emisorInfo.set(updatedPersona);
-    }
-  }
-
-  deleteEstable(id: number) {
-    const currentPersona = this.emisorInfo();
-
-    if (currentPersona) {
-      const updatedPersona = {
-        ...currentPersona,
-        data: {
-          ...currentPersona.data,
-          subsidiaries: currentPersona.data.subsidiaries.filter((item) => item.ideSubsidiary !== id),
-        },
-      };
-
-      this.emisorInfo.set(updatedPersona);
-    }
-  }
-
-  updateEstable(infoEstablecimiento: any) {
-    const currentPersona = this.emisorInfo();
-
-    if (currentPersona) {
-      const updatedPersona = {
-        ...currentPersona,
-        data: {
-          ...currentPersona.data,
-          subsidiaries: currentPersona.data.subsidiaries.map((item) => {
-            if (item.ideSubsidiary === infoEstablecimiento.ideSubsidiary) {
-              return {
-                ...item,
-                ...infoEstablecimiento,
-              };
-            }
-
-            return item;
-          }),
         },
       };
 

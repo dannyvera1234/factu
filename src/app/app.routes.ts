@@ -48,7 +48,10 @@ export const routes: Routes & {
         path: 'emision_empresas',
         loadChildren: () => import('./features-empresas/emision/routes'),
       },
-
+      {
+        path: 'establecimientos',
+        loadChildren: () => import('./features-empresas/establecimiento/routes'),
+      },
 
       {
         path: 'proveedores',

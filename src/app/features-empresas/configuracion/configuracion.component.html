@@ -137,52 +137,8 @@
                     </p>
                   </div>
 
-                  <hr class="my-2" />
-                  <div class="flex justify-between items-center">
-                    <button class="flex gap-2 items-center">
-                      <h3 class="text-black">Establecimiento</h3>
-                    </button>
 
-                    <button
-                      class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
-                      (click)="createEstablecimiento.open(); viewingRuc.set(byPersona)"
-                    >
-                      Agregar
-                    </button>
-                  </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 truncate">
-                    @for (item of byPersona.subsidiaries; track $index) {
-                      <div class="flex items-center gap-4 p-2 rounded-lg">
-                        <div class="bg-red-600 rounded-full size-8 flex items-center justify-center shrink-0">
-                          <img src="/assets/icon/company.svg" alt="Company" class="size-4" />
-                        </div>
-
-                        <div class="flex-1 overflow-hidden group relative">
-                          <p class="text-gray-700 truncate">{{ item.code }}</p>
-                          <p class="text-sm text-gray-500 truncate overflow-ellipsis whitespace-nowrap">
-                            {{ item.address }}
-                          </p>
-
-                        </div>
-
-                        <div class="flex gap-2 items-center">
-                          <button
-                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                            (click)="updateEstablecimiento.open(); viewingEstablecimiento.set(item)"
-                          >
-                            <img src="/assets/icon/edit.svg" class="w-5 sm:w-5 md:w-5" alt="Edit" />
-                          </button>
-                          <button
-                            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                            (click)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(item.ideSubsidiary)"
-                          >
-                            <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-5 md:w-4" alt="Delete" />
-                          </button>
-                        </div>
-                      </div>
-                    }
-                  </div>
                 </div>
               </div>
             </div>
@@ -562,49 +518,10 @@
   </div>
 </app-modal>
 
-<app-modal #createEstablecimiento>
-  @defer {
-    <div class="flex items-center justify-center">
-      <div class="bg-white w-full rounded-lg overflow-auto">
-        <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Agregar Establecimiento</h2>
-          <button (click)="createEstablecimiento.close()" class="shrink-0">
-            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
-          </button>
-        </header>
-        @if (viewingRuc(); as ruc) {
-          <section class="p-6">
-            <app-create-establecimiento
-              [ruc]="ruc"
-              (createEstablecimiento)="createEstablecimiento.close(); viewingInfo.set(null)"
-              (createEstablecimiento)="$event && createEstable($event)"
-            />
-          </section>
-        }
-      </div>
-    </div>
-  }
-</app-modal>
 
-<app-modal #deleteEstablecimiento>
-  <div class="h-screen w-full flex items-center justify-center">
-    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
-      <section class="p-4">
-        @defer {
-          @if (viewingIdeSubsidiary(); as ideRegister) {
-            <app-delete-establecimiento
-              (deleted)="deleteEstablecimiento.close()"
-              [ideRegister]="ideRegister"
-              (deleted)="$event && deleteEstable($event); viewingIdeSubsidiary.set(null)"
-            />
-          }
-        }
-      </section>
-    </div>
-  </div>
-</app-modal>
 
-<app-modal #updateEstablecimiento>
+
+<!-- <app-modal #updateEstablecimiento>
   @defer {
     <div class="flex items-center justify-center">
       <div class="bg-white w-full rounded-lg overflow-auto">
@@ -626,7 +543,7 @@
       </div>
     </div>
   }
-</app-modal>
+</app-modal> -->
 
 <app-modal #addSequential>
   <div class="flex items-center justify-center">

@@ -1,0 +1,171 @@
+<div class="p-5">
+  <div class="bg-white rounded-lg shadow p-4">
+    <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+      <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+        <!-- Input con espacio para la lupa -->
+        <div class="w-full relative md:max-w-[200px]">
+          <input
+            type="text"
+            placeholder="Buscar"
+            class="pl-4 pr-2 py-2 w-full border rounded"
+            [(ngModel)]="searchQuery"
+          />
+        </div>
+        <!-- Botón de búsqueda -->
+        <button
+          class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded flex items-center w-full md:w-auto justify-center"
+          (click)="onSearchClick()"
+        >
+          Buscar
+        </button>
+
+        <button
+          class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
+          (click)="createEstablecimiento.open()"
+        >
+          <div class="relative size-5 shrink-0 mr-2">
+            <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
+          </div>
+          Agregar
+        </button>
+      </div>
+    </nav>
+
+    <section>
+      <div class="relative overflow-x-auto mt-6">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="font-normal text-neutral-400 px-6 py-3">
+              <th class="px-4 py-3">Establecimiento</th>
+              <th class="px-4 py-3 text-center">Identificación</th>
+              <th class="px-4 py-3 text-center">Estado</th>
+              <th class="px-4 py-3 text-center">Telefono</th>
+              <th >Acción</th>
+            </tr>
+          </thead>
+          @if (loading()) {
+            <tbody>
+              <tr>
+                <td colspan="100%">
+                  <div class="text-center py-9">
+                    <div class="loader"></div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          } @else {
+            <tbody>
+              @if (subsidiaries() && subsidiaries()!.data!.listData.length > 0) {
+                @for (sub of subsidiaries()!.data!.listData; track $index) {
+                  <tr class="border-b hover:bg-gray-100 text-xs">
+                    <th scope="row" class="font-normal p-2 cursor-pointer" >
+                      <!-- [routerLink]="[sub.ideSubsidiaryEncrypted]" -->
+                      <div class="flex gap-4 items-center">
+                        <div
+                          class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
+                        >
+                          {{ sub.code }}
+                        </div>
+                        <div>
+                          <p class="font-bold">{{ sub.address }}</p>
+                          <div class="flex items-center gap-2"></div>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="px-4 py-3 text-center">
+                      {{ sub.email }}
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <span class="rounded-full px-2 py-1 inline-block bg-green-100 text-green-700 border-green-500">
+                        {{ sub.statusRecord }}
+                      </span>
+                    </td>
+
+                    <td class="px-4 py-3 text-center">
+                      {{ sub.cellPhone | formatPhone }}
+                    </td>
+
+                    <td >
+                      <div class="flex gap-1 group relative">
+                        <button
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          (click)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(sub.ideSubsidiary)"
+                        >
+                          <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                        </button>
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Eliminar
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="100%">
+                    <div
+                      class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                    >
+                      <p class="font-medium">Ningún cliente encontrado</p>
+                      <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          }
+        </table>
+      </div>
+
+      @defer {
+        <div class="mt-4">
+          @if (subsidiaries() && subsidiaries()!.data!.page.totalPages > 0) {
+            <app-pagination [paginationData]="subsidiaries()!.data!.page" (pageChange)="onPageChange($event)" />
+          }
+        </div>
+      }
+    </section>
+  </div>
+</div>
+
+<app-modal #createEstablecimiento>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w-xl rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Agregar Establecimiento</h2>
+          <button (click)="createEstablecimiento.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          </button>
+        </header>
+
+        <section class="p-6">
+          <app-create-establecimiento
+            (createEstablecimiento)="createEstablecimiento.close()"
+            (createEstablecimiento)="$event && createEstable($event)"
+          />
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+<app-modal #deleteEstablecimiento>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (viewingIdeSubsidiary(); as ideRegister) {
+            <app-delete-establecimiento
+              (deleted)="deleteEstablecimiento.close()"
+              [ideRegister]="ideRegister"
+              (deleted)="$event && deleteEstable($event); viewingIdeSubsidiary.set(null)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
