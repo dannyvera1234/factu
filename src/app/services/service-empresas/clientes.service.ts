@@ -53,5 +53,11 @@ export class ClientesService {
     });
   }
 
+  detailsCustomer(ideRegister: string): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, ideRegister);
 
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/retrieveCustomer`, {
+      body: payload,
+    });
+  }
 }

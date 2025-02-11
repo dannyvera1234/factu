@@ -4,3 +4,5 @@ export * from './emision';
 export * from './configuracion';
 export * from './establecimiento';
 export * from './details-establecimiento';
+export * from './clientes';
+export * from './details-cliente';

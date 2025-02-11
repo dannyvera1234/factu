@@ -196,4 +196,5 @@ export class ListaDocEmpresaComponent {
       this.selectedRow.set(rowIndex);
     }
   }
+
 }

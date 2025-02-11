@@ -52,6 +52,10 @@ export const routes: Routes & {
         path: 'establecimientos',
         loadChildren: () => import('./features-empresas/establecimiento/routes'),
       },
+      {
+        path: 'clientes_empresas',
+        loadChildren: () => import('./features-empresas/clientes/routes'),
+      },
 
       {
         path: 'proveedores',

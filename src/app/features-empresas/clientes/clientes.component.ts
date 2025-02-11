@@ -1,20 +1,18 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { of, mergeMap, finalize } from 'rxjs';
-import { ListClientes, GeneriResp } from '@/interfaces';
-import { ModalComponent } from '@/components';
-import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { NgOptimizedImage } from '@angular/common';
-import { ClientesService } from '@/services/service-empresas';
-import {
-  CreateClienteEmpresaComponent,
-  DeleteClienteEmpresaComponent,
-  UpdateClienteEmpresaComponent,
-} from './components';
-import { PaginationComponent } from '@/components/pagination';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { of, mergeMap, finalize } from 'rxjs';
+import { ModalComponent } from '@/components';
+import { PaginationComponent } from '@/components/pagination';
+import { ListClientes, GeneriResp } from '@/interfaces';
+import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
+import { ClientesService } from '../../services/service-empresas';
+
+import { RouterLink } from '@angular/router';
+import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent } from './components';
 
 @Component({
-  selector: 'app-lista-clientes-empresa',
+  selector: 'app-clientes',
   imports: [
     ModalComponent,
     FormatPhonePipe,
@@ -22,15 +20,15 @@ import { FormsModule } from '@angular/forms';
     NgOptimizedImage,
     CreateClienteEmpresaComponent,
     DeleteClienteEmpresaComponent,
-    UpdateClienteEmpresaComponent,
     PaginationComponent,
     FormsModule,
+    RouterLink,
   ],
-  templateUrl: './lista-clientes-empresa.component.html',
+  templateUrl: './clientes.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListaClientesEmpresaComponent {
+export class ClientesComponent {
   public readonly loading = signal(false);
 
   public readonly updateClient = signal<ListClientes | null>(null);
@@ -64,6 +62,7 @@ export class ListaClientesEmpresaComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           this.listClientes.set(resp);
         }
       });
@@ -85,19 +84,9 @@ export class ListaClientesEmpresaComponent {
   }
 
   createCliente(create: ListClientes): void {
-    const currentCliente = this.listClientes();
-
-    if (!currentCliente?.data?.listData) return;
-
-    const updatedCliente = {
-      ...currentCliente,
-      data: {
-        ...currentCliente.data,
-        listData: [...currentCliente.data.listData, create],
-      },
-    };
-
-    this.listClientes.set(updatedCliente);
+    if (create) {
+      this.getListClientes();
+    }
   }
 
   deleteCliente(ideCustomer: number): void {
@@ -116,21 +105,5 @@ export class ListaClientesEmpresaComponent {
     this.listClientes.set(updatedCliente);
   }
 
-  updateCliente(update: Partial<ListClientes>): void {
-    const currentCliente = this.listClientes();
 
-    if (!currentCliente?.data?.listData) return;
-
-    const updatedCliente = {
-      ...currentCliente,
-      data: {
-        ...currentCliente.data,
-        listData: currentCliente.data.listData.map((cliente: any) =>
-          cliente.ideCustomer === update.ideCustomer ? update : cliente,
-        ),
-      },
-    };
-
-    this.listClientes.set(updatedCliente);
-  }
 }
