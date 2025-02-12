@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, HostListener, Input, signal,  } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
 import { CustomPipe } from '@/pipes';
 import { ModalComponent } from '../../../../components';
 
@@ -8,7 +8,7 @@ import { ModalComponent } from '../../../../components';
   imports: [CurrencyPipe, NgClass, CustomPipe, NgOptimizedImage, ModalComponent],
   templateUrl: './historial-pago.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HistorialPagoComponent {
   @HostListener('document:click', ['$event'])
@@ -20,10 +20,13 @@ export class HistorialPagoComponent {
     }
   }
 
-  @Input({ required: true })  historialPago!: any;
+  @Input({ required: true }) loadingShow!: boolean;
+
+  @Input({ required: true }) historialPago!: any;
 
   public readonly selectedRow = signal<number | null>(null);
 
+  constructor() {}
 
   toggleMenu(ide: number) {
     if (this.selectedRow() === ide) {
@@ -32,5 +35,4 @@ export class HistorialPagoComponent {
       this.selectedRow.set(ide);
     }
   }
-
 }

@@ -151,14 +151,8 @@
           </div>
         </div>
         @if (showDetails() === item.ide) {
-          @if (loadingShow()) {
-            <div class="h-full min-h-36 flex justify-center items-center">
-              <div class="loader"></div>
-            </div>
-          } @else {
-            @defer {
-              <app-historial-pago [historialPago]="historialPago()" />
-            }
+          @defer {
+            <app-historial-pago [historialPago]="historialPago()" [loadingShow]="loadingShow()" />
           }
         }
       }

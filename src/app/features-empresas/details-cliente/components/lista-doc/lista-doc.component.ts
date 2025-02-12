@@ -71,6 +71,7 @@ export class ListaDocComponent {
     }
   }
 
+
   toggleMenu(rowIndex: number): void {
     this.selectedRow.set(this.selectedRow() === rowIndex ? null : rowIndex);
   }
