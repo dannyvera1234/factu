@@ -25,51 +25,94 @@
     <!-- Row 1 con efecto flotante -->
     @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
       @for (item of listInvoices()!.data!.listData; track $index) {
-        <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow">
+        <div class="flex items-center justify-between bg-white p-2 rounded-lg shadow">
           <div class="flex items-center space-x-3">
             <div class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0 bg-blue-400">
               <img src="assets/icon/file.svg" width="20" height="20" />
             </div>
             <div class="flex items-center gap-2">
               <div class="truncate">
-                <p class="text-sm font-medium text-gray-800">{{ item.electronicDesTypeDoc }}</p>
+                <p class="text-xs font-medium text-gray-800">{{ item.electronicDesTypeDoc }}</p>
                 <div class="flex items-center gap-2">
                   <div class="relative text-xs">
                     {{ item.emissionDate | custom }}
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- <span class="text-sm font-medium text-gray-800">Factura</span> -->
-            <!-- Status Indicators -->
-            <div class="flex gap-2">
-              <div
-                class="p-1 rounded-md flex items-center justify-center text-xs text-white"
-                [ngClass]="{
-                  'bg-red-400': item.saleType === 'Crédito',
-                  'bg-blue-400': item.saleType === 'Contado',
-                }"
-              >
-                {{ item.saleType }}
+              <div class="relative group inline-block">
+                <!-- Botón que muestra el tooltip -->
+                <button
+                  class="m-0"
+                  (mouseenter)="toggleTooltip(item.ide, true)"
+                  (mouseleave)="toggleTooltip(item.ide, false)"
+                >
+                  <img src="assets/icon/tooltip.svg" alt="Tooltip" />
+                </button>
+
+                <!-- Tooltip -->
+                @if (isTooltipVisible(item.ide)) {
+                  <div
+                    class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                    (mouseenter)="toggleTooltip(item.ide, true)"
+                    (mouseleave)="toggleTooltip(item.ide, false)"
+                  >
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-3">
+                      <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+                      <button
+                        class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                        (click)="toggleTooltip(item.ide, false)"
+                      >
+                        &times;
+                      </button>
+                    </div>
+
+                    <!-- Histories -->
+                    @if (historial(); as historial) {
+                      <ul class="space-y-2">
+                        @for (history of historial!.data; track $index) {
+                          <li
+                            class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
+                          >
+                            <div class="flex justify-between items-center text-gray-700">
+                              <span>{{ history.description }}</span>
+                            </div>
+                          </li>
+                        }
+                      </ul>
+                    } @else {
+                      <div class="h-full text-center flex justify-center items-center">
+                        <div class="loader"></div>
+                      </div>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
-            <div class="inline-flex items-center space-x-1 rounded bg-green-100 px-3 py-1">
+            <div class="inline-flex items-center space-x-1 rounded bg-red-100 px-3 py-1">
               <span class="text-xs">{{ item.total | currency }} </span>
             </div>
           </div>
 
           <div class="flex items-center justify-between space-x-3">
             <!-- Approval Status -->
-            @if (item.saleType !== 'Contado') {
-              <div
-                class="inline-flex items-center space-x-1 bg-green-100 text-green-700 border-green-500 rounded px-3 py-1"
-              >
-                <span class="text-xs font-medium">
-                  {{ item.paidCreditLettersCount + '/' + item.creditLettersCount + ' ' + 'Crédito' }}
-                </span>
-              </div>
-            }
+            <div
+              class="inline-flex items-center space-x-1 rounded px-3 py-1"
+              [ngClass]="{
+                'bg-green-100 text-green-700 border-green-500': item.saleType !== 'Contado',
+                'bg-blue-100 text-blue-700 border-blue-500': item.saleType === 'Contado',
+              }"
+            >
+              <span class="text-xs font-medium">
+                {{
+                  item.saleType !== 'Contado'
+                    ? item.paidCreditLettersCount + '/' + item.creditLettersCount + ' Crédito'
+                    : 'Contado'
+                }}
+              </span>
+            </div>
+
             <!-- Action Buttons -->
             <div class="flex items-center space-x-1">
               <button class="text-gray-400 hover:text-gray-600" (click)="toggleHistory(item.ide)">

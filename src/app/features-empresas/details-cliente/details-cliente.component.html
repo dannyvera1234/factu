@@ -75,25 +75,25 @@
             </div>
           </div>
         </div>
+            <!-- Sección Gráfica de Buró de Crédito -->
+          @defer {
+            <section class="bg-white p-4 rounded-lg shadow  ">
+              <app-buro-credito />
+            </section>
+          }
       </aside>
 
       <main class="flex flex-col gap-4 w-full">
         <div class="flex flex-col lg:flex-row gap-4">
           <!-- Sección Lista de Documentos -->
           @defer {
-            <section class="bg-white p-4 rounded-lg shadow flex-[8]">
-              <app-lista-doc  [idePersonaRol]="customer.idePersonaRol" />
-            </section>
-          }
-
-          <!-- Sección Gráfica de Buró de Crédito -->
-          @defer {
-            <section class="bg-white p-4 rounded-lg shadow flex-[2] h-[350px]">
-              <app-buro-credito />
+            <section class="bg-white p-6 rounded-lg shadow-lg flex-1">
+              <app-lista-doc [idePersonaRol]="customer.idePersonaRol" />
             </section>
           }
         </div>
       </main>
+
 
     </div>
   }

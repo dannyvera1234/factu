@@ -7,10 +7,11 @@ import { NotificationService } from '@/utils/services';
 import { PaginationComponent } from '@/components/pagination';
 import { CustomPipe } from '@/pipes';
 import { HistorialPagoComponent } from '../historial-pago';
+import { Modulos } from '@/utils/permissions';
 
 @Component({
   selector: 'app-lista-doc',
-  imports: [NgOptimizedImage, CurrencyPipe, NgClass, PaginationComponent,HistorialPagoComponent, CustomPipe],
+  imports: [NgOptimizedImage, CurrencyPipe, NgClass, PaginationComponent, HistorialPagoComponent, CustomPipe],
   templateUrl: './lista-doc.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +71,33 @@ export class ListaDocComponent {
         });
     }
   }
+  public readonly showTooltip = signal<{ [key: string]: boolean }>({});
+  private readonly requestedHistories = new Set<number>();
+  public readonly historial = signal<GeneriResp<any> | null>(null);
 
+  toggleTooltip(id: number, isVisible: boolean): void {
+    const currentState = this.showTooltip();
+
+    // Evitar actualizaciones innecesarias
+    if (currentState[id] === isVisible) return;
+
+    this.showTooltip.set({ ...currentState, [id]: isVisible });
+
+    if (isVisible && !this.requestedHistories.has(id)) {
+      this.requestedHistories.add(id);
+      this.docService.histories(id).subscribe((res) => {
+        if (res.status === 'OK') {
+          this.historial.set(res);
+        }
+      });
+    } else if (!isVisible) {
+      this.requestedHistories.delete(id); // Solo eliminar el ID actual
+    }
+  }
+
+  isTooltipVisible(id: number): boolean {
+    return !!this.showTooltip()[id];
+  }
 
   toggleMenu(rowIndex: number): void {
     this.selectedRow.set(this.selectedRow() === rowIndex ? null : rowIndex);
@@ -78,7 +105,7 @@ export class ListaDocComponent {
 
   invoiceCustomers(idePersonaRol: number, page: number): void {
     const paginaator = {
-      size: 5,
+      size: Modulos.PAGE_SIZE,
       page: page,
       search: this.onSearch,
     };
@@ -90,8 +117,22 @@ export class ListaDocComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
-          this.listInvoices.set(resp);
+          // Verificar que listData exista y sea un arreglo
+          if (Array.isArray(resp.data.listData)) {
+            const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
+              if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;
+              if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;
+              return 0; // Mantener el orden cuando ambos son iguales
+            });
+
+            this.listInvoices.set({
+              ...resp,
+              data: {
+                ...resp.data,
+                listData: sortedInvoices,
+              },
+            });
+          }
         }
       });
   }

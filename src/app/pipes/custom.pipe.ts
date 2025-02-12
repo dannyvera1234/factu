@@ -13,15 +13,13 @@ export class CustomPipe implements PipeTransform {
   transform(value: string): string {
     if (!value) return '';
 
-    // Tomar solo la parte de la fecha antes del espacio o coma
-    const datePart = value.split(/[ ,]/)[0];
-
-    const parts = datePart.split('/');
+    // Verificar que el formato sea YYYY-MM-DD
+    const parts = value.split('-');
     if (parts.length !== 3) return value; // Si el formato no es correcto, devolver el valor original
 
-    const day = parts[0];
+    const year = parts[0]; // Año completo (2025)
     const monthIndex = parseInt(parts[1], 10) - 1; // Convertir el mes a índice (0-11)
-    const year = `20${parts[2]}`; // Asumimos que el año está en formato corto (25 → 2025)
+    const day = parseInt(parts[2], 10); // Día sin ceros iniciales
 
     return `${day} ${this.months[monthIndex]} de ${year}`;
   }
