@@ -198,4 +198,11 @@ export class DocumentosService {
     });
   }
 
+  histories(id: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/invoices/histories`, {
+      body: payload,
+    });
+  }
+
 }

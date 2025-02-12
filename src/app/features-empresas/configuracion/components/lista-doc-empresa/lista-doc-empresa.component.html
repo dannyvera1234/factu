@@ -57,15 +57,9 @@
         </tr>
       </thead>
       @if (loading()) {
-        <tbody>
-          <tr>
-            <td colspan="100%">
-              <div class="text-center py-9">
-                <div class="loader"></div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <div class="h-full text-center flex justify-center items-center">
+          <div class="loader"></div>
+        </div>
       } @else {
         <tbody>
           @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
@@ -120,17 +114,23 @@
                             </div>
 
                             <!-- Histories -->
-                            <ul class="space-y-2">
-                              @for (history of invoice.histories; track $index) {
-                                <li
-                                  class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
-                                >
-                                  <div class="flex justify-between items-center text-gray-700">
-                                    <span>{{ history.description }}</span>
-                                  </div>
-                                </li>
-                              }
-                            </ul>
+                            @if (historial();as historial) {
+                              <ul class="space-y-2">
+                                @for (history of historial!.data; track $index) {
+                                  <li
+                                    class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
+                                  >
+                                    <div class="flex justify-between items-center text-gray-700">
+                                      <span>{{ history.description }}</span>
+                                    </div>
+                                  </li>
+                                }
+                              </ul>
+                            } @else {
+                              <div class="h-full text-center flex justify-center items-center">
+                                <div class="loader"></div>
+                              </div>
+                            }
                           </div>
                         }
                       </div>
@@ -239,20 +239,32 @@
                             Pendiente
                           </div>
                         </div>
-                      } @case ('RETENIDA') {
+                      }
+                      @case ('RETENIDA') {
                         <div class="relative group">
-                          <svg class="w-6 h-6 text-gray-800 dark:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z" clip-rule="evenodd"/>
+                          <svg
+                            class="w-6 h-6 text-gray-800 dark:text-red-500"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z"
+                              clip-rule="evenodd"
+                            />
                           </svg>
 
                           <!-- Tooltip -->
                           <div
-                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           >
                             Retenida
                           </div>
                         </div>
-
                       }
                     }
                   </div>
@@ -376,7 +388,11 @@
 
                 <!--  -->
                 <td class="text-center">
-                  @if (invoice.authorizationStatus !== 'NO AUTORIZADO' && invoice.statusProcess !== 'EN PROCESO' && invoice.statusProcess !== 'RETENIDA' && invoice.receptionStatus !== 'DEVUELTA') {
+                  @if (
+                    invoice.authorizationStatus !== 'NO AUTORIZADO' &&
+                    !['EN PROCESO', 'RETENIDA', 'PENDIENTE'].includes(invoice.statusProcess) &&
+                    invoice.receptionStatus !== 'DEVUELTA'
+                  ) {
                     <div class="flex justify-center group relative">
                       <!-- Botón de configuración, visible solo en pantallas grandes -->
                       <button

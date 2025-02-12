@@ -71,6 +71,9 @@ export class ListaDocEmpresaComponent {
 
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
 
+  public readonly historial = signal<GeneriResp<any> | null>(null);
+
+  private readonly requestedHistories = new Set<number>();
   constructor(
     private readonly docService: DocumentosService,
     public readonly config: ConfigFacturacionService,
@@ -101,9 +104,25 @@ export class ListaDocEmpresaComponent {
     this.listInvoices.set(newInvoices);
   }
 
+
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
+
+    // Evitar actualizaciones innecesarias
+    if (currentState[id] === isVisible) return;
+
     this.showTooltip.set({ ...currentState, [id]: isVisible });
+
+    // Solo llamar al servicio si se muestra el tooltip y no se ha solicitado antes
+    if (isVisible && !this.requestedHistories.has(id)) {
+      this.requestedHistories.add(id);
+
+      this.docService.histories(id).subscribe((res) => {
+        if (res.status === 'OK') {
+          this.historial.set(res);
+        }
+      });
+    }
   }
 
   isTooltipVisible(id: number): boolean {
@@ -134,6 +153,7 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });
@@ -196,5 +216,4 @@ export class ListaDocEmpresaComponent {
       this.selectedRow.set(rowIndex);
     }
   }
-
 }

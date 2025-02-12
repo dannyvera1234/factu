@@ -60,4 +60,24 @@ export class ClientesService {
       body: payload,
     });
   }
+
+  docCustomer(customerIde: number, paginator: any): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      customerIde,
+      paginator,
+    });
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos`, {
+      body: payload,
+    });
+  }
+
+  historialPago(id: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      invoiceIde: id,
+    });
+    console.log(payload);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos/historialPago`, {
+      body: payload,
+    });
+  }
 }
