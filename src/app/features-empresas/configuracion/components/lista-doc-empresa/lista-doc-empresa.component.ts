@@ -104,7 +104,6 @@ export class ListaDocEmpresaComponent {
     this.listInvoices.set(newInvoices);
   }
 
-
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
 
@@ -113,24 +112,27 @@ export class ListaDocEmpresaComponent {
 
     this.showTooltip.set({ ...currentState, [id]: isVisible });
 
-    // Solo llamar al servicio si se muestra el tooltip y no se ha solicitado antes
     if (isVisible && !this.requestedHistories.has(id)) {
       this.requestedHistories.add(id);
-
       this.docService.histories(id).subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
         }
       });
+    } else if (!isVisible) {
+      this.requestedHistories.delete(id); // Solo eliminar el ID actual
     }
   }
+
 
   isTooltipVisible(id: number): boolean {
     return !!this.showTooltip()[id];
   }
 
   onSyncClick() {
+    this.requestedHistories.clear();
     this.getListInvoices();
+
     this.detailsService.info.set({
       personaRolIde: 1,
     });
