@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, Input, signal } from '@angular/core';
 import { ClientesService, DocumentosService } from '@/services/service-empresas';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
@@ -8,10 +8,19 @@ import { PaginationComponent } from '@/components/pagination';
 import { CustomPipe } from '@/pipes';
 import { HistorialPagoComponent } from '../historial-pago';
 import { Modulos } from '@/utils/permissions';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lista-doc',
-  imports: [NgOptimizedImage, CurrencyPipe, NgClass, PaginationComponent, HistorialPagoComponent, CustomPipe],
+  imports: [
+    NgOptimizedImage,
+    CurrencyPipe,
+    NgClass,
+    PaginationComponent,
+    HistorialPagoComponent,
+    CustomPipe,
+    FormsModule,
+  ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,9 +37,13 @@ export class ListaDocComponent {
 
   @Input({ required: true }) set idePersonaRol(value: number) {
     if (value === null) return;
-    this.invoiceCustomers(value, 0);
+    this.invoiceCustomers(value, 0, this.searchQuery);
     this.idePersona.set(value);
   }
+
+  public readonly maxDate = computed(() => {
+    return new Date().toISOString().split('T')[0]; // Fecha actual si no hay fecha de inicio
+  });
 
   private readonly idePersona = signal<number | null>(null);
   public readonly showDetails = signal<number | null>(null);
@@ -43,7 +56,7 @@ export class ListaDocComponent {
   private readonly requestedHistories = new Set<number>();
   public readonly historial = signal<GeneriResp<any> | null>(null);
 
-  onSearch = '';
+  searchQuery = '';
 
   constructor(
     private readonly clienteService: ClientesService,
@@ -95,7 +108,7 @@ export class ListaDocComponent {
   }
   updateletterPay(item: any) {
     if (!item) return;
-    this.invoiceCustomers(this.idePersona()!, 0);
+    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
   }
 
   isTooltipVisible(id: number): boolean {
@@ -106,16 +119,19 @@ export class ListaDocComponent {
     this.selectedRow.set(this.selectedRow() === rowIndex ? null : rowIndex);
   }
 
-  invoiceCustomers(idePersonaRol: number, page: number): void {
-    const paginaator = {
+  onSearchClick() {
+    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
+  }
+
+  invoiceCustomers(idePersonaRol: number, page: number, searchTerm: string): void {
+    const paginator = {
       size: Modulos.PAGE_SIZE,
       page: page,
-      search: this.onSearch,
+      search: searchTerm,
     };
-
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.clienteService.docCustomer(idePersonaRol, paginaator)),
+        mergeMap(() => this.clienteService.docCustomer(idePersonaRol, paginator)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
@@ -148,7 +164,7 @@ export class ListaDocComponent {
       pagination.hasNext = newPage < pagination.totalPages;
       pagination.hasPrevious = newPage > 1;
 
-      this.invoiceCustomers(this.idePersona()!, newPage);
+      this.invoiceCustomers(this.idePersona()!, newPage, this.searchQuery);
       // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
     }
   }
