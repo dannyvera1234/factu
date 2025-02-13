@@ -17,6 +17,7 @@ import { montoTotalValidator } from '@/utils/validators';
 export class UpdatePagoComponent {
   @Input({ required: true }) set total(value: number) {
     this._total = value;
+    this.form.controls.paymentList.controls.forEach((control) => control.controls.paidAmount.setValue(value));
     this.form.controls.paymentList.setValidators(montoTotalValidator(value));
   }
 
