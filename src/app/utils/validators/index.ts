@@ -7,3 +7,4 @@ export * from './ageValidator.validator';
 export * from './app-document.validator';
 export * from './validar-cedula.validator';
 export * from './validator-ruc.validator';
+export * from './montoMaximo.validator';

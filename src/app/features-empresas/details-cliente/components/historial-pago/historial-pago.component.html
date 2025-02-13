@@ -9,49 +9,73 @@
         <h2 class="text-sm font-medium text-gray-800">Historial de Pagos</h2>
       </div>
 
-      <div class="space-y-2 w-full text-xs ">
+      <div class="space-y-2 w-full text-xs">
         @for (item of historialPago!.data; track $index) {
           <div class="flex items-center justify-between p-1 bg-gray-50 rounded-lg">
             <div class="flex items-center space-x-2">
-              <input type="checkbox" class="h-4 w-4" />
+              @switch (item.paymentStatus) {
+                @case ('PAGADO') {
+                  <img src="assets/icon/pagado.svg" alt="" />
+                }
+                @case ('PENDIENTE') {
+                  <img src="assets/icon/pendiente.svg" alt="" />
+                }
+                @case ('ATRAZADO') {
+                  <img src="assets/icon/atrado.svg" alt="" />
+                }
+              }
+
               <span class="font-medium text-gray-800">{{ item.paymentDate | custom }}</span>
-              <div class="inline-flex items-center space-x-1 rounded px-3 py-1"
-                   [ngClass]="{
-                     'bg-green-100 text-green-700 border-green-500': item.paymentStatus === 'PAGADO',
-                     'bg-red-100 text-red-700 border-red-500': item.paymentStatus === 'ATRAZADO',
-                     'bg-orange-100 text-orange-700 border-orange-500': item.paymentStatus === 'PENDIENTE',
-                   }">
+              <div
+                class="inline-flex items-center space-x-1 rounded px-3 py-1"
+                [ngClass]="{
+                  'bg-green-100 text-green-700 border-green-500': item.paymentStatus === 'PAGADO',
+                  'bg-red-100 text-red-700 border-red-500': item.paymentStatus === 'ATRAZADO',
+                  'bg-orange-100 text-orange-700 border-orange-500': item.paymentStatus === 'PENDIENTE',
+                }"
+              >
                 <span class="lowercase">{{ item.paymentStatus }}</span>
               </div>
             </div>
 
             <div class="flex items-center space-x-2">
               <span class="text-gray-800"> {{ item.amountToPay | currency }} </span>
-              <div>
-                <button (click)="infoCredito.open()">
-                  <img src="assets/icon/historial.svg" alt="" />
-                </button>
-              </div>
+              @if (item.paymentStatus !== 'PAGADO') {
+                <div>
+                  <button (click)="infoCredito.open(); updatePago.set(item)">
+                    <img src="assets/icon/historial.svg" alt="" />
+                  </button>
+                </div>
+              }
               <div class="group relative text-xs">
                 <button (click)="toggleMenu(item.ide)">
-                  <svg class="w-6 h-6"
-                       aria-hidden="true"
-                       xmlns="http://www.w3.org/2000/svg"
-                       width="104"
-                       height="104"
-                       fill="none"
-                       viewBox="0 0 24 24">
-                    <path stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-width="2"
-                          d="M12 6h.01M12 12h.01M12 18h.01" />
+                  <svg
+                    class="w-6 h-6"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="104"
+                    height="104"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-width="2"
+                      d="M12 6h.01M12 12h.01M12 18h.01"
+                    />
                   </svg>
                 </button>
 
                 @if (selectedRow() === item.ide) {
-                  <div class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10">
+                  <div
+                    class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10"
+                  >
                     <ul>
-                      <a target="_blank" class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer">
+                      <a
+                        target="_blank"
+                        class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
+                      >
                         <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
                         Descargar
                       </a>
@@ -68,22 +92,18 @@
           </div>
         }
       </div>
-
-      <div class="flex justify-end w-full mt-4">
-        <button class="text-white text-sm bg-secondary shrink-0 flex font-semibold px-3 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700">
-          Registrar
-        </button>
-      </div>
     </div>
   } @else {
     <div class="text-center py-4 max-w-2xl mx-auto">
       <div class="bg-slate-50 py-4 mb-5 rounded-xl">
-        <img ngSrc="assets/icon/no-application-found.svg"
-             alt="Nothing found"
-             width="150"
-             height="150"
-             priority
-             class="mx-auto" />
+        <img
+          ngSrc="assets/icon/no-application-found.svg"
+          alt="Nothing found"
+          width="150"
+          height="150"
+          priority
+          class="mx-auto"
+        />
       </div>
       <h3 class="text-2xl font-bold">No tiene crédito registrado</h3>
       <p class="text-balance">No se encontraron créditos registrados en esta factura.</p>
@@ -91,25 +111,25 @@
   }
 }
 
-
 <app-modal #infoCredito>
   @defer {
     <div class="flex items-center justify-center">
-      <div class="bg-white w-full rounded-lg overflow-auto">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto shadow-lg">
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Registro del Crédito</h2>
+          <h2 class="font-bold text-lg truncate">Registre los detalles de sus pagos</h2>
           <button (click)="infoCredito.close()" class="shrink-0">
             <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
         </header>
-        <section class="p-6">
-          <!-- @if (updateClient(); as update) {
-            <app-update-cliente-empresa
-              [updatePersona]="update"
-              (created)="editClient.close(); updateClient.set(null)"
-              (created)="$event && updateCliente($event)"
+        <section class="p-4">
+          @if (updatePago(); as update) {
+            <app-update-pago
+              [total]="update.amountToPay"
+              [letterPayIde]="update.ide"
+              (created)="infoCredito.close(); updatePago.set(null)"
+              (created)="$event && updateLetterPay($event)"
             />
-          } -->
+          }
         </section>
       </div>
     </div>

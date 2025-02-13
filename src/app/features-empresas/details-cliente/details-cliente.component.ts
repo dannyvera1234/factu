@@ -6,10 +6,11 @@ import { NgClass } from '@angular/common';
 import {  FormatPhonePipe, TextInitialsPipe } from '../../pipes';
 import { ModalComponent } from '../../components';
 import { BuroCreditoComponent, ListaDocComponent, UpdateClienteEmpresaComponent } from './components';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-details-cliente',
-  imports: [NgClass, FormatPhonePipe, ModalComponent, TextInitialsPipe, UpdateClienteEmpresaComponent, BuroCreditoComponent,ListaDocComponent],
+  imports: [NgClass, FormatPhonePipe, ModalComponent, TextInitialsPipe, UpdateClienteEmpresaComponent, BuroCreditoComponent,ListaDocComponent, RouterLink],
   templateUrl: './details-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

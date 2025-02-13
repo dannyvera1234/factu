@@ -41,28 +41,21 @@
               </div>
               <div class="relative group inline-block">
                 <!-- Botón que muestra el tooltip -->
-                <button
-                  class="m-0"
-                  (mouseenter)="toggleTooltip(item.ide, true)"
-                  (mouseleave)="toggleTooltip(item.ide, false)"
-                >
+                <button class="m-0" (click)="toggleTooltip(item.ide, true)">
                   <img src="assets/icon/tooltip.svg" alt="Tooltip" />
                 </button>
 
                 <!-- Tooltip -->
                 @if (isTooltipVisible(item.ide)) {
                   <div
-                    class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                    class="absolute z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                     (mouseenter)="toggleTooltip(item.ide, true)"
                     (mouseleave)="toggleTooltip(item.ide, false)"
                   >
                     <!-- Header -->
                     <div class="flex justify-between items-center mb-3">
                       <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                      <button
-                        class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                        (click)="toggleTooltip(item.ide, false)"
-                      >
+                      <button class="text-gray-400 hover:text-gray-600" (click)="toggleTooltip(item.ide, false)">
                         &times;
                       </button>
                     </div>
@@ -89,22 +82,23 @@
                 }
               </div>
             </div>
+            <div class="h-6 border-l border-neutral-300 mx-4"></div>
 
-            <div class="inline-flex items-center space-x-1 rounded bg-red-100 px-3 py-1">
-              <span class="text-xs">{{ item.total | currency }} </span>
+            <div class="flex items-center space-x-2 bg-gray-100 border border-slate-400 rounded-md px-3 py-0.5">
+              <span class="text-xs text-slate-600 font-medium">{{ item.total | currency }}</span>
             </div>
           </div>
 
           <div class="flex items-center justify-between space-x-3">
             <!-- Approval Status -->
             <div
-              class="inline-flex items-center space-x-1 rounded px-3 py-1"
+              class="flex items-center space-x-2 rounded-md px-3 py-0.5"
               [ngClass]="{
-                'bg-green-100 text-green-700 border-green-500': item.saleType !== 'Contado',
+                ' text-green-700 bg-green-50 border border-green-500': item.saleType !== 'Contado',
                 'bg-blue-100 text-blue-700 border-blue-500': item.saleType === 'Contado',
               }"
             >
-              <span class="text-xs font-medium">
+              <span class="text-xs px-2 py-0.5 rounded-full">
                 {{
                   item.saleType !== 'Contado'
                     ? item.paidCreditLettersCount + '/' + item.creditLettersCount + ' Crédito'
@@ -115,13 +109,17 @@
 
             <!-- Action Buttons -->
             <div class="flex items-center space-x-1">
-              <button class="text-gray-400 hover:text-gray-600" (click)="toggleHistory(item.ide)">
-                <img
-                  alt="tap"
-                  class="w-6 h-6 object-contain"
-                  [src]="showDetails() === item.ide ? 'assets/icon/tap.svg' : 'assets/icon/add-right.svg'"
-                />
-              </button>
+              @if (item.saleType !== 'Contado') {
+                @defer {
+                  <button class="text-gray-400 hover:text-gray-600" (click)="toggleHistory(item.ide)">
+                    <img
+                      alt="tap"
+                      class="w-5 h-5 object-contain"
+                      [src]="showDetails() === item.ide ? 'assets/icon/tap-right.svg' : 'assets/icon/add-right.svg'"
+                    />
+                  </button>
+                }
+              }
 
               <div class="group relative text-xs">
                 <button class="top-2 right-2 px-2 py-2 text-gray-600 hover:text-black" (click)="toggleMenu($index)">
@@ -195,7 +193,11 @@
         </div>
         @if (showDetails() === item.ide) {
           @defer {
-            <app-historial-pago [historialPago]="historialPago()" [loadingShow]="loadingShow()" />
+            <app-historial-pago
+              [historialPago]="historialPago()"
+              [loadingShow]="loadingShow()"
+              (created)="updateletterPay($event); showDetails.set(null)"
+            />
           }
         }
       }

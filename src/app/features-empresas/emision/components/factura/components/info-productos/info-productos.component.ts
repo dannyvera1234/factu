@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input, signal, ViewChild } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from '@/components';
@@ -36,6 +36,13 @@ export class InfoProductosComponent {
     }
   }
 
+  public readonly calculateTotal = computed(() => {
+    return this.config
+      .detailProducts()
+      ?.map((product) => ({ ...product }))
+      .reduce((acc, product) => acc + product.valorTotal, 0);
+  });
+
   Math = Math;
 
   public readonly idePersona = signal<number | null>(null);
@@ -43,7 +50,7 @@ export class InfoProductosComponent {
   public readonly paymentMethods = signal<any | null>(null);
 
   constructor(
-    private config: CreateFacturaEmpresaService,
+    public config: CreateFacturaEmpresaService,
     private readonly notification: NotificationService,
   ) {}
 
@@ -80,9 +87,11 @@ export class InfoProductosComponent {
         return [...currentProducts, { ...product }];
       }
     });
+
     this.config.detailProducts.set([...this.products()]);
     this.config.products.set([...this.products()]);
   }
+
   removeProduct(id: number) {
     this.products.update((currentProducts) => currentProducts.filter((product) => product.ide !== id));
     this.config.detailProducts.set([...this.products()]);

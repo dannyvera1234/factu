@@ -76,8 +76,26 @@ export class ClientesService {
       invoiceIde: id,
     });
     console.log(payload);
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos/historialPago`, {
-      body: payload,
+    return this._http.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos/historialPago`,
+      {
+        body: payload,
+      },
+    );
+  }
+
+  payLetter(data: Partial<any>, files: File | null): Observable<any> {
+    const form = new FormData();
+
+    if (files) {
+      form.append('voucher', files);
+    }
+
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
+    form.append('reqDTO', JSON.stringify(payload));
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/payLetter`, {
+      body: form,
     });
   }
 }

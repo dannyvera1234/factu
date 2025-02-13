@@ -61,6 +61,10 @@ const DEFAULT_ERRORS = {
   CONTACT_ALREADY_EXISTS: () => 'This contact is already registered',
 
   COMPANY_ALREADY_EXISTS: () => 'This company is already registered',
+
+  montoInvalido: () => 'El monto es inválido, tiene que se igual al total.',
+
+  duplicatePaymentMethod: () => 'El metodo de pago ya se encuentra registrado.',
 };
 
 @Injectable({

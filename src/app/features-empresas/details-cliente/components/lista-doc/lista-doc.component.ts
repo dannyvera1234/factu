@@ -33,18 +33,15 @@ export class ListaDocComponent {
   }
 
   private readonly idePersona = signal<number | null>(null);
-
   public readonly showDetails = signal<number | null>(null);
-
   public readonly selectedRow = signal<number | null>(null);
-
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
-
   public readonly historialPago = signal<GeneriResp<any> | null>(null);
-
   public readonly loading = signal(false);
-
   public readonly loadingShow = signal(false);
+  public readonly showTooltip = signal<{ [key: string]: boolean }>({});
+  private readonly requestedHistories = new Set<number>();
+  public readonly historial = signal<GeneriResp<any> | null>(null);
 
   onSearch = '';
 
@@ -54,15 +51,40 @@ export class ListaDocComponent {
     private readonly notification: NotificationService,
   ) {}
 
+  toggleTooltip(id: number, isVisible: boolean): void {
+    const currentState = this.showTooltip();
+
+    // Solo actualizar si el estado cambia
+    if (currentState[id] === isVisible) return;
+
+    // Cierra todos los tooltips excepto el actual
+    this.showTooltip.set(isVisible ? { [id]: true } : {});
+
+    if (isVisible && !this.requestedHistories.has(id)) {
+      this.requestedHistories.add(id);
+      this.docService.histories(id).subscribe((res) => {
+        if (res.status === 'OK') {
+          this.historial.set(res);
+          console.log(res);
+        }
+      });
+    }
+  }
+
   toggleHistory(ide: number) {
-    if (this.showDetails() === ide) {
+    if (this.loadingShow()) return; // Evita ejecutar si ya está cargando
+
+    const currentId = this.showDetails();
+
+    if (currentId === ide) {
       this.showDetails.set(null);
     } else {
-      of(this.loadingShow.set(true), this.showDetails.set(ide))
-        .pipe(
-          mergeMap(() => this.clienteService.historialPago(ide)),
-          finalize(() => this.loadingShow.set(false)),
-        )
+      this.loadingShow.set(true);
+      this.showDetails.set(ide);
+
+      this.clienteService
+        .historialPago(ide)
+        .pipe(finalize(() => this.loadingShow.set(false)))
         .subscribe((resp) => {
           if (resp.status === 'OK') {
             this.historialPago.set(resp);
@@ -71,28 +93,9 @@ export class ListaDocComponent {
         });
     }
   }
-  public readonly showTooltip = signal<{ [key: string]: boolean }>({});
-  private readonly requestedHistories = new Set<number>();
-  public readonly historial = signal<GeneriResp<any> | null>(null);
-
-  toggleTooltip(id: number, isVisible: boolean): void {
-    const currentState = this.showTooltip();
-
-    // Evitar actualizaciones innecesarias
-    if (currentState[id] === isVisible) return;
-
-    this.showTooltip.set({ ...currentState, [id]: isVisible });
-
-    if (isVisible && !this.requestedHistories.has(id)) {
-      this.requestedHistories.add(id);
-      this.docService.histories(id).subscribe((res) => {
-        if (res.status === 'OK') {
-          this.historial.set(res);
-        }
-      });
-    } else if (!isVisible) {
-      this.requestedHistories.delete(id); // Solo eliminar el ID actual
-    }
+  updateletterPay(item: any) {
+    if (!item) return;
+    this.invoiceCustomers(this.idePersona()!, 0);
   }
 
   isTooltipVisible(id: number): boolean {
@@ -118,21 +121,19 @@ export class ListaDocComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           // Verificar que listData exista y sea un arreglo
-          if (Array.isArray(resp.data.listData)) {
-            const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
-              if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;
-              if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;
-              return 0; // Mantener el orden cuando ambos son iguales
-            });
-
-            this.listInvoices.set({
-              ...resp,
-              data: {
-                ...resp.data,
-                listData: sortedInvoices,
-              },
-            });
-          }
+          const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
+            if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;
+            if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;
+            return 0; // Mantener el orden cuando ambos son iguales
+          });
+          console.log(sortedInvoices);
+          this.listInvoices.set({
+            ...resp,
+            data: {
+              ...resp.data,
+              listData: sortedInvoices,
+            },
+          });
         }
       });
   }

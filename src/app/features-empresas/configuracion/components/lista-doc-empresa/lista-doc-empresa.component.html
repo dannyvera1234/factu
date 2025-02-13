@@ -87,34 +87,27 @@
                       <!-- Tooltip Section -->
                       <div class="relative group inline-block">
                         <!-- Botón que muestra el tooltip -->
-                        <button
-                          class="m-0"
-                          (mouseenter)="toggleTooltip(invoice.ide, true)"
-                          (mouseleave)="toggleTooltip(invoice.ide, false)"
-                        >
+                        <button class="m-0" (click)="toggleTooltip(invoice.ide, true)">
                           <img src="assets/icon/tooltip.svg" alt="Tooltip" />
                         </button>
 
                         <!-- Tooltip -->
                         @if (isTooltipVisible(invoice.ide)) {
                           <div
-                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            class="absolute z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                             (mouseenter)="toggleTooltip(invoice.ide, true)"
                             (mouseleave)="toggleTooltip(invoice.ide, false)"
                           >
                             <!-- Header -->
                             <div class="flex justify-between items-center mb-3">
                               <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                              <button
-                                class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                                (click)="toggleTooltip(invoice.ide, false)"
-                              >
+                              <button class="text-gray-400 hover:text-gray-600" (click)="toggleTooltip(invoice.ide, false)">
                                 &times;
                               </button>
                             </div>
 
                             <!-- Histories -->
-                            @if (historial();as historial) {
+                            @if (historial(); as historial) {
                               <ul class="space-y-2">
                                 @for (history of historial!.data; track $index) {
                                   <li

@@ -107,23 +107,22 @@ export class ListaDocEmpresaComponent {
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
 
-    // Evitar actualizaciones innecesarias
+    // Solo actualizar si el estado cambia
     if (currentState[id] === isVisible) return;
 
-    this.showTooltip.set({ ...currentState, [id]: isVisible });
+    // Cierra todos los tooltips excepto el actual
+    this.showTooltip.set(isVisible ? { [id]: true } : {});
 
     if (isVisible && !this.requestedHistories.has(id)) {
       this.requestedHistories.add(id);
       this.docService.histories(id).subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
+          console.log(res);
         }
       });
-    } else if (!isVisible) {
-      this.requestedHistories.delete(id); // Solo eliminar el ID actual
     }
   }
-
 
   isTooltipVisible(id: number): boolean {
     return !!this.showTooltip()[id];

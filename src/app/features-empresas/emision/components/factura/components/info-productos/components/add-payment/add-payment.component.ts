@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { GeneriResp } from '@/interfaces';
 import { AccountingControlSystemService, NotificationService } from '@/utils/services';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,6 +11,9 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddPaymentComponent {
+  @Input({ required: true }) set total(value: any) {
+    this.form.patchValue({ valor: value });
+  }
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);
 
   public readonly loading = signal(false);
@@ -35,8 +38,8 @@ export class AddPaymentComponent {
 
   form = this._fb.group({
     metodoPago: ['', [Validators.required]],
-    plazo: ['0',[Validators.required]],
-    valor: ['00.00', [Validators.required]],
+    plazo: ['0', [Validators.required]],
+    valor: ['', [Validators.required]],
     tiempo: ['dias', [Validators.required]],
   });
 
@@ -70,7 +73,7 @@ export class AddPaymentComponent {
     this.addPay.emit(this.form.value);
 
     this.form.reset({
-      valor: '00.00',
+      valor: this.total,
       metodoPago: '',
       plazo: '0',
       tiempo: 'dias',

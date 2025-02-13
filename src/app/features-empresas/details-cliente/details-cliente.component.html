@@ -7,6 +7,21 @@
     <div class="flex flex-col lg:flex-row gap-4 p-4">
       <aside class="w-full lg:w-1/4 flex flex-col gap-4">
         <div class="bg-white rounded-lg shadow p-4 py-6">
+          <div class="flex items-center">
+            <a routerLink="/sistema_contable_empresa/clientes_empresas" class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-5 h-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              <span class="text-sm">Atrás</span>
+            </a>
+          </div>
+
           <div
             class="relative group bg-blue-950 text-white rounded-lg size-20 flex items-center justify-center mb-2 mx-auto text-2xl"
           >
@@ -59,7 +74,7 @@
 
                   <div class="mb-2">
                     <h4>Correo</h4>
-                    <p class="text-neutral-500 mb-2">
+                    <p class="text-neutral-500 mb-2 truncate">
                       {{ customer.email }}
                     </p>
                   </div>
@@ -75,12 +90,12 @@
             </div>
           </div>
         </div>
-            <!-- Sección Gráfica de Buró de Crédito -->
-          @defer {
-            <section class="bg-white p-4 rounded-lg shadow  ">
-              <app-buro-credito />
-            </section>
-          }
+        <!-- Sección Gráfica de Buró de Crédito -->
+        @defer {
+          <section class="bg-white p-4 rounded-lg shadow">
+            <app-buro-credito />
+          </section>
+        }
       </aside>
 
       <main class="flex flex-col gap-4 w-full">
@@ -93,8 +108,6 @@
           }
         </div>
       </main>
-
-
     </div>
   }
 }

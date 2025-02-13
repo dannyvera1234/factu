@@ -10,12 +10,17 @@
     Agregar Producto
   </button>
   <!-- Botón para añadir forma de pago -->
-  <button
-    (click)="payment.open()"
-    class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg border bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 w-full md:w-auto"
-  >
-    + Añadir forma de pago
-  </button>
+
+  @if (products().length > 0) {
+    @defer {
+      <button
+        (click)="payment.open()"
+        class="flex items-center px-4 py-2 text-sm font-semibold rounded-lg border bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 w-full md:w-auto"
+      >
+        + Añadir forma de pago
+      </button>
+    }
+  }
 </div>
 
 <div class="border rounded-lg overflow-x-auto max-h-[250px]">
@@ -149,7 +154,6 @@
       </tbody>
     </table>
   </div>
-
 }
 
 <app-modal #addProduct>
@@ -196,7 +200,10 @@
         </button>
       </header>
       <section class="p-4">
-        <app-add-payment (addPay)="payment.close()" (addPay)="$event && addPayment($event)" />
+        <app-add-payment (addPay)="payment.close()" (addPay)="$event && addPayment($event)"
+            [total]="calculateTotal()"
+        />
+
       </section>
     </div>
   </div>
