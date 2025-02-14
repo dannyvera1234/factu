@@ -128,7 +128,6 @@ export class TablaRegistradaComponent {
       this.docService.histories(id).subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
-          console.log(res);
         }
       });
     }
@@ -224,7 +223,6 @@ export class TablaRegistradaComponent {
       .subscribe((res) => {
         if (res.status === 'OK') {
           this.listProformas.set(res);
-          console.log(res.data);
           this.allSelected.set(false);
 
           // Deselecciona todas las proformas

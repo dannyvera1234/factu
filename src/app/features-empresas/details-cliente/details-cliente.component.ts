@@ -36,7 +36,6 @@ export class DetailsClienteComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.customer.set(resp);
         }
       });

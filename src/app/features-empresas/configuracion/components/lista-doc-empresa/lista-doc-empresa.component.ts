@@ -133,7 +133,6 @@ export class ListaDocEmpresaComponent {
       this.docService.histories(id).subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
-          console.log(res);
         }
       });
     }
@@ -169,7 +168,6 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.detailsService.info.set({
             personaRolIde: 1,
           });
@@ -219,9 +217,7 @@ export class ListaDocEmpresaComponent {
           type: 'success',
         });
       })
-      .catch((err) => {
-        console.error('Error al copiar al portapapeles: ', err);
-      });
+
   }
 
   // Función para alternar la visibilidad del menú

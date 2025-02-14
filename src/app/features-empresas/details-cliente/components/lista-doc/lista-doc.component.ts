@@ -21,7 +21,7 @@ import { ViewerDocumentComponent } from '@/components';
     HistorialPagoComponent,
     CustomPipe,
     FormsModule,
-    ViewerDocumentComponent
+    ViewerDocumentComponent,
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
@@ -82,7 +82,6 @@ export class ListaDocComponent {
       this.docService.histories(id).subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
-          console.log(res);
         }
       });
     }
@@ -116,7 +115,6 @@ export class ListaDocComponent {
         .subscribe((resp) => {
           if (resp.status === 'OK') {
             this.historialPago.set(resp);
-            console.log(resp);
           }
         });
     }
@@ -157,7 +155,6 @@ export class ListaDocComponent {
             if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;
             return 0; // Mantener el orden cuando ambos son iguales
           });
-          console.log(sortedInvoices);
           this.listInvoices.set({
             ...resp,
             data: {
@@ -167,6 +164,11 @@ export class ListaDocComponent {
           });
         }
       });
+  }
+
+  onSyncClick() {
+    this.requestedHistories.clear();
+    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
   }
 
   onPageChange(newPage: number): void {

@@ -45,7 +45,6 @@ export class ProveedoresComponent {
   }
 
   cargar(evet: any) {
-    console.log(evet);
     this.infoXML.set(null);
   }
 

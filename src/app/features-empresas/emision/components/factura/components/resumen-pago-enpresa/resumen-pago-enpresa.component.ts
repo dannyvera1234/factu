@@ -197,7 +197,7 @@ export class ResumenPagoEnpresaComponent {
         next: (response) => {
           if (response.status === 'OK') {
             this.paymentMethods.set(response);
-            console.log(this.paymentMethods());
+
             this.ejecutarFormPago.set(true);
             resolve(); // Resolución exitosa
           } else {

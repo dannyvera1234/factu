@@ -253,7 +253,6 @@ export class CreateFacturaEmpresaService {
    */
   saveDocument() {
     const dataFacturacion = this.infoDataFactura();
-    console.log(dataFacturacion);
     let serviceCall;
     switch (this.actionToConfirm) {
       case 'Guardar':

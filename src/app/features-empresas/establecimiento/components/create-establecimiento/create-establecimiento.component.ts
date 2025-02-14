@@ -69,7 +69,6 @@ export class CreateEstablecimientoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.notification.push({
             message: 'Establecimiento creado correctamente',
             type: 'success',

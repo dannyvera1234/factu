@@ -96,7 +96,6 @@ export class DetailsXmlComponent implements OnInit {
       tipoProducto: this.tipoProducto(),
     };
 
-    console.log(data);
     this.created.emit(data);
     return;
     of(this.loading.set(true))

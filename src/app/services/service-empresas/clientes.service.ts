@@ -75,7 +75,6 @@ export class ClientesService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       invoiceIde: id,
     });
-    console.log(payload);
     return this._http.post(
       `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos/historialPago`,
       {

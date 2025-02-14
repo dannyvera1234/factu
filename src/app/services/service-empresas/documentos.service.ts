@@ -69,7 +69,6 @@ export class DocumentosService {
 
   generateCredito(data: Partial<any>): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
-    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/emission/company/generateInvoiceCredito`, {
       body: payload,
     });

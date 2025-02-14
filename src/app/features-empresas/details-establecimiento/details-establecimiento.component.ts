@@ -35,7 +35,6 @@ export class DetailsEstablecimientoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.subsidiary.set(resp);
         }
       });

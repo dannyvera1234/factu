@@ -27,7 +27,6 @@ export class SubsidiaryService {
 
   detailsSubsidiary(ideRegister: string): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI,  ideRegister );
-    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/retrieveSubsidiary`, {
       body: payload,
     });
