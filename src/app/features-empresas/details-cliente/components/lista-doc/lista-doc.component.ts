@@ -39,7 +39,7 @@ export class ListaDocComponent {
 
   @Input({ required: true }) set idePersonaRol(value: number) {
     if (value === null) return;
-    this.invoiceCustomers(value, 0, this.searchQuery);
+    this.invoiceCustomers(value, 0, '');
     this.idePersona.set(value);
   }
 
@@ -121,7 +121,7 @@ export class ListaDocComponent {
   }
   updateletterPay(item: any) {
     if (!item) return;
-    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
+    this.invoiceCustomers(this.idePersona()!, 0, '');
   }
 
   isTooltipVisible(id: number): boolean {
@@ -168,7 +168,7 @@ export class ListaDocComponent {
 
   onSyncClick() {
     this.requestedHistories.clear();
-    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
+    this.invoiceCustomers(this.idePersona()!, 0, '');
   }
 
   onPageChange(newPage: number): void {
@@ -181,7 +181,7 @@ export class ListaDocComponent {
       pagination.hasNext = newPage < pagination.totalPages;
       pagination.hasPrevious = newPage > 1;
 
-      this.invoiceCustomers(this.idePersona()!, newPage, this.searchQuery);
+      this.invoiceCustomers(this.idePersona()!, newPage, '');
       // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
     }
   }
