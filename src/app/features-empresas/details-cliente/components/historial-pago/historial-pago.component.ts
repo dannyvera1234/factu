@@ -1,12 +1,23 @@
 import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CustomPipe } from '@/pipes';
-import { ModalComponent } from '@/components';
+import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { UpdatePagoComponent } from './components';
+import { finalize, mergeMap, of } from 'rxjs';
+import { DocumentosService } from '../../../../services/service-empresas';
+import { NotificationService } from '../../../../utils/services';
 
 @Component({
   selector: 'app-historial-pago',
-  imports: [CurrencyPipe, NgClass, CustomPipe, NgOptimizedImage, ModalComponent, UpdatePagoComponent],
+  imports: [
+    CurrencyPipe,
+    NgClass,
+    CustomPipe,
+    NgOptimizedImage,
+    ModalComponent,
+    UpdatePagoComponent,
+    ViewerDocumentComponent,
+  ],
   templateUrl: './historial-pago.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,25 +40,52 @@ export class HistorialPagoComponent {
 
   public readonly updatePago = signal<any | null>(null);
 
+  public readonly currentDocumentUrl = signal<string | null>(null);
+
+  public readonly isModalOpen = signal(false);
+
   @Output() public readonly created = new EventEmitter<any | null>();
 
-  constructor() {}
+  constructor(
+    private readonly docService: DocumentosService,
+    private readonly notification: NotificationService,
+  ) {}
 
   toggleMenu(ide: number): void {
     // Si el elemento ya está seleccionado, deseleccionamos, si no, lo seleccionamos.
     this.selectedRow.set(this.selectedRow() === ide ? null : ide);
   }
 
+  openDocument(item: any) {
+    this.currentDocumentUrl.set(item);
+    this.isModalOpen.set(true);
+    this.selectedRow.set(null);
+  }
+
+  closeDocument() {
+    this.isModalOpen.set(false);
+    this.currentDocumentUrl.set(null);
+  }
+
   updateLetterPay(item: any) {
     if (!item) return;
     this.created.emit(item);
-    // if (this.loadingShow) return;
+  }
 
-    // this.historialPago = {
-    //   ...this.historialPago,
-    //   data: this.historialPago.data.map((entry: any) => {
-    //     return entry.ide === item.letterPayIde ? { ...entry, paymentStatus: item.paymentStatus } : entry;
-    //   }),
-    // };
+  reeviarEmail(id: number) {
+    of((this.loadingShow = true))
+      .pipe(
+        mergeMap(() => this.docService.sendNotification(id)),
+        finalize(() => (this.loadingShow = false)),
+      )
+      .subscribe((res) => {
+        if (res.status === 'OK') {
+          this.selectedRow.set(null);
+          this.notification.push({
+            message: 'Correo enviado correctamente',
+            type: 'success',
+          });
+        }
+      });
   }
 }

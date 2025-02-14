@@ -35,7 +35,10 @@
               <tr class="border-b hover:bg-gray-100">
                 <td class="px-4 py-3">
                   <!-- Checkbox para cada fila -->
-                  @if (invoice.statusProcess !== 'EN PROCESO PROFORMA' && (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')) {
+                  @if (
+                    invoice.statusProcess !== 'EN PROCESO PROFORMA' &&
+                    (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')
+                  ) {
                     <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
                   }
                 </td>
@@ -56,52 +59,51 @@
                       </div>
                       <div class="relative group inline-block">
                         <!-- Botón que muestra el tooltip -->
-                        <button
-                          class="m-0"
-                          (mouseenter)="toggleTooltip(invoice.ide, true)"
-                          (mouseleave)="toggleTooltip(invoice.ide, false)"
-                        >
+                        <button class="m-0" (click)="toggleTooltip(invoice.ide, true)">
                           <img src="assets/icon/tooltip.svg" alt="Tooltip" />
                         </button>
 
                         <!-- Tooltip -->
                         @if (isTooltipVisible(invoice.ide)) {
                           <div
-                            class="absolute fi z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                            class="absolute z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                             (mouseenter)="toggleTooltip(invoice.ide, true)"
                             (mouseleave)="toggleTooltip(invoice.ide, false)"
                           >
                             <!-- Header -->
                             <div class="flex justify-between items-center mb-3">
                               <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                              <button
-                                class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                                (click)="toggleTooltip(invoice.ide, false)"
-                              >
+                              <button class="text-gray-400 hover:text-gray-600" (click)="toggleTooltip(invoice.ide, false)">
                                 &times;
                               </button>
                             </div>
 
                             <!-- Histories -->
-                            <ul class="space-y-2">
-                              @for (history of invoice.histories; track $index) {
-                                <li class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs">
-                                  <!-- First Row -->
-                                  <div class="flex justify-between items-center text-gray-700">
-                                    <span>{{ history.description }}</span>
-                                  </div>
-                                </li>
-                              }
-                            </ul>
+                            @if (historial(); as historial) {
+                              <ul class="space-y-2">
+                                @for (history of historial!.data; track $index) {
+                                  <li
+                                    class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
+                                  >
+                                    <div class="flex justify-between items-center text-gray-700">
+                                      <span>{{ history.description }}</span>
+                                    </div>
+                                  </li>
+                                }
+                              </ul>
+                            } @else {
+                              <div class="h-full text-center flex justify-center items-center">
+                                <div class="loader"></div>
+                              </div>
+                            }
                           </div>
                         }
                       </div>
+
                     </div>
                   </div>
                 </td>
-                <!-- <td class="px-4 py-3 text-center">
-                  {{ invoice.lote }}
-                </td> -->
+
                 <td class="px-4 py-3 text-center">
                   {{ invoice.emissionDate | customDate }}
                 </td>
@@ -146,18 +148,29 @@
                       }
                       @case ('RETENIDA PROFORMA') {
                         <div class="relative group">
-                          <svg class="w-6 h-6 text-gray-800 dark:text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z" clip-rule="evenodd"/>
+                          <svg
+                            class="w-6 h-6 text-gray-800 dark:text-red-500"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z"
+                              clip-rule="evenodd"
+                            />
                           </svg>
 
                           <!-- Tooltip -->
                           <div
-                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           >
                             Retenida
                           </div>
                         </div>
-
                       }
                     }
                   </div>
@@ -281,7 +294,11 @@
                 </td>
 
                 <td class="text-center">
-                  @if (invoice.pdfProforma !== null && invoice.statusProcess !== 'EN PROCESO PROFORMA' && invoice.statusProcess !== 'RETENIDA PROFORMA') {
+                  @if (
+                    invoice.pdfProforma !== null &&
+                    invoice.statusProcess !== 'EN PROCESO PROFORMA' &&
+                    invoice.statusProcess !== 'RETENIDA PROFORMA'
+                  ) {
                     <div class="flex justify-center group relative">
                       <!-- Botón de configuración, visible solo en pantallas grandes -->
                       <button
@@ -299,18 +316,17 @@
                         >
                           <ul>
                             <!-- Opción Editar -->
-                            <button
+                            <!-- <button
                               (click)="editarProforma(invoice.ideEncrypted)"
                               class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                             >
                               <img src="assets/icon/edit copy.svg" alt="email" class="w-5 h-5" />
                               Editar
-                            </button>
+                            </button> -->
 
                             <!-- Opción PDF -->
                             <a
-                              [href]="invoice.pdfProforma"
-                              target="_blank"
+                              (click)="openDocument(invoice.pdfProforma)"
                               class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                             >
                               <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
@@ -349,17 +365,16 @@
                     <!-- Acciones mostradas directamente en pantallas pequeñas, con un diseño de lista -->
                     <div class="sm:hidden flex flex-row gap-2 mt-2">
                       <!-- Acción Editar -->
-                      <button
+                      <!-- <button
                         (click)="editarProforma(invoice.ideEncrypted)"
                         class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                       >
                         Editar
-                      </button>
+                      </button> -->
 
                       <!-- Acción PDF -->
                       <a
-                        [href]="invoice.pdfProforma"
-                        target="_blank"
+                        (click)="openDocument(invoice.pdfProforma)"
                         class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                       >
                         PDF
@@ -427,3 +442,8 @@
     </div>
   </div>
 </app-modal>
+@if (isModalOpen()) {
+  @defer {
+    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+  }
+}

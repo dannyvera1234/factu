@@ -47,54 +47,65 @@
                   </button>
                 </div>
               }
-              <div class="group relative text-xs">
-                <button (click)="toggleMenu(item.ide)">
-                  <svg
-                    class="w-6 h-6"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="104"
-                    height="104"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-width="2"
-                      d="M12 6h.01M12 12h.01M12 18h.01"
-                    />
-                  </svg>
-                </button>
+              @if (item.receipt) {
+                <div class="group relative text-xs">
+                  <button (click)="toggleMenu(item.ide)">
+                    <svg
+                      class="w-6 h-6"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="104"
+                      height="104"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-width="2"
+                        d="M12 6h.01M12 12h.01M12 18h.01"
+                      />
+                    </svg>
+                  </button>
 
-                @if (selectedRow() === item.ide) {
-                  <div
-                    class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10"
-                  >
-                    <ul>
-                      <a
-                        target="_blank"
-                        class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                      >
-                        <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
-                        Descargar
-                      </a>
-                      <a
-                        target="_blank"
-                        class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                      >
-                        <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
-                        Documentos
-                      </a>
-                      <hr class="my-2 border-gray-600" />
-                      <li class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer">
-                        <img src="assets/icon/email.svg" alt="email" class="w-5 h-5" />
-                        Reenviar
-                      </li>
-                    </ul>
-                  </div>
-                }
-              </div>
+                  @if (selectedRow() === item.ide) {
+                    <div
+                      class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10"
+                    >
+                      <ul>
+                        @if (item.adjunto !== null) {
+                          <a
+                            (click)="openDocument(item.adjunto)"
+                            class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
+                          >
+                            <img src="assets/icon/adjunto.svg" alt="adjunto" class="w-5 h-5" />
+
+                            Adjunto
+                          </a>
+                        }
+                        @if (item.receipt !== null) {
+                          <a
+                            (click)="openDocument(item.receipt)"
+                            class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
+                          >
+                            <img src="assets/icon/vaucher.svg" alt="vaucher" class="w-5 h-5" />
+
+                            Vaucher
+                          </a>
+                          <hr class="my-2 border-gray-600" />
+                        }
+                        <li class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
+                        (click)="reeviarEmail(item.ide)"
+                        >
+                          <img src="assets/icon/email.svg" alt="email" class="w-5 h-5"
+                          />
+                          Reenviar
+                        </li>
+                      </ul>
+                    </div>
+                  }
+                </div>
+              }
             </div>
           </div>
         }
@@ -142,3 +153,8 @@
     </div>
   }
 </app-modal>
+@if (isModalOpen()) {
+  @defer {
+    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+  }
+}

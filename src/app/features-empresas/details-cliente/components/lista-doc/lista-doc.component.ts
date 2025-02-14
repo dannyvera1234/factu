@@ -9,6 +9,7 @@ import { CustomPipe } from '@/pipes';
 import { HistorialPagoComponent } from '../historial-pago';
 import { Modulos } from '@/utils/permissions';
 import { FormsModule } from '@angular/forms';
+import { ViewerDocumentComponent } from '@/components';
 
 @Component({
   selector: 'app-lista-doc',
@@ -20,6 +21,7 @@ import { FormsModule } from '@angular/forms';
     HistorialPagoComponent,
     CustomPipe,
     FormsModule,
+    ViewerDocumentComponent
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
@@ -55,6 +57,8 @@ export class ListaDocComponent {
   public readonly showTooltip = signal<{ [key: string]: boolean }>({});
   private readonly requestedHistories = new Set<number>();
   public readonly historial = signal<GeneriResp<any> | null>(null);
+  public readonly currentDocumentUrl = signal<string | null>(null);
+  public readonly isModalOpen = signal(false);
 
   searchQuery = '';
 
@@ -82,6 +86,17 @@ export class ListaDocComponent {
         }
       });
     }
+  }
+
+  openDocument(item: any) {
+    this.currentDocumentUrl.set(item);
+    this.isModalOpen.set(true);
+    this.selectedRow.set(null);
+  }
+
+  closeDocument() {
+    this.isModalOpen.set(false);
+    this.currentDocumentUrl.set(null);
   }
 
   toggleHistory(ide: number) {
@@ -176,6 +191,7 @@ export class ListaDocComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          this.selectedRow.set(null);
           this.notification.push({
             message: 'Correo enviado correctamente',
             type: 'success',

@@ -7,7 +7,7 @@ import { CurrencyPipe, NgClass, SlicePipe } from '@angular/common';
 import { CustomDatePipe } from '@/pipes';
 import { DocumentosService } from '@/services/service-empresas';
 import { DetailsService } from '@/feature-counters/details-counter-application';
-import { ModalComponent } from '@/components';
+import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { DeleteFacturaComponent } from '../delete-factura';
 import { FormsModule } from '@angular/forms';
 import { FiltroComponent } from './components';
@@ -24,6 +24,7 @@ import { FiltroComponent } from './components';
     DeleteFacturaComponent,
     FormsModule,
     FiltroComponent,
+    ViewerDocumentComponent,
   ],
   templateUrl: './lista-doc-empresa.component.html',
   styles: `
@@ -72,6 +73,8 @@ export class ListaDocEmpresaComponent {
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
 
   public readonly historial = signal<GeneriResp<any> | null>(null);
+  public readonly currentDocumentUrl = signal<string | null>(null);
+  public readonly isModalOpen = signal(false);
 
   private readonly requestedHistories = new Set<number>();
   constructor(
@@ -103,6 +106,18 @@ export class ListaDocEmpresaComponent {
     // Actualizamos la lista de facturas
     this.listInvoices.set(newInvoices);
   }
+
+  openDocument(item: any) {
+    this.currentDocumentUrl.set(item);
+    this.isModalOpen.set(true);
+    this.selectedRow.set(null);
+  }
+
+  closeDocument() {
+    this.isModalOpen.set(false);
+    this.currentDocumentUrl.set(null);
+  }
+
 
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
@@ -186,6 +201,7 @@ export class ListaDocEmpresaComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
+          this.selectedRow.set(null);
           this.notification.push({
             message: 'Correo enviado correctamente',
             type: 'success',

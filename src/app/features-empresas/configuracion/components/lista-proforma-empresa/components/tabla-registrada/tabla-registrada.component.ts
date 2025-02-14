@@ -8,12 +8,12 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { DocumentosService } from '@/services/service-empresas';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModalComponent } from '@/components';
+import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { DeleteProformaComponent } from '../../../delete-proforma';
 
 @Component({
   selector: 'app-tabla-registrada',
-  imports: [PaginationComponent, CurrencyPipe, CustomDatePipe, FormsModule, ModalComponent, DeleteProformaComponent],
+  imports: [PaginationComponent, CurrencyPipe, CustomDatePipe, FormsModule, ModalComponent, DeleteProformaComponent, ViewerDocumentComponent],
   templateUrl: './tabla-registrada.component.html',
   styles: `
     #optionsMenu {
@@ -68,6 +68,11 @@ export class TablaRegistradaComponent {
 
   public readonly loading = signal(false);
 
+  public readonly currentDocumentUrl = signal<string | null>(null);
+  public readonly isModalOpen = signal(false);
+  private readonly requestedHistories = new Set<number>();
+  public readonly historial = signal<GeneriResp<any> | null>(null)
+
   @Output() public readonly ideProformas = new EventEmitter<number[] | null>();
 
   @Output() finalizar = new EventEmitter<null>();
@@ -96,9 +101,37 @@ export class TablaRegistradaComponent {
     }
   }
 
+  openDocument(item: any) {
+    this.currentDocumentUrl.set(item);
+    this.isModalOpen.set(true);
+    this.selectedRow.set(null);
+  }
+
+  closeDocument() {
+    this.isModalOpen.set(false);
+    this.currentDocumentUrl.set(null);
+  }
+
+
+
   toggleTooltip(id: number, isVisible: boolean): void {
     const currentState = this.showTooltip();
-    this.showTooltip.set({ ...currentState, [id]: isVisible });
+
+    // Solo actualizar si el estado cambia
+    if (currentState[id] === isVisible) return;
+
+    // Cierra todos los tooltips excepto el actual
+    this.showTooltip.set(isVisible ? { [id]: true } : {});
+
+    if (isVisible && !this.requestedHistories.has(id)) {
+      this.requestedHistories.add(id);
+      this.docService.histories(id).subscribe((res) => {
+        if (res.status === 'OK') {
+          this.historial.set(res);
+          console.log(res);
+        }
+      });
+    }
   }
 
   isTooltipVisible(id: number): boolean {

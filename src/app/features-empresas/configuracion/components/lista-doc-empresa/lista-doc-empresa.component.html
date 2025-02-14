@@ -57,9 +57,15 @@
         </tr>
       </thead>
       @if (loading()) {
-        <div class="h-full text-center flex justify-center items-center">
-          <div class="loader"></div>
-        </div>
+        <tbody>
+          <tr>
+            <td colspan="100%">
+              <div class="text-center py-9">
+                <div class="loader"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       } @else {
         <tbody>
           @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
@@ -101,7 +107,10 @@
                             <!-- Header -->
                             <div class="flex justify-between items-center mb-3">
                               <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                              <button class="text-gray-400 hover:text-gray-600" (click)="toggleTooltip(invoice.ide, false)">
+                              <button
+                                class="text-gray-400 hover:text-gray-600"
+                                (click)="toggleTooltip(invoice.ide, false)"
+                              >
                                 &times;
                               </button>
                             </div>
@@ -404,16 +413,14 @@
                           <ul>
                             <!-- Opción PDF -->
                             <a
-                              [href]="invoice.pdf"
-                              target="_blank"
+                            (click)="openDocument(invoice.pdf)"
                               class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                             >
                               <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
                               PDF
                             </a>
                             <a
-                              [href]="invoice.xml"
-                              target="_blank"
+                              (click)="openDocument(invoice.xml)"
                               class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                             >
                               <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
@@ -439,16 +446,14 @@
                     <div class="sm:hidden flex flex-row gap-2 mt-2">
                       <!-- Acción PDF -->
                       <a
-                        [href]="invoice.pdf"
-                        target="_blank"
+                        (click)="openDocument(invoice.pdf)"
                         class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                       >
                         PDF
                       </a>
 
                       <a
-                        [href]="invoice.xml"
-                        target="_blank"
+                        (click)="openDocument(invoice.xml)"
                         class="py-2 px-3 flex items-center gap-2 hover:bg-gray-700 rounded-md cursor-pointer"
                       >
                         XML
@@ -527,3 +532,8 @@
     </div>
   </div>
 </app-modal>
+@if (isModalOpen()) {
+  @defer {
+    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+  }
+}
