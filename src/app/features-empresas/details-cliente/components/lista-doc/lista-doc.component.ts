@@ -51,7 +51,8 @@ export class ListaDocComponent {
   public readonly showDetails = signal<number | null>(null);
   public readonly selectedRow = signal<number | null>(null);
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
-  public readonly historialPago = signal<GeneriResp<any> | null>(null);
+  // public readonly historialPago = signal<GeneriResp<any> | null>(null);
+  public readonly historialPago = signal<any | null>(null);
   public readonly loading = signal(false);
   public readonly loadingShow = signal(false);
   public readonly showTooltip = signal<{ [key: string]: boolean }>({});
@@ -98,9 +99,10 @@ export class ListaDocComponent {
     this.currentDocumentUrl.set(null);
   }
 
-  toggleHistory(ide: number) {
+  toggleHistory(invoice: any) {
     if (this.loadingShow()) return; // Evita ejecutar si ya está cargando
 
+    const ide = invoice.ide as number;
     const currentId = this.showDetails();
 
     if (currentId === ide) {
@@ -114,7 +116,10 @@ export class ListaDocComponent {
         .pipe(finalize(() => this.loadingShow.set(false)))
         .subscribe((resp) => {
           if (resp.status === 'OK') {
-            this.historialPago.set(resp);
+            this.historialPago.set({
+                respHistoriaPago: resp,
+                montoPagado: invoice?.creditPaymentAmount || 0.00
+            });
           }
         });
     }
@@ -148,6 +153,7 @@ export class ListaDocComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
+        console.log(resp);
         if (resp.status === 'OK') {
           // Verificar que listData exista y sea un arreglo
           console.log(resp);

@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { CurrencyPipe, JsonPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CustomPipe } from '@/pipes';
 import { ModalComponent, ViewerDocumentComponent } from '@/components';
