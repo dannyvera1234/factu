@@ -47,7 +47,7 @@ export class ClientesComponent {
 
   onSearchClick(): void {
     // Si el término de búsqueda está vacío, puedes manejarlo de alguna manera, como mostrar un mensaje de error.
-    if (this.searchQuery.trim()) {
+    if (this.searchQuery.trim() && this.searchQuery.length >= 2) {
       this.getListClientes(0, this.searchQuery); // Realiza la búsqueda desde la primera página
     } else {
       this.getListClientes();

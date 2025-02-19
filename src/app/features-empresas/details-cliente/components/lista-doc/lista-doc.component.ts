@@ -150,6 +150,7 @@ export class ListaDocComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           // Verificar que listData exista y sea un arreglo
+          console.log(resp);
           const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
             if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;
             if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;
@@ -188,7 +189,7 @@ export class ListaDocComponent {
   reeviarEmail(id: number) {
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.docService.sendNotification(id)),
+        mergeMap(() => this.docService.letterPayNotification(id)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {

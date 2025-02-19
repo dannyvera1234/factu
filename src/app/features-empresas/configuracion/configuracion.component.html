@@ -264,34 +264,34 @@
             <ul
               class="flex flex-col sm:flex-row sm:flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400"
             >
-            <li class="mr-2 mb-2 sm:mb-0">
-              <a
-                (click)="changeTab('inventario')"
-                [ngClass]="{
-                  'text-blue-500 border-b-2 border-primary': selectedTab() === 'inventario',
-                  'text-gray-600': selectedTab() !== 'inventario',
-                }"
-                class="cursor-pointer inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
-              >
-                <svg
-                  class="w-4 h-4 mr-2"
+              <li class="mr-2 mb-2 sm:mb-0">
+                <a
+                  (click)="changeTab('inventario')"
                   [ngClass]="{
-                    'text-blue-500': selectedTab() === 'inventario',
-                    'text-gray-400': selectedTab() !== 'inventario',
-                    'group-hover:text-gray-500': selectedTab() !== 'inventario',
+                    'text-blue-500 border-b-2 border-primary': selectedTab() === 'inventario',
+                    'text-gray-600': selectedTab() !== 'inventario',
                   }"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                  class="cursor-pointer inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
                 >
-                  <path
-                    d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"
-                  />
-                </svg>
-                Inventario
-              </a>
-            </li>
+                  <svg
+                    class="w-4 h-4 mr-2"
+                    [ngClass]="{
+                      'text-blue-500': selectedTab() === 'inventario',
+                      'text-gray-400': selectedTab() !== 'inventario',
+                      'group-hover:text-gray-500': selectedTab() !== 'inventario',
+                    }"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"
+                    />
+                  </svg>
+                  Inventario
+                </a>
+              </li>
               <li class="mr-2 mb-2 sm:mb-0">
                 <a
                   (click)="changeTab('doc')"
@@ -323,7 +323,6 @@
                   Documentos
                 </a>
               </li>
-
 
               <li class="mr-2 mb-2 sm:mb-0">
                 <a
@@ -387,7 +386,6 @@
                   <app-lista-proforma-empresa />
                 }
               }
-
             }
           </div>
         </div>
@@ -480,8 +478,6 @@
     </div>
   </div>
 </app-modal>
-
-
 
 <app-modal #addSequential>
   <div class="flex items-center justify-center">

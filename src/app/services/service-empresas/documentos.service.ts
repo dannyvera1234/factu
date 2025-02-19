@@ -74,7 +74,6 @@ export class DocumentosService {
     });
   }
 
-
   updateProforma(data: Partial<any>, invoiceIde: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       invoiceIde,
@@ -106,6 +105,17 @@ export class DocumentosService {
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/sendNotification`, {
       body: payload,
     });
+  }
+
+  letterPayNotification(id: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, { ide: id });
+    console.log(payload);
+    return this._http.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
+      {
+        body: payload,
+      },
+    );
   }
 
   sendNotificationProforma(id: number): Observable<any> {
@@ -172,8 +182,6 @@ export class DocumentosService {
     });
   }
 
-
-
   generateZipWithDocuments(data: Partial<any>): Observable<Blob> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       ...data,
@@ -182,7 +190,7 @@ export class DocumentosService {
     return this.httpClient.post(
       `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/invoice/generateZipWithDocuments`,
       payload,
-      { responseType: 'blob' }
+      { responseType: 'blob' },
     );
   }
 
@@ -203,5 +211,4 @@ export class DocumentosService {
       body: payload,
     });
   }
-
 }
