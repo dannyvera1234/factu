@@ -16,18 +16,33 @@
       <h3 class="font-semibold text-lg text-gray-800">Descargar Reporte</h3>
       <hr class="border-gray-300 mt-2" />
     </div>
-    <div class="flex flex-col gap-2">
-      <label class="flex items-center gap-2">
-        <input type="radio" formControlName="frecuencia" name="frecuencia" value="quincenal" class="size-4" />
-        <span>Quincenal</span>
-      </label>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-600 mb-1">Fecha inicio</label>
+        <div class="relative">
+          <input
+            name="start"
+            type="date"
+            formControlName="start"
+            [attr.max]="minDate()"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 w-full pl-4 py-2"
+          />
+        </div>
+      </div>
 
-      <label class="flex items-center gap-2">
-        <input type="radio" formControlName="frecuencia" name="frecuencia" value="mensual" class="size-4" />
-        <span>Mensual</span>
-      </label>
+      <div class="flex flex-col">
+        <label class="text-sm font-medium text-gray-600 mb-1">Fecha fin</label>
+        <div class="relative">
+          <input
+            name="end"
+            type="date"
+            formControlName="end"
+            [attr.max]="maxDate()"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 w-full pl-4 py-2"
+          />
+        </div>
+      </div>
     </div>
-
     <!-- Botón de búsqueda -->
     @if (!loading()) {
       <div>
@@ -40,44 +55,3 @@
     }
   </form>
 </div>
-
-<app-modal #descargar>
-  <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-    <div class="bg-white rounded-2xl p-3 w-full max-w-md shadow-xl relative">
-      <button
-        class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 focus:outline-none"
-        (click)="descargar.close()"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-      <section class="p-4">
-        @defer {
-          <div class="flex flex-col items-center mb-4">
-            <img src="/assets/icon/alert.svg" alt="" class="size-20 mb-4" />
-            <h3 class="text-lg font-semibold text-gray-800 text-center">Confirmar descarga de documentos</h3>
-          </div>
-          <p class="text-sm text-gray-600 mb-4 text-center">
-            Estás a punto de descargar
-            <span class="font-semibold text-gray-800">{{ countInvoices() || 0 }}</span>
-            {{ (countInvoices() || 0) === 1 ? 'documento autorizado' : 'documentos autorizados' }}. Este proceso podría
-            tardar unos minutos. ¿Deseas continuar con la descarga?
-          </p>
-
-          <div class="flex justify-center gap-4">
-            @if (!loading()) {
-              <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" (click)="descargarInvoices()">
-                Descargar
-              </button>
-            } @else {
-              <div class="flex justify-center items-center h-full mt-4">
-                <div class="loader"></div>
-              </div>
-            }
-          </div>
-        }
-      </section>
-    </div>
-  </div>
-</app-modal>

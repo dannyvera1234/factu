@@ -205,11 +205,10 @@ export class DocumentosService {
     );
   }
 
-  reportCreditoClientes(): Observable<Blob> {
+  reportCreditoClientes(data: Partial<any>): Observable<Blob> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI,
-      273
+      { ...data },
     );
-
     return this.httpClient.post(
       `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/reportes/creditosClientes`,
       payload,

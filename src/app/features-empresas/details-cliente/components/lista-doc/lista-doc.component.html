@@ -184,14 +184,15 @@
                           XML
                         </a>
                       }
-                      <a
-                        (click)="generateReporteInvoiceCredito(item.ide)"
-                        class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                      >
-                        <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
-                        Reporte
-                      </a>
-
+                      @if (item.saleType !== 'Contado') {
+                        <a
+                          (click)="generateReporteInvoiceCredito(item.ide)"
+                          class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
+                        >
+                          <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
+                          Reporte
+                        </a>
+                      }
 
                       <hr class="my-2 border-gray-600" />
 

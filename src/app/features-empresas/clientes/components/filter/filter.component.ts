@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, EventEmitter, HostListener, Output, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, mergeMap, finalize } from 'rxjs';
 import { ModalComponent } from '@/components';
@@ -8,13 +18,13 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-filter',
-  imports: [NgClass,ReactiveFormsModule, ModalComponent, NgOptimizedImage],
+  imports: [NgClass, ReactiveFormsModule, ModalComponent, NgOptimizedImage],
   templateUrl: './filter.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterComponent {
- public readonly open = signal(false);
+  public readonly open = signal(false);
 
   @HostListener('document:click', ['$event.target'])
   onClick(btn: any) {
@@ -48,79 +58,40 @@ export class FilterComponent {
     private readonly ref: ElementRef,
     private readonly _fb: FormBuilder,
     private readonly notification: NotificationService,
-    private readonly modalService: ModalService,
     private readonly docService: DocumentosService,
-  ) {
-    of(this.loading.set(true))
-    .pipe(
-      mergeMap(() => this.docService.reportCreditoClientes()),
-      finalize(() => this.loading.set(false)),
-    )
-    .subscribe((blob: Blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Reporte.pdf`; // Nombre del archivo
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-  }
+  ) {}
 
   form = this._fb.group({
-    frecuencia: ['', [Validators.required]],
+    start: [null, Validators.required],
+    end: [null, Validators.required],
   });
 
   submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
+    const data = {
+      startDate: this.form.value.start,
+      endDate: this.form.value.end,
+    };
 
-  }
-
-  descargarInvoices() {
-
-
-    // of(this.loading.set(true))
-    //   .pipe(
-    //     mergeMap(() => this.docService.reportCreditoClientes()),
-    //     finalize(() => this.loading.set(false)),
-    //   )
-    //   .subscribe((blob: Blob) => {
-    //     console.log(blob);
-    //     // const fileName = `Facturas_${this.form.value.start}_${this.form.value.end}_${this.formatDateWithoutSeparators(new Date())}.zip`;
-    //     // this.downloadZip(blob, fileName);
-    //     this.form.reset();
-    //     this.modalService.close(this.modal);
-    //   });
-  }
-
-  formatDateWithoutSeparators(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Asegura dos dígitos
-  const day = date.getDate().toString().padStart(2, '0'); // Asegura dos dígitos
-  const hours = date.getHours().toString().padStart(2, '0'); // Asegura dos dígitos
-  const minutes = date.getMinutes().toString().padStart(2, '0'); // Asegura dos dígitos
-  const seconds = date.getSeconds().toString().padStart(2, '0'); // Asegura dos dígitos
-
-  // Formato sin separadores: yyyyMMddHHmmss
-  return `${year}${month}${day}${hours}${minutes}${seconds}`;
-}
-
-  downloadZip(blob: Blob, fileName: string): void {
-    // Crear una URL de objeto para el Blob
-    const url = window.URL.createObjectURL(blob);
-
-    // Crear un elemento de enlace (a) para simular la descarga
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName; // Nombre del archivo que se va a descargar
-
-    // Simular el clic en el enlace
-    document.body.appendChild(a);
-    a.click();
-
-    // Limpiar
-    window.URL.revokeObjectURL(url);
-    a.remove();
+    of(this.loading.set(true))
+      .pipe(
+        mergeMap(() => this.docService.reportCreditoClientes(data)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((blob: Blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Reporte_general.pdf`; // Nombre del archivo
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.notification.push({ message: 'Reporte generado con éxito.', type: 'success' });
+      });
   }
 }
