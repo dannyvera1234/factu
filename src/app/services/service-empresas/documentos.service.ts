@@ -118,6 +118,17 @@ export class DocumentosService {
     );
   }
 
+  generateReporteInvoiceCredito(ide: number): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, ide);
+    console.log(payload);
+    return this.httpClient.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
+      payload,
+      { responseType: 'blob' },
+    );
+  }
+
+
   sendNotificationProforma(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/sendNotificationProforma`, {
@@ -194,6 +205,17 @@ export class DocumentosService {
     );
   }
 
+  reportCreditoClientes(): Observable<Blob> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI,
+      273
+    );
+
+    return this.httpClient.post(
+      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/reportes/creditosClientes`,
+      payload,
+      { responseType: 'blob' },
+    );
+  }
   lisroInvoicesCredito(page: number, search: string): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       size: Modulos.PAGE_SIZE,

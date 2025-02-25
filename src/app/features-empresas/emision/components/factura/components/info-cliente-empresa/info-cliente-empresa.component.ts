@@ -82,7 +82,7 @@ export class InfoClienteEmpresaComponent {
           address: cliente.address,
           email: cliente.email,
           cellPhone: cliente.cellPhone,
-          customerIde: cliente.idePersona,
+          customerIde: cliente.idePersonaRol,
         });
       });
   }

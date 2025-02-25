@@ -9,7 +9,7 @@ import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
 import { ClientesService } from '../../services/service-empresas';
 
 import { RouterLink } from '@angular/router';
-import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent } from './components';
+import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent, FilterComponent } from './components';
 
 @Component({
   selector: 'app-clientes',
@@ -23,6 +23,7 @@ import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent } from './
     PaginationComponent,
     FormsModule,
     RouterLink,
+    FilterComponent,
   ],
   templateUrl: './clientes.component.html',
   styles: ``,

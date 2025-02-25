@@ -21,7 +21,7 @@
       >
         Buscar
       </button>
-      <div class="w-full md:w-auto md:ml-auto">
+      <!-- <div class="w-full md:w-auto md:ml-auto">
         <button
           class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] hover:bg-slate-300 text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
           (click)="onSyncClick()"
@@ -31,7 +31,7 @@
           </div>
           Sincronizar
         </button>
-      </div>
+      </div> -->
     </div>
   </nav>
   @if (loading()) {
@@ -65,7 +65,7 @@
                 <!-- Tooltip -->
                 @if (isTooltipVisible(item.ide)) {
                   <div
-                    class="absolute z-10 top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
                     (mouseenter)="toggleTooltip(item.ide, true)"
                     (mouseleave)="toggleTooltip(item.ide, false)"
                   >
@@ -185,17 +185,14 @@
                         </a>
                       }
                       <a
-                        (click)="openDocument(item.receipt)"
+                        (click)="generateReporteInvoiceCredito(item.ide)"
                         class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
                       >
                         <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
                         Reporte
                       </a>
 
-                      <!-- <a class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer">
-                      <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
-                      Facturar
-                    </a> -->
+
                       <hr class="my-2 border-gray-600" />
 
                       <!-- Opción Reenviar -->

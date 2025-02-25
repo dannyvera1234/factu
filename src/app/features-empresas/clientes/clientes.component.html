@@ -23,6 +23,10 @@
           Buscar
         </button>
 
+        @defer () {
+          <app-filter/>
+        }
+
         <button
           class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
           (click)="createClient.open()"

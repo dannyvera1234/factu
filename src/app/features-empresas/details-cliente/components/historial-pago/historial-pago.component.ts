@@ -75,7 +75,7 @@ export class HistorialPagoComponent {
   reeviarEmail(id: number) {
     of((this.loadingShow = true))
       .pipe(
-        mergeMap(() => this.docService.sendNotification(id)),
+        mergeMap(() => this.docService.letterPayNotification(id)),
         finalize(() => (this.loadingShow = false)),
       )
       .subscribe((res) => {

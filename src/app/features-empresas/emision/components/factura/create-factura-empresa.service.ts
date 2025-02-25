@@ -177,7 +177,6 @@ export class CreateFacturaEmpresaService {
         mainAddress: infoEmisor.address,
         email: infoEmisor.email,
         cellPhone: infoEmisor.cellPhone,
-        // personaRolIde: infoEmisor.personaRolIde,
       },
       infoCustomer: {
         identificationNumber: infoCustomer.identificationNumber,
