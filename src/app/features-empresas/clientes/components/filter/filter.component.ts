@@ -86,7 +86,7 @@ export class FilterComponent {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Reporte_general.pdf`; // Nombre del archivo
+        a.download = `Reporte_general_${Date.now().toString()}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
