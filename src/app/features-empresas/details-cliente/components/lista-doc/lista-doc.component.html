@@ -65,7 +65,7 @@
                 <!-- Tooltip -->
                 @if (isTooltipVisible(item.ide)) {
                   <div
-                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm z-[1000]"
                     (mouseenter)="toggleTooltip(item.ide, true)"
                     (mouseleave)="toggleTooltip(item.ide, false)"
                   >
