@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-1 gap-4 p-2 mt-2">
     <div class="mb-4">
       <app-custom-input
-        label="Establecimiento"
+        label="Establecimiento *"
         formControlName="code"
         (input)="onUsernameInput($event, 'code')"
         placeholder="ej. 001"
@@ -11,7 +11,7 @@
     </div>
     <div class="mb-4">
       <app-custom-input
-        label="Telefono"
+        label="Telefono *"
         formControlName="cellPhone"
         (input)="onUsernameInput($event, 'cellPhone')"
         [prefix]="'📞'"
@@ -19,9 +19,9 @@
     </div>
 
     <div class="mb-4">
-      <!-- <app-custom-input label="Correo" formControlName="email" /> -->
+
       <app-custom-input
-        label="Correo"
+        label="Correo *"
         type="email"
         formControlName="email"
         placeholder="correo@ejemplo.com"
@@ -30,7 +30,7 @@
     </div>
     <div class="mb-4">
       <app-custom-input
-        label="Dirección"
+        label="Dirección *"
         formControlName="address"
         placeholder="Ingrese dirección del establecimiento"
         [prefix]="'📍'"
