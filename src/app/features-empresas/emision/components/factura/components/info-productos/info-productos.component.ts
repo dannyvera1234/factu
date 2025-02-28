@@ -146,7 +146,6 @@ export class InfoProductosComponent {
     }
   }
   addPayment(payment: any): void {
-    console.log('payment', payment);
     if (!payment) return;
 
     this.paymentMethods.update((currentPaymentMethods: any[] = []) => {
@@ -159,17 +158,30 @@ export class InfoProductosComponent {
       if (paymentExists) {
         this.notification.push({
           message: 'La forma de pago ya está registrada. Elimínala y vuelve a intentarlo.',
-
           type: 'error',
         });
         return methods; // Retornamos la lista sin modificarla
       }
 
-      // Si no existe, agregamos el nuevo pago
+      // ✅ Calculamos el total incluyendo el nuevo pago
+      const valorTotal = methods.reduce((acc, method) => acc + Number(method.valor || 0), 0) + Number(payment.valor || 0);
+
+      const totalFactura = Number(this.calculateTotal()) || 0; // Aseguramos que sea un número válido
+
+      if (valorTotal > totalFactura) {
+        this.notification.push({
+          message: 'El valor total de los pagos no puede ser mayor al total de la factura.',
+          type: 'error',
+        });
+        return methods; // Retornamos la lista sin modificarla
+      }
+
+      // ✅ Si todo está correcto, agregamos el nuevo pago
       this.config.selectedPaymentMethod.set([...methods, payment]);
       return [...methods, payment]; // Retornamos la lista con el nuevo pago agregado
     });
   }
+
 
   removePayment(code: string): void {
     // Obtenemos la lista actual de métodos de pago
