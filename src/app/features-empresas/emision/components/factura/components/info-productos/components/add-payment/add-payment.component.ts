@@ -61,6 +61,15 @@ export class AddPaymentComponent {
   }
 
   submit() {
+    const code = this.paymentMethods()!.data.find((x) => x.code === '00');
+    if (this.form.controls.metodoPago.value === code && this.form.controls.plazo.value === '0') {
+      this.notification.push({
+        message: 'Por favor, seleccione un plazo de pago',
+        type: 'error',
+      });
+      return;
+    }
+
     if (this.form.invalid) {
       this.notification.push({
         message: 'Por favor, llene todos los campos',
