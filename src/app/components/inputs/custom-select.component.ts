@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, Input, OnInit, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
-
 
 import { FormErrorMessageComponent } from './form-error-message.component';
 import { InputErrorLocatorService } from '../../utils/services';
@@ -10,28 +9,40 @@ import { InputErrorLocatorService } from '../../utils/services';
   selector: 'app-custom-select',
   imports: [NgClass, FormErrorMessageComponent, FormsModule, FormErrorMessageComponent],
   template: `
-    @if (label) {
-      <label
-        [for]=""
-        class="absolute left-0 -top-3.5 text-gray-400 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base text-sm peer-placeholder-shown:text-gray-400 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-secondary"
-        [ngClass]="labelClass"
-        >{{ label }}</label
+    <div class="relative">
+      <label [for]="name" class="absolute left-0 top-[-25px] font-medium text-gray-700">
+        {{ label.split('*')[0] }}
+
+        @if (label.includes('*')) {
+          <span class="text-red-500">*</span>
+        }
+      </label>
+
+      <!-- Prefix (si existe) -->
+      @if (prefix(); as prefix) {
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          {{ prefix }}
+        </span>
+      }
+      <select
+        [ngClass]="
+          'peer w-full border border-gray-300 rounded-md focus:ring focus:ring-blue-300 outline-none text-gray-600 p-2 ' +
+          concatInputClass() +
+          (prefix() ? ' pl-10' : ' pl-3')
+        "
+        [(ngModel)]="value"
+        (blur)="control.control?.markAsTouched()"
+        (ngModelChange)="change()"
+        [disabled]="this.control.control?.disabled ?? false"
       >
-    }
-    <select
-      class="peer w-full border-b-2 border-gray-300 focus:border-secondary outline-none text-gray-400 py-2 "
-      [(ngModel)]="value"
-      [ngClass]="concatInputClass()"
-      (blur)="control.control?.markAsTouched()"
-      (ngModelChange)="change()"
-    >
-      @if (placeholder) {
-        <option value="" [selected]="true">{{ placeholder }}</option>
-      }
-      @for (item of options; track $index) {
-        <option [ngClass]="optionClass" [value]="item">{{ labels ? labels[$index] : item }}</option>
-      }
-    </select>
+        @if (placeholder) {
+          <option value="" [selected]="true">{{ placeholder }}</option>
+        }
+        @for (item of options; track $index) {
+          <option [ngClass]="optionClass" [value]="item">{{ labels ? labels[$index] : item }}</option>
+        }
+      </select>
+    </div>
 
     @if (touched()) {
       <app-form-error-message [control]="control.control!" />
@@ -55,6 +66,8 @@ export class CustomSelectComponent implements ControlValueAccessor, OnInit {
   @Input() optionClass = '';
 
   @Input() inputClass = '';
+
+  prefix = input<string | null>(null);
 
   public value: any;
 

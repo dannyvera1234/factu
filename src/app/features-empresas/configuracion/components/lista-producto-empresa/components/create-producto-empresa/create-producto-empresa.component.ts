@@ -84,6 +84,34 @@ export class CreateProductoEmpresaComponent {
     }
   }
 
+  onAmountInput(event: any, sourceField: string): void {
+    let inputValue = event.target.value;
+
+    // Reemplazar cualquier cosa que no sea número o punto decimal
+    inputValue = inputValue.replace(/[^0-9.]/g, '');
+
+    // Asegurarse de que solo haya un punto decimal
+    const decimalCount = (inputValue.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      inputValue = inputValue.substring(0, inputValue.lastIndexOf('.')) + inputValue.slice(inputValue.lastIndexOf('.'));
+    }
+
+    // Limitar a dos decimales
+    if (inputValue.includes('.')) {
+      const [integerPart, decimalPart] = inputValue.split('.');
+      inputValue = `${integerPart}.${decimalPart.slice(0, 2)}`;
+    }
+
+    // Asignar el valor ajustado al input
+    event.target.value = inputValue;
+
+    const control = this.form.get(sourceField);
+    if (control) {
+      control.setValue(inputValue);
+    }
+  }
+
+
   public readonly form = this._fb.group({
     name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
     description: [''],
@@ -132,6 +160,8 @@ export class CreateProductoEmpresaComponent {
       }
     });
   }
+
+
 
   submit(): void {
     if (this.form.invalid) {

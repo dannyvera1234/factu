@@ -2,15 +2,25 @@ import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core
 import { of, mergeMap, finalize } from 'rxjs';
 import { GeneriResp, ListClientes } from '../../interfaces';
 import { ClientesService } from '../../services/service-empresas';
-import { NgClass } from '@angular/common';
-import {  FormatPhonePipe, TextInitialsPipe } from '../../pipes';
+import { NgClass, NgOptimizedImage } from '@angular/common';
+import { FormatPhonePipe, TextInitialsPipe } from '../../pipes';
 import { ModalComponent } from '../../components';
 import { BuroCreditoComponent, ListaDocComponent, UpdateClienteEmpresaComponent } from './components';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-details-cliente',
-  imports: [NgClass, FormatPhonePipe, ModalComponent, TextInitialsPipe, UpdateClienteEmpresaComponent, BuroCreditoComponent,ListaDocComponent, RouterLink],
+  imports: [
+    NgClass,
+    FormatPhonePipe,
+    ModalComponent,
+    TextInitialsPipe,
+    UpdateClienteEmpresaComponent,
+    BuroCreditoComponent,
+    ListaDocComponent,
+    RouterLink,
+    NgOptimizedImage,
+  ],
   templateUrl: './details-cliente.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

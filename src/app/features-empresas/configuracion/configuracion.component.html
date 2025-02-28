@@ -395,16 +395,19 @@
   }
 }
 
+
+
 <app-modal #updateInfoEmisor>
   @defer {
     <div class="flex items-center justify-center">
-      <div class="bg-white w-full max-w rounded-lg overflow-auto">
+      <div class="bg-white w-full max-w-xl rounded-lg overflow-auto">
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
           <h2 class="font-bold text-xl truncate">Editar Informacion Personal</h2>
           <button (click)="updateInfoEmisor.close()" class="shrink-0">
             <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
         </header>
+
         @if (viewingEmisor(); as infoEmisor) {
           <section class="p-4">
             <app-update-emisor
@@ -418,6 +421,7 @@
     </div>
   }
 </app-modal>
+
 
 <app-modal #updateInfoTributaria>
   @defer {
