@@ -13,12 +13,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { of, mergeMap, finalize } from 'rxjs';
 import { ModalComponent } from '@/components';
 import { DocumentosService } from '@/services/service-empresas';
-import { NotificationService, ModalService } from '@/utils/services';
+import { NotificationService } from '@/utils/services';
 import { NgClass, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-filter',
-  imports: [NgClass, ReactiveFormsModule, ModalComponent, NgOptimizedImage],
+  imports: [NgClass, ReactiveFormsModule, NgOptimizedImage],
   templateUrl: './filter.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
