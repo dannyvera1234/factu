@@ -12,8 +12,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 })
 export class AddPaymentComponent {
   @Input({ required: true }) set total(value: any) {
+    this.valorTotal.set(value);
     this.form.patchValue({ valor: value });
   }
+
+  private readonly valorTotal = signal<string>('');
+
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);
 
   public readonly loading = signal(false);
@@ -39,7 +43,7 @@ export class AddPaymentComponent {
   form = this._fb.group({
     metodoPago: ['', [Validators.required]],
     plazo: ['0', [Validators.required]],
-    valor: ['', [Validators.required]],
+    valor: ['0', [Validators.required]],
     tiempo: ['dias', [Validators.required]],
   });
 
@@ -61,6 +65,15 @@ export class AddPaymentComponent {
   }
 
   submit() {
+    if (this.form.controls.metodoPago.value === '') {
+      this.notification.push({
+        message: 'Por favor, seleccione un método de pago',
+        type: 'error',
+      });
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const code = this.paymentMethods()!.data.find((x) => x.code === '00');
     if (this.form.controls.metodoPago.value === code && this.form.controls.plazo.value === '0') {
       this.notification.push({
@@ -70,19 +83,18 @@ export class AddPaymentComponent {
       return;
     }
 
-    if (this.form.invalid) {
+    if ( this.form.controls.valor.value === '0') {
       this.notification.push({
-        message: 'Por favor, llene todos los campos',
+        message: 'El valor a pagar no puede ser 0',
         type: 'error',
       });
-      this.form.markAllAsTouched();
       return;
     }
 
     this.addPay.emit(this.form.value);
 
     this.form.reset({
-      valor: this.total,
+      valor: '0',
       metodoPago: '',
       plazo: '0',
       tiempo: 'dias',

@@ -146,6 +146,7 @@ export class InfoProductosComponent {
     }
   }
   addPayment(payment: any): void {
+    console.log('payment', payment);
     if (!payment) return;
 
     this.paymentMethods.update((currentPaymentMethods: any[] = []) => {
