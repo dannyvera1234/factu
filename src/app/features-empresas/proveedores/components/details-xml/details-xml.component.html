@@ -129,48 +129,41 @@
         </table>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-2">
-        <section class="lg:col-span-3 space-y-4">
-          <div class="border rounded-lg overflow-x-auto mt-5">
-            <table class="w-full table-auto">
-              <thead>
-                <tr class="border-b bg-gray-100">
-                  <th class="text-center p-3 text-sm font-medium">Forma de Pago</th>
-                  <th class="text-center p-3 text-sm font-medium">Monto Total</th>
-                  <th class="text-center p-3 text-sm font-medium">Plazo</th>
-                  <th class="text-center p-3 text-sm font-medium">Unidad de Tiempo</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of dataxML.infoFactura.pagos.pago; track $index) {
-                  <tr class="border-b bg-white">
-                    <td class="p-3 text-center text-sm">{{ config.paymentMethod()[item.formaPago] }}</td>
-                    <td class="p-3 text-center text-sm">{{ item.total | currency }}</td>
-                    <td class="p-3 text-center text-sm">{{ item.plazo || 0 }}</td>
-                    <td class="p-3 text-center text-sm">{{ item.unidadTiempo || '0 Dias' }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
+        <div class="space-y-4 p-2 mt-5">
+          <h2 class="text-lg font-semibold text-gray-700">Información Adicional</h2>
           @if (dataxML.infoAdicional) {
-            <div class="space-y-4 border border-gray-200 p-2 rounded-lg shadow-sm">
-              <h2 class="text-lg font-semibold text-gray-700">Información Adicional</h2>
-              @for (item of dataxML.infoAdicional.campoAdicional; track $index) {
-                <div class="flex text-xs items-center">
-                  <span class="font-medium text-gray-600">{{ item.nombre }}:</span>
-                  <span class="text-gray-800 font-normal">{{ item.value }}</span>
-                </div>
-              }
-            </div>
+            @for (item of dataxML.infoAdicional.campoAdicional; track $index) {
+              <div class="flex text-xs items-center">
+                <span class="font-medium text-gray-600">{{ item.nombre }}:</span>
+                <span class="text-gray-800 font-normal">{{ item.value }}</span>
+              </div>
+            }
           }
-        </section>
-        <section class="lg:col-span-1 space-y-4">
-          <div class="flex justify-between items-center w-full py-2 px-4 bg-gray-50 rounded-lg shadow-sm">
-            <span class="font-medium text-gray-700">Importe Total</span>
-            <span class="font-semibold text-gray-800">{{ dataxML.infoFactura.importeTotal | currency }}</span>
           </div>
-        </section>
+
+        <div class="overflow-x-auto mt-5">
+          <table class="w-full table-auto rounded-lg">
+            <thead>
+              <tr class="border-b bg-gray-100">
+                <th class="text-center p-3 text-sm font-medium">Forma de Pago</th>
+                <th class="text-center p-3 text-sm font-medium">Plazo</th>
+                <th class="text-center p-3 text-sm font-medium">Unidad de Tiempo</th>
+                <th class="text-center p-3 text-sm font-medium">Monto Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of dataxML.infoFactura.pagos.pago; track $index) {
+                <tr class="border-b bg-white">
+                  <td class="p-3 text-center text-sm">{{ config.paymentMethod()[item.formaPago] }}</td>
+                  <td class="p-3 text-center text-sm">{{ item.plazo || 0 }}</td>
+                  <td class="p-3 text-center text-sm">{{ item.unidadTiempo || '0 Dias' }}</td>
+                  <td class="p-3 text-center text-sm">{{ item.total | currency }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     }
 
