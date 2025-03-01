@@ -4,8 +4,8 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { ListClientes, GeneriResp } from '@/interfaces';
 import { ProveedorService } from '../../services/service-empresas';
 import { FormatIdPipe, TextInitialsPipe } from '@/pipes';
-import {  NgOptimizedImage } from '@angular/common';
-import {  AgregarProveedorComponent } from './components';
+import { NgOptimizedImage } from '@angular/common';
+import { AgregarProveedorComponent } from './components';
 import { Modulos } from '../../utils/permissions';
 import { PaginationComponent } from '../../components/pagination';
 import { RouterLink } from '@angular/router';
@@ -19,8 +19,7 @@ import { RouterLink } from '@angular/router';
     NgOptimizedImage,
     PaginationComponent,
     AgregarProveedorComponent,
-    RouterLink
-
+    RouterLink,
   ],
   templateUrl: './proveedores.component.html',
   styles: ``,
@@ -44,13 +43,12 @@ export class ProveedoresComponent {
   }
 
   getListProveedor(page: number): void {
-
-    const filter ={
+    const filter = {
       page: page,
       size: Modulos.PAGE_SIZE,
       apply: true,
       search: '',
-    }
+    };
 
     of(this.loading.set(true))
       .pipe(
@@ -80,26 +78,25 @@ export class ProveedoresComponent {
     }
   }
 
-  cargar(evet: any) {
-    this.infoXML.set(null);
-  }
-
   cargarArchivo(data: any) {
     if (data) {
       this.infoXML.set(data);
     }
   }
 
-  // deleteCliente(ideCustomer: number) {
-  //   const currentCliente = this.listProveedor();
+  addProveedor(data: any) {
+    const currentProveedor = this.listProveedor();
 
-  //   if (currentCliente) {
-  //     const updatedCliente = {
-  //       ...currentCliente,
-  //       data: currentCliente.data.filter((cliente) => cliente.ideCustomer !== ideCustomer),
-  //     };
+    if (!currentProveedor?.data?.listData) return;
 
-  //     this.listProveedor.set(updatedCliente);
-  //   }
-  // }
+    const updatedProveedor = {
+      ...currentProveedor,
+      data: {
+        ...currentProveedor.data,
+        listData: [...currentProveedor.data.listData, data],
+      },
+    };
+
+    this.listProveedor.set(updatedProveedor);
+  }
 }

@@ -13,6 +13,7 @@
         label="RUC *"
         formControlName="identificationNumber"
         placeholder=" Por favor escribe tu RUC"
+        (input)="onUsernameInput($event, 'identificationNumber')"
         [prefix]="'🆔'"
       />
     </div>

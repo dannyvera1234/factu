@@ -32,7 +32,7 @@ export class RegistroProveedorComponent implements OnInit {
             '',
             [Validators.required, cedulaValidator(), Validators.maxLength(13), Validators.minLength(13)],
           ],
-      typeDocument: ['RUC', Validators.required],
+      typeDocument: ['04', Validators.required],
       email: ['', [Validators.required, emailValidator()]],
       cellPhone: ['09', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       address: ['', Validators.required],
@@ -67,7 +67,11 @@ export class RegistroProveedorComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          this.agregarRegistro.emit(res.data);
+          console.log(res);
+          this.agregarRegistro.emit({
+            proveedorIde:res.data,
+            ...data
+          });
           this.notification.push({
             message: 'Proveedor creado correctamente',
             type: 'success',

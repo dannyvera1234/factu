@@ -162,7 +162,9 @@
             />
           </button>
         </header>
-        <app-agregar-proveedor (agregarXML)="aggProveedor.close()" />
+        <app-agregar-proveedor (agregarXML)="aggProveedor.close()"
+        (dataRegistro)="$event && addProveedor($event)"
+        />
       </div>
     </div>
   }
