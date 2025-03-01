@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { ProveedoresComponent } from './proveedores.component';
-import { AggXmlComponent, DetailsXmlComponent } from './components';
+import { AggXmlComponent } from './components';
 
 export default [
   {
@@ -9,9 +9,13 @@ export default [
   },
 
   {
+    path: ':ideProveedorEncrypted',
+    loadComponent: () =>
+      import('../details-proveedor/details-proveedor.component').then((c) => c.DetailsProveedorComponent),
+  },
+  {
     path: 'importar-xml',
     component: AggXmlComponent,
   },
-
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ] satisfies Route[];

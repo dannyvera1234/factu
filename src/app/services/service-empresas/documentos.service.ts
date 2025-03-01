@@ -109,7 +109,6 @@ export class DocumentosService {
 
   letterPayNotification(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, { ide: id });
-    console.log(payload);
     return this._http.post(
       `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
       {
@@ -120,7 +119,6 @@ export class DocumentosService {
 
   generateReporteInvoiceCredito(ide: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, ide);
-    console.log(payload);
     return this.httpClient.post(
       `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
       payload,

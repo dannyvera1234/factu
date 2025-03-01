@@ -14,9 +14,9 @@ export class ProveedorService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listoProveedor(): Observable<any> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {});
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listProduct`, {
+  listaProveedor(filter:any): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {...filter});
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/listProveedor`, {
       body: payload,
     });
   }
@@ -36,10 +36,27 @@ export class ProveedorService {
     );
   }
 
-  saveXML(data: Partial<any>): Observable<any> {
-    console.log(data);
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/saveXML`, {
-      body: data,
+  saveXML(data: any,dataTypeBuy:string, files: File | null): Observable<any> {
+    const form = new FormData();
+
+    if (files) {
+      form.append('invoiceXML', files);
+    }
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
+      factura: data,
+      buyType: dataTypeBuy
+    });
+    console.log(payload);
+    form.append('reqDTO', JSON.stringify(payload));
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/saveProveedorFromXML`, {
+      body: payload,
+    });
+  }
+
+  saveProveedor(data: any): Observable<any> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, data);
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/saveProveedor`, {
+      body: payload,
     });
   }
 }

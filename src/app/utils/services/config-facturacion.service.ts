@@ -40,6 +40,12 @@ export class ConfigFacturacionService {
     '05': 'Otro',
   });
 
+  public readonly buyType = signal<Record<string, string>>({
+      '01': 'Costo',
+      '02': 'Gasto',
+  });
+
+
   public readonly paymentMethod = signal<Record<string, string>>({
     '00': 'Credito',
     '01': 'Efectivo',

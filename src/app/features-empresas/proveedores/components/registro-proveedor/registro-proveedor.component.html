@@ -1,14 +1,19 @@
 <form [formGroup]="proveedorForm">
   <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6 p-3">
     <div class="mb-4">
-      <app-custom-input label="RUC *" formControlName="ruc" placeholder="Ej. 123456789" [prefix]="'👤'" />
+      <app-custom-input
+        label="Nombres  *"
+        formControlName="socialReason"
+        placeholder=" Por favor escribe el nombre empresa"
+        [prefix]="'🏢'"
+      />
     </div>
     <div class="mb-4">
       <app-custom-input
-        label="Nombres  *"
-        formControlName="nombre"
-        placeholder=" Por favor escribe el nombre empresa"
-        [prefix]="'👤'"
+        label="RUC *"
+        formControlName="identificationNumber"
+        placeholder=" Por favor escribe tu RUC"
+        [prefix]="'🆔'"
       />
     </div>
 
@@ -23,33 +28,41 @@
     <div class="mb-4">
       <app-custom-input
         label="telefono *"
-        formControlName="telefono"
+        formControlName="cellPhone"
         placeholder=" Por favor escribe tu telefono"
-        [prefix]="'📧'"
+        (input)="onUsernameInput($event, 'cellPhone')"
+        [prefix]="'📞'"
       />
     </div>
     <div class="mb-4">
       <app-custom-input
         label="Dirección *"
-        formControlName="direccionEstablecimiento"
+        formControlName="address"
         placeholder=" Por favor escribe tu direccion"
-        [prefix]="'📧'"
+        [prefix]="'📍'"
       />
     </div>
 
-    <div class="flex gap-4 justify-end  md:flex-row flex-col text-center max-md:w-full">
-      <button
-        class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
-        type="button"
-        (click)="agregarRegistro.emit(null)"
-      >
-        Cerrar
-      </button>
-      <button class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex" >
-        Guardar
-      </button>
+    <div class="flex gap-4 justify-end md:flex-row flex-col text-center max-md:w-full">
+      @if (!loandig()) {
+        <button
+          class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
+          type="button"
+          (click)="agregarRegistro.emit(null)"
+        >
+          Cerrar
+        </button>
+        <button
+          class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex"
+          (click)="saveProveedor()"
+        >
+          Guardar
+        </button>
+      } @else {
+        <div class="flex justify-center items-center h-full mt-4">
+          <div class="loader"></div>
+        </div>
+      }
     </div>
   </div>
-
-
 </form>

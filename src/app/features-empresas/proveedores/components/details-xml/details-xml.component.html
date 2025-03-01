@@ -10,26 +10,52 @@
           <div class="relative text-sm">
             <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
             <div
-              class="relative flex flex-col items-center justify-center gap-4 rounded-xl border bg-white/50 p-1 backdrop-blur-sm"
+              class="relative flex flex-col items-center justify-center gap-4 rounded-xl bg-white/50 backdrop-blur-sm"
             >
               <div class="relative">
-                <img
-                  [src]="dataxML.infoTributaria.photo || '/assets/icon/file.png'"
-                  alt="Emisor"
-                  class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
-                />
-                <span
-                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
-                  [ngClass]="{
-                    'bg-green-500': dataxML.infoTributaria.ambiente === '2',
-                    'bg-red-500': dataxML.infoTributaria.ambiente === '1',
-                  }"
-                >
-                  {{ config.environmentCode()[dataxML.infoTributaria.ambiente] }}
-                </span>
-              </div>
-              <div class="text-center">
-                <p class="font-medium">{{ dataxML.infoTributaria.nombreComercial }}</p>
+                @if (!fileUrl()) {
+                  <div>
+                    <label
+                      class="bg-gray-50 border border-dashed border-neutral-400 block p-4 rounded-lg text-center mb-4 cursor-pointer"
+                    >
+                      <div class="flex gap-2 flex-col">
+                        <input type="file" (change)="onFileSelected($event)" class="hidden" accept=".xml" />
+                        <div class="size-14 mx-auto bg-blue-300 rounded-full flex items-center justify-center">
+                          <img src="/assets/icon/drag_and_drop.svg" alt="Upload" width="35" height="30" />
+                        </div>
+                        <p class="text-balance">
+                          Arrastre y suelte el archivo aquí o seleccione el comprobante de pago
+                        </p>
+                        <p class="text-sm text-neutral-400">Formato del archivo permitido: JPG, PNG</p>
+                      </div>
+                    </label>
+                  </div>
+                } @else {
+                  <div
+                    class="relative p-4 rounded-lg bg-white border border-neutral-300 shadow-md hover:shadow-lg transition-all flex flex-col items-center"
+                  >
+                    <!-- Botón eliminar en la parte superior derecha -->
+                    <button
+                      class="absolute top-2 right-2 p-2 rounded-md bg-gray-300 hover:bg-gray-400 transition-colors"
+                      (click)="removeLogo()"
+                    >
+                      <img src="/assets/icon/trash-icon.svg" class="w-5" alt="Delete" />
+                    </button>
+
+                    <!-- Ícono de archivo centrado -->
+                    <div class="rounded-md size-16 flex items-center justify-center bg-blue-400 my-4">
+                      <img src="/assets/icon/file.svg" width="32" height="32" alt="File" />
+                    </div>
+
+                    <!-- Nombre del archivo -->
+                    <p
+                      class="truncate text-sm font-medium text-gray-700 text-center max-w-[290px]"
+                      [title]="nameFile()"
+                    >
+                      {{ nameFile() }}
+                    </p>
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -42,10 +68,23 @@
                   <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
                 </div>
                 <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Nombre Comercial</p>
+                  <p class="font-medium truncate">{{ dataxML.infoTributaria.nombreComercial }}</p>
+                </div>
+              </div>
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+                </div>
+                <div class="space-y-1 min-w-0">
                   <p class="text-sm text-gray-500">RUC</p>
                   <p class="font-medium truncate">{{ dataxML.infoTributaria.ruc }}</p>
                 </div>
               </div>
+            </div>
+            <div class="grid gap-2 md:grid-cols-2">
               <div
                 class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md text-sm"
               >
@@ -58,9 +97,7 @@
                   <p class="font-medium truncate">{{ dataxML.infoTributaria.dirMatriz }}</p>
                 </div>
               </div>
-            </div>
 
-            <div class="grid gap-4 md:grid-cols-2">
               <div
                 class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
               >
@@ -76,7 +113,22 @@
                   </div>
                 </div>
               </div>
+            </div>
 
+            <div class="grid gap-4 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="space-y-1 flex-1">
+                  <app-custom-select
+                    [(ngModel)]="dataTypeBuy"
+                    placeholder="Selecciona un tipo de compra"
+                    [options]="typeBuy().values"
+                    [labels]="typeBuy().labels"
+                    [prefix]="'📇'"
+                  />
+                </div>
+              </div>
               <div
                 class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
               >
@@ -140,7 +192,7 @@
               </div>
             }
           }
-          </div>
+        </div>
 
         <div class="overflow-x-auto mt-5">
           <table class="w-full table-auto rounded-lg">
