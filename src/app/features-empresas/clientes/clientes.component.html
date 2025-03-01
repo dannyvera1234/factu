@@ -23,8 +23,8 @@
           Buscar
         </button>
 
-        @defer () {
-          <app-filter/>
+        @defer {
+          <app-filter />
         }
 
         <button
@@ -49,6 +49,7 @@
               <th class="px-4 py-3 text-center">Correo</th>
               <th class="px-4 py-3 text-center">Dirección</th>
               <th class="px-4 py-3 text-center">Telefono</th>
+              <th class="px-4 py-4 text-center"></th>
               <th class="px-4 py-4 text-center"></th>
             </tr>
           </thead>
@@ -94,6 +95,21 @@
                       {{ cliente.cellPhone | formatPhone }}
                     </td>
 
+                    <td>
+                      <div class="flex gap-1 group relative">
+                        <button
+                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+                          [routerLink]="cliente.ideCustomerEncrypted"
+                        >
+                          <img src="assets/icon/show-password.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
+                        </button>
+                        <div
+                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        >
+                          Ver detalle
+                        </div>
+                      </div>
+                    </td>
                     <td>
                       <div class="flex gap-1 group relative">
                         <button
@@ -173,4 +189,3 @@
     </div>
   </div>
 </app-modal>
-

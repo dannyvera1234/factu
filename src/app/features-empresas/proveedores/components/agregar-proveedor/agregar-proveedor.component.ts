@@ -3,11 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalComponent } from '../../../../components';
 import { NgOptimizedImage } from '@angular/common';
 import { RegistroProveedorComponent } from '../registro-proveedor';
-import { RegistroContadoresComponent } from "../../../../web/registro-contadores/registro-contadores.component";
 
 @Component({
   selector: 'app-agregar-proveedor',
-  imports: [ModalComponent, NgOptimizedImage, RegistroProveedorComponent, RegistroContadoresComponent],
+  imports: [ModalComponent, NgOptimizedImage, RegistroProveedorComponent],
   templateUrl: './agregar-proveedor.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
