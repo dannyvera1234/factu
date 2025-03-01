@@ -2,8 +2,6 @@ export * from './update-emisor';
 export * from './update-emisor-tributaria';
 export * from './create-file';
 export * from './delete-file';
-export * from './create-establecimiento';
-export * from './delete-establecimiento';
 export * from './update-establecimiento';
 export * from './sequential';
 export * from './update-logo';

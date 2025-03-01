@@ -1,53 +1,52 @@
+
+
+
 <form [formGroup]="form">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
-      <app-custom-input label="Codigo*" formControlName="mainCode" />
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 mt-4">
+    <div class="mb-4">
+      <app-custom-input label="Código Principal *" formControlName="mainCode" placeholder="ej. 001" [prefix]="'🏢'" />
     </div>
-    <div>
-      <app-custom-input label="Codigo Auxiliar" formControlName="auxiliaryCode" />
+    <div class="mb-4">
+      <app-custom-input label="Codigo Auxiliar" formControlName="auxiliaryCode" placeholder="ej. 001" [prefix]="'🏢'" />
     </div>
-    <div>
-      <app-custom-input label="Nombre*" formControlName="name" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Nombre del Producto *"
+        formControlName="name"
+        placeholder="ej. Producto 1"
+        [prefix]="'📦'"
+      />
     </div>
-    <div>
+    <div class="mb-4">
+      <app-custom-input
+        label="Precio *"
+        formControlName="unitPrice"
+        placeholder="ej. 1000"
+        [prefix]="'💲'"
+        (input)="onAmountInput($event, 'unitPrice')"
+      />
+    </div>
+    <div class="mb-4">
       <app-custom-select
         formControlName="productType"
-        placeholder="Tipo de producto*"
+        placeholder="Selecciona el tipo de producto"
         [options]="productTypeCode().values"
         [labels]="productTypeCode().labels"
+        [prefix]="'🛒'"
+        label="Tipo de producto *"
       />
     </div>
 
-    <div>
+    <div class="mb-4">
       <app-custom-select
         formControlName="tariffCodeIva"
-        placeholder="Tarifa IVA*"
+        placeholder=" Selecciona la tarifa"
         [options]="codeTariffIVA().values"
         [labels]="codeTariffIVA().labels"
+        [prefix]="'📇'"
+        label="IVA *"
       />
     </div>
-
-    <div>
-      <app-custom-input label="Precio*" formControlName="unitPrice" />
-    </div>
-
-    <!-- <div>
-      <app-custom-input
-        label="Cantidad"
-        formControlName="stock"
-        (input)="onUsernameInput($event, 'stock')"
-
-      />
-    </div> -->
-
-    <!-- <div>
-      <app-custom-select
-        formControlName="tariffCodeIce"
-        placeholder="Tarifa ICE"
-        [options]="codeTariffICE().values"
-        [labels]="codeTariffICE().labels"
-      />
-    </div> -->
   </div>
 
   <div class="mt-4">
@@ -56,14 +55,19 @@
         label="Cantidad"
         formControlName="stock"
         (input)="onUsernameInput($event, 'stock')"
-
+        placeholder="Ingrese la cantidad de productos"
+        [prefix]="'🔢'"
       />
     </div>
+    <label for="nota-textarea">
+      Descripción
+      <span class="text-gray-400">(opcional)</span>
+    </label>
     <textarea
       id="nota-textarea"
       rows="4"
       formControlName="description"
-      class="w-full p-3 border-b-2 border-gray-300 focus:ring-teal-500 focus:border-teal-500 text-sm text-gray-700"
+      class="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 text-sm text-gray-700"
       placeholder="Escribe una descripción del producto"
     ></textarea>
 
@@ -72,7 +76,7 @@
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {
       <button
-        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+      class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
         type="button"
         (click)="update.emit(null)"
       >

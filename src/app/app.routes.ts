@@ -14,8 +14,7 @@ export const routes: Routes & {
   },
   {
     path: 'sobre_nosotros',
-    loadComponent: () =>
-      import('./web/sobre-nosotros/sobre-nosotros.component').then((m) => m.SobreNosotrosComponent),
+    loadComponent: () => import('./web/sobre-nosotros/sobre-nosotros.component').then((m) => m.SobreNosotrosComponent),
   },
   {
     path: 'registro_empresa',
@@ -61,11 +60,6 @@ export const routes: Routes & {
         path: 'proveedores',
         loadChildren: () => import('./features-empresas/proveedores/routes'),
       },
-      {
-        path: 'detalle_proveedor',
-        loadChildren: () => import('./features-empresas/proveedores/components/details-xml/routes'),
-      },
-
 
       {
         path: '**',

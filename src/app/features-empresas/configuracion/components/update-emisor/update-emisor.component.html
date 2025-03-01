@@ -1,54 +1,51 @@
 <form [formGroup]="form">
-  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
-    <div>
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-4 p-2">
+    <div class="mb-4">
       <app-custom-input
-        label="RUC"
-        formControlName="identificationNumber"
-        (input)="onUsernameInput($event, 'identificationNumber')"
-      />
-    </div>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <app-custom-input
-        label="Nombres"
+        label="Nombres *"
         formControlName="names"
-        subLabel="Por favor escribe tus nombres completos"
+        placeholder="Ingrese los nombres"
+        [prefix]="'👤'"
         (input)="onletterInput($event, 'names')"
       />
     </div>
-    <div>
+    <div class="mb-4">
       <app-custom-input
-        label="Apellidos"
+        label="Apellidos *"
         formControlName="lastName"
+        placeholder="Ingrese los apellidos"
+        [prefix]="'👤'"
         (input)="onletterInput($event, 'lastName')"
-        subLabel="Por favor escribe tus apellidos completos"
       />
     </div>
 
-    <div>
+    <div class="mb-4">
       <app-custom-input
-        label="Télefono"
+        label="Télefono *"
         formControlName="cellPhone"
-        class="grow"
+        [prefix]="'📞'"
+        placeholder="Ingrese el número de télefono"
         (input)="onUsernameInput($event, 'cellPhone')"
       />
     </div>
-
-    <div>
-      <app-custom-input label="Fecha de nacimiento" formControlName="dateBirth" type="date" [max]="maxDate()" />
+    <div class="mb-4">
+      <app-custom-input
+        type="email"
+        label="Correo *"
+        formControlName="email"
+        placeholder="Ingrese el correo"
+        [prefix]="'📧'"
+      />
     </div>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
-    <div>
-      <app-custom-input type="email" label="Correo" formControlName="email" class="grow" />
+    <div class="mb-4">
+      <app-custom-input label="Fecha de nacimiento" formControlName="dateBirth" type="date" [max]="maxDate()" />
     </div>
   </div>
 
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {
       <button
-        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+      class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
         type="button"
         (click)="updateEmisor.emit(null)"
       >

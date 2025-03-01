@@ -1,29 +1,47 @@
 <form [formGroup]="form">
-  <div class="grid grid-cols-1 md:grid-cols-1 gap-4 p-2">
-    <div class="mb-2">
+  <div class="grid grid-cols-1 md:grid-cols-1 gap-4 p-2 mt-2">
+    <div class="mb-4">
       <app-custom-input
-        label="Establecimiento"
+        label="Establecimiento *"
         formControlName="code"
         (input)="onUsernameInput($event, 'code')"
-        subLabel="ej. 003"
+        placeholder="ej. 001"
+        [prefix]="'🏢'"
       />
     </div>
-    <div class="mb-2">
-      <app-custom-input label="Telefono" formControlName="cellPhone" (input)="onUsernameInput($event, 'cellPhone')" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Telefono *"
+        formControlName="cellPhone"
+        (input)="onUsernameInput($event, 'cellPhone')"
+        [prefix]="'📞'"
+      />
     </div>
 
-    <div class="mb-2">
-      <app-custom-input label="Correo" formControlName="email" />
+    <div class="mb-4">
+
+      <app-custom-input
+        label="Correo *"
+        type="email"
+        formControlName="email"
+        placeholder="correo@ejemplo.com"
+        [prefix]="'📧'"
+      />
     </div>
-    <div class="mb-2">
-      <app-custom-input label="Dirección" formControlName="address" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Dirección *"
+        formControlName="address"
+        placeholder="Ingrese dirección del establecimiento"
+        [prefix]="'📍'"
+      />
     </div>
   </div>
 
-  <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+  <div class="flex gap-4 justify-end md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {
       <button
-        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+        class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
         type="button"
         (click)="createEstablecimiento.emit()"
       >

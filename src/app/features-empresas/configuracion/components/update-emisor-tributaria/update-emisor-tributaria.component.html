@@ -1,32 +1,57 @@
 <form [formGroup]="form">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <div>
-      <app-custom-input label="Razon Social" formControlName="razon_social"
-      (input)="onletterInput($event, 'razon_social')"
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
+    <div class="mb-4">
+      <app-custom-input
+        label="Razon Social *"
+        formControlName="razon_social"
+        (input)="onletterInput($event, 'razon_social')"
+        placeholder="Ingrese la razón social de la empresa"
+        [prefix]="'👤'"
       />
     </div>
-    <div>
-      <app-custom-input label="Nombre Comercial" formControlName="comercialName"
-      (input)="onletterInput($event, 'comercialName')"
+    <div class="mb-4">
+      <app-custom-input
+        label="Nombre Comercial *"
+        formControlName="comercialName"
+        (input)="onletterInput($event, 'comercialName')"
+        placeholder="Ingrese el nombre comercial de la empresa"
+        [prefix]="'🏢'"
       />
     </div>
-    <div>
-      <app-custom-input label="Dirección Matriz" formControlName="mainAddress" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Ubicación de la empresa *"
+        formControlName="mainAddress"
+        placeholder="Ingrese la ciudad de la empresa"
+        [prefix]="'📍'"
+      />
     </div>
 
-    <div>
+    <div class="mb-4">
       <app-custom-select
         formControlName="typePerson"
-        placeholder="Tipo de Persona"
+        placeholder="Selecciona el tipo de persona"
         [options]="typePerson().values"
         [labels]="typePerson().labels"
+        [prefix]="'🧑'"
+        label="Tipo de Persona *"
       />
     </div>
-    <div>
-      <app-custom-input label="Contribuyente Especial" formControlName="specialContributor" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Contribuyente Especial"
+        formControlName="specialContributor"
+        placeholder="Ingrese si la empresa es contribuyente especial"
+        [prefix]="'📇'"
+      />
     </div>
-    <div>
-      <app-custom-input label="Agente de Retención" formControlName="retentionAgent" />
+    <div class="mb-4">
+      <app-custom-input
+        label="Agente de Retención"
+        formControlName="retentionAgent"
+        placeholder="Ingrese si la empresa es agente de retención"
+        [prefix]="'📇'"
+      />
     </div>
   </div>
 
@@ -131,7 +156,7 @@
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
     @if (!loading()) {
       <button
-        class="items-center gap-2 bg-zinc-200 px-4 py-2 rounded-lg md:flex text-gray-600"
+        class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
         type="button"
         (click)="updateTributaria.emit(null)"
       >

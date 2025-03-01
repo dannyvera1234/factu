@@ -65,7 +65,7 @@
                 <!-- Tooltip -->
                 @if (isTooltipVisible(item.ide)) {
                   <div
-                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm"
+                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm z-[1000]"
                     (mouseenter)="toggleTooltip(item.ide, true)"
                     (mouseleave)="toggleTooltip(item.ide, false)"
                   >
@@ -102,7 +102,7 @@
             <div class="h-6 border-l border-neutral-300 mx-4"></div>
 
             <div class="flex items-center space-x-2 bg-gray-100 border border-slate-400 rounded-md px-3 py-0.5">
-              <span class="text-xs text-slate-600 font-medium">{{ item.total | currency }}</span>
+              <span class="text-xs text-slate-600 font-medium">{{ item.creditAmount | currency }}</span>
             </div>
           </div>
 

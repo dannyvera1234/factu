@@ -37,6 +37,7 @@ export class ProveedorService {
   }
 
   saveXML(data: Partial<any>): Observable<any> {
+    console.log(data);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/saveXML`, {
       body: data,
     });

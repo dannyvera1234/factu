@@ -4,18 +4,25 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { FormErrorMessageComponent } from './form-error-message.component';
 import { InputErrorLocatorService } from '@/utils/services';
 
-
-
 @Component({
   selector: 'app-custom-input',
   imports: [NgClass, FormErrorMessageComponent],
   template: `<div [class]="groupClass">
     <div class="relative">
+      <label [for]="id ?? control.name" class="absolute left-0 top-[-25px]  font-medium text-gray-700">
+      {{ label.split('*')[0] }}
+
+        @if (label.includes('*')) {
+          <span class="text-red-500">*</span>
+        }
+      </label>
+
       @if (prefix(); as prefix) {
-        <span class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none text-gray-600">{{
-          prefix
-        }}</span>
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          {{ prefix }}
+        </span>
       }
+
       <input
         [id]="id ?? control.name"
         [name]="control.name"
@@ -24,37 +31,20 @@ import { InputErrorLocatorService } from '@/utils/services';
         [accept]="accept"
         [placeholder]="placeholder"
         [ngClass]="
-          'peer w-full border-b-2 border-gray-300 focus:border-secondary outline-none text-gray-600 py-2 ' +
+          'peer w-full border border-gray-300 rounded-md focus:ring focus:ring-blue-300 outline-none text-gray-600 p-2 ' +
           inputClass +
-          (prefix() ? 'ps-6' : '')
+          (prefix() ? 'pl-10' : 'pl-3')
         "
-        [class]="inputClass"
         [readonly]="readonly"
         [autocomplete]="autocomplete"
         [value]="value"
         (input)="change($event)"
         (blur)="control.control?.markAsTouched()"
-        [min]="min"
-        [max]="max"
-        [pattern]="pattern"
         [disabled]="this.control.control?.disabled ?? false"
       />
-
-      @if (label) {
-        <label
-          [for]="id ?? control.name"
-          class="absolute left-0 -top-3.5 text-gray-400 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base text-sm peer-placeholder-shown:text-gray-400 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-secondary"
-          [ngClass]="prefix() ? 'left-6' : 'left-0'"
-        >
-          {{ label }}</label
-        >
-        <span class="label-text-alt text-gray-400 text-xs">
-          {{ subLabel }}
-        </span>
-      }
     </div>
     <app-form-error-message [control]="control.control!" />
-  </div>`,
+  </div> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomInputComponent implements ControlValueAccessor, OnInit {
