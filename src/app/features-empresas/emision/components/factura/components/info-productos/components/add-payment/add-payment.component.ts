@@ -35,7 +35,6 @@ export class AddPaymentComponent {
   private getPayForms() {
     this.controlService.getTypesPayForm().subscribe((resp) => {
       if (resp.status === 'OK') {
-        console.log(resp);
         this.paymentMethods.set(resp);
       }
     });

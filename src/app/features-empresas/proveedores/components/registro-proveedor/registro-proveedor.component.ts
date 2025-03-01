@@ -67,7 +67,7 @@ export class RegistroProveedorComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
+
           this.agregarRegistro.emit({
             proveedorIde:res.data,
             ...data

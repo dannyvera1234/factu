@@ -153,10 +153,8 @@ export class ListaDocComponent {
         finalize(() => this.loading.set(false)),
       )
       .subscribe((resp) => {
-        console.log(resp);
         if (resp.status === 'OK') {
           // Verificar que listData exista y sea un arreglo
-          console.log(resp);
           const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
             if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;
             if (a.saleType !== 'Crédito' && b.saleType === 'Crédito') return 1;

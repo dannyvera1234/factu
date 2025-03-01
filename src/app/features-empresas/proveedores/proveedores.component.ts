@@ -57,7 +57,6 @@ export class ProveedoresComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.listProveedor.set(resp);
         }
       });
