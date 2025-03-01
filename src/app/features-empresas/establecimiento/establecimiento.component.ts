@@ -56,6 +56,7 @@ export class EstablecimientoComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+
           this.subsidiaries.set(resp);
         }
       });

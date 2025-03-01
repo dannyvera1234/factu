@@ -40,6 +40,16 @@ export class ConfigFacturacionService {
     '05': 'Otro',
   });
 
+  public readonly paymentMethod = signal<Record<string, string>>({
+    '00': 'Credito',
+    '01': 'Efectivo',
+    '02': 'Cheque',
+    '03': 'Transferencia',
+    '04': 'Tarjeta de crédito',
+    '05': 'Tarjeta de debito',
+    '06': 'Otros',
+  });
+
 
   public readonly DOCUMENT_STYLES = signal<Record<string, { bgColor: string; icon: string }>>({
     'Factura': {

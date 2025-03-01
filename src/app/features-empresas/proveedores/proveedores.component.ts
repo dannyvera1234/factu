@@ -4,18 +4,27 @@ import { of, mergeMap, finalize } from 'rxjs';
 import { ListClientes, GeneriResp } from '@/interfaces';
 import { ProveedorService } from '../../services/service-empresas';
 import { FormatIdPipe, FormatPhonePipe, TextInitialsPipe } from '@/pipes';
-import { NgClass, NgOptimizedImage } from '@angular/common';
-import { AggXmlComponent, DetailsXmlComponent } from './components';
+import {  NgOptimizedImage } from '@angular/common';
+import {  AgregarProveedorComponent, DetailsXmlComponent } from './components';
 
 @Component({
   selector: 'app-proveedores',
-  imports: [ModalComponent, TextInitialsPipe, FormatIdPipe, FormatPhonePipe, NgOptimizedImage, AggXmlComponent, DetailsXmlComponent],
+  imports: [
+    ModalComponent,
+    TextInitialsPipe,
+    FormatIdPipe,
+    FormatPhonePipe,
+    NgOptimizedImage,
+    DetailsXmlComponent,
+    AgregarProveedorComponent,
+
+  ],
   templateUrl: './proveedores.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProveedoresComponent {
- public readonly loading = signal(false);
+  public readonly loading = signal(false);
 
   public readonly updateClient = signal<ListClientes | null>(null);
 
@@ -48,13 +57,11 @@ export class ProveedoresComponent {
     this.infoXML.set(null);
   }
 
-
-  cargarArchivo(data: any){
-    if(data){
+  cargarArchivo(data: any) {
+    if (data) {
       this.infoXML.set(data);
     }
   }
-
 
   deleteCliente(ideCustomer: number) {
     const currentCliente = this.listProveedor();
@@ -68,6 +75,4 @@ export class ProveedoresComponent {
       this.listProveedor.set(updatedCliente);
     }
   }
-
-
 }

@@ -1,69 +1,85 @@
-  @if (!fileUrl()) {
-    <div>
-      <label
-        class="bg-gray-50 border border-dashed border-neutral-400 block p-4 rounded-lg text-center mb-4 cursor-pointer"
+<div class="p-5">
+  <div class="rounded-2xl shadow bg-white p-6">
+    @if (!showForm()) {
+      <a
+        routerLink="/sistema_contable_empresa/proveedores"
+        class="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
       >
-        <div class="flex gap-2 flex-col">
-          <input
-          type="file"
-          (change)="onFileSelected($event)"
-          class="hidden"
-          accept=".xml"
-        />
-          <div class="size-14 mx-auto bg-blue-300 rounded-full flex items-center justify-center">
-            <img src="/assets/icon/drag_and_drop.svg" alt="Upload" width="35" height="30" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span class="text-sm">Atrás</span>
+      </a>
+    }
+    <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+      <!-- Título y descripción -->
+      <div class="flex flex-col items-start gap-1">
+        <h1 class="text-2xl font-semibold">Visualización de Documento XML</h1>
+        <span class="text-xs text-gray-500 md:whitespace-nowrap md:truncate md:max-w-[300px] lg:max-w-full">
+          Aquí puedes ver y administrar los XML generados por los proveedores.
+        </span>
+      </div>
+
+      <!-- Contenedor de la sección de búsqueda y botón -->
+      <div class="flex items-center gap-4 w-full mt-4 md:mt-0">
+        <button
+          class="bg-[#E4E7EB] shrink-0 flex font-semibold px-4 py-2 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-slate-300 text-[13px]"
+          (click)="aggXML.open()"
+        >
+          + Agregar Xml
+        </button>
+      </div>
+    </nav>
+
+    @if (showForm()) {
+      <div class="mt-6">
+        <app-details-xml [infoXML]="dataXML()" />
+      </div>
+    } @else {
+      @if (loading()) {
+        <div class="h-full text-center flex justify-center items-center">
+          <div class="loader"></div>
+        </div>
+      } @else {
+        <div class="text-center py-4 max-w-2xl mx-auto">
+          <div class="bg-slate-50 py-4 mb-5 rounded-xl">
+            <img
+              ngSrc="assets/icon/no-application-found.svg"
+              alt="Nothing found"
+              width="242"
+              height="242"
+              priority
+              class="mx-auto"
+            />
           </div>
-          <p class="text-balance">Arrastre y suelte el archivo aquí o seleccione el archivo XML</p>
-          <p class="text-sm text-neutral-400">Formato del archivo permitido: XML</p>
+          <h3 class="text-2xl font-bold">No hay XML registradas</h3>
+          <p class="text-balance">No se encontraron XML registrado, Puedes agregar un nuevo XML.</p>
         </div>
-      </label>
-    </div>
-  }
+      }
+    }
+  </div>
+</div>
 
-  @if (fileUrl()) {
-    <div>
-      <div class="p-2 rounded-lg flex items-center gap-3 bg-white border border-neutral-300">
-        <div class="rounded-md size-10 flex items-center justify-center shrink-0 cursor-pointer bg-orange-500">
-          <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
-        </div>
-
-        <div class="grow truncate">
-          <div class="flex gap-2 items-center">
-            <p class="truncate text-sm">{{ nameFile() }}</p>
-          </div>
-        </div>
-
-        <div class="flex gap-1 truncate">
-          <button
-            class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-            (click)="removeLogo()"
-          >
-            <img src="/assets/icon/trash-icon.svg" class="w-20 sm:w-5 md:w-5 lg:w-6" alt="Delete" />
+<app-modal #aggXML>
+  @defer {
+    <div class="flex items-center justify-center">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <header class="p-4 flex justify-between items-center border-b border-gray-300">
+          <h2 class="font-bold text-xl truncate">Subir Documentos XML</h2>
+          <button (click)="aggXML.close()" class="shrink-0">
+            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
           </button>
-        </div>
+        </header>
+        <section class="p-6">
+          <app-subir-xml (created)="aggXML.close()" (created)="$event && createXML($event)" />
+        </section>
       </div>
     </div>
   }
-
-
-
-<div class="flex justify-end gap-4 mt-6 flex-col md:flex-row w-full md:w-auto">
-  @if (!loading()) {
-    <button
-      class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 w-full md:w-auto mb-2 md:mb-0"
-      type="button"
-      (click)="infoXML.emit(null)"
-    >
-      Cancelar
-    </button>
-    <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 w-full md:w-auto" (click)="submit()">
-      Cargar Archivo
-    </button>
-  } @else {
-    <div class="flex justify-center items-center h-full mt-4">
-      <div class="loader"></div>
-    </div>
-  }
-</div>
-
-
+</app-modal>

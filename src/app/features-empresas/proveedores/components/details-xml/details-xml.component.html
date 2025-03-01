@@ -1,262 +1,190 @@
-<!-- Contenedor principal -->
-<div class="border-b border-gray-200 pb-4 mb-6">
-  <h1 class="text-2xl font-bold text-gray-800">Visualización de Documento XML</h1>
-  <p class="text-sm text-gray-500">Detalle del archivo XML cargado, estructurado para facilitar la lectura.</p>
-</div>
-
-<!-- Contenido del XML -->
-@if (infoXML) {
-  <div class="bg-gray-50 p-2 rounded-lg border border-gray-200 overflow-auto">
-    <div class="grid gap-2 md:grid-cols-[3fr,1fr]">
-      <!-- Información de la factura -->
-      <div class="space-y-2">
-        <!-- Aquí van los divs de información de la factura, como RUC, correo, etc. -->
-
-        <div class="grid gap-2 md:grid-cols-2">
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-blue-50 p-2">
-              <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">RUC</p>
-              <p class="font-medium truncate">
-                {{ infoXML?.infoTributaria?.ruc }}
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-green-50 p-2">
-              <img src="assets/icon/email.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">Correo</p>
-              <p class="font-medium truncate">44234</p>
-            </div>
-          </div>
-        </div>
-        <div class="grid gap-2 md:grid-cols-2">
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md text-sm"
-          >
-            <div class="rounded-lg bg-blue-50 p-2">
-              <img src="assets/icon/address.svg" alt="" />
-            </div>
-
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">Dirección</p>
-              <p class="font-medium truncate">
-                {{ infoXML?.infoTributaria?.dirMatriz }}
-              </p>
-            </div>
-          </div>
-
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-green-50 p-2">
-              <img src="assets/icon/cell.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">Teléfono</p>
-              <p class="font-medium truncate">2323</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid gap-4 md:grid-cols-2">
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-purple-100 p-2">
-              <img src="assets/icon/company.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">Establecimiento</p>
-              <div class="flex items-center gap-2">
-                <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
-                  {{ infoXML?.infoTributaria?.estab }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-green-50 p-2">
-              <img src="assets/icon/cell.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <p class="text-sm text-gray-500">Punto de venta</p>
-              <p class="font-medium truncate">
-                <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
-                {{ infoXML?.infoTributaria?.ptoEmi }}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- combos -->
-        <div class="grid gap-4 md:grid-cols-2">
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-purple-100 p-2">
-              <img src="assets/icon/company.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <!-- <p class="text-sm text-gray-500">Tipo de Registro </p> -->
-              <div class="flex items-center gap-2">
-                <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
-                  <app-custom-select
-                    [(ngModel)]="tipoProducto"
-                    placeholder="Tipo de Registro"
-                    [options]="tipoProduct().values"
-                    [labels]="tipoProduct().labels"
-                    class="w-full"
-                  />
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
-          >
-            <div class="rounded-lg bg-purple-100 p-2">
-              <img src="assets/icon/company.svg" alt="" />
-            </div>
-            <div class="space-y-1 min-w-0">
-              <!-- <p class="text-sm text-gray-500">Tipo de Registro </p> -->
-              <div class="flex items-center gap-2">
-                <span class="bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-md">
-                  <app-custom-select
-                    [(ngModel)]="tipoProducto"
-                    placeholder="Tipo de Registro"
-                    [options]="tipoProduct().values"
-                    [labels]="tipoProduct().labels"
-                    class="w-full"
-                  />
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="relative text-sm">
-        <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
-        <div
-          class="relative flex flex-col items-center justify-center gap-4 rounded-xl border bg-white/50 p-1 backdrop-blur-sm"
-        >
-          <div class="relative">
-            <img
-              [src]="'/assets/icon/file.png'"
-              alt="Emisor"
-              class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
-            />
-            <span
-              class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
-              [ngClass]="{
-                'bg-green-500': infoXML.infoTributaria.ambiente === '2',
-                'bg-red-500': infoXML.infoTributaria.ambiente === '1',
-              }"
+<div class="p-4 border border-gray-200 rounded-md shadow-sm bg-white">
+  @if (loading()) {
+    <div class="flex justify-center items-center h-full mt-4">
+      <div class="loader"></div>
+    </div>
+  } @else {
+    @if (infoXML; as dataxML) {
+      <div class="mt-2 text-sm">
+        <div class="grid gap-2 md:grid-cols-[1fr,3fr]">
+          <div class="relative text-sm">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
+            <div
+              class="relative flex flex-col items-center justify-center gap-4 rounded-xl border bg-white/50 p-1 backdrop-blur-sm"
             >
-              {{ config.environmentCode()[infoXML.infoTributaria.ambiente] }}
-            </span>
+              <div class="relative">
+                <img
+                  [src]="dataxML.infoTributaria.photo || '/assets/icon/file.png'"
+                  alt="Emisor"
+                  class="h-24 w-24 rounded-full border-4 border-white shadow-xl object-cover"
+                />
+                <span
+                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 text-white text-xs font-semibold px-2 py-1 rounded-full border"
+                  [ngClass]="{
+                    'bg-green-500': dataxML.infoTributaria.ambiente === '2',
+                    'bg-red-500': dataxML.infoTributaria.ambiente === '1',
+                  }"
+                >
+                  {{ config.environmentCode()[dataxML.infoTributaria.ambiente] }}
+                </span>
+              </div>
+              <div class="text-center">
+                <p class="font-medium">{{ dataxML.infoTributaria.nombreComercial }}</p>
+              </div>
+            </div>
           </div>
-          <div class="text-center">
-            <p class="font-medium">{{ infoXML.infoTributaria.razonSocial }}</p>
-            <p class="text-sm text-gray-500">{{ infoXML.infoTributaria.nombreComercial }}</p>
-          </div>
-          <hr class="w-full border-t border-gray-200" />
-          <div
-            class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-center"
-          >
-            {{ infoXML.infoTributaria.claveAcceso | slice: 0 : 30 }}...
-            <button
-              (click)="copyToClipboard(infoXML.infoTributaria.claveAcceso)"
-              class="text-blue-600 hover:text-blue-800"
-            >
-              <svg
-                class="w-6 h-6 text-black hover:text-green-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="currentColor"
-                viewBox="0 0 24 24"
+          <div class="space-y-2">
+            <div class="grid gap-2 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z"
-                  clip-rule="evenodd"
-                />
-                <path
-                  fill-rule="evenodd"
-                  d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">RUC</p>
+                  <p class="font-medium truncate">{{ dataxML.infoTributaria.ruc }}</p>
+                </div>
+              </div>
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md text-sm"
+              >
+                <div class="rounded-lg bg-blue-50 p-2">
+                  <img src="assets/icon/address.svg" alt="" />
+                </div>
+
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Dirección</p>
+                  <p class="font-medium truncate">{{ dataxML.infoTributaria.dirMatriz }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-purple-100 p-2">
+                  <img src="assets/icon/company.svg" alt="" />
+                </div>
+                <div class="space-y-1 min-w-0">
+                  <p class="text-sm text-gray-500">Establecimiento</p>
+                  <div class="flex items-center gap-2">
+                    <p class="font-medium truncate">
+                      {{ dataxML.infoTributaria.estab }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 p-3 rounded-xl bg-white border shadow-sm transition-shadow hover:shadow-md"
+              >
+                <div class="rounded-lg bg-pink-50 p-2">
+                  <img src="assets/icon/code.svg" alt="" />
+                </div>
+                <div class="space-y-1 flex-1">
+                  <p class="text-sm text-gray-500">Punto de venta</p>
+                  <div class="flex items-center gap-2">
+                    <p class="font-medium truncate">
+                      {{ dataxML.infoTributaria.ptoEmi }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Tabla de detalles del producto -->
-    <div class="border rounded-lg overflow-x-auto mt-5">
-      <table class="w-full table-auto">
-        <thead>
-          <tr class="border-b bg-white">
-            <th class="text-center p-3 text-sm font-medium">Código</th>
-            <th class="text-center p-3 text-sm font-medium">Codigo Aux</th>
-            <th class="text-center p-3 text-sm font-medium">Descripción</th>
-            <th class="text-center p-3 text-sm font-medium">Cantidad</th>
-            <th class="text-center p-3 text-sm font-medium">Precio Unit.</th>
-            <th class="text-center p-3 text-sm font-medium">Tarifa IVA</th>
-            <th class="text-center p-3 text-sm font-medium">Valor IVA</th>
-            <th class="text-center p-3 text-sm font-medium">Sub Total</th>
-            <th class="text-center p-3 text-sm font-medium">Valor Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (product of listaDetalle(); track $index) {
-            <tr class="hover:bg-gray-100 text-sm text-center">
-              <td class="p-2">{{ product.codigoPrincipal }}</td>
-              <td class="p-2"> {{product.codigoAuxiliar}} </td>
-              <td class="p-2">{{ product.descripcion }}</td>
-              <td class="p-2">{{ product.cantidad }}</td>
-              <td class="p-2">{{ product.precioUnitario | currency }}</td>
-              <td class="p-2">{{ product.tarifaIVA  }}</td>
-              <td class="p-2">{{ product.valorIVA | currency }}</td>
-              <td class="p-2">{{ product.subTotal | currency }}</td>
-              <td class="p-2">{{ product.total | currency }}</td>
+      <div class="border rounded-lg overflow-x-auto mt-5">
+        <table class="w-full table-auto">
+          <thead>
+            <tr class="border-b bg-gray-100">
+              <th class="text-center p-3 text-sm font-medium">Código</th>
+
+              <th class="text-center p-3 text-sm font-medium">Descripción</th>
+              <th class="text-center p-3 text-sm font-medium">Cantidad</th>
+              <th class="text-center p-3 text-sm font-medium">Valor Iva</th>
+              <th class="text-center p-3 text-sm font-medium">Precio Unitario</th>
+              <th class="text-center p-3 text-sm font-medium">Monto Total</th>
             </tr>
+          </thead>
+          <tbody>
+            @for (item of listaDetalle(); track $index) {
+              <tr class="border-b bg-white">
+                <td class="p-3 text-center text-sm">{{ item.codigoPrincipal }}</td>
+                <td class="p-3 text-center text-sm">{{ item.descripcion }}</td>
+                <td class="p-3 text-center text-sm">{{ item.cantidad }}</td>
+                <td class="p-3 text-center text-sm">{{ item.valorIVA | currency }}</td>
+                <td class="p-3 text-center text-sm">
+                  {{ item.subTotal | currency }}
+                </td>
+                <td class="p-3 text-center text-sm">
+                  {{ item.total | currency }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-2">
+        <section class="lg:col-span-3 space-y-4">
+          <div class="border rounded-lg overflow-x-auto mt-5">
+            <table class="w-full table-auto">
+              <thead>
+                <tr class="border-b bg-gray-100">
+                  <th class="text-center p-3 text-sm font-medium">Forma de Pago</th>
+                  <th class="text-center p-3 text-sm font-medium">Monto Total</th>
+                  <th class="text-center p-3 text-sm font-medium">Plazo</th>
+                  <th class="text-center p-3 text-sm font-medium">Unidad de Tiempo</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of dataxML.infoFactura.pagos.pago; track $index) {
+                  <tr class="border-b bg-white">
+                    <td class="p-3 text-center text-sm">{{ config.paymentMethod()[item.formaPago] }}</td>
+                    <td class="p-3 text-center text-sm">{{ item.total | currency }}</td>
+                    <td class="p-3 text-center text-sm">{{ item.plazo || 0 }}</td>
+                    <td class="p-3 text-center text-sm">{{ item.unidadTiempo || '0 Dias' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          @if (dataxML.infoAdicional) {
+            <div class="space-y-4 border border-gray-200 p-2 rounded-lg shadow-sm">
+              <h2 class="text-lg font-semibold text-gray-700">Información Adicional</h2>
+              @for (item of dataxML.infoAdicional.campoAdicional; track $index) {
+                <div class="flex text-xs items-center">
+                  <span class="font-medium text-gray-600">{{ item.nombre }}:</span>
+                  <span class="text-gray-800 font-normal">{{ item.value }}</span>
+                </div>
+              }
+            </div>
           }
-        </tbody>
-      </table>
+        </section>
+        <section class="lg:col-span-1 space-y-4">
+          <div class="flex justify-between items-center w-full py-2 px-4 bg-gray-50 rounded-lg shadow-sm">
+            <span class="font-medium text-gray-700">Importe Total</span>
+            <span class="font-semibold text-gray-800">{{ dataxML.infoFactura.importeTotal | currency }}</span>
+          </div>
+        </section>
+      </div>
+    }
+
+    <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
+      <button
+        class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
+        type="button"
+        routerLink="/sistema_contable_empresa/proveedores"
+      >
+        Cerrar
+      </button>
+      <button class="items-center gap-2 bg-secondary px-4 py-2 rounded-lg text-white md:flex" (click)="saveXML()">
+        Guardar
+      </button>
     </div>
-  </div>
-}
-
-<!-- Acciones -->
-<div class="mt-6 flex justify-end gap-4">
-  <button
-    class="px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-    type="button"
-    (click)="created.emit(null)"
-  >
-    Salir
-  </button>
-  <button class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700" type="button"
-    (click)="saveXML()">
-
-    Guardar XML
-  </button>
+  }
 </div>
