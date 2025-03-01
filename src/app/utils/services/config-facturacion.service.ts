@@ -12,10 +12,7 @@ export class ConfigFacturacionService {
 
   constructor() {}
 
-  public CategoriaCostoEnum = signal<Record<string, string>>({
-    G: 'Gasto',
-    C: 'Costo',
-  });
+
 
   public rimpe = signal<Record<string, string>>({
     true: 'Sí',
