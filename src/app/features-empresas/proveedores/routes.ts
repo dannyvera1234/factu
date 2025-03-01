@@ -7,15 +7,15 @@ export default [
     path: '',
     component: ProveedoresComponent,
   },
-
+  {
+    path: 'importar-xml',
+    component: AggXmlComponent,
+  },
   {
     path: ':ideProveedorEncrypted',
     loadComponent: () =>
       import('../details-proveedor/details-proveedor.component').then((c) => c.DetailsProveedorComponent),
   },
-  {
-    path: 'importar-xml',
-    component: AggXmlComponent,
-  },
+
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ] satisfies Route[];

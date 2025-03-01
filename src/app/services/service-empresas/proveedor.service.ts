@@ -46,10 +46,9 @@ export class ProveedorService {
       factura: data,
       buyType: dataTypeBuy
     });
-    console.log(payload);
     form.append('reqDTO', JSON.stringify(payload));
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/proveedores/saveProveedorFromXML`, {
-      body: payload,
+      body: form,
     });
   }
 

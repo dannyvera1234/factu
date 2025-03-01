@@ -12,16 +12,15 @@ export class ConfigFacturacionService {
 
   constructor() {}
 
-  public CategoriaCostoEnum  = signal<Record<string, string>>({
+  public CategoriaCostoEnum = signal<Record<string, string>>({
     G: 'Gasto',
     C: 'Costo',
   });
 
-  public  rimpe = signal<Record<string, string>>({
-    'true': 'Sí',
-    'false': 'No',
+  public rimpe = signal<Record<string, string>>({
+    true: 'Sí',
+    false: 'No',
   });
-
 
   public environmentCode = signal<Record<string, string>>({
     '1': 'Pruebas',
@@ -41,24 +40,24 @@ export class ConfigFacturacionService {
   });
 
   public readonly buyType = signal<Record<string, string>>({
-      '01': 'Costo',
-      '02': 'Gasto',
+    '01': 'Costo',
+    '02': 'Gasto',
   });
-
 
   public readonly paymentMethod = signal<Record<string, string>>({
     '00': 'Credito',
     '01': 'Efectivo',
-    '02': 'Cheque',
-    '03': 'Transferencia',
-    '04': 'Tarjeta de crédito',
-    '05': 'Tarjeta de debito',
-    '06': 'Otros',
+    '15': 'Conpensación de deuda',
+    '16': 'Taarjeta de debito',
+    '17': 'Transferencia bancaria',
+    '18': 'Tarjeta prepago',
+    '19': 'Tarjeta de crédito',
+    '20': 'Otro con utilización del sistema financiero',
+    '21': 'Endoso de titulos',
   });
 
-
   public readonly DOCUMENT_STYLES = signal<Record<string, { bgColor: string; icon: string }>>({
-    'Factura': {
+    Factura: {
       bgColor: 'bg-blue-500',
       icon: '/assets/icon/file.svg',
     },
