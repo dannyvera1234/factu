@@ -24,7 +24,7 @@ export class AggXmlComponent {
 
   createXML(dataXML: any) {
     if (dataXML) this.showForm.set(true);
-
+    console.log(dataXML);
     this.dataXML.set(dataXML);
   }
 }

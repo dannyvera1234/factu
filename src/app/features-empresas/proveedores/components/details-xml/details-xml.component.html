@@ -213,6 +213,10 @@
                   <td class="p-3 text-center text-sm">{{ item.total | currency }}</td>
                 </tr>
               }
+              <tr class="border-t bg-gray-50 font-bold">
+                <td colspan="3" class="p-3 text-right">Total:</td>
+                <td colspan="4" class="p-3 text-center">{{ dataxML.infoFactura.importeTotal | currency }}</td>
+              </tr>
             </tbody>
           </table>
         </div>
