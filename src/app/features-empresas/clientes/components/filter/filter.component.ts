@@ -18,7 +18,7 @@ import { NgClass, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-filter',
-  imports: [NgClass, ReactiveFormsModule, NgOptimizedImage],
+  imports: [NgClass, ReactiveFormsModule],
   templateUrl: './filter.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

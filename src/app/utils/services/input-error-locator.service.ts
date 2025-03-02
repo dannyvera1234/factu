@@ -62,7 +62,7 @@ const DEFAULT_ERRORS = {
 
   COMPANY_ALREADY_EXISTS: () => 'This company is already registered',
 
-  montoInvalido: () => 'El monto es inválido, tiene que se igual al total.',
+  montoInvalido: () => 'El monto es inválido, no debe ser mayor que el total.',
 
   duplicatePaymentMethod: () => 'El metodo de pago ya se encuentra registrado.',
 };

@@ -32,6 +32,7 @@ export class UpdatePagoComponent {
   paymentMethods = [
     { paymentMethodId: '01', descripaymentMethodDescriptionption: 'Efectivo' },
     { paymentMethodId: '20', descripaymentMethodDescriptionption: 'Transferencia' },
+    { paymentMethodId: '21', descripaymentMethodDescriptionption: 'Cheque' },
   ];
 
   constructor(

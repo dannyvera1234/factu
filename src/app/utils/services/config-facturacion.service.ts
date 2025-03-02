@@ -53,6 +53,13 @@ export class ConfigFacturacionService {
     '21': 'Endoso de titulos',
   });
 
+  public readonly statusCredito = signal<Record<string, string>>({
+    '00': 'Pendiente',
+    '01': 'Aprobado',
+    '02': 'Rechazado',
+    '03': 'Cancelado',
+  })
+
   public readonly DOCUMENT_STYLES = signal<Record<string, { bgColor: string; icon: string }>>({
     Factura: {
       bgColor: 'bg-blue-500',

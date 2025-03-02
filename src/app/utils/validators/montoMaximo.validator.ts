@@ -10,7 +10,7 @@ export function montoTotalValidator(total: number) {
     // Sumar los montos de cada pago
     const sumaMontos = pagos.reduce((sum: number, pago: any) => sum + (parseFloat(pago.paidAmount) || 0), 0);
 
-    if (sumaMontos !== total) {
+    if (sumaMontos > total) {
       return { montoInvalido: true }; // Error si la suma no es igual al total
     }
 

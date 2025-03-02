@@ -9,7 +9,7 @@ import { AgregarProveedorComponent } from './components';
 import { Modulos } from '../../utils/permissions';
 import { PaginationComponent } from '../../components/pagination';
 import { RouterLink } from '@angular/router';
-
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-proveedores',
   imports: [
@@ -20,6 +20,8 @@ import { RouterLink } from '@angular/router';
     PaginationComponent,
     AgregarProveedorComponent,
     RouterLink,
+
+    ButtonModule
   ],
   templateUrl: './proveedores.component.html',
   styles: ``,

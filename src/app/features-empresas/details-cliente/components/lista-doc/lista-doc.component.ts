@@ -117,8 +117,8 @@ export class ListaDocComponent {
         .subscribe((resp) => {
           if (resp.status === 'OK') {
             this.historialPago.set({
-                respHistoriaPago: resp,
-                montoPagado: invoice?.creditPaymentAmount || 0.00
+              respHistoriaPago: resp,
+              montoPagado: invoice?.creditPaymentAmount || 0.0,
             });
           }
         });
@@ -208,22 +208,10 @@ export class ListaDocComponent {
   }
 
   generateReporteInvoiceCredito(ide: number) {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.docService.generateReporteInvoiceCredito(ide)),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe((blob: Blob) => {
-        this.selectedRow.set(null);
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Reporte_${ide}.pdf`; // Nombre del archivo
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
+    this.docService.generateReporteInvoiceCredito(ide).subscribe((blob: Blob) => {
+      this.selectedRow.set(null);
+      const url = URL.createObjectURL(blob);
+     this.openDocument(url);
+    });
   }
-
 }
