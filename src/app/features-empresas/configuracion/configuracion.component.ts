@@ -17,7 +17,6 @@ import {
   UpdateEmisorTributariaComponent,
   UpdateLogoComponent,
 } from './components';
-import { ListaProductoEmpresaComponent } from './components/lista-producto-empresa';
 import { ListaProformaEmpresaComponent } from './components/lista-proforma-empresa/lista-proforma-empresa.component';
 
 @Component({
@@ -37,7 +36,6 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
     SequentialComponent,
     UpdateLogoComponent,
     DeleteLogoComponent,
-    ListaProductoEmpresaComponent,
     ListaDocEmpresaComponent,
     InfoCardEmpresaComponent,
     ListaProformaEmpresaComponent,
@@ -49,7 +47,7 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
 export class ConfiguracionComponent {
   public readonly uploadingDoc = signal(false);
 
-  public readonly selectedTab = signal<'inventario' | 'doc'  | 'Proforma' >('inventario');
+  public readonly selectedTab = signal<  'doc'  | 'Proforma' >('doc');
 
   public readonly loading = signal(false);
 
@@ -76,7 +74,7 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc'  | 'Proforma' ): void {
+  public changeTab(tab:  'doc'  | 'Proforma' ): void {
     this.selectedTab.set(tab);
   }
 

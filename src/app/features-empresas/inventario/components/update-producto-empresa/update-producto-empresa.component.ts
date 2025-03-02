@@ -6,7 +6,7 @@ import { AccountingControlSystemService, NotificationService } from '@/utils/ser
 import { onlyNumbersDecimalsValidator } from '@/utils/validators';
 import { NgClass } from '@angular/common';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
-import { InventarioService } from '../../../../../../services/service-empresas';
+import { InventarioService } from '../../../../services/service-empresas';
 
 @Component({
   selector: 'app-update-producto-empresa',
