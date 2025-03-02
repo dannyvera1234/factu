@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { toObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
-import { NgClass } from '@angular/common';
-import { ConfiguracionService } from '@/services/service-empresas';
-import { DetailsService } from '@/feature-counters/details-counter-application';
+import { HomeService } from '@/services/service-empresas';
+import { UserService } from '@/services';
+import { CustomDatePipe } from '@/pipes';
 interface InfoCardData {
   totalClientes: number;
   totalDocAutorizados: number;
@@ -14,13 +12,34 @@ interface InfoCardData {
 }
 @Component({
   selector: 'app-info-card-empresa',
-  imports: [NgClass],
+  imports: [CustomDatePipe],
   templateUrl: './info-card-empresa.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoCardEmpresaComponent {
+  private readonly user = computed(() => this.userService.getUserData()!.user);
   public readonly infoCard = signal<GeneriResp<InfoCardData> | null>(null);
+  public readonly infoPlan = signal<GeneriResp<any> | null>(null);
+
+  constructor(
+    private readonly homeServie: HomeService,
+    private readonly userService: UserService,
+  ) {
+    this.retrievePlan();
+  }
+
+  retrievePlan() {
+    const idPersonRol = this.user().idPersonRol;
+    if (idPersonRol) {
+      this.homeServie.retrievePlan(idPersonRol).subscribe((resp) => {
+        if (resp.status === 'OK') {
+          this.infoPlan.set(resp);
+        }
+      });
+    }
+  }
+
 
   stats: { title: string; key: any; color: string; icon: string }[] = [
     {
@@ -68,35 +87,5 @@ export class InfoCardEmpresaComponent {
     }
 
     return value;
-  }
-
-  public readonly card = computed(() => this.detailsService.info());
-
-  constructor(
-    private readonly configuracionService: ConfiguracionService,
-    private readonly detailsService: DetailsService,
-  ) {
-    this.detailsHome();
-
-    toObservable(this.card)
-      .pipe(
-        takeUntilDestroyed(),
-        tap(() => this.infoCard.set(null)),
-      )
-      .subscribe((info) => {
-        const personaRolIde = info?.personaRolIde;
-        if (personaRolIde) {
-          this.detailsHome();
-          this.detailsService.info.set(null);
-        }
-      });
-  }
-
-  detailsHome(): void {
-    this.configuracionService.detailsHome().subscribe((response) => {
-      if (response.status === 'OK') {
-        this.infoCard.set(response);
-      }
-    });
   }
 }
