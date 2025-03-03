@@ -11,6 +11,7 @@ import { DocumentosService } from '@/services/service-empresas';
 import { ConfigFacturacionService, NotificationService } from '@/utils/services';
 import { DeleteFacturaComponent } from './components';
 import { Modulos } from '@/utils/permissions';
+import { ProformaComponent } from '../proforma';
 
 @Component({
   selector: 'app-documents',
@@ -27,12 +28,14 @@ import { Modulos } from '@/utils/permissions';
     DeleteFacturaComponent,
     ViewerDocumentComponent,
     NgOptimizedImage,
+    ProformaComponent
   ],
   templateUrl: './documents.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentsComponent {
+  public readonly selectedTab = signal<'doc' | 'Proforma'>('doc');
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
   public readonly historial = signal<GeneriResp<any> | null>(null);
   public readonly currentDocumentUrl = signal<string | null>(null);
@@ -61,6 +64,10 @@ export class DocumentsComponent {
     } else {
       this.open.set(filterName);
     }
+  }
+
+  public changeTab(tab: 'doc' | 'Proforma'): void {
+    this.selectedTab.set(tab);
   }
 
   filter() {
@@ -118,7 +125,6 @@ export class DocumentsComponent {
       )
       .subscribe((res) => {
         if (res.status === 'OK') {
-          console.log(res);
           this.listInvoices.set(res);
           this.filterInvoices.set(res.data.page);
           this.numElementsByPage.set(res.data.page.numElementsByPage);

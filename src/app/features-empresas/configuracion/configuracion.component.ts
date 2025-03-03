@@ -16,7 +16,6 @@ import {
   UpdateEmisorTributariaComponent,
   UpdateLogoComponent,
 } from './components';
-import { ListaProformaEmpresaComponent } from './components/lista-proforma-empresa/lista-proforma-empresa.component';
 
 @Component({
   selector: 'app-configuracion',
@@ -36,44 +35,27 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
     UpdateLogoComponent,
     DeleteLogoComponent,
     InfoCardEmpresaComponent,
-    ListaProformaEmpresaComponent,
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfiguracionComponent {
-  public readonly uploadingDoc = signal(false);
-
-  public readonly selectedTab = signal<  'doc'  | 'Proforma' >('doc');
-
-  public readonly loading = signal(false);
-
-  public readonly viewingEmisor = signal<ByApplicationCounter | null>(null);
-
   public readonly emisorInfo = signal<GeneriResp<ByApplicationCounter> | null>(null);
-
-  public readonly viewingRuc = signal<any | null>(null);
-
-  public readonly viewingIdeSubsidiary = signal<number | null>(null);
-
-  public readonly viewingEstablecimiento = signal<any | null>(null);
-
-  public readonly viewingFile = signal<number | null>(null);
-
+  public readonly viewingEmisor = signal<ByApplicationCounter | null>(null);
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
-
-  public readonly idePersonaRol = signal<number | null>(null);
+  public readonly viewingIdeSubsidiary = signal<number | null>(null);
+  public readonly viewingEstablecimiento = signal<any | null>(null);
+  public readonly viewingFile = signal<number | null>(null);
+  public readonly viewingRuc = signal<any | null>(null);
+  public readonly uploadingDoc = signal(false);
+  public readonly loading = signal(false);
 
   constructor(
     private readonly emisorService: EmpresaService,
     public readonly config: ConfigFacturacionService,
   ) {
     this.retrieveEmisor();
-  }
-
-  public changeTab(tab:  'doc'  | 'Proforma' ): void {
-    this.selectedTab.set(tab);
   }
 
   retrieveEmisor() {
@@ -85,7 +67,6 @@ export class ConfiguracionComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.emisorInfo.set(resp);
-          this.idePersonaRol.set(resp.data.idePersonaRol);
         }
       });
   }

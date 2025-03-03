@@ -1,0 +1,346 @@
+<nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+  <div class="w-full md:w-auto"></div>
+
+  <div class="flex flex-col md:flex-row items-center gap-4 w-full">
+    <div class="flex gap-4 md:flex-row flex-col max-md:w-full"></div>
+    <button
+      class="text-[#4A5568] shrink-0 flex font-semibold px-4 py-2 md:mt-0 bg-[#E4E7EB] text-[13px] rounded-md justify-center items-center w-full md:w-auto md:ml-auto"
+      (click)="convertirProformas()"
+    >
+      <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+        <img src="/assets/icon/file.svg" class="w-[67%]" />
+      </div>
+      Facturar Proformas
+    </button>
+  </div>
+</nav>
+
+<hr class="my-4" />
+
+<div class="card text-xs mt-3">
+  <p-table
+    #dt
+    [value]="listProformas()?.data?.listData"
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="numElementsByPage()"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading()"
+    [paginator]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+    [totalRecords]="filterProforma()?.totalElements"
+    [lazy]="true"
+    (onPage)="onPageChange($event)"
+  >
+    <ng-template #header>
+      <tr>
+        <th style="width: 3rem">
+          <input type="checkbox" (change)="selectAll($event)" [checked]="allSelected()" />
+        </th>
+
+        <th style="min-width: 8rem">
+          <div class="flex justify-between items-center">
+            Nombre
+            <div class="relative">
+              <button
+                class="flex items-center gap-2 px-4 py-2 rounded w-full"
+                (click)="toggleFilter('nombre')"
+              >
+                <div class="relative size-5 shrink-0">
+                  <img ngSrc="assets/icon/filters.svg" alt="Create" fill />
+                </div>
+              </button>
+              @if (open() === 'nombre') {
+                <form
+                  class="bg-white absolute shadow min-w-full p-4 overflow-clip *:mb-2 md:min-w-64 flex flex-col gap-2"
+                >
+                  <div class="flex flex-col gap-4 z-[1000]">
+                    <input
+                      type="text"
+                      placeholder="Buscar"
+                      class="pl-4 pr-2 py-2 w-full border rounded"
+                      [(ngModel)]="searchQuery"
+                      [ngModelOptions]="{ standalone: true }"
+                    />
+                  </div>
+
+                  <div>
+                    <button
+                      class="w-full px-2 py-2 bg-primary text-white rounded-md mb-1"
+                      (click)="filter()"
+                    >
+                      Buscar
+                    </button>
+                  </div>
+                </form>
+              }
+            </div>
+          </div>
+        </th>
+        <th style="min-width: 5rem">
+          <div class="flex justify-between items-center">Fecha Creción</div>
+        </th>
+        <th style="min-width: 5rem">
+          <div class="flex justify-between items-center">N° Proforma</div>
+        </th>
+
+        <th style="min-width: 5rem">
+          <div class="flex justify-between items-center">Monto</div>
+        </th>
+        <th style="min-width: 3rem">
+          <div class="flex justify-between items-center">Proceso</div>
+        </th>
+        <th style="min-width: 3rem">
+          <div class="flex justify-between items-center">Recepción</div>
+        </th>
+        <th style="min-width: 3rem">
+          <div class="flex justify-between items-center">Autorización</div>
+        </th>
+        <th style="min-width: 10rem">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-invoice>
+      <tr class="p-selectable-row" [pSelectableRow]="invoice">
+        <td class="px-4 py-3">
+          <!-- Checkbox para cada fila -->
+          @if (
+            invoice.statusProcess !== 'EN PROCESO PROFORMA' &&
+            (invoice.authorizationStatus !== 'NO AUTORIZADO' || invoice.receptionStatus === 'DEVUELTA')
+          ) {
+            <input type="checkbox" [(ngModel)]="invoice.selected" (change)="updateSelectAll()" />
+          }
+        </td>
+        <td class="font-normal p-2">
+          <div class="flex gap-4 items-center">
+            <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-400">
+              <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="truncate">
+                <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
+                <div class="flex items-center gap-2">
+                  <div class="relative">
+                    {{ invoice.identificationCustomer }}
+                  </div>
+                </div>
+              </div>
+              <div class="relative group inline-block">
+                <!-- Botón que muestra el tooltip -->
+                <!-- <button class="m-0" (click)="toggleTooltip(invoice.ide, true)"> -->
+                <!-- <img src="assets/icon/tooltip.svg" alt="Tooltip" />
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </td>
+
+        <td class="px-4 py-3 text-center">
+          {{ invoice.emissionDate | customDate }}
+        </td>
+
+        <td class="px-2 py-1 text-center text-xs">
+          {{ invoice.sequentialDocProforma }}
+        </td>
+
+        <td class="text-center">
+          {{ invoice.total | currency }}
+        </td>
+        <td class="text-center">
+          <div class="flex justify-center items-center">
+            @switch (invoice.statusProcess) {
+              @case ('PENDIENTE PROFORMA') {
+                <div class="relative group">
+                  <img src="assets/icon/pendiente.svg" alt="" class="text-blue-500" />
+                  <!-- Tooltip -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    Pendiente
+                  </div>
+                </div>
+              }
+
+              @case ('EN PROCESO PROFORMA') {
+                <div class="flex items-center justify-center">
+                  <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                  </svg>
+                  <span class="ml-2 text-sm text-green-700">Procesando...</span>
+                </div>
+              }
+              @case ('RETENIDA PROFORMA') {
+                <div class="relative group">
+                  <img src="assets/icon/warning.svg" alt="" />
+
+                  <!-- Tooltip -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    Retenida
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </td>
+
+        <td class="text-center">
+          <div class="flex justify-center items-center">
+            @switch (invoice.receptionStatus) {
+              @case ('RECIBIDA') {
+                <div class="relative group">
+                  <span class="b text-green-700">
+                    <img src="assets/icon/pagado.svg" alt="" />
+                    <div
+                      class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                      Recibida
+                    </div>
+                  </span>
+                </div>
+              }
+
+              @case ('DEVUELTA') {
+                <div class="relative group">
+                  <span class="text-red-700">
+                    <img src="assets/icon/warning.svg" alt="" />
+                  </span>
+                  <!-- Tooltip -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    Devuelta
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </td>
+        <td class="text-center">
+          <div class="flex justify-center items-center">
+            @switch (invoice.authorizationStatus) {
+              @case ('AUTORIZADO') {
+                <div class="relative group">
+                  <span class="b text-green-700">
+                    <img src="assets/icon/pagado.svg" alt="" />
+                    <div
+                      class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >
+                      Autorizado
+                    </div>
+                  </span>
+                </div>
+              }
+
+              @case ('NO AUTORIZADO') {
+                <div class="relative group">
+                  <span class="text-red-700">
+                    <img src="assets/icon/warning.svg" alt="" />
+                  </span>
+                  <!-- Tooltip -->
+                  <div
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
+                    No Autorizado
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </td>
+
+        <td class="text-center">
+          @if (
+            invoice.pdfProforma !== null &&
+            invoice.statusProcess !== 'EN PROCESO PROFORMA' &&
+            invoice.statusProcess !== 'RETENIDA PROFORMA'
+          ) {
+            <!-- <p-button
+              icon="pi pi-cog"
+              class="mr-2"
+              severity="secondary"
+              [outlined]="true"
+              (click)="editProforma.open(); ideEditProforma.set(invoice.ide)"
+            /> -->
+            <p-button
+              icon="pi pi-print"
+              severity="info"
+              [outlined]="true"
+              class="mr-2"
+              (click)="openDocument(invoice.pdfProforma)"
+            />
+
+            <p-button
+              icon="pi pi-envelope"
+              class="mr-2"
+              severity="secondary"
+              [outlined]="true"
+              (click)="reeviarEmail(invoice.ide)"
+            />
+
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [outlined]="true"
+              class="mr-2"
+              (click)="deleteProforma.open(); ideDeleteProdorma.set(invoice.ide)"
+            />
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="100%">
+          <div
+            class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+          >
+            <p class="font-medium">No se encontraron resultados</p>
+            <span class="text-sm">Por favor, genere un documento para ver su información</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<app-modal #facturarProforma>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          <app-facturar-proformas
+            (facturarProforma)="facturarProforma.close()"
+            [idsInvoices]="ideProforma()"
+            (facturarProforma)="ideEnviadoProceso.set($event)"
+          />
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+<app-modal #deleteProforma>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (ideDeleteProdorma(); as ide) {
+            <app-delete-proforma
+              [ideProforma]="ide"
+              (deleted)="deleteProforma.close()"
+              (deleted)="$event && eliminarProforma($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+@if (isModalOpen()) {
+  @defer {
+    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+  }
+}

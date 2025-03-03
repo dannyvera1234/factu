@@ -25,10 +25,9 @@ export class DocumentosService {
     });
   }
 
-  listProforma(page: number): Observable<any> {
+  listProforma(filter:any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-      size: Modulos.PAGE_SIZE,
-      page: page,
+      ...filter
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoicesProforma`, {
       body: payload,
