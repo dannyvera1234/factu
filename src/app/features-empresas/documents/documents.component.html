@@ -1,0 +1,400 @@
+<div class="p-5">
+  <div class="bg-white rounded-lg shadow p-4">
+    <div class="flex justify-end w-full">
+      <div class="sm:w-auto text-gray-400">
+        <a
+          href="https://srienlinea.sri.gob.ec/comprobantes-electronicos-internet/publico/validezComprobantes.jsf"
+          target="_blank"
+        >
+          Verificar documentos
+        </a>
+      </div>
+    </div>
+
+    <nav class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-4">
+      <div class="flex flex-col items-start gap-1 w-full md:w-auto">
+        <h3 class="text-2xl font-semibold">Lista de facturas</h3>
+        <span class="text-xs text-gray-500 md:whitespace-nowrap md:truncate md:max-w-[300px] lg:max-w-full">
+          Aquí puedes ver y administrar las facturas de tu empresa.
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <!-- @defer {
+          <app-filter />
+        } -->
+        <div class="w-full md:w-auto md:ml-auto">
+          <button
+            class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
+            (click)="filter()"
+          >
+            <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
+              <img src="assets/icon/sync.svg" class="w-[67%]" />
+            </div>
+            Sincronizar
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="card text-xs mt-3">
+      <p-table
+        #dt
+        [value]="listInvoices()?.data?.listData"
+        dataKey="id"
+        [rowHover]="true"
+        [rows]="numElementsByPage()"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="loading()"
+        [paginator]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+        [totalRecords]="filterInvoices().totalElements"
+        [lazy]="true"
+        (onPage)="onPageChange($event)"
+      >
+        <ng-template #header>
+          <tr>
+            <th style="min-width: 8rem">
+              <div class="flex justify-between items-center">
+                Nombre
+                <div class="relative">
+                  <button class="flex items-center gap-2 px-4 py-2 rounded w-full" (click)="toggleFilter('nombre')">
+                    <div class="relative size-5 shrink-0">
+                      <img ngSrc="assets/icon/filters.svg" alt="Create" fill />
+                    </div>
+                  </button>
+                  @if (open() === 'nombre') {
+                    <form
+                      class="bg-white absolute shadow min-w-full p-4 overflow-clip *:mb-2 md:min-w-64 flex flex-col gap-2"
+                    >
+                      <div class="flex flex-col gap-4 z-[1000]">
+                        <input
+                          type="text"
+                          placeholder="Buscar"
+                          class="pl-4 pr-2 py-2 w-full border rounded"
+                          [(ngModel)]="searchQuery"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </div>
+
+                      <div>
+                        <button class="w-full px-2 py-2 bg-primary text-white rounded-md mb-1" (click)="filter()">
+                          Buscar
+                        </button>
+                      </div>
+                    </form>
+                  }
+                </div>
+              </div>
+            </th>
+            <th style="min-width: 5rem">
+              <div class="flex justify-between items-center">Origen</div>
+            </th>
+            <th style="min-width: 5rem">
+              <div class="flex justify-between items-center">Clave</div>
+            </th>
+            <th style="min-width: 5rem">
+              <div class="flex justify-between items-center">Fecha Autorización</div>
+            </th>
+            <th style="min-width: 8rem">
+              <div class="flex justify-between items-center">Monto</div>
+            </th>
+            <th style="min-width: 3rem">
+              <div class="flex justify-between items-center">Proceso</div>
+            </th>
+            <th style="min-width: 3rem">
+              <div class="flex justify-between items-center">Recepción</div>
+            </th>
+            <th style="min-width: 3rem">
+              <div class="flex justify-between items-center">Autorización</div>
+            </th>
+            <th style="min-width: 10rem">Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-invoice>
+          <tr class="p-selectable-row" [pSelectableRow]="invoice">
+            <td scope="row" class="font-normal p-2">
+              <div class="flex gap-4 items-center">
+                <div
+                  class="rounded-md size-10 flex items-center justify-center shrink-0"
+                  [ngClass]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).bgColor"
+                >
+                  <img [src]="config.getDocumentStyle(invoice.electronicCodeTypeDoc).icon" width="20" height="20" />
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <div class="truncate">
+                    <p class="font-bold truncate">{{ invoice.socialReasonCustomer }}</p>
+                    <div class="flex items-center gap-2">
+                      <div>
+                        {{ invoice.identificationCustomer }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button class="m-0" (click)="historialFactura.open(); historiaInvoice(invoice.ide)">
+                      <img src="assets/icon/tooltip.svg" alt="Tooltip" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700 border-blue-500': invoice.origen === 'FACTURA',
+                  'bg-orange-100 text-orange-700 border-orange-500': invoice.origen === 'PROFORMA',
+                }"
+                class="rounded-full px-2 py-1 inline-block"
+              >
+                {{ invoice.origen }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center truncate">
+              @if (invoice.pdf !== null) {
+                {{ invoice.keyAccess | slice: 0 : 6 }}...
+                <button (click)="copyToClipboard(invoice.keyAccess)" class="text-blue-600 hover:text-blue-800">
+                  <img src="assets/icon/keyAccess.svg" alt="" />
+                </button>
+              }
+            </td>
+
+            <td class="px-4 py-3 text-center">
+              {{ invoice.authorizationDate | customDate }}
+            </td>
+            <td class="px-4 py-3 text-center">
+              {{ invoice.total | currency }}
+            </td>
+
+            <td class="text-center">
+              <div class="flex justify-center items-center">
+                @switch (invoice.statusProcess) {
+                  @case ('FINALIZADA') {
+                    <div class="relative group">
+                      <span>
+                        <img src="assets/icon/pagado.svg" alt="" />
+                        <div
+                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          Finalizado
+                        </div>
+                      </span>
+                    </div>
+                  }
+                  @case ('EN PROCESO') {
+                    <div class="flex items-center justify-center">
+                      <svg class="animate-spin h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24">
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 100 8H4z"></path>
+                      </svg>
+                      <span class="ml-2 text-sm text-green-700">Procesando...</span>
+                    </div>
+                  }
+
+                  @case ('PENDIENTE') {
+                    <div class="relative group">
+                      <img src="assets/icon/pendiente.svg" alt="" class="text-blue-500" />
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      >
+                        Pendiente
+                      </div>
+                    </div>
+                  }
+                  @case ('RETENIDA') {
+                    <div class="relative group">
+                      <img src="assets/icon/warning.svg" alt="" />
+
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      >
+                        Retenida
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="flex justify-center items-center">
+                @switch (invoice.receptionStatus) {
+                  @case ('RECIBIDA') {
+                    <div class="relative group">
+                      <span>
+                        <img src="assets/icon/pagado.svg" alt="" />
+                        <div
+                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          Finalizado
+                        </div>
+                      </span>
+                    </div>
+                  }
+
+                  @case ('DEVUELTA') {
+                    <div class="relative group">
+                      <span class="text-red-700">
+                        <img src="assets/icon/warning.svg" alt="" />
+                      </span>
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      >
+                        Devuelto
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="flex justify-center items-center">
+                @switch (invoice.authorizationStatus) {
+                  @case ('AUTORIZADO') {
+                    <div class="relative group">
+                      <span>
+                        <img src="assets/icon/pagado.svg" alt="" />
+                        <div
+                          class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          Autorizado
+                        </div>
+                      </span>
+                    </div>
+                  }
+
+                  @case ('NO AUTORIZADO') {
+                    <div class="relative group">
+                      <span>
+                        <img src="assets/icon/warning.svg" alt="" />
+                      </span>
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      >
+                        No Autorizado
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            </td>
+            <td>
+              @if (
+                invoice.authorizationStatus !== 'NO AUTORIZADO' &&
+                !['EN PROCESO', 'RETENIDA', 'PENDIENTE'].includes(invoice.statusProcess) &&
+                invoice.receptionStatus !== 'DEVUELTA'
+              ) {
+                <p-button
+                  icon="pi pi-print"
+                  severity="info"
+                  [outlined]="true"
+                  class="mr-2"
+                  (click)="openDocument(invoice.pdf)"
+                />
+                <p-button icon="pi pi-file-pdf" class="mr-2" [outlined]="true" (click)="openDocument(invoice.xml)" />
+                <p-button
+                  icon="pi pi-envelope"
+                  class="mr-2"
+                  severity="secondary"
+                  [outlined]="true"
+                  (click)="reeviarEmail(invoice.ide)"
+                />
+              } @else if (invoice.statusProcess === 'PENDIENTE' && invoice.statusProcess !== 'RETENIDA') {
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  class="mr-2"
+                  (click)="deleteFactura.open(); ideDeleteFactura.set(invoice.ide)"
+                />
+              }
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">
+              <div
+                class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+              >
+                <p class="font-medium">Ningún documento encontrado</p>
+                <span class="text-sm">Por favor, genere un documento para ver su información</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<app-modal #deleteFactura>
+  <div class="h-screen w-full flex items-center justify-center">
+    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
+      <section class="p-4">
+        @defer {
+          @if (ideDeleteFactura(); as ide) {
+            <app-delete-factura
+              [ideFactura]="ide"
+              (deleted)="deleteFactura.close()"
+              (deleted)="$event && eliminarFactura($event)"
+            />
+          }
+        }
+      </section>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal #historialFactura>
+  @defer {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <section class="p-4">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+            <button class="text-gray-400 hover:text-gray-600" (click)="historialFactura.close(); historial.set(null)">
+              &times;
+            </button>
+          </div>
+          <div>
+            @if (loadingHstorial()) {
+              <div class="h-full text-center flex justify-center items-center">
+                <div class="loader"></div>
+              </div>
+            } @else {
+              @if (historial(); as historial) {
+                <div class="space-y-2">
+                  @for (history of historial!.data; track $index) {
+                    <div class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto">
+                      <div class="flex justify-between items-center text-gray-700">
+                        <span>{{ history.description }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
+
+@if (isModalOpen()) {
+  @defer {
+    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+  }
+}

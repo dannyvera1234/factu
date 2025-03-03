@@ -16,11 +16,9 @@ export class DocumentosService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listInvoices(page: number, search: string): Observable<any> {
+  listInvoices(filter: any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-      size: Modulos.PAGE_SIZE,
-      page: page,
-      search: search,
+     ...filter
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoices`, {
       body: payload,
