@@ -51,7 +51,7 @@ export class UpdatePagoComponent {
       ],
       [montoTotalValidator(this._total)], // Suponiendo que montoTotalValidator es el validador para la suma total
     ),
-    observaciones: [''],
+    observation: ['',[Validators.maxLength(250)]],
     documentos: new FormControl<File | null>(null),
   });
 
@@ -105,7 +105,7 @@ export class UpdatePagoComponent {
 
     const dataCredito = {
       letterPayIde: this.letterPayIde,
-      observations: this.form.value.observaciones,
+      observation: this.form.value.observation,
       paymentList: this.form.value.paymentList?.map((pago) => {
         const method = this.paymentMethods.find((method) => method.paymentMethodId === pago.paymentMethodId);
         return {
