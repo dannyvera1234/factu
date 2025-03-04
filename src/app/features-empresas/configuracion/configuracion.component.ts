@@ -16,6 +16,7 @@ import {
   UpdateEmisorTributariaComponent,
   UpdateLogoComponent,
 } from './components';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-configuracion',
@@ -35,6 +36,7 @@ import {
     UpdateLogoComponent,
     DeleteLogoComponent,
     InfoCardEmpresaComponent,
+    ButtonModule
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,

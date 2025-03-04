@@ -232,12 +232,14 @@
                     </div>
                   </div>
                   <div class="flex gap-1 group relative">
-                    <button
-                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      (click)="deleteDoc.open(); viewingFile.set(item.ide)"
-                    >
-                      <img src="/assets/icon/trash-icon.svg" class="w-12 sm:w-6 md:w-5 lg:w-10" alt="Delete" />
-                    </button>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [outlined]="true"
+                      class="mr-2"
+                      (onClick)="deleteDoc.open(); viewingFile.set(item.ide)"
+                    />
+
                     <div
                       class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                     >
@@ -260,17 +262,11 @@
           <app-info-card-empresa />
         }
 
-        <div class="bg-white rounded-lg shadow p-4">
-
-
-
-        </div>
+        <div class="bg-white rounded-lg shadow p-4"></div>
       </main>
     </div>
   }
 }
-
-
 
 <app-modal #updateInfoEmisor>
   @defer {
@@ -296,7 +292,6 @@
     </div>
   }
 </app-modal>
-
 
 <app-modal #updateInfoTributaria>
   @defer {
