@@ -22,7 +22,6 @@ import { Tag } from 'primeng/tag';
     NgOptimizedImage,
     CreateClienteEmpresaComponent,
     DeleteClienteEmpresaComponent,
-    FormsModule,
     RouterLink,
     FilterComponent,
     TableModule,

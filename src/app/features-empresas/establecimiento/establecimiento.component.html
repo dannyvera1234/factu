@@ -1,23 +1,17 @@
 <div class="p-5">
   <div class="bg-white rounded-lg shadow p-4">
-    <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
-      <div class="flex flex-col md:flex-row items-center gap-4 w-full">
-        <!-- Input con espacio para la lupa -->
-        <div class="w-full relative md:max-w-[200px]">
-          <input
-            type="text"
-            placeholder="Buscar"
-            class="pl-4 pr-2 py-2 w-full border rounded"
-            [(ngModel)]="searchQuery"
-          />
-        </div>
-        <!-- Botón de búsqueda -->
-        <button
-          class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded flex items-center w-full md:w-auto justify-center"
-          (click)="onSearchClick()"
-        >
-          Buscar
-        </button>
+    <nav class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-4">
+      <div class="flex flex-col items-start gap-1 w-full md:w-auto">
+        <h3 class="text-2xl font-semibold">Lista de establecimientos</h3>
+        <span class="text-xs text-gray-500 md:whitespace-nowrap md:truncate md:max-w-[300px] lg:max-w-full">
+          Aquí puedes ver y administrar los establecimientos de tu empresa.
+        </span>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <!-- @defer {
+          <app-filter />
+        } -->
 
         <button
           class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
@@ -30,102 +24,120 @@
         </button>
       </div>
     </nav>
-
     <section>
-      <div class="relative overflow-x-auto mt-6">
-        <table class="w-full text-left text-xs">
-          <thead>
-            <tr class="font-normal text-neutral-400 px-6 py-3">
-              <th class="px-4 py-3">Establecimiento</th>
-              <th class="px-4 py-3 text-center">Identificación</th>
-              <th class="px-4 py-3 text-center">Estado</th>
-              <th class="px-4 py-3 text-center">Telefono</th>
-              <th >Acción</th>
-            </tr>
-          </thead>
-          @if (loading()) {
-            <tbody>
-              <tr>
-                <td colspan="100%">
-                  <div class="text-center py-9">
-                    <div class="loader"></div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          } @else {
-            <tbody>
-              @if (subsidiaries() && subsidiaries()!.data!.listData.length > 0) {
-                @for (sub of subsidiaries()!.data!.listData; track $index) {
-                  <tr class="border-b hover:bg-gray-100 text-xs">
-                    <th scope="row" class="font-normal p-2 cursor-pointer" >
-                      <!-- [routerLink]="[sub.ideSubsidiaryEncrypted]" -->
-                      <div class="flex gap-4 items-center">
-                        <div
-                          class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
-                        >
-                          {{ sub.code }}
+      <div class="card text-xs mt-3">
+        <p-table
+          #dt
+          [value]="subsidiaries()?.data?.listData"
+          dataKey="id"
+          [rowHover]="true"
+          [rows]="numElementsByPage()"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [loading]="loading()"
+          [paginator]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+          [totalRecords]="filterSubsidiary()?.totalElements"
+          (onPage)="onPageChange($event)"
+          [lazy]="true"
+        >
+          <ng-template #header>
+            <tr>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">
+                  Nombre
+
+                  <div class="relative">
+                    <button class="flex items-center gap-2 px-4 py-2 rounded w-full" (click)="toggleFilter('nombre')">
+                      <div class="relative size-5 shrink-0">
+                        <img ngSrc="assets/icon/filters.svg" alt="Create" fill />
+                      </div>
+                    </button>
+                    @if (open() === 'nombre') {
+                      <form
+                        class="bg-white absolute shadow min-w-full p-4 right-0 overflow-clip *:mb-2 md:min-w-64 flex flex-col gap-2"
+                      >
+                        <div class="flex flex-col gap-4 z-[1000]">
+                          <input
+                            type="text"
+                            placeholder="Buscar"
+                            class="pl-4 pr-2 py-2 w-full border rounded"
+                            [(ngModel)]="searchQuery"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
                         </div>
+
                         <div>
-                          <p class="font-bold">{{ sub.address }}</p>
-                          <div class="flex items-center gap-2"></div>
+                          <button class="w-full px-2 py-2 bg-primary text-white rounded-md mb-1" (click)="filter()">
+                            Buscar
+                          </button>
                         </div>
-                      </div>
-                    </th>
-                    <td class="px-4 py-3 text-center">
-                      {{ sub.email }}
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                      <span class="rounded-full px-2 py-1 inline-block bg-green-100 text-green-700 border-green-500">
-                        {{ sub.statusRecord }}
-                      </span>
-                    </td>
+                      </form>
+                    }
+                  </div>
+                </div>
+              </th>
 
-                    <td class="px-4 py-3 text-center">
-                      {{ sub.cellPhone | formatPhone }}
-                    </td>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Dirección</div>
+              </th>
+              <th style="min-width: 10rem">
+                <div class="flex justify-between items-center">Estado</div>
+              </th>
+              <th style="min-width: 8rem">
+                <div class="flex justify-between items-center">Telefono</div>
+              </th>
 
-                    <td >
-                      <div class="flex gap-1 group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          (click)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(sub.ideSubsidiary)"
-                        >
-                          <img src="/assets/icon/trash-icon.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
-                        </button>
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Eliminar
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              } @else {
-                <tr>
-                  <td colspan="100%">
-                    <div
-                      class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
-                    >
-                      <p class="font-medium">Ningún cliente encontrado</p>
-                      <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          }
-        </table>
+              <th style="min-width: 10rem">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-sub>
+            <tr class="p-selectable-row">
+              <td scope="row" class="font-normal p-2 cursor-pointer">
+                <div class="flex gap-4 items-center">
+                  <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                    {{ sub.code }}
+                  </div>
+                  <div>
+                    <p class="font-bold">{{ sub.address }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ sub.email }}
+              </td>
+              <td>
+                <p-tag [value]="sub.statusRecord" [severity]="'success'" />
+              </td>
+
+              <td>
+                {{ sub.cellPhone | formatPhone }}
+              </td>
+
+              <td>
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  (onClick)="deleteEstablecimiento.open(); viewingIdeSubsidiary.set(sub.ideSubsidiary)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún cliente encontrado</p>
+                  <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
-
-      @defer {
-        <div class="mt-4">
-          @if (subsidiaries() && subsidiaries()!.data!.page.totalPages > 0) {
-            <app-pagination [paginationData]="subsidiaries()!.data!.page" (pageChange)="onPageChange($event)" />
-          }
-        </div>
-      }
     </section>
   </div>
 </div>

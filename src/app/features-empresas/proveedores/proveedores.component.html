@@ -27,111 +27,89 @@
 
     <hr class="my-4" />
     <section>
-      <div class="relative overflow-x-auto">
-        <table class="w-full text-left">
-          <thead>
-            <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-              <th class="px-4 py-3">Nombres</th>
-              <th class="px-4 py-3 text-center">Identificación</th>
-              <th class="px-4 py-3 text-center">Dirección</th>
-              <th class="px-4 py-3 text-center"></th>
-              <th class="px-4 py-3 text-center"></th>
-            </tr>
-          </thead>
-          @if (loading()) {
-            <tbody>
-              <tr>
-                <td colspan="100%">
-                  <div class="text-center py-9">
-                    <div class="loader"></div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          } @else {
-            <tbody>
-              @if (listProveedor() && listProveedor()!.data.listData.length > 0) {
-                @for (proveedor of listProveedor()!.data!.listData; track $index) {
-                  <tr class="border-b hover:bg-gray-100 text-sm">
-                    <th scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
-                      <div class="flex gap-4 items-center">
-                        <div
-                          class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
-                        >
-                          {{ proveedor.socialReason | initials }}
-                        </div>
-                        <div>
-                          <p class="font-bold">{{ proveedor.socialReason }}</p>
+      <div class="card text-xs mt-3">
+        <p-table
+          #dt
+          [value]="listProveedor()?.data?.listData"
+          dataKey="id"
+          [rowHover]="true"
+          [rows]="numElementsByPage()"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [loading]="loading()"
+          [paginator]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+          [totalRecords]="filterProveedor()?.totalElements"
+          (onPage)="onPageChange($event)"
+          [lazy]="true"
+        >
+          <ng-template #header>
+            <tr>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Nombre</div>
+              </th>
 
-                          <div class="flex items-center gap-2">
-                            <div class="relative">
-                              {{ proveedor.email }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </th>
-                    <td class="px-4 py-3 text-center">
-                      {{ proveedor.identificationNumber | formatId }}
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                      {{ proveedor.address }}
-                    </td>
-                    <td>
-                      <div class="flex gap-1 group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          [routerLink]="proveedor.ideProveedorEncrypted"
-                        >
-                          <img src="assets/icon/show-password.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
-                        </button>
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver detalle
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="flex gap-1 group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          (click)="deleteCounterClient.open(); viewingIdeCustomer.set(proveedor.ideCustomer)"
-                        >
-                          <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
-                        </button>
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Eliminar
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              } @else {
-                <tr>
-                  <td colspan="100%">
-                    <div
-                      class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
-                    >
-                      <p class="font-medium">Ningún cliente encontrado</p>
-                      <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          }
-        </table>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Identificación</div>
+              </th>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Correo</div>
+              </th>
+              <th style="min-width: 10rem">
+                <div class="flex justify-between items-center">Dirección</div>
+              </th>
+              <th style="min-width: 10rem">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-proveedor>
+            <tr class="p-selectable-row">
+              <th scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
+                <div class="flex gap-4 items-center">
+                  <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                    {{ proveedor.socialReason | initials }}
+                  </div>
+                  <div>
+                    <p class="font-bold">{{ proveedor.socialReason }}</p>
+                  </div>
+                </div>
+              </th>
+              <td>
+                {{ proveedor.identificationNumber | formatId }}
+              </td>
+              <td>
+                {{ proveedor.email }}
+              </td>
+              <td>
+                {{ proveedor.address }}
+              </td>
+
+              <td>
+                <p-button icon="pi pi-eye" class="mr-2" severity="secondary" [outlined]="true" />
+                <!-- routerLink="{{ proveedor.ideCustomerEncrypted }}" -->
+
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  (onClick)="deleteCounterClient.open(); viewingIdeCustomer.set(proveedor.ideCustomer)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún cliente encontrado</p>
+                  <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
-      @defer {
-        <div class="mt-4">
-          @if (listProveedor() && listProveedor()!.data!.page.totalPages > 0) {
-            <app-pagination [paginationData]="listProveedor()!.data!.page" (pageChange)="onPageChange($event)" />
-          }
-        </div>
-      }
     </section>
   </div>
 </div>
@@ -152,9 +130,7 @@
             />
           </button>
         </header>
-        <app-agregar-proveedor (agregarXML)="aggProveedor.close()"
-        (dataRegistro)="$event && addProveedor($event)"
-        />
+        <app-agregar-proveedor (agregarXML)="aggProveedor.close()" (dataRegistro)="$event && infoXML.set($event)" />
       </div>
     </div>
   }
@@ -177,158 +153,3 @@
     </div>
   </div>
 </app-modal>
-
-
-<!-- <p-table
-    #dt
-    [value]="customers"
-    [(selection)]="selectedCustomers"
-    dataKey="id"
-    [rowHover]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading"
-    [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [filterDelay]="0"
-    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
->
-    <ng-template #caption>
-        <div class="flex justify-between">
-            <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="clear(dt)" />
-            <p-iconField iconPosition="left">
-                <p-inputIcon>
-                    <i class="pi pi-search"></i>
-                </p-inputIcon>
-                <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Keyboard Search" />
-            </p-iconField>
-        </div>
-    </ng-template>
-    <ng-template #header>
-        <tr>
-            <th style="width: 4rem">
-                <p-tableHeaderCheckbox />
-            </th>
-            <th pSortableColumn="name" style="min-width: 14rem">
-                <div class="flex justify-between items-center">
-                    Name
-                    <p-sortIcon field="name" />
-                    <p-columnFilter type="text" field="name" display="menu" class="ml-auto" />
-                </div>
-            </th>
-            <th pSortableColumn="country.name" style="min-width: 14rem">
-                <div class="flex justify-between items-center">
-                    Country
-                    <p-sortIcon field="country.name" />
-                    <p-columnFilter type="text" field="country.name" display="menu" class="ml-auto" />
-                </div>
-            </th>
-            <th pSortableColumn="representative.name" style="min-width: 14rem">
-                <div class="flex justify-between items-center">
-                    Agent
-                    <p-sortIcon field="representative.name" />
-                    <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" class="ml-auto">
-                        <ng-template #filter let-value let-filter="filterCallback">
-                            <p-multiselect [filter]="false" [(ngModel)]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name" class="w-full">
-                                <ng-template let-option #item>
-                                    <div class="flex items-center gap-2">
-                                        <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" style="width: 32px" />
-                                        <span>{{ option.name }}</span>
-                                    </div>
-                                </ng-template>
-                            </p-multiselect>
-                        </ng-template>
-                    </p-columnFilter>
-                </div>
-            </th>
-            <th pSortableColumn="date" style="min-width: 10rem">
-                <div class="flex justify-between items-center">
-                    Date
-                    <p-sortIcon field="date" />
-                    <p-columnFilter type="date" field="date" display="menu" class="ml-auto" />
-                </div>
-            </th>
-            <th pSortableColumn="balance" style="min-width: 10rem">
-                <div class="flex justify-between items-center">
-                    Balance
-                    <p-sortIcon field="balance" />
-                    <p-columnFilter type="numeric" field="balance" display="menu" currency="USD" class="ml-auto" />
-                </div>
-            </th>
-            <th pSortableColumn="status" style="min-width: 10rem">
-                <div class="flex justify-between items-center">
-                    Status
-                    <p-sortIcon field="status" />
-                    <p-columnFilter field="status" matchMode="equals" display="menu" class="ml-auto">
-                        <ng-template #filter let-value let-filter="filterCallback">
-                            <p-dropdown [(ngModel)]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
-                                <ng-template let-option #item>
-                                    <p-tag [value]="option.label" [severity]="getSeverity(option.label)" />
-                                </ng-template>
-                            </p-dropdown>
-                        </ng-template>
-                    </p-columnFilter>
-                </div>
-            </th>
-            <th pSortableColumn="activity" style="min-width: 10rem">
-                <div class="flex justify-between items-center">
-                    Activity
-                    <p-sortIcon field="activity" />
-                    <p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false" class="ml-auto">
-                        <ng-template #filter let-filter="filterCallback">
-                            <p-slider [(ngModel)]="activityValues" [range]="true" (onSlideEnd)="filter($event.values)" styleClass="m-4"></p-slider>
-                            <div class="flex items-center justify-between px-2">
-                                <span>{{ activityValues[0] }}</span>
-                                <span>{{ activityValues[1] }}</span>
-                            </div>
-                        </ng-template>
-                    </p-columnFilter>
-                </div>
-            </th>
-            <th style="width: 5rem"></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-customer>
-        <tr class="p-selectable-row">
-            <td>
-                <p-tableCheckbox [value]="customer" />
-            </td>
-            <td>
-                {{ customer.name }}
-            </td>
-            <td>
-                <div class="flex items-center gap-2">
-                    <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + customer.country.code" style="width: 20px" />
-                    <span class="ml-1 align-middle">{{ customer.country.name }}</span>
-                </div>
-            </td>
-            <td>
-                <div class="flex items-center gap-2">
-                    <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
-                    <span class="ml-1 align-middle">{{ customer.representative.name }}</span>
-                </div>
-            </td>
-            <td>
-                {{ customer.date | date: 'MM/dd/yyyy' }}
-            </td>
-            <td>
-                {{ customer.balance | currency: 'USD' : 'symbol' }}
-            </td>
-            <td>
-                <p-tag [value]="customer.status" [severity]="getSeverity(customer.status)" />
-            </td>
-            <td>
-                <p-progressBar [value]="customer.activity" [showValue]="false" />
-            </td>
-            <td style="text-align: center">
-                <p-button rounded icon="pi pi-cog" />
-            </td>
-        </tr>
-    </ng-template>
-    <ng-template #emptymessage>
-        <tr>
-            <td colspan="8">No customers found.</td>
-        </tr>
-    </ng-template>
-</p-table> -->

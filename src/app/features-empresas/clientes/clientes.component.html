@@ -33,7 +33,7 @@
         [rowHover]="true"
         [rows]="numElementsByPage()"
         [showCurrentPageReport]="true"
-        [rowsPerPageOptions]="[10, 25, 50]"
+        [rowsPerPageOptions]="[numElementsByPage(), 25, 50]"
         [loading]="loading()"
         [paginator]="true"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
@@ -205,10 +205,7 @@
               />
             </td>
             <td>
-              <p-tag
-                [value]="customer.letterCreditStatus !== null ? customer.letterCreditStatus : '-'"
-                [severity]="customer.letterCreditStatus !== null ? getSeverity(customer.letterCreditStatus) : 'danger'"
-              />
+              <p-tag [value]="customer.letterCreditStatus" [severity]="getSeverity(customer.letterCreditStatus)" />
             </td>
 
             <td>
