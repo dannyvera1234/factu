@@ -9,7 +9,7 @@ import { CustomPipe } from '@/pipes';
 import { HistorialPagoComponent } from '../historial-pago';
 import { Modulos } from '@/utils/permissions';
 import { FormsModule } from '@angular/forms';
-import { ViewerDocumentComponent } from '@/components';
+import { ModalComponent, ViewerDocumentComponent } from '@/components';
 
 @Component({
   selector: 'app-lista-doc',
@@ -22,6 +22,7 @@ import { ViewerDocumentComponent } from '@/components';
     CustomPipe,
     FormsModule,
     ViewerDocumentComponent,
+    ModalComponent,
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
@@ -60,7 +61,7 @@ export class ListaDocComponent {
   public readonly historial = signal<GeneriResp<any> | null>(null);
   public readonly currentDocumentUrl = signal<string | null>(null);
   public readonly isModalOpen = signal(false);
-
+  public readonly loadingHstorial = signal(false);
   searchQuery = '';
 
   constructor(
@@ -69,23 +70,17 @@ export class ListaDocComponent {
     private readonly notification: NotificationService,
   ) {}
 
-  toggleTooltip(id: number, isVisible: boolean): void {
-    const currentState = this.showTooltip();
-
-    // Solo actualizar si el estado cambia
-    if (currentState[id] === isVisible) return;
-
-    // Cierra todos los tooltips excepto el actual
-    this.showTooltip.set(isVisible ? { [id]: true } : {});
-
-    if (isVisible && !this.requestedHistories.has(id)) {
-      this.requestedHistories.add(id);
-      this.docService.histories(id).subscribe((res) => {
+  toggleTooltip(id:any): void {
+    of(this.loadingHstorial.set(true))
+      .pipe(
+        mergeMap(() => this.docService.histories(id)),
+        finalize(() => this.loadingHstorial.set(false)),
+      )
+      .subscribe((res) => {
         if (res.status === 'OK') {
           this.historial.set(res);
         }
       });
-    }
   }
 
   openDocument(item: any) {
@@ -212,7 +207,7 @@ export class ListaDocComponent {
     this.docService.generateReporteInvoiceCredito(ide).subscribe((blob: Blob) => {
       this.selectedRow.set(null);
       const url = URL.createObjectURL(blob);
-     this.openDocument(url);
+      this.openDocument(url);
     });
   }
 }

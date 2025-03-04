@@ -178,8 +178,8 @@
     } @else {
       @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
         @for (item of listInvoices()!.data!.listData; track $index) {
-          <div class="group border-b hover:bg-gray-50 transition-all duration-200">
-            <div class="grid grid-cols-12 items-center p-4">
+          <div class="group border-b hover:bg-gray-50 transition-all duration-200 text-xs">
+            <div class="grid grid-cols-12 items-center p-3">
               <div class="col-span-5 flex items-center gap-3">
                 <div class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0 bg-blue-400">
                   <img src="assets/icon/file.svg" width="20" height="20" />
@@ -189,7 +189,9 @@
                     <h3 class="font-medium group-hover:text-blue-600 transition-colors">
                       {{ item.electronicDesTypeDoc + ' #' + item.emissionDate }}
                     </h3>
-                    <button class="h-6 w-6 rounded-full" title="Información adicional">
+                    <button class="h-6 w-6 rounded-full" title="Información adicional"
+                      (click)="historialFactura.open(); toggleTooltip(item.ide)"
+                    >
                       <img src="assets/icon/tooltip.svg" alt="" class="h-4 w-4 text-gray-400" />
                     </button>
                   </div>
@@ -353,3 +355,41 @@
     }
   }
 </div>
+
+
+
+<app-modal #historialFactura>
+  @defer {
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <section class="p-4">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+            <button class="text-gray-400 hover:text-gray-600" (click)="historialFactura.close(); historial.set(null)">
+              &times;
+            </button>
+          </div>
+          <div>
+            @if (loadingHstorial()) {
+              <div class="h-full text-center flex justify-center items-center">
+                <div class="loader"></div>
+              </div>
+            } @else {
+              @if (historial(); as historial) {
+                <div class="space-y-2">
+                  @for (history of historial!.data; track $index) {
+                    <div class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto">
+                      <div class="flex justify-between items-center text-gray-700">
+                        <span>{{ history.description }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  }
+</app-modal>
