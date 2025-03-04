@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
-import { CustomInputComponent } from '@/components';
+import { CustomInputComponent } from '../../../../components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass } from '@angular/common';
-import { ByApplicationCounter } from '@/interfaces';
-import { ageValidator, emailValidator, onlyLettersValidator, onlyNumbersValidator } from '@/utils/validators';
 import { of, mergeMap, finalize } from 'rxjs';
+import { ByApplicationCounter } from '../../../../interfaces';
 import { EmpresaService } from '../../../../services/service-empresas';
+import { onlyLettersValidator, emailValidator, onlyNumbersValidator, ageValidator } from '../../../../utils/validators';
+import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-update-emisor',
+  selector: 'app-general',
   imports: [CustomInputComponent, ReactiveFormsModule, NgClass],
-  templateUrl: './update-emisor.component.html',
+  templateUrl: './general.component.html',
   styles: ``,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UpdateEmisorComponent {
-  @Input({ required: true }) set infoEmisor(value: ByApplicationCounter) {
+export class GeneralComponent {
+ @Input({ required: true }) set infoEmisor(value: ByApplicationCounter) {
     this.form.patchValue({
       names: value.names,
       lastName: value.lastName,

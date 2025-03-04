@@ -10,9 +10,12 @@ import {
   CreateFileComponent,
   DeleteFileComponent,
   DeleteLogoComponent,
+  FacturacionComponent,
+  GeneralComponent,
   InfoCardEmpresaComponent,
+  NotificacionComponent,
+  SeguridadComponent,
   SequentialComponent,
-  UpdateEmisorComponent,
   UpdateEmisorTributariaComponent,
   UpdateLogoComponent,
 } from './components';
@@ -28,7 +31,6 @@ import { ButtonModule } from 'primeng/button';
     CustomDatePipe,
     TextInitialsPipe,
     NgOptimizedImage,
-    UpdateEmisorComponent,
     UpdateEmisorTributariaComponent,
     CreateFileComponent,
     DeleteFileComponent,
@@ -36,15 +38,19 @@ import { ButtonModule } from 'primeng/button';
     UpdateLogoComponent,
     DeleteLogoComponent,
     InfoCardEmpresaComponent,
-    ButtonModule
+    ButtonModule,
+    FacturacionComponent,
+    GeneralComponent,
+    NotificacionComponent,
+    SeguridadComponent,
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfiguracionComponent {
+  public readonly tap = signal<'general' | 'facturacion' | 'seguridad' | 'notificaciones'>('general')
   public readonly emisorInfo = signal<GeneriResp<ByApplicationCounter> | null>(null);
-  public readonly viewingEmisor = signal<ByApplicationCounter | null>(null);
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
   public readonly viewingIdeSubsidiary = signal<number | null>(null);
   public readonly viewingEstablecimiento = signal<any | null>(null);
@@ -58,6 +64,10 @@ export class ConfiguracionComponent {
     public readonly config: ConfigFacturacionService,
   ) {
     this.retrieveEmisor();
+  }
+
+  public changeTab(tab: 'general' | 'facturacion' | 'seguridad' | 'notificaciones') {
+    this.tap.set(tab);
   }
 
   retrieveEmisor() {

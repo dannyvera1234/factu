@@ -105,12 +105,7 @@
             <div class="flex justify-between items-center">
               <h3 class="text-black">información Personal</h3>
 
-              <button
-                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
-                (click)="updateInfoEmisor.open(); viewingEmisor.set(byPersona)"
-              >
-                Editar
-              </button>
+
             </div>
             <hr class="my-2" />
             <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
@@ -262,36 +257,99 @@
           <app-info-card-empresa />
         }
 
-        <div class="bg-white rounded-lg shadow p-4"></div>
+        <div>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-medium mb-2">Configuración de la cuenta</h3>
+
+            <!-- Pestañas de configuración -->
+            <div class="border-b mb-6">
+              <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                <li class="mr-2 cursor-pointer" (click)="changeTab('general')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
+                    [ngClass]="{
+                      'border-blue-500 text-blue-500': tap() === 'general',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300': tap() !== 'general',
+                    }"
+                  >
+                    General
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('facturacion')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
+                    [ngClass]="{
+                      'border-blue-500 text-blue-500': tap() === 'facturacion',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'facturacion',
+                    }"
+                  >
+                    Facturación
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('seguridad')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
+                    [ngClass]="{
+                      'border-blue-500 text-blue-500': tap() === 'seguridad',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'seguridad',
+                    }"
+                  >
+                    Seguridad
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('notificaciones')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
+                    [ngClass]="{
+                      'border-blue-500 text-blue-500': tap() === 'notificaciones',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'notificaciones',
+                    }"
+                  >
+                    Notificaciones
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            @switch (tap()) {
+              @case ('general') {
+                @defer {
+
+                    <app-general
+                      [infoEmisor]="byPersona"
+
+                      (updateEmisor)="$event && updateEmisor($event)"
+                    />
+
+                }
+              }
+              @case ('facturacion') {
+                @defer {
+                  <app-facturacion />
+                }
+              }
+              @case ('seguridad') {
+                @defer {
+                  <app-seguridad />
+                }
+              }
+              @case ('notificaciones') {
+                @defer {
+                  <app-notificacion />
+                }
+              }
+            }
+          </div>
+        </div>
       </main>
     </div>
   }
 }
 
-<app-modal #updateInfoEmisor>
-  @defer {
-    <div class="flex items-center justify-center">
-      <div class="bg-white w-full max-w-xl rounded-lg overflow-auto">
-        <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Editar Informacion Personal</h2>
-          <button (click)="updateInfoEmisor.close()" class="shrink-0">
-            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
-          </button>
-        </header>
 
-        @if (viewingEmisor(); as infoEmisor) {
-          <section class="p-4">
-            <app-update-emisor
-              [infoEmisor]="infoEmisor"
-              (updateEmisor)="updateInfoEmisor.close(); viewingEmisor.set(null)"
-              (updateEmisor)="$event && updateEmisor($event)"
-            />
-          </section>
-        }
-      </div>
-    </div>
-  }
-</app-modal>
 
 <app-modal #updateInfoTributaria>
   @defer {

@@ -207,7 +207,9 @@
               />
             </td> -->
             <td>
-              <p-tag [value]="customer.letterCreditStatus" [severity]="getSeverity(customer.letterCreditStatus)" />
+              @if (customer.letterCreditStatus) {
+                <p-tag [value]="customer.letterCreditStatus" [severity]="getSeverity(customer.letterCreditStatus)" />
+              }
             </td>
             <td>
               {{ customer.cellPhone | formatPhone }}

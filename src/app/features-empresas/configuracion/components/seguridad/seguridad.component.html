@@ -1,0 +1,224 @@
+<div class="tab-content" id="seguridad-content">
+  <div class="space-y-6">
+    <!-- Cambiar contraseña -->
+    <div>
+      <h4 class="text-sm font-medium text-gray-700 mb-3">Cambiar contraseña</h4>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs text-gray-700 mb-1">Contraseña actual</label>
+          <input
+            type="password"
+            class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs text-gray-700 mb-1">Nueva contraseña</label>
+          <input
+            type="password"
+            class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label class="block text-xs text-gray-700 mb-1">Confirmar nueva contraseña</label>
+          <input
+            type="password"
+            class="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1.5 rounded-md">
+            Actualizar contraseña
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Autenticación de dos factores -->
+    <div>
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-sm font-medium text-gray-700">Autenticación de dos factores</h4>
+        <div class="flex items-center">
+          <span class="text-xs text-gray-500 mr-2">Desactivado</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer" />
+            <div
+              class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"
+            ></div>
+          </label>
+        </div>
+      </div>
+      <p class="text-xs text-gray-600 mb-3">
+        La autenticación de dos factores agrega una capa adicional de seguridad a tu cuenta. Además de tu
+        contraseña, necesitarás ingresar un código de verificación.
+      </p>
+      <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-md">
+        Configurar autenticación de dos factores
+      </button>
+    </div>
+
+    <!-- Sesiones activas -->
+    <div>
+      <h4 class="text-sm font-medium text-gray-700 mb-3">Sesiones activas</h4>
+      <div class="border border-gray-200 rounded-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Dispositivo
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Ubicación
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Última actividad
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Acción
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 text-xs">
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                <div class="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-gray-500 mr-2"
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                  Windows - Chrome
+                </div>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Quito, Ecuador</td>
+              <td class="px-4 py-2 whitespace-nowrap">Ahora (Sesión actual)</td>
+              <td class="px-4 py-2 whitespace-nowrap text-right">
+                <span class="text-gray-400">-</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap">
+                <div class="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="text-gray-500 mr-2"
+                  >
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                  iPhone - Safari
+                </div>
+              </td>
+              <td class="px-4 py-2 whitespace-nowrap">Guayaquil, Ecuador</td>
+              <td class="px-4 py-2 whitespace-nowrap">Hace 2 días</td>
+              <td class="px-4 py-2 whitespace-nowrap text-right">
+                <button class="text-red-500 hover:text-red-600">Cerrar sesión</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Historial de acceso -->
+    <div>
+      <h4 class="text-sm font-medium text-gray-700 mb-3">Historial de acceso</h4>
+      <div class="border border-gray-200 rounded-md overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Fecha y hora
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Dispositivo
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Ubicación
+              </th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Estado
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200 text-xs">
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap">23 Ene 2025, 10:45 AM</td>
+              <td class="px-4 py-2 whitespace-nowrap">Windows - Chrome</td>
+              <td class="px-4 py-2 whitespace-nowrap">Quito, Ecuador</td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Exitoso</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap">21 Ene 2025, 08:30 AM</td>
+              <td class="px-4 py-2 whitespace-nowrap">iPhone - Safari</td>
+              <td class="px-4 py-2 whitespace-nowrap">Guayaquil, Ecuador</td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Exitoso</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap">20 Ene 2025, 11:15 PM</td>
+              <td class="px-4 py-2 whitespace-nowrap">Desconocido - Firefox</td>
+              <td class="px-4 py-2 whitespace-nowrap">Bogotá, Colombia</td>
+              <td class="px-4 py-2 whitespace-nowrap">
+                <span class="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">Fallido</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex justify-end space-x-3 mt-6">
+      <button class="border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-4 py-1.5 rounded-md">
+        Cancelar
+      </button>
+      <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1.5 rounded-md">
+        Guardar cambios
+      </button>
+    </div>
+  </div>
+</div>
