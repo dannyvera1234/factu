@@ -148,7 +148,7 @@ export class HomeComponent implements OnInit {
 
       this.options = {
         maintainAspectRatio: false,
-        aspectRatio: 0.6,
+        aspectRatio: 1,
         plugins: {
           legend: {
             labels: {
