@@ -107,6 +107,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.initChart();
+    this.initChartRounde();
   }
 
   initChart() {
@@ -177,4 +178,41 @@ export class HomeComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
+
+  dataRounde: any;
+
+  optionsRpunde: any;
+
+  initChartRounde() {
+    if (isPlatformBrowser(this.platformId)) {
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+
+        this.dataRounde = {
+            labels: ['A', 'B', 'C'],
+            datasets: [
+                {
+                    data: [540, 325, 702],
+                    backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
+                    hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')]
+                }
+            ]
+        };
+
+        this.optionsRpunde = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
+        this.cd.markForCheck()
+    }
+
 }
+}
+
+
