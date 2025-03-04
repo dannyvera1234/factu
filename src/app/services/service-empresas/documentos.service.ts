@@ -18,16 +18,16 @@ export class DocumentosService {
 
   listInvoices(filter: any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-     ...filter
+      ...filter,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoices`, {
       body: payload,
     });
   }
 
-  listProforma(filter:any): Observable<any> {
+  listProforma(filter: any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-      ...filter
+      ...filter,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoicesProforma`, {
       body: payload,
@@ -123,7 +123,6 @@ export class DocumentosService {
     );
   }
 
-
   sendNotificationProforma(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/sendNotificationProforma`, {
@@ -200,12 +199,10 @@ export class DocumentosService {
     );
   }
 
-  reportCreditoClientes(data: Partial<any>): Observable<Blob> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI,
-      { ...data },
-    );
+  reportCreditoClientes(data: Partial<any>, endDate: any, startDate: any): Observable<Blob> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data , endDate, startDate });
     return this.httpClient.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/reportes/creditosClientes`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/reportes/creditosClientes`,
       payload,
       { responseType: 'blob' },
     );

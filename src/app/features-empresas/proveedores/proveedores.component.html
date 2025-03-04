@@ -62,7 +62,7 @@
           </ng-template>
           <ng-template #body let-proveedor>
             <tr class="p-selectable-row">
-              <th scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
+              <td scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
                 <div class="flex gap-4 items-center">
                   <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
                     {{ proveedor.socialReason | initials }}
@@ -71,7 +71,7 @@
                     <p class="font-bold">{{ proveedor.socialReason }}</p>
                   </div>
                 </div>
-              </th>
+              </td>
               <td>
                 {{ proveedor.identificationNumber | formatId }}
               </td>

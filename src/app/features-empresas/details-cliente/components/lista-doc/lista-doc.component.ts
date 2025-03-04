@@ -154,6 +154,7 @@ export class ListaDocComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
+          console.log(resp);
           // Verificar que listData exista y sea un arreglo
           const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
             if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;

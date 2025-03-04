@@ -77,14 +77,14 @@
                 </div>
               </div>
             </th>
-
+            <th style="min-width: 14rem">
+              <div class="flex justify-between items-center">Email</div>
+            </th>
             <th style="min-width: 14rem">
               <div class="flex justify-between items-center">Dirección</div>
             </th>
-            <th style="min-width: 10rem">
-              <div class="flex justify-between items-center">Telefono</div>
-            </th>
-            <th style="min-width: 8rem">
+
+            <!-- <th style="min-width: 8rem">
               <div class="flex justify-between items-center">
                 Estado Credito
 
@@ -98,7 +98,7 @@
                     </div>
                   </button>
 
-                  <!-- Se muestra el formulario de filtros solo si 'Estado Credito' está abierto -->
+
                   @if (open() === 'Estado Credito') {
                     <form
                       class="bg-white absolute shadow min-w-full p-4 right-0 overflow-clip z-20 mt-2 md:min-w-64 flex flex-col gap-2"
@@ -132,7 +132,7 @@
                   }
                 </div>
               </div>
-            </th>
+            </th> -->
             <th style="min-width: 8rem">
               <div class="flex justify-between items-center">
                 Estado Pago
@@ -170,6 +170,9 @@
                 </div>
               </div>
             </th>
+            <th style="min-width: 10rem">
+              <div class="flex justify-between items-center">Telefono</div>
+            </th>
             <th style="min-width: 10rem">Acciones</th>
           </tr>
         </ng-template>
@@ -190,24 +193,25 @@
                 </div>
               </div>
             </td>
-
+            <td>
+              {{ customer.email }}
+            </td>
             <td>
               {{ customer.address }}
             </td>
-            <td>
-              {{ customer.cellPhone | formatPhone }}
-            </td>
 
-            <td>
+            <!-- <td>
               <p-tag
                 [value]="customer.hasActiveCredit === true ? 'ACTIVO' : '-'"
                 [severity]="customer.hasActiveCredit === true ? 'success' : 'danger'"
               />
-            </td>
+            </td> -->
             <td>
               <p-tag [value]="customer.letterCreditStatus" [severity]="getSeverity(customer.letterCreditStatus)" />
             </td>
-
+            <td>
+              {{ customer.cellPhone | formatPhone }}
+            </td>
             <td>
               <p-button
                 icon="pi pi-eye"

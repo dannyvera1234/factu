@@ -127,7 +127,7 @@ export class ClientesComponent {
       search: this.searchQuery,
       filterModel: {
         hasActiveCredit: this.credito(),
-        letterCreditStatus: this.letterCreditStatus(),
+        // letterCreditStatus: this.letterCreditStatus(),
       },
     };
     of(this.loading.set(true))

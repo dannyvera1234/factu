@@ -1,5 +1,5 @@
 import { CurrencyPipe, JsonPipe, NgClass, NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CustomPipe } from '@/pipes';
 import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { UpdatePagoComponent } from './components';
@@ -45,6 +45,16 @@ export class HistorialPagoComponent {
   public readonly isModalOpen = signal(false);
 
   @Output() public readonly created = new EventEmitter<any | null>();
+
+  public readonly  pagosPagados = computed(() => this.historialPago.respHistoriaPago.data.filter((item: any) => item.paymentStatus === 'PAGADO').length);
+
+  public readonly  pagosAtrasados = computed(() => this.historialPago.respHistoriaPago.data.filter((item: any) => item.paymentStatus === 'ATRASADO').length);
+
+   public readonly  pagosPendientes = computed(() => this.historialPago.respHistoriaPago.data.filter((item: any) => item.paymentStatus === 'PENDIENTE').length);
+
+   getPlural(count: number, word: string): string {
+    return count === 1 ? word : word + 's';
+  }
 
   constructor(
     private readonly docService: DocumentosService,

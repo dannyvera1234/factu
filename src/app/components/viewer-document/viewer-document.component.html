@@ -1,9 +1,8 @@
-<!-- Modal -->
 @if (documentUrl) {
   <!-- Modal Overlay -->
   <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4 z-50">
     <!-- Modal Container -->
-    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-xl max-w-4xl md:w-4/5 w-full relative scale-95 animate-scaleIn">
+    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-xl max-w-5xl w-full h-screen flex flex-col relative">
       <!-- Botón de Cerrar -->
       <button (click)="closeModal()" class="absolute top-2 right-2 p-2">
         <img src="assets/icon/close-icon.svg" alt="Cerrar" class="w-6 h-6 md:w-4 md:h-4" />
@@ -12,9 +11,9 @@
       <!-- Título -->
       <h2 class="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4 border-b pb-2">Visualizar Documento</h2>
 
-      <!-- Contenedor del Iframe -->
-      <div class="overflow-hidden rounded-lg border shadow-sm">
-        <iframe [src]="sanitizedUrl" class="w-full h-[70vh] md:h-[80vh] lg:h-[500px] rounded-md border-none"> </iframe>
+      <!-- Contenedor del Iframe (ocupa todo el espacio disponible) -->
+      <div class="flex-grow overflow-hidden rounded-lg border shadow-sm">
+        <iframe [src]="sanitizedUrl" class="w-full h-full rounded-md border-none"></iframe>
       </div>
     </div>
   </div>
