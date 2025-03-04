@@ -1,16 +1,10 @@
-<div class="p-4 border border-gray-200 rounded-md shadow-sm bg-white">
-  <!-- asdasd -->
+<div >
 
   <div class="flex items-center justify-between flex-wrap">
-    <!-- Información de Cliente -->
-    <div class="flex items-start gap-2 mb-4 sm:mb-0">
-      <div class="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-2.5 border">
-        <img src="/assets/icon/perfil.svg" alt="Info" class="w-6 h-6" />
-      </div>
-      <div>
-        <h2 class="text-xl font-semibold">Información Cliente</h2>
-        <p class="text-sm text-gray-500">Busque o registre un nuevo cliente</p>
-      </div>
+    <div class="flex items-center gap-2 mb-3">
+      <img src="/assets/icon/perfil.svg" alt="Info" class="w-6 h-6" />
+      <h2 class="text-base font-medium">Información Cliente</h2>
+      <span class="text-xs text-gray-500">Busque o registre un nuevo cliente</span>
     </div>
   </div>
 
@@ -23,19 +17,19 @@
         [(ngModel)]="searchTerm"
         (keyup)="search($event)"
         (focus)="dropdownOpen.set(true)"
-        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full pl-7 h-8 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+        class="absolute left-2 top-2 text-gray-400"
       >
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -85,8 +79,9 @@
     </div>
 
     <!-- Botón para crear nuevo cliente -->
+
     <button
-      class="w-full sm:w-auto sm:flex-[1] px-1 py-2 text-xs font-semibold rounded border border-gray-300 flex items-center hover:bg-gray-100"
+      class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 h-8 rounded-md"
       (click)="createClient.open()"
     >
       + Nuevo Cliente
@@ -108,18 +103,14 @@
     } @else {
       <div class="mt-3">
         <div class="space-y-2 text-xs">
-          <!-- Nombres -->
-          <div>
+          <!-- Detalles del cliente -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
             <p>
               <span class="block text-gray-500">Nombres</span>
               <span class="font-medium truncate">{{
                 selectedCliente()?.names + ' ' + selectedCliente()?.lastName
               }}</span>
             </p>
-          </div>
-
-          <!-- Detalles del cliente -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
             <p>
               <label class="block text-gray-500">Identificación</label>
               <span class="font-medium truncate">{{ selectedCliente()?.identificationNumber }}</span>

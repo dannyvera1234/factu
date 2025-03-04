@@ -15,14 +15,14 @@ export class AddPaymentComponent {
     this.valorTotal.set(value);
     this.form.patchValue({ valor: value });
   }
+  @Output() public readonly addPay = new EventEmitter<any | null>();
 
-  private readonly valorTotal = signal<string>('');
 
   public readonly paymentMethods = signal<GeneriResp<any[]> | null>(null);
-
+  private readonly valorTotal = signal<string>('');
   public readonly loading = signal(false);
 
-  @Output() public readonly addPay = new EventEmitter<any | null>();
+
 
   constructor(
     private readonly controlService: AccountingControlSystemService,

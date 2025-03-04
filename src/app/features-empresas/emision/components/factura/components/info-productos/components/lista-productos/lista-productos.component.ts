@@ -69,6 +69,7 @@ export class ListaProductosComponent {
 
   addProduct(product: any) {
     if (product !== null) {
+
       this.addProducto.emit(product);
       this.notification.push({
         message: 'Productos cargados correctamente',

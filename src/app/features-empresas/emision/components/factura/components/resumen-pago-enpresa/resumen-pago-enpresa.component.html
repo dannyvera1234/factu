@@ -1,39 +1,39 @@
-<div class="text-sm">
-  <header class="bg-orange-50 hover:bg-orange-100 transition-colors p-4 rounded-t-lg cursor-pointer">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <i class="fas fa-receipt text-orange-500"></i>
-        <h2 class="text-lg font-semibold">Resumen de Pago</h2>
-      </div>
-    </div>
-  </header>
 
-  <div class="p-2 space-y-4">
-    <div>
-      @if (valuesCalculates()?.length) {
-        @for (item of valuesCalculates(); track item.key) {
-          <div class="text-sm text-gray-700">
-            @if (item.key === 'tarifaIva') {
-              @for (itemIva of item.values; track itemIva.key) {
-                <div class="flex justify-between items-center w-full py-1">
-                  <span class="text-gray-600">{{ 'Subtotal ' + itemIva.label }}</span>
-                  <span class="font-semibold text-gray-800 ml-auto text-right">{{ itemIva.value | currency }}</span>
-                </div>
-              }
-            } @else {
-              <div class="flex justify-between items-center w-full py-1">
-                <span class="text-gray-600 truncate">{{ item.label }}</span>
-                <span class="font-semibold text-gray-800 ml-auto text-right">{{ item.values | currency }}</span>
-              </div>
-            }
+
+<h3 class="text-sm font-medium flex items-center gap-1 mb-3 text-gray-700">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="text-orange-500"
+  >
+    <path d="M3 3v18h18" />
+    <path d="m19 9-5 5-4-4-3 3" />
+  </svg>
+  Resumen de Pago
+</h3>
+@if (valuesCalculates()?.length) {
+  @for (item of valuesCalculates(); track item.key) {
+    <div class="space-y-1 text-xs">
+      @if (item.key === 'tarifaIva') {
+        @for (itemIva of item.values; track itemIva.key) {
+          <div class="flex justify-between">
+            <span class="text-gray-600">{{ 'Subtotal ' + itemIva.label }}</span>
+            <span>{{ itemIva.value | currency }}</span>
           </div>
         }
       } @else {
-        <div class="h-full text-center flex justify-center items-center p-5">
-          <div class="loader"></div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">{{ item.label }}</span>
+          <span>{{ item.values | currency }}</span>
         </div>
       }
     </div>
-
-  </div>
-</div>
+  }
+}

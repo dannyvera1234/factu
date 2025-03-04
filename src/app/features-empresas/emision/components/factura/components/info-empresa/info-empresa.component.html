@@ -1,16 +1,8 @@
-<div class="p-4 border border-gray-200 rounded-md shadow-sm bg-white">
-  <div class="flex items-center justify-between">
-    <div class="space-y-1">
-      <div class="flex items-center gap-3">
-        <div class="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 p-2.5 border">
-          <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
-        </div>
-        <div>
-          <h2 class="text-xl font-semibold">Información Empresa</h2>
-          <p class="text-sm text-gray-500">Detalles de la empresa</p>
-        </div>
-      </div>
-    </div>
+
+  <div class="flex items-center gap-2 ">
+    <img src="/assets/icon/emisor.svg" alt="Info" class="w-6 h-6" />
+    <h2 class="text-base font-medium">Información Empresa</h2>
+    <span class="text-xs text-gray-500">Detalles de la empresa</span>
   </div>
 
   @if (loading()) {
@@ -19,7 +11,7 @@
     </div>
   } @else {
     @if (infoEmpresa()?.data; as empresa) {
-      <div class="mt-8 text-sm">
+      <div class="mt-5 text-sm">
         <div class="grid gap-2 md:grid-cols-[1fr,3fr]">
           <div class="relative text-sm">
             <div class="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white rounded-xl"></div>
@@ -199,4 +191,3 @@
       </div>
     }
   }
-</div>

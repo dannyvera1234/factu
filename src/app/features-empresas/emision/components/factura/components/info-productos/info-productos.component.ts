@@ -1,14 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, Input, signal, ViewChild } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '@/components';
-import { AddPaymentComponent, ListaProductosComponent } from './components';
 import { CreateFacturaEmpresaService } from '../../create-factura-empresa.service';
 import { NotificationService } from '../../../../../../utils/services';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-info-productos',
-  imports: [CommonModule, ModalComponent, NgOptimizedImage, FormsModule, ListaProductosComponent, AddPaymentComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    Button,
+  ],
   templateUrl: './info-productos.component.html',
   styles: `
     input[type='number'] {
@@ -18,8 +21,6 @@ import { NotificationService } from '../../../../../../utils/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoProductosComponent {
-  @Input({ required: true }) setPersonaRol!: any;
-
   @Input({ required: true }) set editProformaProducto(product: any[]) {
     if (product) {
       product.forEach((item: any) => {
@@ -36,6 +37,12 @@ export class InfoProductosComponent {
     }
   }
 
+  @Input({ required: true }) set producto(product: any) {
+    if (!product) return;
+    this.addProducto(product);
+    this.config.infoProducto.set(null);
+  }
+
   public readonly calculateTotal = computed(() => {
     return this.config
       .detailProducts()
@@ -43,18 +50,15 @@ export class InfoProductosComponent {
       .reduce((acc, product) => acc + product.valorTotal, 0);
   });
 
-  Math = Math;
-
-  public readonly idePersona = signal<number | null>(null);
-
   public readonly paymentMethods = signal<any | null>(null);
+  public readonly idePersona = signal<number | null>(null);
+  public readonly products = signal<any[]>([]);
+  public readonly Math = Math;
 
   constructor(
     public config: CreateFacturaEmpresaService,
     private readonly notification: NotificationService,
   ) {}
-
-  public readonly products = signal<any[]>([]);
 
   decrementCantidad(product: any): void {
     product.cantidad = Math.max(1, product.cantidad - 1);
@@ -99,7 +103,7 @@ export class InfoProductosComponent {
 
     this.notification.push({
       message: 'Producto eliminado correctamente',
-      type: 'success',
+      type: 'warning',
     });
   }
 
@@ -138,61 +142,10 @@ export class InfoProductosComponent {
   }
 
   restrictInput(event: KeyboardEvent) {
-    // Permitir solo teclas de flecha (arriba y abajo) y retroceso
     const allowedKeys = ['ArrowUp', 'ArrowDown', 'Backspace', 'Tab'];
 
     if (!allowedKeys.includes(event.key)) {
-      event.preventDefault(); // Bloquea cualquier otra tecla
+      event.preventDefault();
     }
-  }
-  addPayment(payment: any): void {
-    if (!payment) return;
-
-    this.paymentMethods.update((currentPaymentMethods: any[] = []) => {
-      // Aseguramos que currentPaymentMethods sea un array válido
-      const methods = Array.isArray(currentPaymentMethods) ? currentPaymentMethods : [];
-
-      // Verificamos si el pago ya existe en la lista por el 'code' dentro de metodoPago
-      const paymentExists = methods.some((method) => method.metodoPago?.code === payment.metodoPago?.code);
-
-      if (paymentExists) {
-        this.notification.push({
-          message: 'La forma de pago ya está registrada. Elimínala y vuelve a intentarlo.',
-          type: 'error',
-        });
-        return methods; // Retornamos la lista sin modificarla
-      }
-
-      // ✅ Calculamos el total incluyendo el nuevo pago
-      const valorTotal = methods.reduce((acc, method) => acc + Number(method.valor || 0), 0) + Number(payment.valor || 0);
-
-      const totalFactura = Number(this.calculateTotal()) || 0; // Aseguramos que sea un número válido
-
-      if (valorTotal > totalFactura) {
-        this.notification.push({
-          message: 'El valor total de los pagos no puede ser mayor al total de la factura.',
-          type: 'error',
-        });
-        return methods; // Retornamos la lista sin modificarla
-      }
-
-      // ✅ Si todo está correcto, agregamos el nuevo pago
-      this.config.selectedPaymentMethod.set([...methods, payment]);
-      return [...methods, payment]; // Retornamos la lista con el nuevo pago agregado
-    });
-  }
-
-
-  removePayment(code: string): void {
-    // Obtenemos la lista actual de métodos de pago
-    this.paymentMethods.update((currentPaymentMethods = []) => {
-      // Filtramos los métodos de pago para eliminar el que coincida con el código
-      const updatedPaymentMethods = currentPaymentMethods.filter((method: any) => method.metodoPago?.code !== code);
-
-      // Actualizamos los métodos de pago seleccionados
-      this.config.selectedPaymentMethod.set(updatedPaymentMethods);
-
-      return updatedPaymentMethods;
-    });
   }
 }
