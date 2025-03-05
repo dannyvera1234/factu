@@ -1,20 +1,19 @@
-import { CurrencyPipe, JsonPipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { CurrencyPipe, NgClass, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   EventEmitter,
-  HostListener,
   Input,
   Output,
   signal,
 } from '@angular/core';
 import { CustomPipe } from '@/pipes';
-import { ModalComponent, ViewerDocumentComponent } from '@/components';
+import { ModalComponent } from '@/components';
 import { HistorialCreditoComponent, UpdatePagoComponent } from './components';
 import { finalize, mergeMap, of } from 'rxjs';
-import { DocumentosService } from '../../../../services/service-empresas';
-import { NotificationService } from '../../../../utils/services';
+import { DocumentosService } from '@/services/service-empresas';
+import { NotificationService } from '@/utils/services';
 
 @Component({
   selector: 'app-historial-pago',
@@ -25,7 +24,6 @@ import { NotificationService } from '../../../../utils/services';
     NgOptimizedImage,
     ModalComponent,
     UpdatePagoComponent,
-    ViewerDocumentComponent,
     HistorialCreditoComponent,
   ],
   templateUrl: './historial-pago.component.html',

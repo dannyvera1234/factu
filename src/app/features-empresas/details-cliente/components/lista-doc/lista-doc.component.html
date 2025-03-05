@@ -225,7 +225,7 @@
                   </button>
                 }
                 <div class="card flex justify-center">
-                  <p-menu #menu [model]="items" [popup]="true" />
+                  <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
                   <p-button
                     (click)="menu.toggle($event); selectedRow.set(item)"
                     icon="pi pi-ellipsis-v"
