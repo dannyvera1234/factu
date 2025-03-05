@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, Input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ClientesService, DocumentosService } from '@/services/service-empresas';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
@@ -10,7 +20,8 @@ import { HistorialPagoComponent } from '../historial-pago';
 import { Modulos } from '@/utils/permissions';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent, ViewerDocumentComponent } from '@/components';
-
+import { ButtonModule } from 'primeng/button';
+import { Menu } from 'primeng/menu';
 @Component({
   selector: 'app-lista-doc',
   imports: [
@@ -23,36 +34,24 @@ import { ModalComponent, ViewerDocumentComponent } from '@/components';
     FormsModule,
     ViewerDocumentComponent,
     ModalComponent,
+    Menu,
+    ButtonModule,
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListaDocComponent {
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent): void {
-    // Si el clic no es dentro de la tabla o el botón de configuración, cerramos el menú
-    const menu = (event.target as HTMLElement).closest('.group');
-    if (!menu) {
-      this.selectedRow.set(null);
-    }
-  }
-
+export class ListaDocComponent implements OnInit {
   @Input({ required: true }) set idePersonaRol(value: number) {
     if (value === null) return;
     this.invoiceCustomers(value, 0, '');
     this.idePersona.set(value);
   }
 
-  public readonly maxDate = computed(() => {
-    return new Date().toISOString().split('T')[0]; // Fecha actual si no hay fecha de inicio
-  });
-
   private readonly idePersona = signal<number | null>(null);
   public readonly showDetails = signal<number | null>(null);
-  public readonly selectedRow = signal<number | null>(null);
+  public readonly selectedRow = signal<any | null>(null);
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
-  // public readonly historialPago = signal<GeneriResp<any> | null>(null);
   public readonly historialPago = signal<any | null>(null);
   public readonly loading = signal(false);
   public readonly loadingShow = signal(false);
@@ -63,14 +62,63 @@ export class ListaDocComponent {
   public readonly isModalOpen = signal(false);
   public readonly loadingHstorial = signal(false);
   searchQuery = '';
-
+  public items: any[] = [];
   constructor(
     private readonly clienteService: ClientesService,
     private readonly docService: DocumentosService,
     private readonly notification: NotificationService,
   ) {}
+  ngOnInit(): void {
+    this.items = [
+      {
+        items: [
+          {
+            label: 'PDF',
+            icon: 'pi pi-print',
+            command: () => this.openDocument(this.selectedRow().pdf),
+          },
+          {
+            label: 'XML',
+            icon: 'pi pi-file',
+            command: () => this.openDocument(this.selectedRow().xml),
+          },
+          {
+            label: 'Reporte',
+            icon: 'pi pi-download',
+            command: () => this.generateReporteInvoiceCredito(this.selectedRow().ide),
+          },
+          {
+            label: 'Configuración',
+            icon: 'pi pi-cog',
+          },
+          {
+            label: 'Reenviar',
+            icon: 'pi pi-send',
+            command: () => this.reeviarEmail(this.selectedRow().ide),
+          },
+        ],
+      },
+    ];
+  }
 
-  toggleTooltip(id:any): void {
+  public readonly totalInvoices = computed(() => {
+    return this.listInvoices()?.data.listData.reduce((sum: any, invoice: any) => sum + (invoice.creditAmount || 0), 0);
+  });
+
+  public readonly totalPayments = computed(() => {
+    return this.listInvoices()?.data.listData.reduce(
+      (sum: any, invoice: any) => sum + (invoice.creditPaymentAmount || 0),
+      0,
+    );
+  });
+
+  public readonly paymentProgress = computed(() => {
+    const total = this.totalInvoices();
+    const paid = this.totalPayments();
+    return total > 0 ? (paid / total) * 100 : 0;
+  });
+
+  toggleTooltip(id: any): void {
     of(this.loadingHstorial.set(true))
       .pipe(
         mergeMap(() => this.docService.histories(id)),
@@ -111,6 +159,8 @@ export class ListaDocComponent {
         .pipe(finalize(() => this.loadingShow.set(false)))
         .subscribe((resp) => {
           if (resp.status === 'OK') {
+            console.log(resp);
+
             this.historialPago.set({
               respHistoriaPago: resp,
               montoPagado: invoice?.creditPaymentAmount || 0.0,
@@ -189,7 +239,7 @@ export class ListaDocComponent {
   reeviarEmail(id: number) {
     of(this.loading.set(true))
       .pipe(
-        mergeMap(() => this.docService.letterPayNotification(id)),
+        mergeMap(() => this.docService.sendNotification(id)),
         finalize(() => this.loading.set(false)),
       )
       .subscribe((res) => {

@@ -69,7 +69,7 @@
                 </div>
                 <div class="flex items-center gap-1 font-medium">
                   <span>
-                    {{ item.amountToPay | currency }}
+                    {{ item.pendingBalance | currency }}
                   </span>
                 </div>
 
@@ -82,59 +82,11 @@
                 }
                 @if (item.receipt) {
                   <div class="group relative text-xs">
-                    <button (click)="toggleMenu(item.ide)">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                        />
-                      </svg>
+                    <button (click)="historialCredito.open(); ideLetterPay.set(item.ide)">
+                   <img src="assets/icon/show-password.svg" alt="">
                     </button>
 
-                    @if (selectedRow() === item.ide) {
-                      <div
-                        class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10"
-                      >
-                        <ul>
-                          @if (item.adjunto !== null) {
-                            <a
-                              (click)="openDocument(item.adjunto)"
-                              class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                            >
-                              <img src="assets/icon/adjunto.svg" alt="adjunto" class="w-5 h-5" />
 
-                              Adjunto
-                            </a>
-                          }
-                          @if (item.receipt !== null) {
-                            <a
-                              (click)="openDocument(item.receipt)"
-                              class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                            >
-                              <img src="assets/icon/vaucher.svg" alt="vaucher" class="w-5 h-5" />
-
-                              Vaucher
-                            </a>
-                            <hr class="my-2 border-gray-600" />
-                          }
-                          <li
-                            class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                            (click)="reeviarEmail(item.ide)"
-                          >
-                            <img src="assets/icon/email.svg" alt="email" class="w-5 h-5" />
-                            Reenviar
-                          </li>
-                        </ul>
-                      </div>
-                    }
                   </div>
                 }
               </div>
@@ -174,7 +126,7 @@
         <section class="p-4">
           @if (updatePago(); as update) {
             <app-update-pago
-              [total]="update.amountToPay"
+              [total]="update.pendingBalance"
               [letterPayIde]="update.ide"
               (created)="infoCredito.close(); updatePago.set(null)"
               (created)="$event && updateLetterPay($event)"
@@ -185,8 +137,27 @@
     </div>
   }
 </app-modal>
-@if (isModalOpen()) {
+
+<app-modal #historialCredito>
   @defer {
-    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <section class="p-4">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-gray-800 font-semibold text-xs">Historial Letra</h3>
+            <button class="text-gray-400 hover:text-gray-600" (click)="historialCredito.close()">
+              &times;
+            </button>
+          </div>
+          <div>
+
+              @if (ideLetterPay(); as ideLetterPay) {
+                <app-historial-credito [ideLetterPay]="ideLetterPay" />
+            }
+          </div>
+        </section>
+      </div>
+    </div>
   }
-}
+</app-modal>
+
