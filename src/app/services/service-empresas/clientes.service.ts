@@ -18,7 +18,11 @@ export class ClientesService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       ...filter,
     });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listCustomer`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listCustomer`, {
+    //   body: payload,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/listCustomer`, {
       body: payload,
     });
   }
@@ -27,7 +31,11 @@ export class ClientesService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       ...data,
     });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/addCustomer`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/addCustomer`, {
+    //   body: payload,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/addCustomer`, {
       body: payload,
     });
   }
@@ -36,7 +44,11 @@ export class ClientesService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
       ideRegister,
     });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/deleteCustomer`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/deleteCustomer`, {
+    //   body: payload,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/deleteCustomer`, {
       body: payload,
     });
   }
@@ -46,7 +58,11 @@ export class ClientesService {
       ...data,
     });
 
-    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/updateCustomer`, {
+    // return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/updateCustomer`, {
+    //   body: payload,
+    // });
+
+    return this._http.put(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/updateCustomer`, {
       body: payload,
     });
   }
@@ -54,7 +70,11 @@ export class ClientesService {
   detailsCustomer(ideRegister: string): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, ideRegister);
 
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/retrieveCustomer`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/retrieveCustomer`, {
+    //   body: payload,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/retrieveCustomer`, {
       body: payload,
     });
   }
@@ -64,7 +84,11 @@ export class ClientesService {
       customerIde,
       paginator,
     });
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos`, {
+    //   body: payload,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/documentos`, {
       body: payload,
     });
   }
@@ -74,7 +98,7 @@ export class ClientesService {
       invoiceIde: id,
     });
     return this._http.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/documentos/historialPago`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/clientes/documentos/letrascredito`,
       {
         body: payload,
       },
@@ -91,7 +115,11 @@ export class ClientesService {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data });
     form.append('reqDTO', JSON.stringify(payload));
 
-    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/payLetter`, {
+    // return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/payLetter`, {
+    //   body: form,
+    // });
+
+    return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/letracredito/payLetter`, {
       body: form,
     });
   }

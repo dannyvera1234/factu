@@ -106,8 +106,15 @@ export class DocumentosService {
 
   letterPayNotification(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, { ide: id });
+    // return this._http.post(
+    //   `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
+    //   {
+    //     body: payload,
+    //   },
+    // );
+
     return this._http.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/clientes/letracredito/letterPayNotification`,
       {
         body: payload,
       },
@@ -116,8 +123,14 @@ export class DocumentosService {
 
   generateReporteInvoiceCredito(ide: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, ide);
+    // return this.httpClient.post(
+    //   `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
+    //   payload,
+    //   { responseType: 'blob' },
+    // );
+
     return this.httpClient.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/clientes/documentos/generateReporteInvoiceCredito`,
       payload,
       { responseType: 'blob' },
     );
