@@ -14,6 +14,7 @@ import { HistorialCreditoComponent, UpdatePagoComponent } from './components';
 import { finalize, mergeMap, of } from 'rxjs';
 import { DocumentosService } from '@/services/service-empresas';
 import { NotificationService } from '@/utils/services';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-historial-pago',
@@ -25,6 +26,7 @@ import { NotificationService } from '@/utils/services';
     ModalComponent,
     UpdatePagoComponent,
     HistorialCreditoComponent,
+    Button
   ],
   templateUrl: './historial-pago.component.html',
   styles: ``,

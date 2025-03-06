@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-
-  Input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, signal } from '@angular/core';
 import { ClientesService, DocumentosService } from '@/services/service-empresas';
 import { finalize, mergeMap, of } from 'rxjs';
 import { GeneriResp } from '@/interfaces';
@@ -34,7 +27,7 @@ import { CardCreditComponent } from '../card-credit';
     ModalComponent,
     Menu,
     ButtonModule,
-    CardCreditComponent
+    CardCreditComponent,
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
@@ -46,7 +39,7 @@ export class ListaDocComponent implements OnInit {
     this.invoiceCustomers(value, 0, '');
     this.idePersona.set(value);
   }
-  public readonly actulizarCard = signal<any | null>(null)
+  public readonly actulizarCard = signal<any | null>(null);
 
   public readonly idePersona = signal<number>(0);
   public readonly showDetails = signal<number | null>(null);
@@ -101,8 +94,6 @@ export class ListaDocComponent implements OnInit {
     ];
   }
 
-
-
   toggleTooltip(id: any): void {
     of(this.loadingHstorial.set(true))
       .pipe(
@@ -154,12 +145,10 @@ export class ListaDocComponent implements OnInit {
     }
   }
 
-
   updateletterPay(item: any) {
     if (!item) return;
-    this.actulizarCard.set({ide:this.idePersona()!});
+    this.actulizarCard.set({ ide: this.idePersona()! });
     this.invoiceCustomers(this.idePersona()!, 0, '');
-
   }
 
   isTooltipVisible(id: number): boolean {
@@ -178,7 +167,11 @@ export class ListaDocComponent implements OnInit {
     const paginator = {
       size: Modulos.PAGE_SIZE,
       page: page,
-      search: searchTerm,
+      search: null,
+      apply: true,
+      filterModel: {
+        statusLetter: null,
+      },
     };
     of(this.loading.set(true))
       .pipe(
