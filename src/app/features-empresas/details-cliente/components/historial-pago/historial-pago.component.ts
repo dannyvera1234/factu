@@ -34,6 +34,7 @@ export class HistorialPagoComponent {
   @Output() public readonly created = new EventEmitter<any | null>();
   @Input({ required: true }) loadingShow!: boolean;
   @Input({ required: true }) historialPago!: any;
+  @Input({ required: true }) idePersonalRol!: number;
 
   public readonly ideLetterPay = signal<number | null>(null);
   public readonly updatePago = signal<any | null>(null);

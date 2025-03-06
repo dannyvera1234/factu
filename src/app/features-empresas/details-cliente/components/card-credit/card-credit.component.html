@@ -1,0 +1,145 @@
+@if (listResumen()?.data; as resumen) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-none shadow-md">
+      <div class="p-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm font-medium text-blue-600">Total Facturas Crédito</p>
+            <h3 class="text-2xl font-bold mt-1">{{ resumen.resumeCreditActive.totalCreditAmount | currency }}</h3>
+          </div>
+          <div class="bg-white p-2 rounded-full shadow-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-blue-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-gray-500">Progreso de pagos</span>
+            <span class="font-medium">
+              {{ resumen.resumeCreditActive.totalPaidAmount | currency }} - {{ paymentProgress().toFixed(2) }}%
+            </span>
+          </div>
+          <div class="w-full bg-blue-200 rounded-full h-2">
+            <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="paymentProgress()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border-none shadow-md">
+      <div class="p-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm font-medium text-amber-600">Pagos Pendientes</p>
+            <h3 class="text-2xl font-bold mt-1">
+              {{ resumen.resumeCreditModelPending.totalCreditAmount | currency }}
+            </h3>
+          </div>
+          <div class="bg-white p-2 rounded-full shadow-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-amber-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-gray-500">Próximo vencimiento</span>
+            <span class="font-medium">{{ resumen.resumeCreditModelPending.nearestDuePayment | custom }} </span>
+          </div>
+          <div class="flex items-center gap-2 mt-2">
+            <span
+              class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-200"
+            >
+              {{
+                resumen.resumeCreditModelPending.letterAmount === 0
+                  ? 'No hay letras pendientes'
+                  : resumen.resumeCreditModelPending.letterAmount +
+                    ' ' +
+                    (resumen.resumeCreditModelPending.letterAmount === 1
+                      ? 'letra pendiente mensual'
+                      : 'letras pendientes mensuales')
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl border-none shadow-md">
+      <div class="p-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm font-medium text-red-600">Crédito Atrasado</p>
+            <h3 class="text-2xl font-bold mt-1">
+              {{ resumen.resumeCreditModelOverdue.totalCreditAmount | currency }}
+            </h3>
+          </div>
+          <div class="bg-white p-2 rounded-full shadow-sm">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-red-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="text-gray-500">Letras Vencidas</span>
+            <span class="font-medium">{{ resumen.resumeCreditModelOverdue.nearestDuePayment | custom }} </span>
+          </div>
+
+            <div class="flex items-center gap-2 mt-2">
+              <span
+                class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-200"
+              >
+
+
+                {{
+                  resumen.resumeCreditModelOverdue.letterAmount === 0
+                    ? 'No hay letras vencidas'
+                    : resumen.resumeCreditModelOverdue.letterAmount +
+                      ' ' +
+                      (resumen.resumeCreditModelOverdue.letterAmount === 1
+                        ? 'letra vencida mensual'
+                        : 'letras vencidas mensuales')
+                }}
+              </span>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+}

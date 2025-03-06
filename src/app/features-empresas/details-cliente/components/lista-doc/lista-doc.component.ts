@@ -1,13 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
-  ElementRef,
-  HostListener,
+
   Input,
   OnInit,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { ClientesService, DocumentosService } from '@/services/service-empresas';
 import { finalize, mergeMap, of } from 'rxjs';
@@ -22,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
+import { CardCreditComponent } from '../card-credit';
 @Component({
   selector: 'app-lista-doc',
   imports: [
@@ -36,6 +34,7 @@ import { Menu } from 'primeng/menu';
     ModalComponent,
     Menu,
     ButtonModule,
+    CardCreditComponent
   ],
   templateUrl: './lista-doc.component.html',
   styles: ``,
@@ -47,8 +46,9 @@ export class ListaDocComponent implements OnInit {
     this.invoiceCustomers(value, 0, '');
     this.idePersona.set(value);
   }
+  public readonly actulizarCard = signal<any | null>(null)
 
-  private readonly idePersona = signal<number | null>(null);
+  public readonly idePersona = signal<number>(0);
   public readonly showDetails = signal<number | null>(null);
   public readonly selectedRow = signal<any | null>(null);
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
@@ -101,22 +101,7 @@ export class ListaDocComponent implements OnInit {
     ];
   }
 
-  public readonly totalInvoices = computed(() => {
-    return this.listInvoices()?.data.listData.reduce((sum: any, invoice: any) => sum + (invoice.creditAmount || 0), 0);
-  });
 
-  public readonly totalPayments = computed(() => {
-    return this.listInvoices()?.data.listData.reduce(
-      (sum: any, invoice: any) => sum + (invoice.creditPaymentAmount || 0),
-      0,
-    );
-  });
-
-  public readonly paymentProgress = computed(() => {
-    const total = this.totalInvoices();
-    const paid = this.totalPayments();
-    return total > 0 ? (paid / total) * 100 : 0;
-  });
 
   toggleTooltip(id: any): void {
     of(this.loadingHstorial.set(true))
@@ -160,7 +145,6 @@ export class ListaDocComponent implements OnInit {
         .subscribe((resp) => {
           if (resp.status === 'OK') {
             console.log(resp);
-
             this.historialPago.set({
               respHistoriaPago: resp,
               montoPagado: invoice?.creditPaymentAmount || 0.0,
@@ -169,9 +153,13 @@ export class ListaDocComponent implements OnInit {
         });
     }
   }
+
+
   updateletterPay(item: any) {
     if (!item) return;
+    this.actulizarCard.set({ide:this.idePersona()!});
     this.invoiceCustomers(this.idePersona()!, 0, '');
+
   }
 
   isTooltipVisible(id: number): boolean {
@@ -200,6 +188,7 @@ export class ListaDocComponent implements OnInit {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           console.log(resp);
+
           // Verificar que listData exista y sea un arreglo
           const sortedInvoices = resp.data.listData.sort((a: any, b: any) => {
             if (a.saleType === 'Crédito' && b.saleType !== 'Crédito') return -1;

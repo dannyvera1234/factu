@@ -23,7 +23,9 @@
             </span>
           }
           @if (pagosAtrasados() > 0) {
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-200 animate-pulse">
+            <span
+              class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-200 animate-pulse"
+            >
               {{ pagosAtrasados() }} {{ getPlural(pagosAtrasados(), 'atrasado') }}
             </span>
           }
@@ -57,13 +59,12 @@
 
               <div class="flex items-center gap-3">
                 <div
-                  class="px-2.5 py-0.5 rounded-full text-xs font-medium "
+                  class="px-2.5 py-0.5 rounded-full text-xs font-medium"
                   [ngClass]="{
                     'bg-green-100 text-green-700 border-green-500': item.paymentStatus === 'PAGADO',
                     'bg-red-100 text-red-700 border-red-500 !animate-pulse': item.paymentStatus === 'ATRASADO',
-                    'bg-orange-100 text-orange-700 border-orange-500 animate-pulse': item.paymentStatus === 'PENDIENTE'
+                    'bg-orange-100 text-orange-700 border-orange-500 animate-pulse': item.paymentStatus === 'PENDIENTE',
                   }"
-
                 >
                   <span class="lowercase">{{ item.paymentStatus }}</span>
                 </div>
@@ -80,13 +81,11 @@
                     </button>
                   </div>
                 }
-                @if (item.receipt) {
+                @if (item.amountPaid !== null) {
                   <div class="group relative text-xs">
                     <button (click)="historialCredito.open(); ideLetterPay.set(item.ide)">
-                   <img src="assets/icon/show-password.svg" alt="">
+                      <img src="assets/icon/show-password.svg" alt="" />
                     </button>
-
-
                   </div>
                 }
               </div>
@@ -143,16 +142,18 @@
     <div class="flex items-center justify-center min-h-screen">
       <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
         <section class="p-4">
+
           <div class="flex justify-between items-center mb-3">
-            <h3 class="text-gray-800 font-semibold text-xs">Historial Letra</h3>
+            <h3 class="text-gray-800 font-semibold text-xs">Historial de Pagos</h3>
             <button class="text-gray-400 hover:text-gray-600" (click)="historialCredito.close()">
               &times;
             </button>
           </div>
           <div>
-
-              @if (ideLetterPay(); as ideLetterPay) {
-                <app-historial-credito [ideLetterPay]="ideLetterPay" />
+            @if (ideLetterPay(); as ideLetterPay) {
+              <app-historial-credito [ideLetterPay]="{ ideLetterPay, idePersonalRol }"
+              (showDetails)="historialCredito.close()"
+              />
             }
           </div>
         </section>
@@ -160,4 +161,3 @@
     </div>
   }
 </app-modal>
-

@@ -1,9 +1,71 @@
-<!-- <div class="space-y-2">
-  @for (history of historial!.data; track $index) {
-    <div class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto">
-      <div class="flex justify-between items-center text-gray-700">
-        <span>{{ history.description }}</span>
-      </div>
-    </div>
-  }
-</div> -->
+<!-- Lista de historiales -->
+@if (historilAbonos()?.data && historilAbonos()?.data.length) {
+  <div class="max-h-[50vh] overflow-y-auto border-t">
+    @for (item of historilAbonos()?.data; track $index) {
+      <ul class="divide-y">
+        <!-- Historial 1 - Completado -->
+        <li>
+          <a class="block w-full p-4 text-left hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex items-center">
+                <img src="assets/icon/pagado.svg" alt="" class="h-4 w-4 text-green-500" />
+                <span class="font-medium text-gray-800 ml-2">{{ item.amountPaid | currency }} </span>
+              </div>
+
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                Pagado
+              </span>
+            </div>
+
+            <div class="flex justify-between text-sm text-gray-500">
+              <div class="flex flex-col items-center">
+                <div class="flex items-center">
+                  <img src="assets/icon/calendario.svg" alt="" class="h-3.5 w-3.5 mr-1" />
+                  {{ item.paymentDate | custom }}
+                </div>
+                <div class="flex items-center">
+                  <p class="text-sm text-gray-500 mt-1 truncate">
+                    {{ item.observation }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-end gap-y-1">
+                @for (payment of item.creditPayments; track $index) {
+                  <div class="flex items-center">
+                    <img src="assets/icon/credito.svg" alt="" class="h-3.5 w-3.5 mr-1" />
+                    {{ payment.paymentMethodDescription }}
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center mt-2 text-xs text-blue-500">
+              @if (item.adjunto) {
+                <a [href]="item.adjunto" target="_blank" class="mr-4">
+                  <span>Ver adjunto</span>
+                </a>
+              }
+              <a [href]="item.voucher" target="_blank">
+                <span>Ver voucher</span>
+              </a>
+            </div>
+          </a>
+        </li>
+      </ul>
+    }
+  </div>
+}
+<!-- Footer -->
+
+<div class="flex gap-4 justify-end mt-2 md:flex-row flex-col text-center max-md:w-full">
+  <button
+    class="items-center gap-2 bg-secondary px-4 py-1 rounded-lg text-white md:flex"
+    type="button"
+    (click)="showDetails.emit(null)"
+  >
+    Cerrar
+  </button>
+</div>

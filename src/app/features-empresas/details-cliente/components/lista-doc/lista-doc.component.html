@@ -7,119 +7,9 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-none shadow-md">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-blue-600">Total Facturas</p>
-            <h3 class="text-2xl font-bold mt-1">{{ totalInvoices() | currency }}</h3>
-          </div>
-          <div class="bg-white p-2 rounded-full shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-blue-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-gray-500">Progreso de pagos</span>
-            <span class="font-medium">{{ paymentProgress().toFixed(2) }}%</span>
-          </div>
-          <div class="w-full bg-blue-200 rounded-full h-2">
-            <div class="bg-blue-500 h-2 rounded-full" [style.width.%]="paymentProgress()"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl border-none shadow-md">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-amber-600">Pagos Pendientes</p>
-            <h3 class="text-2xl font-bold mt-1">$10.00</h3>
-          </div>
-          <div class="bg-white p-2 rounded-full shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-amber-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-gray-500">Próximo vencimiento</span>
-            <span class="font-medium">2 Abr 2025</span>
-          </div>
-          <div class="flex items-center gap-2 mt-2">
-            <span
-              class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-200"
-            >
-              2 facturas pendientes
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-none shadow-md">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm font-medium text-green-600">Crédito Disponible</p>
-            <h3 class="text-2xl font-bold mt-1">$1,500.00</h3>
-          </div>
-          <div class="bg-white p-2 rounded-full shadow-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-green-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-              />
-            </svg>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-gray-500">Límite de crédito</span>
-            <span class="font-medium">$2,000.00</span>
-          </div>
-          <div class="w-full bg-green-200 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @defer {
+    <app-card-credit [idePersonaRol]="idePersona()" [actulizarCard]="actulizarCard()" />
+  }
 
   <div class="w-full">
     <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-6 mt-4 gap-2">
@@ -127,23 +17,9 @@
         <div class="bg-gray-100 rounded-lg p-1">
           <button class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium w-full sm:w-auto">Todos</button>
           <button class="px-4 py-2 rounded-md text-gray-600 font-medium w-full sm:w-auto">Pendientes</button>
-          <button class="px-4 py-2 rounded-md text-gray-600 font-medium w-full sm:w-auto">Pagados</button>
+          <button class="px-4 py-2 rounded-md text-gray-600 font-medium w-full sm:w-auto">Atrasadas</button>
         </div>
       </div>
-
-      <button
-        class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 w-full sm:w-auto"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-          />
-        </svg>
-        Exportar
-      </button>
     </div>
 
     <div class="bg-white overflow-hidden w-full">
@@ -225,7 +101,7 @@
                   </button>
                 }
                 <div class="card flex justify-center">
-                  <p-menu #menu [model]="items" [popup]="true" appendTo="body"/>
+                  <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
                   <p-button
                     (click)="menu.toggle($event); selectedRow.set(item)"
                     icon="pi pi-ellipsis-v"
@@ -244,6 +120,7 @@
                 [historialPago]="historialPago()"
                 [loadingShow]="loadingShow()"
                 (created)="updateletterPay($event); showDetails.set(null)"
+                [idePersonalRol]="idePersona()"
               />
             }
           }
