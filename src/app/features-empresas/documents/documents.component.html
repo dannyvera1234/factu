@@ -338,25 +338,13 @@
                         !['EN PROCESO', 'RETENIDA', 'PENDIENTE'].includes(invoice.statusProcess) &&
                         invoice.receptionStatus !== 'DEVUELTA'
                       ) {
+                        <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
                         <p-button
-                          icon="pi pi-print"
-                          severity="info"
-                          [outlined]="true"
-                          class="mr-2"
-                          (click)="openDocument(invoice.pdf)"
-                        />
-                        <p-button
-                          icon="pi pi-file-pdf"
-                          class="mr-2"
-                          [outlined]="true"
-                          (click)="openDocument(invoice.xml)"
-                        />
-                        <p-button
-                          icon="pi pi-envelope"
-                          class="mr-2"
+                          (click)="menu.toggle($event); data.set(invoice)"
+                          icon="pi pi-ellipsis-v"
+                          [rounded]="true"
+                          [text]="true"
                           severity="secondary"
-                          [outlined]="true"
-                          (click)="reeviarEmail(invoice.ide)"
                         />
                       } @else if (invoice.statusProcess === 'PENDIENTE' && invoice.statusProcess !== 'RETENIDA') {
                         <p-button

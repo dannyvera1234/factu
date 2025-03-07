@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ModalComponent, ViewerDocumentComponent } from '@/components';
 import { CurrencyPipe, NgClass, NgOptimizedImage, SlicePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { ConfigFacturacionService, NotificationService } from '@/utils/services'
 import { DeleteFacturaComponent } from './components';
 import { Modulos } from '@/utils/permissions';
 import { ProformaComponent } from '../proforma';
+import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-documents',
@@ -28,13 +29,14 @@ import { ProformaComponent } from '../proforma';
     DeleteFacturaComponent,
     ViewerDocumentComponent,
     NgOptimizedImage,
-    ProformaComponent
+    ProformaComponent,
+    Menu,
   ],
   templateUrl: './documents.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentsComponent {
+export class DocumentsComponent implements OnInit{
   public readonly selectedTab = signal<'doc' | 'Proforma'>('doc');
   public readonly listInvoices = signal<GeneriResp<any> | null>(null);
   public readonly historial = signal<GeneriResp<any> | null>(null);
@@ -47,8 +49,11 @@ export class DocumentsComponent {
   public readonly isModalOpen = signal(false);
   public readonly loading = signal(false);
   private size = Modulos.PAGE_SIZE;
+  public items: any[] = [];
   public searchQuery = '';
   private page = 0;
+
+  public readonly data = signal<any | null>(null);
 
   constructor(
     private readonly docService: DocumentosService,
@@ -56,6 +61,31 @@ export class DocumentsComponent {
     private readonly notification: NotificationService,
   ) {
     this.getListInvoices();
+
+
+  }
+  ngOnInit(): void {
+    this.items = [
+      {
+        items: [
+          {
+            label: 'PDF',
+            icon: 'pi pi-print',
+            command: () => this.openDocument(this.data().pdf),
+          },
+          {
+            label: 'XML',
+            icon: 'pi pi-file',
+            command: () => this.openDocument(this.data().xml),
+          },
+          {
+            label: 'Reenviar',
+            icon: 'pi pi-send',
+            command: () => this.reeviarEmail(this.data().ide),
+          },
+        ],
+      },
+    ];
   }
 
   toggleFilter(filterName: 'nombre' | null) {
