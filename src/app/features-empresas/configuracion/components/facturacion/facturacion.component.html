@@ -1,221 +1,211 @@
-<div class="tab-content" id="facturacion-content">
-  <div class="space-y-6">
-    <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="text-blue-500"
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-blue-800">Información de facturación</h3>
-          <div class="mt-1 text-xs text-blue-700">
-            <p>
-              Su plan actual es <strong>PLAN BÁSICO</strong> y se renovará el
-              <strong>23 ene 2026</strong>.
-            </p>
+@if (infoPlan()?.data; as plan) {
+  <div class="tab-content">
+    <div class="space-y-6">
+      <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-blue-500"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <h4 class="text-sm font-medium text-gray-700 mb-3">Plan actual</h4>
-      <div class="border border-gray-200 rounded-md p-4 mb-4">
-        <div class="flex justify-between items-center">
-          <div>
-            <h5 class="text-base font-medium text-amber-600">PLAN BÁSICO</h5>
-            <p class="text-xs text-gray-500 mt-1">$19.99 / mes</p>
-          </div>
-          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Activo</span>
-        </div>
-        <div class="mt-3">
-          <p class="text-xs text-gray-600">Incluye:</p>
-          <ul class="mt-1 space-y-1 text-xs text-gray-600">
-            <li class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-green-500 mr-2"
-              >
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              Hasta 100 facturas mensuales
-            </li>
-            <li class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-green-500 mr-2"
-              >
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              2 usuarios
-            </li>
-            <li class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-green-500 mr-2"
-              >
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              Soporte por correo electrónico
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <h4 class="text-sm font-medium text-gray-700 mb-3">Método de pago</h4>
-      <div class="border border-gray-200 rounded-md p-4 mb-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <div class="bg-gray-100 p-2 rounded-md mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-gray-600"
-              >
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-              </svg>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-blue-800">Información del plan del servicio de facturación e contable.</h3>
+            <div class="mt-1 text-xs text-blue-700">
+              <p>
+                Su plan actual es <strong>{{ plan.titlePlan }}</strong> y se renovará el
+                <strong>{{ plan.endDatePlan | custom }}</strong
+                >.
+              </p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-medium text-gray-700 mb-3">Plan actual</h4>
+        <div class="border border-gray-200 rounded-md p-4 mb-4">
+          <div class="flex justify-between items-center">
             <div>
-              <p class="text-sm font-medium">Visa terminada en 4242</p>
-              <p class="text-xs text-gray-500">Expira 12/2025</p>
+              <h5 class="text-base font-medium text-amber-600">{{ plan.titlePlan }}</h5>
+              <p class="text-xs text-gray-500 mt-1">{{ plan.pricePlan | currency }}</p>
             </div>
+            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full"> {{ plan.statusService }}</span>
           </div>
-          <button class="text-blue-500 hover:text-blue-600 text-xs">Cambiar</button>
+          <div class="mt-3">
+            <p class="text-xs text-gray-600">Incluye:</p>
+            <ul class="mt-1 space-y-1 text-xs text-gray-600">
+              <li class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-green-500 mr-2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {{ plan.amountDocs + ' Documentos' }}
+              </li>
+              <li class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-green-500 mr-2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Todas las funciones del Sistema.
+              </li>
+            </ul>
+
+            <p class="text-xs text-gray-600 mt-3">Total de documentos generado:</p>
+            <ul class="mt-1 space-y-1 text-xs text-gray-600">
+              <li class="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-green-500 mr-2"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {{ plan.amountDocsGenerated + ' Documentos generados' }}
+              </li>
+              </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div>
-      <h4 class="text-sm font-medium text-gray-700 mb-3">Historial de facturación</h4>
-      <div class="border border-gray-200 rounded-md overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Fecha
-              </th>
-              <th
-                scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Descripción
-              </th>
-              <th
-                scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Monto
-              </th>
-              <th
-                scope="col"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Estado
-              </th>
-              <th
-                scope="col"
-                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Acción
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200 text-xs">
-            <tr>
-              <td class="px-4 py-2 whitespace-nowrap">23 Dic 2024</td>
-              <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
-              <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
-              <td class="px-4 py-2 whitespace-nowrap">
-                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
-              </td>
-              <td class="px-4 py-2 whitespace-nowrap text-right">
-                <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 whitespace-nowrap">23 Nov 2024</td>
-              <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
-              <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
-              <td class="px-4 py-2 whitespace-nowrap">
-                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
-              </td>
-              <td class="px-4 py-2 whitespace-nowrap text-right">
-                <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
-              </td>
-            </tr>
-            <tr>
-              <td class="px-4 py-2 whitespace-nowrap">23 Oct 2024</td>
-              <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
-              <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
-              <td class="px-4 py-2 whitespace-nowrap">
-                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
-              </td>
-              <td class="px-4 py-2 whitespace-nowrap text-right">
-                <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div>
+        <h4 class="text-sm font-medium text-gray-700 mb-3">Método de pago</h4>
+        <div class="border border-gray-200 rounded-md p-4 mb-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="bg-gray-100 p-2 rounded-md mr-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-gray-600"
+                >
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-medium">Visa terminada en 4242</p>
+                <p class="text-xs text-gray-500">Expira 12/2025</p>
+              </div>
+            </div>
+            <button class="text-blue-500 hover:text-blue-600 text-xs">Cambiar</button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="flex justify-end space-x-3 mt-6">
-      <button class="border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-4 py-1.5 rounded-md">
-        Cancelar
-      </button>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1.5 rounded-md">
-        Guardar cambios
-      </button>
+
+      <div>
+        <h4 class="text-sm font-medium text-gray-700 mb-3">Historial de facturación</h4>
+        <div class="border border-gray-200 rounded-md overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Fecha
+                </th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Descripción
+                </th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Monto
+                </th>
+                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Estado
+                </th>
+                <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Acción
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 text-xs">
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap">23 Dic 2024</td>
+                <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
+                <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-right">
+                  <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap">23 Nov 2024</td>
+                <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
+                <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-right">
+                  <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 whitespace-nowrap">23 Oct 2024</td>
+                <td class="px-4 py-2 whitespace-nowrap">PLAN BÁSICO - Mensual</td>
+                <td class="px-4 py-2 whitespace-nowrap">$19.99</td>
+                <td class="px-4 py-2 whitespace-nowrap">
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full">Pagado</span>
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-right">
+                  <a href="#" class="text-blue-500 hover:text-blue-600">Descargar</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-3 mt-6">
+        <button class="border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm px-4 py-1.5 rounded-md">
+          Cancelar
+        </button>
+        <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1.5 rounded-md">Guardar cambios</button>
+      </div>
     </div>
   </div>
-</div>
+}

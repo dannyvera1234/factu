@@ -12,7 +12,6 @@ import {
   DeleteLogoComponent,
   FacturacionComponent,
   GeneralComponent,
-  InfoCardEmpresaComponent,
   NotificacionComponent,
   SeguridadComponent,
   SequentialComponent,
@@ -37,7 +36,6 @@ import { ButtonModule } from 'primeng/button';
     SequentialComponent,
     UpdateLogoComponent,
     DeleteLogoComponent,
-    InfoCardEmpresaComponent,
     ButtonModule,
     FacturacionComponent,
     GeneralComponent,
@@ -49,7 +47,7 @@ import { ButtonModule } from 'primeng/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfiguracionComponent {
-  public readonly tap = signal<'general' | 'facturacion' | 'seguridad' | 'notificaciones'>('general')
+  public readonly tap = signal<'general' | 'facturacion' | 'seguridad' | 'notificaciones'>('general');
   public readonly emisorInfo = signal<GeneriResp<ByApplicationCounter> | null>(null);
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
   public readonly viewingIdeSubsidiary = signal<number | null>(null);
