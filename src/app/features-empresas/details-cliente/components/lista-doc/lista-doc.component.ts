@@ -36,26 +36,29 @@ import { CardCreditComponent } from '../card-credit';
 export class ListaDocComponent implements OnInit {
   @Input({ required: true }) set idePersonaRol(value: number) {
     if (value === null) return;
-    this.invoiceCustomers(value, 0, '');
+    this.invoiceCustomers(value);
     this.idePersona.set(value);
   }
-  public readonly actulizarCard = signal<any | null>(null);
-
-  public readonly idePersona = signal<number>(0);
-  public readonly showDetails = signal<number | null>(null);
-  public readonly selectedRow = signal<any | null>(null);
-  public readonly listInvoices = signal<GeneriResp<any> | null>(null);
-  public readonly historialPago = signal<any | null>(null);
-  public readonly loading = signal(false);
-  public readonly loadingShow = signal(false);
   public readonly showTooltip = signal<{ [key: string]: boolean }>({});
-  private readonly requestedHistories = new Set<number>();
+  public readonly listInvoices = signal<GeneriResp<any> | null>(null);
   public readonly historial = signal<GeneriResp<any> | null>(null);
   public readonly currentDocumentUrl = signal<string | null>(null);
-  public readonly isModalOpen = signal(false);
+  public readonly showDetails = signal<number | null>(null);
+  public readonly historialPago = signal<any | null>(null);
+  public readonly actulizarCard = signal<any | null>(null);
+  private readonly requestedHistories = new Set<number>();
+  public readonly selectedRow = signal<any | null>(null);
   public readonly loadingHstorial = signal(false);
-  searchQuery = '';
+  public readonly idePersona = signal<number>(0);
+  public readonly loadingShow = signal(false);
+  public readonly isModalOpen = signal(false);
+  public readonly loading = signal(false);
+  private size = Modulos.PAGE_SIZE;
+  public statusFilters: any | null = null;
   public items: any[] = [];
+  public searchQuery = '';
+  private page = 0;
+
   constructor(
     private readonly clienteService: ClientesService,
     private readonly docService: DocumentosService,
@@ -148,7 +151,7 @@ export class ListaDocComponent implements OnInit {
   updateletterPay(item: any) {
     if (!item) return;
     this.actulizarCard.set({ ide: this.idePersona()! });
-    this.invoiceCustomers(this.idePersona()!, 0, '');
+    this.invoiceCustomers(this.idePersona());
   }
 
   isTooltipVisible(id: number): boolean {
@@ -160,19 +163,27 @@ export class ListaDocComponent implements OnInit {
   }
 
   onSearchClick() {
-    this.invoiceCustomers(this.idePersona()!, 0, this.searchQuery);
+    this.invoiceCustomers(this.idePersona());
   }
 
-  invoiceCustomers(idePersonaRol: number, page: number, searchTerm: string): void {
+
+
+  filter(statusFilter: any) {
+    this.statusFilters = statusFilter;
+    this.invoiceCustomers(this.idePersona());
+  }
+
+  invoiceCustomers(idePersonaRol: number): void {
     const paginator = {
-      size: Modulos.PAGE_SIZE,
-      page: page,
-      search: null,
+      size: this.size,
+      page: this.page,
+      search: this.searchQuery,
       apply: true,
       filterModel: {
-        statusLetter: null,
+        statusLetter: this.statusFilters,
       },
     };
+    console.log(paginator);
     of(this.loading.set(true))
       .pipe(
         mergeMap(() => this.clienteService.docCustomer(idePersonaRol, paginator)),
@@ -201,7 +212,7 @@ export class ListaDocComponent implements OnInit {
 
   onSyncClick() {
     this.requestedHistories.clear();
-    this.invoiceCustomers(this.idePersona()!, 0, '');
+    this.invoiceCustomers(this.idePersona()!);
   }
 
   onPageChange(newPage: number): void {
@@ -213,8 +224,8 @@ export class ListaDocComponent implements OnInit {
       // Lógica adicional para manejar hasNext y hasPrevious
       pagination.hasNext = newPage < pagination.totalPages;
       pagination.hasPrevious = newPage > 1;
-
-      this.invoiceCustomers(this.idePersona()!, newPage, '');
+      this.page = newPage;
+      this.invoiceCustomers(this.idePersona());
       // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
     }
   }
