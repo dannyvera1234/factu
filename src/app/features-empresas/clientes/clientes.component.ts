@@ -1,11 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { of, mergeMap, finalize } from 'rxjs';
-import { CustomSelectComponent, ModalComponent } from '@/components';
-import { ListClientes, GeneriResp } from '@/interfaces';
+import { CustomSelectComponent } from '@/components';
+import { ListClientes } from '@/interfaces';
 import { FormatPhonePipe, TextInitialsPipe } from '@/pipes';
-import { ClientesService } from '../../services/service-empresas';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
@@ -13,10 +11,10 @@ import { CreateClienteEmpresaComponent, DeleteClienteEmpresaComponent, FilterCom
 import { Modulos } from '../../utils/permissions';
 import { ConfigFacturacionService } from '../../utils/services';
 import { Tag } from 'primeng/tag';
+import { CLIENTE_INITIAL_STATE } from './store';
 @Component({
   selector: 'app-clientes',
   imports: [
-    ModalComponent,
     FormatPhonePipe,
     TextInitialsPipe,
     NgOptimizedImage,
@@ -37,17 +35,14 @@ import { Tag } from 'primeng/tag';
 export class ClientesComponent {
   public readonly open = signal<'nombre' | 'Estado Credito' | 'Estado Pago' | null>(null);
   public readonly updateClient = signal<ListClientes | null>(null);
-  public readonly listClientes = signal<GeneriResp<any> | null>(null);
-  public readonly viewingIdeCustomer = signal<number | null>(null);
-  public readonly filterCustomer = signal<any | null>(null);
-  public readonly numElementsByPage = signal<number>(0);
   public readonly letterCreditStatus = signal('');
   public readonly idePersona = signal<number>(0);
-  public readonly loading = signal(false);
   public readonly credito = signal(null);
-  private size = Modulos.PAGE_SIZE;
+  public size: number = Modulos.PAGE_SIZE;
   public searchQuery = '';
   private page = 0;
+
+  clienteStore = inject(CLIENTE_INITIAL_STATE);
 
   public readonly statusCredito = computed<{ values: string[]; labels: string[] }>(() => {
     return Object.entries(this.config.statusCredito()).reduce(
@@ -61,10 +56,7 @@ export class ClientesComponent {
     );
   });
 
-  constructor(
-    private readonly clienteService: ClientesService,
-    private readonly config: ConfigFacturacionService,
-  ) {
+  constructor(private readonly config: ConfigFacturacionService) {
     this.getListClientes();
   }
 
@@ -100,26 +92,6 @@ export class ClientesComponent {
     this.getListClientes();
   }
 
-  createCliente(create: ListClientes): void {
-    if (create) this.getListClientes();
-  }
-
-  deleteCliente(ideCustomer: number): void {
-    const currentCliente = this.listClientes();
-
-    if (!currentCliente?.data?.listData) return;
-
-    const updatedCliente = {
-      ...currentCliente,
-      data: {
-        ...currentCliente.data,
-        listData: currentCliente!.data!.listData!.filter((cliente: any) => cliente.ideCustomer !== ideCustomer),
-      },
-    };
-
-    this.listClientes.set(updatedCliente);
-  }
-
   getListClientes(): void {
     const filter = {
       page: this.page,
@@ -127,22 +99,10 @@ export class ClientesComponent {
       search: this.searchQuery,
       filterModel: {
         hasActiveCredit: this.credito(),
-       letterCreditStatus: this.letterCreditStatus(),
+        //  letterCreditStatus: this.letterCreditStatus(),
       },
     };
 
-    console.log(filter);
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.clienteService.listClientes(filter)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((resp) => {
-        if (resp.status === 'OK') {
-          this.listClientes.set(resp);
-          this.filterCustomer.set(resp.data.page);
-          this.numElementsByPage.set(resp.data.page.numElementsByPage);
-        }
-      });
+    this.clienteStore.listCustom(filter);
   }
 }

@@ -19,6 +19,7 @@ export class ClientesService {
       ...filter,
     });
 
+    console.log(payload);
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/clientes/listCustomer`, {
       body: payload,
     });

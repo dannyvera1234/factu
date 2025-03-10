@@ -106,6 +106,7 @@ export class InfoEmisorComponent {
         data: filtered,
         status: 'OK',
         message: filtered.length > 1 ? 'Búsqueda realizada correctamente' : 'No se encontraron resultados',
+        code: 200
       });
     } else {
       // Si el término de búsqueda está vacío, restablece las opciones completas

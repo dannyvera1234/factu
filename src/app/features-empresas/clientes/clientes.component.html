@@ -15,7 +15,7 @@
 
         <button
           class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
-          (click)="createClient.open()"
+          (click)="clienteStore.openModal('createClientModal')"
         >
           <div class="relative size-5 shrink-0 mr-2">
             <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
@@ -28,16 +28,16 @@
     <div class="card text-xs mt-3">
       <p-table
         #dt
-        [value]="listClientes()?.data?.listData"
+        [value]="clienteStore.clientes().data.listData"
         dataKey="id"
         [rowHover]="true"
-        [rows]="numElementsByPage()"
+        [rows]="this.clienteStore.numElementsByPage()"
         [showCurrentPageReport]="true"
-        [rowsPerPageOptions]="[numElementsByPage(), 25, 50]"
-        [loading]="loading()"
+        [rowsPerPageOptions]="[this.clienteStore.numElementsByPage(), 25, 50]"
+        [loading]="this.clienteStore.loading()"
         [paginator]="true"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-        [totalRecords]="filterCustomer()?.totalElements"
+        [totalRecords]="this.clienteStore.totalElements()"
         (onPage)="onPageChange($event)"
         [lazy]="true"
       >
@@ -84,55 +84,6 @@
               <div class="flex justify-between items-center">Dirección</div>
             </th>
 
-            <!-- <th style="min-width: 8rem">
-              <div class="flex justify-between items-center">
-                Estado Credito
-
-                <div class="relative">
-                  <button
-                    class="flex items-center gap-2 px-4 py-2 rounded w-full"
-                    (click)="toggleFilter('Estado Credito')"
-                  >
-                    <div class="relative size-5 shrink-0">
-                      <img ngSrc="assets/icon/filters.svg" alt="Create" fill />
-                    </div>
-                  </button>
-
-
-                  @if (open() === 'Estado Credito') {
-                    <form
-                      class="bg-white absolute shadow min-w-full p-4 right-0 overflow-clip z-20 mt-2 md:min-w-64 flex flex-col gap-2"
-                    >
-                      <div>
-                        <h3 class="font-semibold text-lg text-gray-800">Filtros de Crédito</h3>
-                        <hr class="border-gray-300 mt-2" />
-                      </div>
-
-                      <div class="flex flex-col gap-4 text-sm">
-                        <label class="flex items-center justify-start cursor-pointer">
-                          <input type="radio" name="credito" value="true" class="mr-2" [(ngModel)]="credito" />
-                          Clientes Con Créditos
-                        </label>
-                        <label class="flex items-center justify-start cursor-pointer">
-                          <input type="radio" name="credito" value="false" class="mr-2" [(ngModel)]="credito" />
-                          Clientes Sin Créditos
-                        </label>
-                        <label class="flex items-center justify-start cursor-pointer">
-                          <input type="radio" name="credito" value="null" class="mr-2" [(ngModel)]="credito" />
-                          Todos
-                        </label>
-                      </div>
-
-                      <div>
-                        <button class="w-full px-2 py-2 bg-primary text-white rounded-md mb-1" (click)="filter()">
-                          Buscar
-                        </button>
-                      </div>
-                    </form>
-                  }
-                </div>
-              </div>
-            </th> -->
             <th style="min-width: 8rem">
               <div class="flex justify-between items-center">
                 Estado Pago
@@ -200,12 +151,6 @@
               {{ customer.address }}
             </td>
 
-            <!-- <td>
-              <p-tag
-                [value]="customer.hasActiveCredit === true ? 'ACTIVO' : '-'"
-                [severity]="customer.hasActiveCredit === true ? 'success' : 'danger'"
-              />
-            </td> -->
             <td>
               @if (customer.letterCreditStatus) {
                 <p-tag [value]="customer.letterCreditStatus" [severity]="getSeverity(customer.letterCreditStatus)" />
@@ -227,7 +172,7 @@
                 icon="pi pi-trash"
                 severity="danger"
                 [outlined]="true"
-                (onClick)="deleteCounterClient.open(); viewingIdeCustomer.set(customer.ideCustomer)"
+                (onClick)="clienteStore.ideCustomer(customer.ideCustomer, 'deleteClientModal')"
               />
             </td>
           </tr>
@@ -248,38 +193,49 @@
     </div>
   </div>
 </div>
-<app-modal #createClient>
+@if (clienteStore.isModalOpen()['createClientModal']) {
   @defer {
-    <div class="flex items-center justify-center">
-      <div class="bg-white w-full rounded-lg overflow-auto">
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity animate-fade-in"
+    >
+      <div
+        class="bg-white max-w-5xl w-full rounded-lg shadow-lg overflow-hidden transform transition-all scale-95 pointer-events-auto"
+      >
         <header class="p-4 flex justify-between items-center border-b border-gray-300">
           <h2 class="font-bold text-xl truncate">Agregar Cliente</h2>
-          <button (click)="createClient.close()" class="shrink-0">
-            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
+          <button
+            class="shrink-0 text-gray-500 hover:text-gray-800"
+            (click)="clienteStore.closeModal('createClientModal')"
+            aria-label="Cerrar"
+          >
+            <img
+              ngSrc="/assets/icon/close-icon.svg"
+              width="14"
+              height="18"
+              alt="Cerrar"
+              class="opacity-50 hover:opacity-100"
+            />
           </button>
         </header>
         <section class="p-6">
-          <app-create-cliente-empresa (created)="createClient.close(); $event && createCliente($event)" />
+          <app-create-cliente-empresa />
         </section>
       </div>
     </div>
   }
-</app-modal>
-
-<app-modal #deleteCounterClient>
-  <div class="h-screen w-full flex items-center justify-center">
-    <div class="bg-white max-w-md h-auto rounded-lg overflow-hidden">
-      <section class="p-4">
-        @defer {
-          @if (viewingIdeCustomer(); as ideClient) {
-            <app-delete-cliente-empresa
-              [ideCustomer]="ideClient"
-              (deleted)="deleteCounterClient.close(); viewingIdeCustomer.set(null)"
-              (deleted)="$event && deleteCliente($event)"
-            />
-          }
-        }
-      </section>
+}
+@if (clienteStore.isModalOpen()['deleteClientModal']) {
+  @defer {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity animate-fade-in"
+    >
+      <div
+        class="bg-white max-w-md w-full rounded-lg shadow-lg overflow-hidden transform transition-all scale-95 pointer-events-auto"
+      >
+        <section class="p-4">
+          <app-delete-cliente-empresa />
+        </section>
+      </div>
     </div>
-  </div>
-</app-modal>
+  }
+}

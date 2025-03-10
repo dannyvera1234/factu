@@ -1,8 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
-import { of, mergeMap, finalize } from 'rxjs';
-import { NotificationService } from '@/utils/services';
-import { ClientesService } from '@/services/service-empresas';
-import { DetailsService } from '@/feature-counters/details-counter-application';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { CLIENTE_INITIAL_STATE } from '../../store';
 
 @Component({
   selector: 'app-delete-cliente-empresa',
@@ -12,36 +9,11 @@ import { DetailsService } from '@/feature-counters/details-counter-application';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteClienteEmpresaComponent {
-  @Input({ required: true }) ideCustomer!: number;
+  clienteStore = inject(CLIENTE_INITIAL_STATE);
 
-  public readonly loading = signal(false);
-
-  @Output() public readonly deleted = new EventEmitter<number | null>();
-
-  constructor(
-    private readonly clienteService: ClientesService,
-    private readonly notification: NotificationService,
-    private readonly detailsService: DetailsService,
-  ) {}
+  constructor() {}
 
   deleteClient() {
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.clienteService.deleteCustomer(this.ideCustomer)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((resp) => {
-        if (resp.status === 'OK') {
-          this.notification.push({
-            message: 'Cliente eliminado del registro.',
-            type: 'success',
-          });
-
-          this.detailsService.info.set({
-            personaRolIde: Number(resp.data),
-          });
-          this.deleted.emit(Number(resp.data));
-        }
-      });
+    this.clienteStore.deleteCustomer();
   }
 }
