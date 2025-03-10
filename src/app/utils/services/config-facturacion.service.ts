@@ -53,7 +53,7 @@ export class ConfigFacturacionService {
 
   public readonly statusCredito = signal<Record<string, string>>({
     PENDIENTE: 'Pendiente',
-    ATRAZADO: 'Atrazado',
+    ATRASADO: 'Atrasado',
     null: 'Todos',
   });
 
