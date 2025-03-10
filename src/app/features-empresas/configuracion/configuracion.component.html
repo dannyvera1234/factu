@@ -105,12 +105,7 @@
             <div class="flex justify-between items-center">
               <h3 class="text-black">información Personal</h3>
 
-              <button
-                class="bg-gray-200 text-gray-600 py-1 px-3 rounded"
-                (click)="updateInfoEmisor.open(); viewingEmisor.set(byPersona)"
-              >
-                Editar
-              </button>
+
             </div>
             <hr class="my-2" />
             <div class="mb-2 grid grid-rows-[0fr] transition-all group-[.open]:grid-rows-[1fr]">
@@ -232,12 +227,14 @@
                     </div>
                   </div>
                   <div class="flex gap-1 group relative">
-                    <button
-                      class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                      (click)="deleteDoc.open(); viewingFile.set(item.ide)"
-                    >
-                      <img src="/assets/icon/trash-icon.svg" class="w-12 sm:w-6 md:w-5 lg:w-10" alt="Delete" />
-                    </button>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [outlined]="true"
+                      class="mr-2"
+                      (onClick)="deleteDoc.open(); viewingFile.set(item.ide)"
+                    />
+
                     <div
                       class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
                     >
@@ -256,135 +253,90 @@
       </aside>
 
       <main class="flex flex-col gap-4 w-full lg:w-3/3">
-        @defer {
-          <app-info-card-empresa />
-        }
 
-        <div class="bg-white rounded-lg shadow p-4">
-          <div>
-            <ul
-              class="flex flex-col sm:flex-row sm:flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400"
-            >
-              <li class="mr-2 mb-2 sm:mb-0">
-                <a
-                  (click)="changeTab('inventario')"
-                  [ngClass]="{
-                    'text-blue-500 border-b-2 border-primary': selectedTab() === 'inventario',
-                    'text-gray-600': selectedTab() !== 'inventario',
-                  }"
-                  class="cursor-pointer inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
-                >
-                  <svg
-                    class="w-4 h-4 mr-2"
+
+        <div>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-medium mb-2">Configuración de la cuenta</h3>
+
+            <!-- Pestañas de configuración -->
+            <div class="border-b mb-6">
+              <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                <li class="mr-2 cursor-pointer" (click)="changeTab('general')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
                     [ngClass]="{
-                      'text-blue-500': selectedTab() === 'inventario',
-                      'text-gray-400': selectedTab() !== 'inventario',
-                      'group-hover:text-gray-500': selectedTab() !== 'inventario',
+                      'border-blue-500 text-blue-500': tap() === 'general',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300': tap() !== 'general',
                     }"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
                   >
-                    <path
-                      d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"
-                    />
-                  </svg>
-                  Inventario
-                </a>
-              </li>
-              <li class="mr-2 mb-2 sm:mb-0">
-                <a
-                  (click)="changeTab('doc')"
-                  [ngClass]="{
-                    'text-blue-500 border-b-2 border-primary': selectedTab() === 'doc',
-                    'text-gray-600': selectedTab() !== 'doc',
-                  }"
-                  class="cursor-pointer inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
-                >
-                  <svg
-                    class="w-4 h-4 mr-2"
+                    General
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('facturacion')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
                     [ngClass]="{
-                      'text-blue-500': selectedTab() === 'doc',
-                      'text-gray-400': selectedTab() !== 'doc',
-                      'group-hover:text-gray-500': selectedTab() !== 'doc',
+                      'border-blue-500 text-blue-500': tap() === 'facturacion',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'facturacion',
                     }"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-
-                  Documentos
-                </a>
-              </li>
-
-              <li class="mr-2 mb-2 sm:mb-0">
-                <a
-                  (click)="changeTab('Proforma')"
-                  [ngClass]="{
-                    'text-blue-500 border-b-2 border-primary': selectedTab() === 'Proforma',
-                    'text-gray-600': selectedTab() !== 'Proforma',
-                  }"
-                  class="cursor-pointer inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
-                >
-                  <svg
-                    class="w-4 h-4 mr-2"
+                    Facturación
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('seguridad')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
                     [ngClass]="{
-                      'text-blue-500': selectedTab() === 'Proforma',
-                      'text-gray-400': selectedTab() !== 'Proforma',
-                      'group-hover:text-gray-500': selectedTab() !== 'Proforma',
+                      'border-blue-500 text-blue-500': tap() === 'seguridad',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'seguridad',
                     }"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4 4a2 2 0 1 0 0 4h16a2 2 0 1 0 0-4H4Zm0 6h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Zm10.707 5.707a1 1 0 0 0-1.414-1.414l-.293.293V12a1 1 0 1 0-2 0v2.586l-.293-.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l2-2Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
+                    Seguridad
+                  </a>
+                </li>
+                <li class="mr-2 cursor-pointer" (click)="changeTab('notificaciones')">
+                  <a
+                    class="inline-block p-3 border-b-2 rounded-t-lg"
+                    [ngClass]="{
+                      'border-blue-500 text-blue-500': tap() === 'notificaciones',
+                      'border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300':
+                        tap() !== 'notificaciones',
+                    }"
+                  >
+                    Notificaciones
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-                  Proformas
-                </a>
-              </li>
-
-              <li class="mr-2 mb-2 w-full sm:w-auto sm:ml-auto">
-                <a
-                  href="https://srienlinea.sri.gob.ec/comprobantes-electronicos-internet/publico/validezComprobantes.jsf"
-                  target="_blank"
-                >
-                  Verificar documentos
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div class="tab-content">
-            @switch (selectedTab()) {
-              @case ('doc') {
+            @switch (tap()) {
+              @case ('general') {
                 @defer {
-                  @if (idePersonaRol(); as ide) {
-                    <app-lista-doc-empresa [idePersonaRol]="ide" />
-                  }
+
+                    <app-general
+                      [infoEmisor]="byPersona"
+
+                      (updateEmisor)="$event && updateEmisor($event)"
+                    />
+
                 }
               }
-              @case ('inventario') {
+              @case ('facturacion') {
                 @defer {
-                  <app-lista-producto-empresa />
+                  <app-facturacion />
                 }
               }
-              @case ('Proforma') {
+              @case ('seguridad') {
                 @defer {
-                  <app-lista-proforma-empresa />
+                  <app-seguridad />
+                }
+              }
+              @case ('notificaciones') {
+                @defer {
+                  <app-notificacion />
                 }
               }
             }
@@ -395,32 +347,6 @@
   }
 }
 
-
-
-<app-modal #updateInfoEmisor>
-  @defer {
-    <div class="flex items-center justify-center">
-      <div class="bg-white w-full max-w-xl rounded-lg overflow-auto">
-        <header class="p-4 flex justify-between items-center border-b border-gray-300">
-          <h2 class="font-bold text-xl truncate">Editar Informacion Personal</h2>
-          <button (click)="updateInfoEmisor.close()" class="shrink-0">
-            <img ngSrc="/assets/icon/close-icon.svg" width="14" height="18" alt="Close" class="opacity-50" />
-          </button>
-        </header>
-
-        @if (viewingEmisor(); as infoEmisor) {
-          <section class="p-4">
-            <app-update-emisor
-              [infoEmisor]="infoEmisor"
-              (updateEmisor)="updateInfoEmisor.close(); viewingEmisor.set(null)"
-              (updateEmisor)="$event && updateEmisor($event)"
-            />
-          </section>
-        }
-      </div>
-    </div>
-  }
-</app-modal>
 
 
 <app-modal #updateInfoTributaria>

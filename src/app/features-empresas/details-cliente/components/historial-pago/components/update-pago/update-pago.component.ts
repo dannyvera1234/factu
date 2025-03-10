@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from '@/utils/services';
 import { FormErrorMessageComponent } from '@/components';
@@ -32,6 +32,7 @@ export class UpdatePagoComponent {
   paymentMethods = [
     { paymentMethodId: '01', descripaymentMethodDescriptionption: 'Efectivo' },
     { paymentMethodId: '20', descripaymentMethodDescriptionption: 'Transferencia' },
+    { paymentMethodId: '21', descripaymentMethodDescriptionption: 'Cheque' },
   ];
 
   constructor(
@@ -50,7 +51,7 @@ export class UpdatePagoComponent {
       ],
       [montoTotalValidator(this._total)], // Suponiendo que montoTotalValidator es el validador para la suma total
     ),
-    observaciones: [''],
+    observation: ['', [Validators.maxLength(250)]],
     documentos: new FormControl<File | null>(null),
   });
 
@@ -95,7 +96,6 @@ export class UpdatePagoComponent {
   eliminarPago(index: number) {
     this.form.controls.paymentList.removeAt(index);
   }
-
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -104,7 +104,7 @@ export class UpdatePagoComponent {
 
     const dataCredito = {
       letterPayIde: this.letterPayIde,
-      observations: this.form.value.observaciones,
+      observation: this.form.value.observation,
       paymentList: this.form.value.paymentList?.map((pago) => {
         const method = this.paymentMethods.find((method) => method.paymentMethodId === pago.paymentMethodId);
         return {
@@ -127,7 +127,7 @@ export class UpdatePagoComponent {
           this.notificacion.push({ message: 'Pago registrado correctamente', type: 'success' });
           this.created.emit({
             letterPayIde: Number(resp.data),
-            paymentStatus: 'PAGADO',
+
           });
         }
       });

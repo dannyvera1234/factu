@@ -1,0 +1,95 @@
+<div class="bg-white rounded-lg shadow-sm overflow-hidden">
+  <table class="w-full">
+    <thead>
+      <tr class="bg-gray-50 text-xs text-gray-500">
+        <th class="p-2 text-left font-medium">Forma de Pago</th>
+        <th class="p-2 text-left font-medium">Tiempo</th>
+        <th class="p-2 text-left font-medium">Plazo</th>
+        <th class="p-2 text-left font-medium">Valor</th>
+        <th class="p-2 text-left font-medium"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (paymentMethods() && paymentMethods().length > 0) {
+        @for (payment of paymentMethods(); track $index) {
+          <tr class="border-t border-gray-100 text-sm">
+            <td class="p-2 text-xs">{{ payment.metodoPago.description }}</td>
+            <td class="p-2 text-xs">{{ payment.plazo }}</td>
+            <td class="p-2 text-xs">{{ payment.tiempo }}</td>
+            <td class="p-2 ttext-xs">{{ payment.valor | currency }}</td>
+
+            <td class="p-2">
+              <button
+                class="h-6 w-6 p-0 text-red-500 hover:text-red-600"
+                (click)="removePayment(payment.metodoPago.code)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr>
+          <td colspan="9">
+            <div class="border border-dashed border-gray-200 p-4 text-center">
+              <p class="text-xs text-gray-500">No hay formas de pago agregadas</p>
+              <p class="text-xs text-gray-400 mt-1">Añade formas de pago para adjuntar a esta factura</p>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+    <!-- @if (paymentMethods().length === 0) {
+      <tr>
+        <td colspan="9">
+          <div class="border border-dashed border-gray-200 p-4 text-center">
+            <p class="text-xs text-gray-500">No hay productos agregados</p>
+            <p class="text-xs text-gray-400 mt-1">Añade productos para adjuntar a esta factura</p>
+          </div>
+        </td>
+      </tr>
+    } -->
+  </table>
+</div>
+
+
+<app-modal #payment>
+  <div class="h-full flex items-center justify-center">
+    <div class="bg-white w-full max-w-2xl rounded-lg overflow-auto max-h-[80vh]">
+      <header class="p-4 flex justify-between items-center border-b border-gray-300">
+        <h2 class="font-bold text-xl truncate">Agregar formas de pago</h2>
+        <button (click)="payment.close()" class="shrink-0">
+          <img
+            ngSrc="/assets/icon/close-icon.svg"
+            width="14"
+            height="18"
+            alt="close"
+            style="filter: invert(64%) sepia(1%) saturate(370%) hue-rotate(314deg) brightness(94%) contrast(91%)"
+          />
+        </button>
+      </header>
+      <section class="p-4">
+        <app-add-payment
+          (addPay)="payment.close()"
+          (addPay)="$event && addPayment($event)"
+          [total]="calculateTotal()"
+        />
+      </section>
+    </div>
+  </div>
+</app-modal>

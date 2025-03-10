@@ -7,8 +7,10 @@ import { FormatIdPipe, TextInitialsPipe } from '@/pipes';
 import { NgOptimizedImage } from '@angular/common';
 import { AgregarProveedorComponent } from './components';
 import { Modulos } from '../../utils/permissions';
-import { PaginationComponent } from '../../components/pagination';
 import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-proveedores',
@@ -17,37 +19,39 @@ import { RouterLink } from '@angular/router';
     TextInitialsPipe,
     FormatIdPipe,
     NgOptimizedImage,
-    PaginationComponent,
     AgregarProveedorComponent,
     RouterLink,
+    ButtonModule,
+    TableModule,
+    FormsModule,
   ],
   templateUrl: './proveedores.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProveedoresComponent {
-  public readonly loading = signal(false);
-
-  public readonly updateClient = signal<ListClientes | null>(null);
-
-  public readonly idePersona = signal<number>(0);
-
   public readonly listProveedor = signal<GeneriResp<any> | null>(null);
-
+  public readonly updateClient = signal<ListClientes | null>(null);
   public readonly viewingIdeCustomer = signal<number | null>(null);
-
+  public readonly filterProveedor = signal<any | null>(null);
+  public readonly numElementsByPage = signal<number>(0);
   public readonly infoXML = signal<any | null>(null);
+  public readonly idePersona = signal<number>(0);
+  public readonly loading = signal(false);
+  private size = Modulos.PAGE_SIZE;
+  public searchQuery = '';
+  private page = 0;
 
   constructor(private readonly proveedorService: ProveedorService) {
-    this.getListProveedor(0);
+    this.getListProveedor();
   }
 
-  getListProveedor(page: number): void {
+  getListProveedor(): void {
     const filter = {
-      page: page,
-      size: Modulos.PAGE_SIZE,
+      page: this.page,
+      size: this.size,
       apply: true,
-      search: '',
+      search: this.searchQuery,
     };
 
     of(this.loading.set(true))
@@ -57,31 +61,17 @@ export class ProveedoresComponent {
       )
       .subscribe((resp) => {
         if (resp.status === 'OK') {
-          console.log(resp);
           this.listProveedor.set(resp);
+          this.numElementsByPage.set(resp.data.page.numElementsByPage);
+          this.filterProveedor.set(resp.data.page);
         }
       });
   }
 
-  onPageChange(newPage: number): void {
-    const pagination = this.listProveedor()?.data?.page;
-
-    if (pagination) {
-      pagination.currentPage = newPage;
-
-      // Lógica adicional para manejar hasNext y hasPrevious
-      pagination.hasNext = newPage < pagination.totalPages;
-      pagination.hasPrevious = newPage > 1;
-
-      this.getListProveedor(newPage);
-      // Aquí puedes realizar acciones adicionales, como cargar datos desde un servidor
-    }
-  }
-
-  cargarArchivo(data: any) {
-    if (data) {
-      this.infoXML.set(data);
-    }
+  onPageChange(newPage: any): void {
+    this.page = newPage.first / newPage.rows;
+    this.size = newPage.rows;
+    this.getListProveedor();
   }
 
   addProveedor(data: any) {

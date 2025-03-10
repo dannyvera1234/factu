@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Notification, NotificationService } from '@/utils/services/notification.service';
-
 @Component({
   selector: 'app-toast',
   template: `
@@ -46,7 +45,6 @@ export class ToastComponent implements OnChanges {
         return 'bg-gray-500 text-white';
     }
   }
-
 
   dispose() {
     clearTimeout(this.timmer);

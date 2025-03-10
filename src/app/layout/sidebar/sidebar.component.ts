@@ -28,6 +28,9 @@ export class SidebarComponent {
     return [];
   });
 
+
+
+
   public toggle(): void {
     this.sidebar.closeSidebar.set(!this.sidebar.closeSidebar());
   }

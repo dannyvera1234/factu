@@ -8,27 +8,17 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-emision',
-  imports: [NgClass, FacturaComponent, RouterLink],
+  imports: [FacturaComponent, RouterLink],
   templateUrl: './emision.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmisionComponent implements OnInit {
-  public readonly selectedTab = signal<'inventario' | 'doc' | 'clientes' | 'facturacion'>('facturacion');
-
-  public readonly loading = signal(false);
-
-  public readonly dataProforma = signal<GeneriResp<any> | null>(null);
-
   public readonly infoEditProforma = signal<GeneriResp<any> | null>(null);
-
-  private readonly destroy$ = new Subject<void>();
-
-  public changeTab(tab: 'inventario' | 'doc' | 'clientes' | 'facturacion'): void {
-    this.selectedTab.set(tab);
-  }
-
   public readonly validateInfo = signal<GeneriResp<any> | null>(null);
+  public readonly dataProforma = signal<GeneriResp<any> | null>(null);
+  private readonly destroy$ = new Subject<void>();
+  public readonly loading = signal(false);
 
   constructor(
     private readonly docService: DocumentosService,
@@ -62,7 +52,6 @@ export class EmisionComponent implements OnInit {
       }
     });
   }
-
 
   /**
    * Valida la información necesaria para la emisión de facturas.

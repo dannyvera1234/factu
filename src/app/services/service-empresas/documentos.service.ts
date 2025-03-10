@@ -16,21 +16,18 @@ export class DocumentosService {
     private genericPayloadService: PayloadService,
   ) {}
 
-  listInvoices(page: number, search: string): Observable<any> {
+  listInvoices(filter: any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-      size: Modulos.PAGE_SIZE,
-      page: page,
-      search: search,
+      ...filter,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoices`, {
       body: payload,
     });
   }
 
-  listProforma(page: number): Observable<any> {
+  listProforma(filter: any): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, {
-      size: Modulos.PAGE_SIZE,
-      page: page,
+      ...filter,
     });
     return this._http.post(`${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/listInvoicesProforma`, {
       body: payload,
@@ -109,8 +106,15 @@ export class DocumentosService {
 
   letterPayNotification(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, { ide: id });
+    // return this._http.post(
+    //   `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
+    //   {
+    //     body: payload,
+    //   },
+    // );
+
     return this._http.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/letterPayNotification`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/clientes/letracredito/letterPayNotification`,
       {
         body: payload,
       },
@@ -119,13 +123,18 @@ export class DocumentosService {
 
   generateReporteInvoiceCredito(ide: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_CLIENTE, ide);
+    // return this.httpClient.post(
+    //   `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
+    //   payload,
+    //   { responseType: 'blob' },
+    // );
+
     return this.httpClient.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/generateReporteInvoiceCredito`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/clientes/documentos/generateReporteInvoiceCredito`,
       payload,
       { responseType: 'blob' },
     );
   }
-
 
   sendNotificationProforma(id: number): Observable<any> {
     const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, id);
@@ -203,12 +212,10 @@ export class DocumentosService {
     );
   }
 
-  reportCreditoClientes(data: Partial<any>): Observable<Blob> {
-    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI,
-      { ...data },
-    );
+  reportCreditoClientes(data: Partial<any>, endDate: any, startDate: any): Observable<Blob> {
+    const payload = this.genericPayloadService.createPayload(Modulos.MODULE_EMPRESA_CONFI, { ...data , endDate, startDate });
     return this.httpClient.post(
-      `${environment.BASE_API_SISTEMA_CONTABLE}/infoPersona/company/clientes/reportes/creditosClientes`,
+      `${environment.BASE_API_SISTEMA_CONTABLE}/reportes/creditosClientes`,
       payload,
       { responseType: 'blob' },
     );

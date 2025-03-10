@@ -1,0 +1,71 @@
+<div class="bg-white p-3 rounded-lg shadow-sm w-full">
+  <!-- Título y botón de subir archivo -->
+  <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+    <h3 class="text-sm font-medium flex items-center gap-1 text-gray-700">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-blue-500"
+      >
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      Comprobantes de Pago
+    </h3>
+
+    <label for="voucher-upload" class="cursor-pointer">
+      <div class="flex items-center gap-1 text-xs text-blue-500 hover:text-blue-600">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Subir comprobante
+      </div>
+      <input id="voucher-upload" type="file" class="hidden" accept="image/*,.pdf" (change)="onFileSelected($event)" />
+    </label>
+  </div>
+
+  @if (!logoUrl()) {
+    <!-- Contenedor vacío cuando no hay archivos -->
+    <div id="voucher-container" class="border border-dashed border-gray-200 rounded-md p-4 text-center">
+      <p class="text-xs text-gray-500">No hay comprobantes subidos</p>
+      <p class="text-xs text-gray-400 mt-1">Sube comprobantes de pago para adjuntar a esta factura</p>
+    </div>
+  } @else {
+    <!-- Archivo subido -->
+    <div class="p-2 rounded-lg flex items-center gap-2 md:gap-3 bg-white border border-neutral-300 flex-wrap">
+      <!-- Ícono del archivo -->
+      <div class="rounded-md size-10 flex items-center justify-center shrink-0 bg-orange-500">
+        <img src="/assets/icon/file.svg" width="20" height="20" alt="File" />
+      </div>
+
+      <!-- Nombre del archivo -->
+      <div class="grow cursor-pointer truncate w-full">
+        <a class="truncate block text-sm w-40">
+          {{ logoUrl() }}
+        </a>
+      </div>
+
+      <!-- Botón eliminar -->
+      <button (click)="removeFile()" class="text-red-500 hover:text-red-700">Eliminar</button>
+    </div>
+  }
+</div>

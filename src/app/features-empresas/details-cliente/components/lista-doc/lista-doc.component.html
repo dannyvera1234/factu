@@ -1,133 +1,125 @@
 <div class="space-y-2">
   <!-- Header Section -->
-  <nav class="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-    <div class="w-full md:w-auto">
-      <h2 class="text-xl font-bold">Lista de Documentos</h2>
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight">Lista de Documentos</h1>
+      <p class="text-gray-500 mt-1">Gestiona tus facturas y pagos pendientes</p>
     </div>
+  </div>
 
-    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto justify-end">
-      <div class="w-full md:max-w-[200px] relative">
-        <input
-          type="date"
-          [max]="maxDate()"
-          class="pl-4 pr-2 py-2 w-full border rounded text-[13px]"
-          [(ngModel)]="searchQuery"
-        />
+  @defer {
+    <app-card-credit [idePersonaRol]="idePersona()" [actulizarCard]="actulizarCard()" />
+  }
+
+  <div class="w-full">
+    <div class="flex flex-col sm:flex-row sm:justify-between items-center mb-6 mt-4 gap-2">
+      <div class="flex flex-col sm:flex-row w-full">
+        <div class="bg-gray-100 rounded-lg p-1 flex gap-2">
+          <button
+            class="px-4 py-2 rounded-md font-medium w-full sm:w-auto"
+            [ngClass]="{
+              'bg-blue-600 text-white': statusFilters === null,
+              'text-gray-600': statusFilters !== null
+            }"
+            (click)="filter(null)"
+          >
+            Todos
+          </button>
+          <button
+            class="px-4 py-2 rounded-md font-medium w-full sm:w-auto"
+            [ngClass]="{
+              'bg-blue-600 text-white': statusFilters === 'PENDIENTES',
+              'text-gray-600': statusFilters !== 'PENDIENTES'
+            }"
+            (click)="filter('PENDIENTES')"
+          >
+            Pendientes
+          </button>
+          <button
+            class="px-4 py-2 rounded-md font-medium w-full sm:w-auto"
+            [ngClass]="{
+              'bg-blue-600 text-white': statusFilters === 'ATRASADOS',
+              'text-gray-600': statusFilters !== 'ATRASADOS'
+            }"
+            (click)="filter('ATRASADOS')"
+          >
+            Atrasadas
+          </button>
+        </div>
+
       </div>
+    </div>
 
-      <button
-        class="px-4 py-2 bg-[#E4E7EB] hover:bg-slate-300 text-[13px] rounded flex items-center w-full md:w-auto justify-center"
-        (click)="onSearchClick()"
-      >
-        Buscar
-      </button>
-      <!-- <div class="w-full md:w-auto md:ml-auto">
-        <button
-          class="text-[#4A5568] shrink-0 font-semibold px-4 py-2 bg-[#E4E7EB] hover:bg-slate-300 text-[13px] rounded-md w-full md:w-auto flex justify-center items-center"
-          (click)="onSyncClick()"
-        >
-          <div class="w-5 h-5 bg-[#718096] flex items-center justify-center rounded-full mr-2">
-            <img src="assets/icon/sync.svg" class="w-[67%]" />
-          </div>
-          Sincronizar
-        </button>
-      </div> -->
+    <div class="bg-white overflow-hidden w-full">
+      <div class="bg-gray-50 py-4 px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-12 text-sm font-medium text-gray-500">
+          <div class="col-span-5 sm:col-span-5">Documento</div>
+          <div class="col-span-2 sm:col-span-2 text-center">Monto</div>
+          <div class="col-span-2 sm:col-span-2 text-center">Estado</div>
+          <div class="col-span-3 sm:col-span-3 text-right">Acciones</div>
+        </div>
+      </div>
     </div>
-  </nav>
-  @if (loading()) {
-    <div class="h-full min-h-36 flex justify-center items-center">
-      <div class="loader"></div>
-    </div>
-  } @else {
-    <!-- Row 1 con efecto flotante -->
-    @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
-      @for (item of listInvoices()!.data!.listData; track $index) {
-        <div class="flex items-center justify-between bg-white p-2 rounded-lg shadow">
-          <div class="flex items-center space-x-3">
-            <div class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0 bg-blue-400">
-              <img src="assets/icon/file.svg" width="20" height="20" />
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="truncate">
-                <p class="text-xs font-medium text-gray-800">{{ item.electronicDesTypeDoc }}</p>
-                <div class="flex items-center gap-2">
-                  <div class="relative text-xs">
-                    {{ item.emissionDate | custom }}
+
+    @if (loading()) {
+      <div class="h-full min-h-36 flex justify-center items-center">
+        <div class="loader"></div>
+      </div>
+    } @else {
+      @if (listInvoices() && listInvoices()!.data!.listData.length > 0) {
+        @for (item of listInvoices()!.data!.listData; track $index) {
+          <div class="group border-b hover:bg-gray-50 transition-all duration-200 text-xs">
+            <div class="grid grid-cols-12 items-center p-2">
+              <div class="col-span-5 flex items-center gap-3">
+                <div class="h-10 w-10 rounded-lg flex items-center justify-center shrink-0 bg-blue-400">
+                  <img src="assets/icon/file.svg" width="20" height="20" />
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-medium group-hover:text-blue-600 transition-colors">
+                      {{ item.electronicDesTypeDoc + ' #' + item.emissionDate }}
+                    </h3>
+                    <button
+                      class="h-6 w-6 rounded-full"
+                      title="Información adicional"
+                      (click)="historialFactura.open(); toggleTooltip(item.ide)"
+                    >
+                      <img src="assets/icon/tooltip.svg" alt="" class="h-4 w-4 text-gray-400" />
+                    </button>
+                  </div>
+                  <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <img src="assets/icon/calendario.svg" alt="" class="h-3.5 w-3.5" />
+                    <span> {{ item.emissionDate | custom }}</span>
                   </div>
                 </div>
               </div>
-              <div class="relative group inline-block">
-                <!-- Botón que muestra el tooltip -->
-                <button class="m-0" (click)="toggleTooltip(item.ide, true)">
-                  <img src="assets/icon/tooltip.svg" alt="Tooltip" />
-                </button>
 
-                <!-- Tooltip -->
-                @if (isTooltipVisible(item.ide)) {
-                  <div
-                    class="absolute top-[-300%] left-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-[500px] text-sm z-[1000]"
-                    (mouseenter)="toggleTooltip(item.ide, true)"
-                    (mouseleave)="toggleTooltip(item.ide, false)"
-                  >
-                    <!-- Header -->
-                    <div class="flex justify-between items-center mb-3">
-                      <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
-                      <button class="text-gray-400 hover:text-gray-600" (click)="toggleTooltip(item.ide, false)">
-                        &times;
-                      </button>
-                    </div>
-
-                    <!-- Histories -->
-                    @if (historial(); as historial) {
-                      <ul class="space-y-2">
-                        @for (history of historial!.data; track $index) {
-                          <li
-                            class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto"
-                          >
-                            <div class="flex justify-between items-center text-gray-700">
-                              <span>{{ history.description }}</span>
-                            </div>
-                          </li>
-                        }
-                      </ul>
-                    } @else {
-                      <div class="h-full text-center flex justify-center items-center">
-                        <div class="loader"></div>
-                      </div>
-                    }
+              <div class="col-span-2 flex justify-center">
+                @if (item.creditAmount) {
+                  <div class="flex items-center gap-1 bg-gray-100 px-3 py-1.5 rounded-md font-medium">
+                    <span>{{ item.creditAmount | currency }}</span>
                   </div>
                 }
               </div>
-            </div>
-            <div class="h-6 border-l border-neutral-300 mx-4"></div>
 
-            <div class="flex items-center space-x-2 bg-gray-100 border border-slate-400 rounded-md px-3 py-0.5">
-              <span class="text-xs text-slate-600 font-medium">{{ item.creditAmount | currency }}</span>
-            </div>
-          </div>
+              <div class="col-span-2 flex justify-center">
+                <span
+                  class="px-2.5 py-0.5 rounded-full text-xs font-medium group-hover:bg-green-100 transition-colors"
+                  [ngClass]="{
+                    ' text-green-700 bg-green-50 border border-green-500': item.saleType !== 'Contado',
+                    'bg-blue-100 text-blue-700 border-blue-500': item.saleType === 'Contado',
+                  }"
+                >
+                  {{
+                    item.saleType !== 'Contado'
+                      ? item.paidCreditLettersCount + '/' + item.creditLettersCount + ' Crédito'
+                      : 'Contado'
+                  }}
+                </span>
+              </div>
 
-          <div class="flex items-center justify-between space-x-3">
-            <!-- Approval Status -->
-            <div
-              class="flex items-center space-x-2 rounded-md px-3 py-0.5"
-              [ngClass]="{
-                ' text-green-700 bg-green-50 border border-green-500': item.saleType !== 'Contado',
-                'bg-blue-100 text-blue-700 border-blue-500': item.saleType === 'Contado',
-              }"
-            >
-              <span class="text-xs px-2 py-0.5 rounded-full">
-                {{
-                  item.saleType !== 'Contado'
-                    ? item.paidCreditLettersCount + '/' + item.creditLettersCount + ' Crédito'
-                    : 'Contado'
-                }}
-              </span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex items-center space-x-1">
-              @if (item.saleType !== 'Contado') {
-                @defer {
+              <div class="col-span-3 flex items-center justify-end gap-2">
+                @if (item.saleType !== 'Contado') {
                   <button class="text-gray-400 hover:text-gray-600" (click)="toggleHistory(item)">
                     <img
                       alt="tap"
@@ -136,121 +128,98 @@
                     />
                   </button>
                 }
-              }
-
-              <div class="group relative text-xs">
-                <button class="top-2 right-2 px-2 py-2 text-gray-600 hover:text-black" (click)="toggleMenu($index)">
-                  <svg
-                    class="w-6 h-6"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="104"
-                    height="104"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-width="2"
-                      d="M12 6h.01M12 12h.01M12 18h.01"
-                    />
-                  </svg>
-                </button>
-
-                <!-- Menú de opciones, visible solo cuando se selecciona la fila -->
-                @if (selectedRow() === $index) {
-                  <div
-                    class="absolute top-8 right-0 mt-2 w-40 bg-gray-800 text-white px-1 py-1 rounded-md shadow-lg z-10"
-                  >
-                    <ul>
-                      <!-- Opción PDF -->
-                      @if (item.pdf) {
-                        <a
-                          (click)="openDocument(item.pdf)"
-                          class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                        >
-                          <img src="assets/icon/downlad.svg" alt="PDF" class="w-5 h-5" />
-                          PDF
-                        </a>
-                      }
-                      @if (item.xml) {
-                        <!-- Opción XML -->
-                        <a
-                          (click)="openDocument(item.xml)"
-                          class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                        >
-                          <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
-                          XML
-                        </a>
-                      }
-                      @if (item.saleType !== 'Contado') {
-                        <a
-                          (click)="generateReporteInvoiceCredito(item.ide)"
-                          class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                        >
-                          <img src="assets/icon/xml.svg" alt="XML" class="w-5 h-5" />
-                          Reporte
-                        </a>
-                      }
-
-                      <hr class="my-2 border-gray-600" />
-
-                      <!-- Opción Reenviar -->
-                      <li
-                        (click)="reeviarEmail(item.ide)"
-                        class="flex items-center gap-2 py-2 px-3 hover:bg-gray-700 rounded-md cursor-pointer"
-                      >
-                        <img src="assets/icon/email.svg" alt="email" class="w-5 h-5" />
-                        Reenviar
-                      </li>
-                    </ul>
-                  </div>
-                }
+                <div class="card flex justify-center">
+                  <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
+                  <p-button
+                    (click)="menu.toggle($event); selectedRow.set(item)"
+                    icon="pi pi-ellipsis-v"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        @if (showDetails() === item.ide) {
-          @defer {
-            <app-historial-pago
-              [historialPago]="historialPago()"
-              [loadingShow]="loadingShow()"
-              (created)="updateletterPay($event); showDetails.set(null)"
-            />
+
+          @if (showDetails() === item.ide) {
+            @defer {
+              <app-historial-pago
+                [historialPago]="historialPago()"
+                [loadingShow]="loadingShow()"
+                (created)="updateletterPay($event); showDetails.set(null)"
+                [idePersonalRol]="idePersona()"
+              />
+            }
           }
         }
-      }
-    } @else {
-      <div class="text-center py-4 max-w-2xl mx-auto">
-        <div class="bg-slate-50 py-4 mb-5 rounded-xl">
-          <img
-            ngSrc="assets/icon/no-application-found.svg"
-            alt="Nothing found"
-            width="242"
-            height="242"
-            priority
-            class="mx-auto"
-          />
+      } @else {
+        <div class="text-center py-4 max-w-2xl mx-auto">
+          <div class="bg-slate-50 py-4 mb-5 rounded-xl">
+            <img
+              ngSrc="assets/icon/no-application-found.svg"
+              alt="Nothing found"
+              width="242"
+              height="242"
+              priority
+              class="mx-auto"
+            />
+          </div>
+          <h3 class="text-2xl font-bold">No hay facturas registradas</h3>
+          <p class="text-balance">
+            No se encontraron facturas registradas a este cliente. Puedes agregar una nueva factura en el modulo de
+            facturas.
+          </p>
         </div>
-        <h3 class="text-2xl font-bold">No hay facturas registradas</h3>
-        <p class="text-balance">
-          No se encontraron facturas registradas a este cliente. Puedes agregar una nueva factura en el modulo de
-          facturas.
-        </p>
-      </div>
+      }
+    }
+  </div>
+  @defer {
+    <div class="mt-4">
+      @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
+        <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
+      }
+    </div>
+  }
+  @if (isModalOpen()) {
+    @defer {
+      <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
     }
   }
 </div>
-@defer {
-  <div class="mt-4">
-    @if (listInvoices() && listInvoices()!.data!.page.totalPages > 0) {
-      <app-pagination [paginationData]="listInvoices()!.data!.page" (pageChange)="onPageChange($event)" />
-    }
-  </div>
-}
-@if (isModalOpen()) {
+
+<app-modal #historialFactura>
   @defer {
-    <app-viewer-document [documentUrl]="currentDocumentUrl()" (close)="closeDocument()" />
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white w-full max-w-lg rounded-lg overflow-auto">
+        <section class="p-4">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-gray-800 font-semibold text-xs">Historial</h3>
+            <button class="text-gray-400 hover:text-gray-600" (click)="historialFactura.close(); historial.set(null)">
+              &times;
+            </button>
+          </div>
+          <div>
+            @if (loadingHstorial()) {
+              <div class="h-full text-center flex justify-center items-center">
+                <div class="loader"></div>
+              </div>
+            } @else {
+              @if (historial(); as historial) {
+                <div class="space-y-2">
+                  @for (history of historial!.data; track $index) {
+                    <div class="flex flex-col bg-gray-50 rounded-lg p-2 shadow-sm text-xs max-h-64 overflow-y-auto">
+                      <div class="flex justify-between items-center text-gray-700">
+                        <span>{{ history.description }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </section>
+      </div>
+    </div>
   }
-}
+</app-modal>

@@ -6,11 +6,11 @@
   ¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.
 </p>
 <div class="flex justify-center gap-4">
-  @if (!loading()) {
+  @if (!clienteStore.loading()) {
     <button
       class="px-4 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
       type="button"
-      (click)="deleted.emit(null)"
+      (click)="clienteStore.closeModal('deleteClientModal')"
     >
       Cancelar
     </button>

@@ -13,16 +13,6 @@
           <!-- Aquí iría tu campo de búsqueda o cualquier otro elemento -->
         </div>
 
-        <!-- <button
-            class="px-3 py-2 text-sm text-white bg-secondary rounded hover:bg-red-700 flex items-center w-full md:w-auto"
-            (click)="aggXml.open()"
-          >
-            <div class="relative size-5 shrink-0 mr-2">
-              <img ngSrc="/assets/icon/add.svg" alt="Create" fill />
-            </div>
-            Agregar
-          </button> -->
-
         <button
           class="text-white bg-secondary shrink-0 flex font-semibold px-4 py-2 mt-2 md:mt-0 rounded-md justify-center items-center w-full md:w-auto md:ml-auto hover:bg-red-700"
           (click)="aggProveedor.open()"
@@ -35,113 +25,90 @@
       </div>
     </nav>
 
-    <hr class="my-4" />
     <section>
-      <div class="relative overflow-x-auto">
-        <table class="w-full text-left">
-          <thead>
-            <tr r class="*:font-normal *:text-neutral-400 *:px-6 *:py-3">
-              <th class="px-4 py-3">Nombres</th>
-              <th class="px-4 py-3 text-center">Identificación</th>
-              <th class="px-4 py-3 text-center">Dirección</th>
-              <th class="px-4 py-3 text-center"></th>
-              <th class="px-4 py-3 text-center"></th>
-            </tr>
-          </thead>
-          @if (loading()) {
-            <tbody>
-              <tr>
-                <td colspan="100%">
-                  <div class="text-center py-9">
-                    <div class="loader"></div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          } @else {
-            <tbody>
-              @if (listProveedor() && listProveedor()!.data.listData.length > 0) {
-                @for (proveedor of listProveedor()!.data!.listData; track $index) {
-                  <tr class="border-b hover:bg-gray-100 text-sm">
-                    <th scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
-                      <div class="flex gap-4 items-center">
-                        <div
-                          class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase"
-                        >
-                          {{ proveedor.socialReason | initials }}
-                        </div>
-                        <div>
-                          <p class="font-bold">{{ proveedor.socialReason }}</p>
+      <div class="card text-xs mt-3">
+        <p-table
+          #dt
+          [value]="listProveedor()?.data?.listData"
+          dataKey="id"
+          [rowHover]="true"
+          [rows]="numElementsByPage()"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [loading]="loading()"
+          [paginator]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+          [totalRecords]="filterProveedor()?.totalElements"
+          (onPage)="onPageChange($event)"
+          [lazy]="true"
+        >
+          <ng-template #header>
+            <tr>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Nombre</div>
+              </th>
 
-                          <div class="flex items-center gap-2">
-                            <div class="relative">
-                              {{ proveedor.email }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </th>
-                    <td class="px-4 py-3 text-center">
-                      {{ proveedor.identificationNumber | formatId }}
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                      {{ proveedor.address }}
-                    </td>
-                    <td>
-                      <div class="flex gap-1 group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          [routerLink]="proveedor.ideProveedorEncrypted"
-                        >
-                          <img src="assets/icon/show-password.svg" class="w-5 sm:w-6 md:w-5" alt="Delete" />
-                        </button>
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Ver detalle
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="flex gap-1 group relative">
-                        <button
-                          class="flex items-center justify-center p-2 rounded-md bg-gray-100 hover:bg-gray-200"
-                          (click)="deleteCounterClient.open(); viewingIdeCustomer.set(proveedor.ideCustomer)"
-                        >
-                          <img src="/assets/icon/trash-icon.svg" class="size-5" alt="Delete" />
-                        </button>
-                        <div
-                          class="absolute -top-10 right-0 bg-gray-800 text-white text-xs px-3 py-1 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                        >
-                          Eliminar
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              } @else {
-                <tr>
-                  <td colspan="100%">
-                    <div
-                      class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
-                    >
-                      <p class="font-medium">Ningún cliente encontrado</p>
-                      <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          }
-        </table>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Identificación</div>
+              </th>
+              <th style="min-width: 14rem">
+                <div class="flex justify-between items-center">Correo</div>
+              </th>
+              <th style="min-width: 10rem">
+                <div class="flex justify-between items-center">Dirección</div>
+              </th>
+              <th style="min-width: 10rem">Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-proveedor>
+            <tr class="p-selectable-row">
+              <td scope="row" class="font-normal p-2" [routerLink]="proveedor.ideProveedorEncrypted">
+                <div class="flex gap-4 items-center">
+                  <div class="size-10 bg-primary rounded-lg text-white flex items-center justify-center uppercase">
+                    {{ proveedor.socialReason | initials }}
+                  </div>
+                  <div>
+                    <p class="font-bold">{{ proveedor.socialReason }}</p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ proveedor.identificationNumber | formatId }}
+              </td>
+              <td>
+                {{ proveedor.email }}
+              </td>
+              <td>
+                {{ proveedor.address }}
+              </td>
+
+              <td>
+                <p-button icon="pi pi-eye" class="mr-2" severity="secondary" [outlined]="true" />
+                <!-- routerLink="{{ proveedor.ideCustomerEncrypted }}" -->
+
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  (onClick)="deleteCounterClient.open(); viewingIdeCustomer.set(proveedor.ideCustomer)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template #emptymessage>
+            <tr>
+              <td colspan="100%">
+                <div
+                  class="flex flex-col items-center justify-center mt-4 h-20 border border-gray-300 bg-gray-50 border-dashed rounded-md text-gray-400 text-center"
+                >
+                  <p class="font-medium">Ningún cliente encontrado</p>
+                  <span class="text-sm">Por favor, agregue un cliente para ver su información</span>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
-      @defer {
-        <div class="mt-4">
-          @if (listProveedor() && listProveedor()!.data!.page.totalPages > 0) {
-            <app-pagination [paginationData]="listProveedor()!.data!.page" (pageChange)="onPageChange($event)" />
-          }
-        </div>
-      }
     </section>
   </div>
 </div>
@@ -162,9 +129,7 @@
             />
           </button>
         </header>
-        <app-agregar-proveedor (agregarXML)="aggProveedor.close()"
-        (dataRegistro)="$event && addProveedor($event)"
-        />
+        <app-agregar-proveedor (agregarXML)="aggProveedor.close()" (dataRegistro)="$event && infoXML.set($event)" />
       </div>
     </div>
   }

@@ -10,15 +10,15 @@ import {
   CreateFileComponent,
   DeleteFileComponent,
   DeleteLogoComponent,
-  InfoCardEmpresaComponent,
-  ListaDocEmpresaComponent,
+  FacturacionComponent,
+  GeneralComponent,
+  NotificacionComponent,
+  SeguridadComponent,
   SequentialComponent,
-  UpdateEmisorComponent,
   UpdateEmisorTributariaComponent,
   UpdateLogoComponent,
 } from './components';
-import { ListaProductoEmpresaComponent } from './components/lista-producto-empresa';
-import { ListaProformaEmpresaComponent } from './components/lista-proforma-empresa/lista-proforma-empresa.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-configuracion',
@@ -30,44 +30,32 @@ import { ListaProformaEmpresaComponent } from './components/lista-proforma-empre
     CustomDatePipe,
     TextInitialsPipe,
     NgOptimizedImage,
-    UpdateEmisorComponent,
     UpdateEmisorTributariaComponent,
     CreateFileComponent,
     DeleteFileComponent,
     SequentialComponent,
     UpdateLogoComponent,
     DeleteLogoComponent,
-    ListaProductoEmpresaComponent,
-    ListaDocEmpresaComponent,
-    InfoCardEmpresaComponent,
-    ListaProformaEmpresaComponent,
+    ButtonModule,
+    FacturacionComponent,
+    GeneralComponent,
+    NotificacionComponent,
+    SeguridadComponent,
   ],
   templateUrl: './configuracion.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfiguracionComponent {
-  public readonly uploadingDoc = signal(false);
-
-  public readonly selectedTab = signal<'inventario' | 'doc'  | 'Proforma' >('inventario');
-
-  public readonly loading = signal(false);
-
-  public readonly viewingEmisor = signal<ByApplicationCounter | null>(null);
-
+  public readonly tap = signal<'general' | 'facturacion' | 'seguridad' | 'notificaciones'>('general');
   public readonly emisorInfo = signal<GeneriResp<ByApplicationCounter> | null>(null);
-
-  public readonly viewingRuc = signal<any | null>(null);
-
-  public readonly viewingIdeSubsidiary = signal<number | null>(null);
-
-  public readonly viewingEstablecimiento = signal<any | null>(null);
-
-  public readonly viewingFile = signal<number | null>(null);
-
   public readonly viewingInfo = signal<ByApplicationCounter | null>(null);
-
-  public readonly idePersonaRol = signal<number | null>(null);
+  public readonly viewingIdeSubsidiary = signal<number | null>(null);
+  public readonly viewingEstablecimiento = signal<any | null>(null);
+  public readonly viewingFile = signal<number | null>(null);
+  public readonly viewingRuc = signal<any | null>(null);
+  public readonly uploadingDoc = signal(false);
+  public readonly loading = signal(false);
 
   constructor(
     private readonly emisorService: EmpresaService,
@@ -76,8 +64,8 @@ export class ConfiguracionComponent {
     this.retrieveEmisor();
   }
 
-  public changeTab(tab: 'inventario' | 'doc'  | 'Proforma' ): void {
-    this.selectedTab.set(tab);
+  public changeTab(tab: 'general' | 'facturacion' | 'seguridad' | 'notificaciones') {
+    this.tap.set(tab);
   }
 
   retrieveEmisor() {
@@ -89,7 +77,6 @@ export class ConfiguracionComponent {
       .subscribe((resp) => {
         if (resp.status === 'OK') {
           this.emisorInfo.set(resp);
-          this.idePersonaRol.set(resp.data.idePersonaRol);
         }
       });
   }

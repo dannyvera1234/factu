@@ -37,6 +37,10 @@ export class CreateFacturaEmpresaService {
 
   public actionToConfirm = '';
 
+
+  public readonly infoProducto = signal<any | null>(null);
+  public readonly addPayments = signal<any | null>(null);
+
   constructor(
     private readonly notification: NotificationService,
     private readonly facturacionService: DocumentosService,
@@ -49,6 +53,17 @@ export class CreateFacturaEmpresaService {
     // Validación común para verificar si el código '00' está presente
     const selectedPaymentMethod = this.selectedPaymentMethod();
     const isCreditoSelected = selectedPaymentMethod?.some((method) => method.metodoPago?.code === '00');
+    const isValorTotalValid = selectedPaymentMethod?.reduce((acc, method) => acc + Number(method.valor || 0), 0) ;
+    const isTotalProductsValid = this.products()?.reduce((acc, product) => acc + Number(product.valorTotal || 0), 0);
+    console.log(isTotalProductsValid);
+    console.log(isValorTotalValid);
+    if(isValorTotalValid < isTotalProductsValid ){
+      this.notification.push({
+        message: 'El valor total de la factura no puede ser menor al valor total de los productos',
+        type: 'error',
+      });
+      return;
+    }
 
     // Validación para 'Credito'
     if (buttonType === 'Credito' && !isCreditoSelected) {
@@ -124,6 +139,8 @@ export class CreateFacturaEmpresaService {
       });
       return;
     }
+
+
 
     // Si todas las validaciones son correctas, guardar los datos de la factura
     switch (buttonType) {

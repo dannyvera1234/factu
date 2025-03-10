@@ -12,8 +12,6 @@ export class ConfigFacturacionService {
 
   constructor() {}
 
-
-
   public rimpe = signal<Record<string, string>>({
     true: 'Sí',
     false: 'No',
@@ -51,6 +49,12 @@ export class ConfigFacturacionService {
     '19': 'Tarjeta de crédito',
     '20': 'Otro con utilización del sistema financiero',
     '21': 'Endoso de titulos',
+  });
+
+  public readonly statusCredito = signal<Record<string, string>>({
+    PENDIENTE: 'Pendiente',
+    ATRAZADO: 'Atrazado',
+    null: 'Todos',
   });
 
   public readonly DOCUMENT_STYLES = signal<Record<string, { bgColor: string; icon: string }>>({
