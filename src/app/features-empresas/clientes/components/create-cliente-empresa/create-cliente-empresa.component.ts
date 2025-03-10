@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { of, mergeMap, finalize } from 'rxjs';
 import { IdentificationType } from '@/interfaces';
-import { ConfigFacturacionService, AccountingControlSystemService, NotificationService } from '@/utils/services';
+import { ConfigFacturacionService, AccountingControlSystemService } from '@/utils/services';
 import {
   onlyLettersValidator,
   emailValidator,
@@ -12,8 +11,8 @@ import {
 } from '@/utils/validators';
 import { CustomInputComponent, CustomSelectComponent } from '@/components';
 import { NgClass } from '@angular/common';
-import { ClientesService } from '@/services/service-empresas';
-import { DetailsService } from '@/feature-counters/details-counter-application';
+
+import { CLIENTE_INITIAL_STATE } from '../../store';
 
 @Component({
   selector: 'app-create-cliente-empresa',
@@ -23,13 +22,11 @@ import { DetailsService } from '@/feature-counters/details-counter-application';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateClienteEmpresaComponent {
+  public readonly identificationLabel = signal<string>('Identificación');
+  public readonly typeDocument = signal<IdentificationType[]>([]);
   public readonly loading = signal(false);
 
-  public readonly identificationLabel = signal<string>('Identificación');
-
-  @Output() public readonly created = new EventEmitter<any | null>();
-
-  public readonly typeDocument = signal<IdentificationType[]>([]);
+  clienteStore = inject(CLIENTE_INITIAL_STATE);
 
   public readonly transformedTypeDocument = computed<{ values: string[]; labels: string[] }>(() =>
     this.typeDocument().reduce(
@@ -52,9 +49,6 @@ export class CreateClienteEmpresaComponent {
     private readonly _fb: FormBuilder,
     public readonly config: ConfigFacturacionService,
     public readonly controlService: AccountingControlSystemService,
-    private readonly clientesService: ClientesService,
-    private readonly notification: NotificationService,
-    private readonly detailsService: DetailsService,
   ) {
     this.getIdentificationTypes();
 
@@ -147,41 +141,16 @@ export class CreateClienteEmpresaComponent {
       cellPhone: this.form.value.cellPhone,
     };
 
-    of(this.loading.set(true))
-      .pipe(
-        mergeMap(() => this.clientesService.addCustomer(updateByInfoPersona)),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe((res) => {
-        if (res.status === 'OK') {
-          this.notification.push({
-            message: 'El cliente ha sido creado con éxito.',
-            type: 'success',
-          });
-          this.created.emit({
-            ideCustomer: Number(res.data),
-            names: this.form.value.names,
-            lastName: this.form.value.lastName,
-            address: this.form.value.address,
-            typeDocument: this.form.value.typeDocument,
-            identificationNumber: this.form.value.identificationNumber,
-            email: this.form.value.email,
-            cellPhone: this.form.value.cellPhone,
-            status: res.status,
-          });
-          this.detailsService.info.set({
-            personaRolIde: Number(res.data),
-           });
-          this.form.reset({
-            cellPhone: '09',
-            typeDocument: '',
-            email: '',
-            address: '',
-            identificationNumber: '',
-            names: '',
-            lastName: '',
-          });
-        }
-      });
+    this.clienteStore.createCustomer(updateByInfoPersona);
+
+    this.form.reset({
+      cellPhone: '09',
+      typeDocument: '',
+      email: '',
+      address: '',
+      identificationNumber: '',
+      names: '',
+      lastName: '',
+    });
   }
 }

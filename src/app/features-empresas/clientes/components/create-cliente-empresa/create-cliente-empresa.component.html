@@ -69,11 +69,11 @@
     </div>
   </div>
   <div class="flex gap-4 justify-end mt-10 md:flex-row flex-col text-center max-md:w-full">
-    @if (!loading()) {
+    @if (!clienteStore.loading()) {
       <button
       class="items-center gap-2 border border-gray-400 px-4 py-2 rounded-lg md:flex text-gray-700"
         type="button"
-        (click)="created.emit(null)"
+        (click)="clienteStore.closeModal('createClientModal')"
       >
         Cerrar
       </button>
