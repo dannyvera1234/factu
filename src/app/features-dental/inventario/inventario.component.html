@@ -1,0 +1,215 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  <div class="p-8">
+    <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+    <!-- Card único con filtros y tabla -->
+    <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+      <!-- Filtros compactos -->
+      <div class="bg-slate-50 p-3 border-b border-slate-200">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2">
+          <!-- Búsqueda -->
+          <div class="flex-1 min-w-0 sm:min-w-48">
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Buscar..."
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="searchTerm.set($event)"
+                class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              >
+              <svg class="absolute left-2.5 top-2.5 w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Filtro categoría -->
+          <select
+            [(ngModel)]="selectedCategory"
+            (ngModelChange)="selectedCategory.set($event)"
+            class="border border-slate-300 rounded-md px-2 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="todos">Todas las categorías</option>
+            <option value="materiales">Materiales</option>
+            <option value="instrumental">Instrumental</option>
+            <option value="medicamentos">Medicamentos</option>
+          </select>
+
+          <!-- Filtro stock -->
+          <select
+            [(ngModel)]="selectedStock"
+            (ngModelChange)="selectedStock.set($event)"
+            class="border border-slate-300 rounded-md px-2 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="todos">Todo el stock</option>
+            <option value="disponible">Disponible</option>
+            <option value="bajo">Stock bajo</option>
+            <option value="agotado">Agotado</option>
+          </select>
+
+          <!-- Controles adicionales -->
+          <div class="flex items-center gap-2">
+            <!-- Agregar producto -->
+            <button
+              (click)="newProduct()"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-md flex items-center gap-1 text-xs transition-colors"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              <span class="hidden sm:inline">Agregar</span>
+            </button>
+
+            <!-- Exportar -->
+            <button
+              (click)="exportList()"
+              class="bg-slate-600 hover:bg-slate-700 text-white px-2 py-2 rounded-md flex items-center gap-1 text-xs transition-colors"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span class="hidden sm:inline">Exportar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de inventario -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-[#34495e]">
+            <tr>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Producto</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Categoría</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Stock</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Precio</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Proveedor</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Estado</th>
+              <th class="px-2 py-2 text-left text-xs font-bold text-white uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-blue-100">
+            @for (product of paginatedProducts(); track product.id) {
+              <tr class="hover:bg-blue-50/50 transition-all duration-200">
+                <td class="px-2 py-2">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                      {{ product.code }}
+                    </div>
+                    <div>
+                      <p class="font-medium text-slate-900 text-sm">{{ product.name }}</p>
+                      <p class="text-xs text-slate-500">{{ product.description }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-2 py-2">
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                    {{ getCategoryText(product.category) }}
+                  </span>
+                </td>
+                <td class="px-2 py-2">
+                  <div class="flex items-center space-x-1">
+                    <span class="font-medium text-slate-900 text-xs">{{ product.stock }}</span>
+                    <span class="text-xs text-slate-500">{{ product.unit }}</span>
+                  </div>
+                </td>
+                <td class="px-2 py-2 text-xs font-medium text-slate-900">${{ product.price }}</td>
+                <td class="px-2 py-2 text-xs text-slate-700">{{ product.supplier }}</td>
+                <td class="px-2 py-2">
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full" [class]="getStockColor(product.stock, product.minStock)">
+                    {{ getStockStatus(product.stock, product.minStock) }}
+                  </span>
+                </td>
+                <td class="px-2 py-2">
+                  <div class="flex items-center space-x-0.5">
+                    <button
+                      (click)="editProduct(product.id)"
+                      class="text-blue-600 hover:text-blue-800 p-1 rounded transition-all duration-200 hover:bg-blue-100"
+                      title="Editar producto"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    </button>
+                    <button
+                      (click)="adjustStock(product.id)"
+                      class="text-emerald-600 hover:text-emerald-800 p-1 rounded transition-all duration-200 hover:bg-emerald-100"
+                      title="Ajustar stock"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      @if (totalPages() > 1) {
+        <div class="px-3 sm:px-6 py-3 sm:py-4 border-t border-slate-200 bg-slate-50">
+          <!-- Móvil: Layout vertical -->
+          <div class="flex flex-col gap-3 sm:hidden">
+            <div class="text-xs text-slate-600 text-center">
+              {{ (currentPage() - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage() * itemsPerPage, filteredProducts().length) }} de {{ filteredProducts().length }}
+            </div>
+            <div class="flex items-center justify-center gap-2">
+              <button
+                (click)="goToPage(currentPage() - 1)"
+                [disabled]="currentPage() === 1"
+                class="px-2 py-1.5 border border-slate-300 rounded text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+              >
+                «
+              </button>
+              <span class="px-3 py-1.5 bg-blue-500 text-white rounded text-xs">
+                {{ currentPage() }}
+              </span>
+              <span class="text-xs text-slate-500">de {{ totalPages() }}</span>
+              <button
+                (click)="goToPage(currentPage() + 1)"
+                [disabled]="currentPage() === totalPages()"
+                class="px-2 py-1.5 border border-slate-300 rounded text-xs disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+              >
+                »
+              </button>
+            </div>
+          </div>
+
+          <!-- Desktop: Layout horizontal -->
+          <div class="hidden sm:flex items-center justify-between">
+            <div class="text-sm text-slate-600">
+              Mostrando {{ (currentPage() - 1) * itemsPerPage + 1 }} a {{ Math.min(currentPage() * itemsPerPage, filteredProducts().length) }} de {{ filteredProducts().length }} productos
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                (click)="goToPage(currentPage() - 1)"
+                [disabled]="currentPage() === 1"
+                class="px-3 py-1.5 border border-slate-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+              >
+                Anterior
+              </button>
+              @for (page of [].constructor(totalPages()); track $index) {
+                <button
+                  (click)="goToPage($index + 1)"
+                  [class]="currentPage() === $index + 1 ? 'bg-blue-500 text-white border-blue-500' : 'border-slate-300 hover:bg-white'"
+                  class="px-3 py-1.5 border rounded-md text-sm transition-colors"
+                >
+                  {{ $index + 1 }}
+                </button>
+              }
+              <button
+                (click)="goToPage(currentPage() + 1)"
+                [disabled]="currentPage() === totalPages()"
+                class="px-3 py-1.5 border border-slate-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white transition-colors"
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

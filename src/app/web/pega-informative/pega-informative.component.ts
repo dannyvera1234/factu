@@ -11,7 +11,7 @@ import { WhatsappComponent } from '../whatsapp';
 
 @Component({
   selector: 'app-pega-informative',
-  imports: [RouterLink, NgClass, CurrencyPipe, HeardComponent, HeardComponent, FooterWebComponent,WhatsappComponent ],
+  imports: [ HeardComponent, HeardComponent ],
   templateUrl: './pega-informative.component.html',
   styles: `
     html {

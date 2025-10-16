@@ -11,4 +11,5 @@ import { RouterLink } from '@angular/router';
 })
 export class FooterWebComponent {
 public readonly link = signal(linkWhast);
+public readonly currentYear = new Date().getFullYear();
 }

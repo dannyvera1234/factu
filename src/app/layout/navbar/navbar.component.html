@@ -1,0 +1,195 @@
+<nav class="bg-[#34495e] shadow-sm" clickOutside (clickOutside)="closeAllMenus()">
+  <div class="w-full">
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex justify-between items-center pl-4 pr-4">
+      <!-- Navigation Links -->
+      <div class="flex">
+        @for (route of userData(); track $index) {
+          <div class="relative navbar-item">
+            @if (route.submenu && route.submenu.length > 0) {
+              <!-- Module with submenu -->
+              <button
+                (click)="toggleSubmenu(route.id)"
+                [class.text-white]="isSubmenuOpen(route.id)"
+                [class.!border-b-cyan-400]="isSubmenuOpen(route.id)"
+                class="navbar-item text-gray-200 hover:text-white px-3 py-2 text-xs font-medium transition-colors duration-200 border-b-4 border-transparent hover:border-cyan-400 flex items-center space-x-1"
+              >
+                <span>{{ route.name }}</span>
+                <svg class="w-3 h-3 transition-transform" [class.rotate-180]="isSubmenuOpen(route.id)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              <!-- Submenu dropdown -->
+              @if (isSubmenuOpen(route.id)) {
+                <div class="absolute top-full left-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50 min-w-48">
+                  @for (subitem of route.submenu; track subitem.name) {
+                    @if (subitem.name === 'Nuevo Paciente' || subitem.url?.includes('/nuevo')) {
+                      <button
+                        (click)="openModal(); activeSubmenu.set(null)"
+                        class="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                      >
+                        <img [src]="getIconPath(subitem.icon)" [alt]="subitem.name" class="w-4 h-4 opacity-60">
+                        <span>{{ subitem.name }}</span>
+                      </button>
+                    } @else {
+                      <a
+                        [routerLink]="subitem.url"
+                        class="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        (click)="activeSubmenu.set(null)"
+                      >
+                        <img [src]="getIconPath(subitem.icon)" [alt]="subitem.name" class="w-4 h-4 opacity-60">
+                        <span>{{ subitem.name }}</span>
+                      </a>
+                    }
+                  }
+                </div>
+              }
+            } @else {
+              <!-- Module without submenu -->
+              <a
+                [routerLink]="route.url"
+                routerLinkActive="text-white !border-b-cyan-400"
+                class="navbar-item text-gray-200 hover:text-white px-3 py-2 text-xs font-medium transition-colors duration-200 border-b-4 border-transparent hover:border-cyan-400"
+              >
+                {{ route.name }}
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Right Side: System Status and Help -->
+      <div class="flex items-center space-x-4">
+        <!-- System Status -->
+        <div class="flex items-center space-x-2 text-xs">
+          <div class="flex items-center space-x-1">
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span class="text-gray-300">Sistema Online</span>
+          </div>
+          <span class="text-gray-500">|</span>
+          <span class="text-gray-400">{{ getActiveUsers() }} usuarios activos</span>
+        </div>
+
+        <!-- Quick Filter -->
+        <select class="bg-transparent text-gray-300 text-xs border border-gray-600 rounded px-2 py-1 focus:outline-none focus:border-cyan-400">
+          <option value="today" class="bg-[#34495e]">Hoy</option>
+          <option value="week" class="bg-[#34495e]">Esta semana</option>
+          <option value="month" class="bg-[#34495e]">Este mes</option>
+        </select>
+
+        <!-- Refresh Data Button (Temporal) -->
+        <button
+          (click)="clearUserData()"
+          class="text-gray-400 hover:text-yellow-400 p-1 rounded"
+          title="Actualizar Módulos"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </button>
+
+        <!-- Help Button -->
+        <button class="text-gray-400 hover:text-white p-1 rounded" title="Ayuda">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="md:hidden px-4">
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center justify-between py-2">
+        <div class="flex items-center space-x-2">
+          <span class="text-white text-sm font-medium">Menú</span>
+          <div class="flex items-center space-x-1">
+            <div class="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+            <span class="text-xs text-gray-400">Online</span>
+          </div>
+        </div>
+        <button
+          (click)="toggleMobileMenu()"
+          class="text-gray-300 hover:text-white p-1"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Items -->
+      @if (showMobileMenu()) {
+        <div class="pb-2 space-y-1">
+          @for (route of userData(); track $index) {
+            <div>
+              @if (route.submenu && route.submenu.length > 0) {
+                <!-- Module with submenu -->
+                <button
+                  (click)="toggleSubmenu(route.id)"
+                  [class.bg-cyan-500]="isSubmenuOpen(route.id)"
+                  [class.text-white]="isSubmenuOpen(route.id)"
+                  class="w-full flex items-center justify-between text-gray-200 hover:text-white hover:bg-cyan-500 px-3 py-2 text-sm font-medium transition-colors rounded"
+                >
+                  <span>{{ route.name }}</span>
+                  <svg class="w-4 h-4 transition-transform" [class.rotate-180]="isSubmenuOpen(route.id)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+
+                <!-- Mobile Submenu -->
+                @if (isSubmenuOpen(route.id)) {
+                  <div class="ml-4 mt-1 space-y-1">
+                    @for (subitem of route.submenu; track subitem.name) {
+                      @if (subitem.name === 'Nuevo Paciente' || subitem.url?.includes('/nuevo')) {
+                        <button
+                          (click)="openModal(); closeMobileMenu()"
+                          class="w-full flex items-center space-x-2 text-gray-300 hover:text-white hover:bg-cyan-600 px-3 py-1.5 text-xs rounded cursor-pointer"
+                        >
+                          <img [src]="getIconPath(subitem.icon)" [alt]="subitem.name" class="w-3 h-3 opacity-60 filter invert">
+                          <span>{{ subitem.name }}</span>
+                        </button>
+                      } @else {
+                        <a
+                          [routerLink]="subitem.url"
+                          class="flex items-center space-x-2 text-gray-300 hover:text-white hover:bg-cyan-600 px-3 py-1.5 text-xs rounded"
+                          (click)="closeMobileMenu()"
+                        >
+                          <img [src]="getIconPath(subitem.icon)" [alt]="subitem.name" class="w-3 h-3 opacity-60 filter invert">
+                          <span>{{ subitem.name }}</span>
+                        </a>
+                      }
+                    }
+                  </div>
+                }
+              } @else {
+                <!-- Module without submenu -->
+                <a
+                  [routerLink]="route.url"
+                  routerLinkActive="bg-cyan-500 text-white"
+                  class="block text-gray-200 hover:text-white hover:bg-cyan-500 px-3 py-2 text-sm font-medium transition-colors rounded"
+                  (click)="closeMobileMenu()"
+                >
+                  {{ route.name }}
+                </a>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Modal de nuevo paciente -->
+  @if (showNewPatientModal()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50">
+      <div class="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl transform transition-transform duration-300 ease-in-out flex flex-col">
+        <app-nuevo-paciente
+          (onCancel)="closeModal()"
+          (onSave)="onPatientSaved()">
+        </app-nuevo-paciente>
+      </div>
+    </div>
+  }
+</nav>

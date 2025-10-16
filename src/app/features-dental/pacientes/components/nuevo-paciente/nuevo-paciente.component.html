@@ -1,0 +1,168 @@
+
+  <div>
+    <!-- Header -->
+    <div class="bg-slate-50 p-2 border-b border-slate-200 flex justify-between items-center">
+      <div>
+        <h3 class="text-xl font-semibold text-slate-900">Nuevo Paciente</h3>
+        <p class="text-sm text-slate-600 mt-1">Completa la información del paciente</p>
+      </div>
+
+        <button (click)="cancel()" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" class="p-4">
+      <!-- Datos del Paciente -->
+      <div class="space-y-3">
+        <h4 class="text-lg font-medium text-slate-900 border-b border-slate-200 pb-2">Datos del Paciente</h4>
+
+        <!-- Primera fila: Cédula y Número -->
+        <div class="grid grid-cols-2 gap-3">
+          <select [(ngModel)]="patient().documentType" name="documentType"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="cedula">Cédula</option>
+            <option value="pasaporte">Pasaporte</option>
+          </select>
+          <input type="text" [(ngModel)]="patient().document" name="document"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Número">
+        </div>
+
+        <!-- Segunda fila: Nombres y Apellidos -->
+        <div class="grid grid-cols-2 gap-3">
+          <input type="text" [(ngModel)]="patient().firstName" name="firstName" required
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Nombres *">
+          <input type="text" [(ngModel)]="patient().lastName" name="lastName" required
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Apellidos *">
+        </div>
+
+        <!-- Tercera fila: Fecha y Sexo -->
+        <div class="grid grid-cols-2 gap-3">
+          <input type="date" [(ngModel)]="patient().birthDate" name="birthDate"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+          <select [(ngModel)]="patient().gender" name="gender"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+          </select>
+        </div>
+
+        <!-- Cuarta fila: Estado y Teléfono -->
+        <div class="grid grid-cols-2 gap-3">
+          <select [(ngModel)]="patient().status" name="status"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+          <div class="flex">
+            <span class="inline-flex items-center px-2 text-sm text-gray-700 bg-gray-200 border border-r-0 border-gray-300 rounded-l">+593</span>
+            <input type="tel" [(ngModel)]="patient().phone" name="phone"
+              class="flex-1 px-2 py-2 border border-slate-300 rounded-r text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Teléfono">
+          </div>
+        </div>
+
+        <!-- Quinta fila: Correo -->
+        <div class="grid grid-cols-1 gap-3">
+          <input type="email" [(ngModel)]="patient().email" name="email"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Correo electrónico">
+        </div>
+      </div>
+
+      <!-- Checkbox para mostrar datos del apoderado -->
+      <div class="mt-6">
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" [(ngModel)]="patient().showGuardian" name="showGuardian"
+            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+          <span class="text-sm font-medium text-slate-700">Agregar datos del apoderado</span>
+        </label>
+      </div>
+
+      <!-- Datos del Apoderado (condicional) -->
+      @if (patient().showGuardian) {
+      <div class="mt-6 space-y-3">
+        <h4 class="text-lg font-medium text-slate-900 border-b border-slate-200 pb-2">Datos del Apoderado</h4>
+
+        <!-- Primera fila: Cédula y Número -->
+        <div class="grid grid-cols-2 gap-3">
+          <select [(ngModel)]="patient().guardianDocumentType" name="guardianDocumentType"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="cedula">Cédula</option>
+            <option value="pasaporte">Pasaporte</option>
+          </select>
+          <input type="text" [(ngModel)]="patient().guardianDocument" name="guardianDocument"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Número">
+        </div>
+
+        <!-- Segunda fila: Nombres y Apellidos -->
+        <div class="grid grid-cols-2 gap-3">
+          <input type="text" [(ngModel)]="patient().guardianFirstName" name="guardianFirstName"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Nombres">
+          <input type="text" [(ngModel)]="patient().guardianLastName" name="guardianLastName"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Apellidos">
+        </div>
+
+        <!-- Tercera fila: Email y Teléfono -->
+        <div class="grid grid-cols-2 gap-3">
+          <input type="email" [(ngModel)]="patient().guardianEmail" name="guardianEmail"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Email">
+          <div class="flex">
+            <span class="inline-flex items-center px-2 text-sm text-gray-700 bg-gray-200 border border-r-0 border-gray-300 rounded-l">+593</span>
+            <input type="tel" [(ngModel)]="patient().guardianPhone" name="guardianPhone"
+              class="flex-1 px-2 py-2 border border-slate-300 rounded-r text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Teléfono">
+          </div>
+        </div>
+
+        <!-- Cuarta fila: Relación y Aseguradora -->
+        <div class="grid grid-cols-2 gap-3">
+          <select [(ngModel)]="patient().guardianRelation" name="guardianRelation"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="mama">Mamá</option>
+            <option value="papa">Papá</option>
+            <option value="abuelo">Abuelo/a</option>
+            <option value="tio">Tío/a</option>
+            <option value="hermano">Hermano/a</option>
+            <option value="otro">Otro</option>
+          </select>
+          <select [(ngModel)]="patient().insurance" name="insurance"
+            class="px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Aseguradora</option>
+            <option value="particular">Particular</option>
+            <option value="seguro_social">Seguro Social</option>
+            <option value="seguro_privado">Seguro Privado</option>
+          </select>
+        </div>
+
+        <!-- Dirección -->
+        <textarea [(ngModel)]="patient().guardianAddress" name="guardianAddress" rows="2"
+          class="w-full px-2 py-2 border border-slate-300 rounded text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Dirección del apoderado"></textarea>
+      </div>
+      }
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-2 mt-6 pt-4 border-t border-slate-200">
+        <button type="button" (click)="cancel()"
+          class="px-3 py-2 border border-slate-300 text-slate-700 rounded hover:bg-slate-50 transition-colors text-sm">
+          Cancelar
+        </button>
+        <button type="submit"
+          class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>

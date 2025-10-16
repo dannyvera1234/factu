@@ -9,8 +9,13 @@ export const authGuardLoginGuard: CanActivateFn = (route, state) => {
   // Verificar si el token de autenticación existe
   const token = authService.getAuthToken();
   if (token) {
-    const url = authService.getPermissions()[0].urlSegment;
-    router.navigate([ `/${url}/inicio`,]);
+    const permissions = authService.getPermissions();
+    if (permissions && permissions.length > 0) {
+      const url = permissions[0].urlSegment;
+      router.navigate([`/${url}/inicio`]);
+    } else {
+      router.navigate(['/sistema_dental/inicio']);
+    }
     return false;
   }
 

@@ -29,7 +29,7 @@ export const routes: Routes & {
 
   // cuenta para empresa
   {
-    path: 'sistema_contable_empresa',
+    path: 'sistema_dental',
     canActivate: [authGuard],
     loadComponent() {
       return import('./layout/layout.component').then((m) => m.LayoutComponent);
@@ -37,38 +37,36 @@ export const routes: Routes & {
     children: [
       {
         path: 'inicio',
-        loadChildren: () => import('./features-empresas/home/routes'),
+        loadComponent: () => import('./features-dental/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
       {
-        path: 'configuracion',
-        loadChildren: () => import('./features-empresas/configuracion/routes'),
+        path: 'pacientes',
+        loadChildren: () => import('./features-dental/pacientes/routes'),
       },
       {
-        path: 'emision_empresas',
-        loadChildren: () => import('./features-empresas/emision/routes'),
+        path: 'agenda',
+        loadComponent: () => import('./features-dental/agenda/agenda.component').then(m => m.AgendaComponent),
       },
       {
-        path: 'establecimientos',
-        loadChildren: () => import('./features-empresas/establecimiento/routes'),
+        path: 'tratamientos',
+        loadComponent: () => import('./features-dental/tratamientos/tratamientos.component').then(m => m.TratamientosComponent),
       },
       {
-        path: 'clientes_empresas',
-        loadChildren: () => import('./features-empresas/clientes/routes'),
+        path: 'facturacion',
+        loadComponent: () => import('./features-dental/facturacion/facturacion.component').then(m => m.FacturacionComponent),
       },
       {
         path: 'inventario',
-        loadChildren: () => import('./features-empresas/inventario/routes'),
+        loadComponent: () => import('./features-dental/inventario/inventario.component').then(m => m.InventarioComponent),
       },
       {
-        path: 'documentos',
-        loadChildren: () => import('./features-empresas/documents/routes'),
+        path: 'reportes',
+        loadComponent: () => import('./features-dental/reportes/reportes.component').then(m => m.ReportesComponent),
       },
-
-      {
-        path: 'proveedores',
-        loadChildren: () => import('./features-empresas/proveedores/routes'),
-      },
-
+      // {
+      //   path: 'configuracion',
+      //   loadChildren: () => import('./features-empresas/configuracion/routes'),
+      // },
       {
         path: '**',
         redirectTo: 'inicio',
@@ -108,50 +106,5 @@ export const routes: Routes & {
       },
     ],
   },
-  //cuenta de contador
-  {
-    path: 'sistema_contable_contador',
-    canActivate: [authGuard],
-    loadComponent() {
-      return import('./layout/layout.component').then((m) => m.LayoutComponent);
-    },
 
-    children: [
-      {
-        path: 'inicio',
-        loadChildren: () => import('./feature-counters/home/routes'),
-      },
-      {
-        path: 'aplicaciones_contadores',
-        loadChildren: () => import('./feature-counters/counter-application/routes'),
-      },
-      {
-        path: 'emision_contadores',
-        loadChildren: () => import('./feature-counters/emision/routes'),
-      },
-
-      // {
-      //   path: 'planes',
-      //   loadChildren: () => import('./features/planes/routes'),
-      // },
-      // {
-      //   path: 'perfiles',
-      //   loadChildren: () => import('./features/perfiles/routes'),
-      // },
-      // {
-      //   path: 'perfilescontadores',
-      //   loadChildren: () => import('./features/counters/routes'),
-      // },
-
-      // {
-      //   path: 'establishment',
-      //   loadChildren: () => import('./features/configuration/establecimientos/routes'),
-      // },
-      {
-        path: '**',
-        redirectTo: 'inicio',
-        pathMatch: 'full',
-      },
-    ],
-  },
 ];

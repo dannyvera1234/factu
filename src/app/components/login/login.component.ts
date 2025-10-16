@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FooterComponent } from '@/layout/footer';
 import { UserService } from '@/services';
 import { Router, RouterLink } from '@angular/router';
 import { finalize, mergeMap, of } from 'rxjs';
-import { WhatsappComponent } from '../../web';
+import { LoadingRedirectService } from '../../shared/services/loading-redirect.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FooterComponent, RouterLink, WhatsappComponent],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,11 +16,11 @@ export class LoginComponent {
   public readonly showPassword = signal(false);
 
   public readonly loanding = signal(false);
+  private loadingService = inject(LoadingRedirectService);
+  private _fb = inject(FormBuilder);
+  private userService = inject(UserService);
 
   constructor(
-    public _fb: FormBuilder,
-    public readonly userService: UserService,
-    private router: Router,
   ) {}
 
   public readonly form = this._fb.group({
@@ -33,19 +32,7 @@ export class LoginComponent {
     this.showPassword.set(!this.showPassword());
   }
 
-  onCopy(event: ClipboardEvent): void {
-    event.preventDefault();
-  }
 
-  onUsernameInput(event: any): void {
-    const inputValue = event.target.value;
-
-    const newValue = inputValue.replace(/[^0-9]/g, '');
-
-    event.target.value = newValue;
-
-    this.form.controls.username.setValue(newValue);
-  }
 
   public submit() {
     if (this.form.invalid) {
@@ -65,7 +52,15 @@ export class LoginComponent {
       )
       .subscribe((response) => {
         if (response.status === 'OK') {
-          this.router.navigate([`/${this.userService.getPermissions()[0].urlSegment}/inicio`]);
+          const permissions = this.userService.getPermissions();
+          console.log('Permissions:', permissions);
+          if (permissions && permissions.length > 0) {
+            console.log('Redirecting to:', `/${permissions[0].urlSegment}/inicio`);
+            this.loadingService.show(`/${permissions[0].urlSegment}/inicio`);
+          } else {
+            console.log('No permissions, redirecting to default');
+            this.loadingService.show('/sistema_dental/inicio');
+          }
         }
       });
   }

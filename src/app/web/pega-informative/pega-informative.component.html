@@ -1,28 +1,23 @@
 <!-- Navegación -->
-<app-heard/>
+<app-heard />
 
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-b from-blue-50 to-white py-32 px-4 sm:px-6">
+<section class="relative bg-gradient-to-b bg-[#182831] py-32 px-4 sm:px-6">
   <div class="container mx-auto flex flex-col md:flex-row items-center md:justify-between">
     <!-- Text Content -->
     <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
-      <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-4">
-        Solución
-        <span class="text-orange-400">End-to-End</span>
-        para tu Gestión Contable.
+      <h1 class="text-white text-3xl md:text-5xl font-bold leading-tight mb-4">
+        <span class="text-teal-300"> Organiza, automatiza</span>
+        y haz crecer tu clínica dental desde un solo clic.
       </h1>
-      <p class="text-gray-600 mb-6">
-        <span class="font-semibold">OlimPush</span>
-        es la plataforma digital que simplifica la gestión contable de principio a fin.
+      <p class="text-white mb-6">
+        <span class="font-semibold text-teal-300">OlimPush</span>
+        es la plataforma digital que te permite llevar el control de tu clínica dental de forma eficiente y eficaz.
       </p>
       <div class="flex justify-center md:justify-start space-x-4">
-        <a
-          [href]="link()"
-          target="_blank"
-          class="bg-purple-400/20 px-6 py-3 rounded-full hover:bg-purple-400/30 transition duration-300"
-        >
-          Contáctanos
-        </a>
+        <button class="bg-cyan-600 px-6 py-3 rounded-lg text-white hover:bg-cyan-500">
+          Prueba GRATIS
+        </button>
       </div>
     </div>
 
@@ -34,19 +29,14 @@
 </section>
 
 <!-- Features Section -->
-<section class="py-20 px-4 sm:px-6">
+<!-- <section class="py-20 px-4 sm:px-6">
   <div class="container mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-      <!-- Columna de imagen a la izquierda -->
       <div class="mt-8 md:mt-0 order-last md:order-first">
-        <img
-          src="assets/publicidad.png"
-          alt="Sistema Integral de Gestión Contable y Facturación"
-          class="rounded-lg shadow-xl w-full"
-        />
+        <img src="assets/publicidad.png" alt="Sistema Integral de Gestión Contable y Facturación"
+          class="rounded-lg shadow-xl w-full" />
       </div>
 
-      <!-- Columna de texto a la derecha -->
       <div class="flex flex-col justify-center">
         <h2 class="mb-6 text-2xl sm:text-3xl font-bold">
           Sistema integral de gestión contable y facturación electrónica
@@ -89,16 +79,14 @@
             <span>Módulo completo para gestión de proveedores</span>
           </li>
         </ul>
-        <a
-          routerLink="/registro_empresa"
-          class="inline-block mt-8 px-6 py-3 text-white text-center bg-blue-600 rounded-md hover:bg-blue-700 transition duration-300"
-        >
+        <a routerLink="/registro_empresa"
+          class="inline-block mt-8 px-6 py-3 text-white text-center bg-blue-600 rounded-md hover:bg-blue-700 transition duration-300">
           Crear cuenta gratuita
         </a>
       </div>
     </div>
   </div>
-</section>
+</section> -->
 <!--
 <section class="py-20 px-4 sm:px-8 bg-gradient-to-br from-blue-50 to-gray-100">
   <div class="max-w-7xl mx-auto">
@@ -164,7 +152,7 @@
   </div>
 </section> -->
 
-<section class="bg-gray-50 py-16" id="planes">
+<!-- <section class="bg-gray-50 py-16" id="planes">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 text-center">
     <h2 class="text-4xl font-bold text-center text-gray-800 mb-10">Planes Facturación Electrónica</h2>
     <p class="text-lg text-gray-600 mt-4">
@@ -173,44 +161,38 @@
     </p>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
       @for (item of plan()?.data; track $index) {
-        <div
-          class="bg-white shadow-xl rounded-lg p-8 transition-transform transform hover:scale-105 hover:shadow-2xl"
-          [ngClass]="{
+      <div class="bg-white shadow-xl rounded-lg p-8 transition-transform transform hover:scale-105 hover:shadow-2xl"
+        [ngClass]="{
             'border-4 border-blue-600': selectedPlan === item.title,
             'border-transparent': selectedPlan !== item.title,
-          }"
-          (click)="selectPlan(item.title)"
-        >
-          <h3 class="text-lg font-semibold text-gray-800 text-center uppercase">{{ item.title }}</h3>
-          <p class="text-gray-600 mt-2 mb-6 text-center text-sm">{{ item.description }}</p>
-          <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
-            <span>
-              {{ item.free ? '00.00' : (item.price | currency) }}/<span class="text-red-600 text-lg">Anual</span>
-            </span>
-          </div>
-          @for (item of item.characteristic; track $index) {
-            <ul class="list-disc list-inside text-gray-600 space-y-3 mb-2 text-sm text-left">
-              <li>
-                {{ item.description }}
-              </li>
-            </ul>
-          }
-
-          <a
-            [href]="link()"
-            target="_blank"
-            class="block bg-sky-500 hover:bg-sky-600 text-white text-center px-6 py-3 rounded-lg transition-colors mt-6"
-          >
-            Elegir Plan
-          </a>
+          }" (click)="selectPlan(item.title)">
+        <h3 class="text-lg font-semibold text-gray-800 text-center uppercase">{{ item.title }}</h3>
+        <p class="text-gray-600 mt-2 mb-6 text-center text-sm">{{ item.description }}</p>
+        <div class="text-4xl font-bold text-gray-900 mb-4 text-center">
+          <span>
+            {{ item.free ? '00.00' : (item.price | currency) }}/<span class="text-red-600 text-lg">Anual</span>
+          </span>
         </div>
+        @for (item of item.characteristic; track $index) {
+        <ul class="list-disc list-inside text-gray-600 space-y-3 mb-2 text-sm text-left">
+          <li>
+            {{ item.description }}
+          </li>
+        </ul>
+        }
+
+        <a [href]="link()" target="_blank"
+          class="block bg-sky-500 hover:bg-sky-600 text-white text-center px-6 py-3 rounded-lg transition-colors mt-6">
+          Elegir Plan
+        </a>
+      </div>
       }
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- Features Grid -->
-<section class="py-20 px-4 sm:px-6">
+<!-- <section class="py-20 px-4 sm:px-6">
   <div class="container mx-auto">
     <h2 class="text-4xl font-bold text-center text-gray-800 mb-10">
       La única plataforma que tiene todo lo que necesitas para hacer crecer tu negocio en línea
@@ -218,48 +200,35 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+          </path>
         </svg>
         <h3 class="mb-2 text-xl font-semibold">Creación de Páginas Informativas</h3>
         <p class="text-gray-600">Diseñamos páginas web informativas personalizadas para tu negocio o proyecto.</p>
       </div>
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-          ></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+          </path>
         </svg>
         <h3 class="mb-2 text-xl font-semibold">Desarrollo Web a Medida</h3>
         <p class="text-gray-600">Creamos sitios web modernos, funcionales y adaptados a tus necesidades específicas.</p>
       </div>
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          ></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+          </path>
         </svg>
         <h3 class="mb-2 text-xl font-semibold">Diseño Gráfico Creativo</h3>
         <p class="text-gray-600">Soluciones de diseño gráfico para mejorar la imagen de tu marca y captar atención.</p>
       </div>
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-          ></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
         </svg>
         <h3 class="mb-2 text-xl font-semibold">Optimización SEO</h3>
         <p class="text-gray-600">
@@ -268,12 +237,8 @@
       </div>
       <div class="p-6 bg-white rounded-lg shadow-lg">
         <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-          ></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
         </svg>
         <h3 class="mb-2 text-xl font-semibold">Diseño Responsivo</h3>
         <p class="text-gray-600">
@@ -291,10 +256,10 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 <!-- Dark Section -->
-<section class="bg-[#1a365d] py-20 px-4 sm:px-6 text-white">
+<!-- <section class="bg-[#1a365d] py-20 px-4 sm:px-6 text-white">
   <div class="container mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
       <div class="mb-8 md:mb-0">
@@ -306,40 +271,28 @@
           ¡Una plataforma lo suficientemente simple como para comenzar hoy y lo suficientemente flexible y escalable
           para crecer contigo!
         </p>
-        <a
-          routerLink="/registro_empresa"
-          class="inline-block px-6 py-3 text-[#1a365d] bg-white rounded-md hover:bg-gray-100"
-        >
+        <a routerLink="/registro_empresa"
+          class="inline-block px-6 py-3 text-[#1a365d] bg-white rounded-md hover:bg-gray-100">
           Crear cuenta gratuita
         </a>
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
-<section class="flex flex-col justify-center items-center mt-10 mb-10 py-12">
+<!-- <section class="flex flex-col justify-center items-center mt-10 mb-10 py-12">
   <h2 class="mb-8 text-center">
     <span class="text-3xl font-bold text-gray-800">Conoce más sobre </span>
     <span class="text-3xl font-bold text-orange-400">OlimPush</span>
   </h2>
   <div class="w-full md:w-3/4 lg:w-2/3 flex justify-center">
     <div class="rounded-lg shadow-lg overflow-hidden">
-      <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/en-lVeJVEUA?si=LjhE44WFdJWTiA9v"
-        title="YouTube video player"
-        frameborder="0"
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/en-lVeJVEUA?si=LjhE44WFdJWTiA9v"
+        title="YouTube video player" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
-</section>
-  <app-whatsapp/>
-  <app-footer-web/>
-
-
-
-
+</section> -->
+<!-- <app-whatsapp />
+<app-footer-web /> -->

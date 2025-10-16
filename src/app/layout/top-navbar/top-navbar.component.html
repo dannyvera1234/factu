@@ -1,0 +1,111 @@
+<nav class="bg-[#253845] shadow-sm border-b border-gray-600" clickOutside (clickOutside)="closeAllMenus()">
+  <div class="w-full px-0">
+    <div class="flex items-center justify-between h-12 px-2 sm:px-3">
+      <!-- Left: Logo -->
+      <span class="text-sm sm:text-lg font-semibold text-white">Sistema Dental</span>
+
+      <!-- Center: Search with Dropdown (Hidden on mobile) -->
+      <div class="hidden lg:flex items-center flex-1 max-w-2xl mx-6">
+        <!-- Global Search with Dropdown -->
+        <div class="flex-1 relative">
+          <input
+            type="text"
+            placeholder="Buscar pacientes, citas..."
+            (focus)="showSearchDropdown.set(true)"
+            (blur)="hideSearchDropdown()"
+            class="w-full px-3 py-1.5 pl-8 text-sm border border-gray-500 bg-gray-700 text-white placeholder-gray-300 rounded-md focus:ring-1 focus:ring-cyan-400 focus:border-cyan-400"
+          >
+          <img src="assets/icons/search.svg" alt="Search" class="absolute left-2.5 top-2 w-4 h-4 filter invert opacity-60">
+          
+          <!-- Search Dropdown -->
+          @if (showSearchDropdown()) {
+            <div class="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+              <div class="py-2">
+                <button 
+                  (mousedown)="addNewAppointment()"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                >
+                  <img src="assets/icons/plus.svg" alt="Add" class="w-4 h-4">
+                  <span>Agregar Nueva Cita</span>
+                </button>
+                <button 
+                  (mousedown)="addNewPatient()"
+                  class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                >
+                  <img src="assets/icons/user-add.svg" alt="Add User" class="w-4 h-4">
+                  <span>Agregar Nuevo Paciente</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right: Status Indicators, DateTime and Profile -->
+      <div class="flex items-center space-x-1 sm:space-x-3">
+        <!-- Status Indicators (Hidden on small screens) -->
+        <div class="hidden md:flex items-center space-x-2">
+          <!-- Pending Appointments -->
+          <div class="flex items-center space-x-1 px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-xs">
+            <img src="assets/icons/calendar.svg" alt="Calendar" class="w-3 h-3">
+            <span class="hidden sm:inline">5 Citas</span>
+            <span class="sm:hidden">5</span>
+          </div>
+
+          <!-- Waiting Room -->
+          <div class="flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
+            <img src="assets/icons/users.svg" alt="Users" class="w-3 h-3">
+            <span class="hidden sm:inline">3 Esperando</span>
+            <span class="sm:hidden">3</span>
+          </div>
+        </div>
+
+        <!-- Date Time (Hidden on small screens) -->
+        <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-300">
+          <span class="font-medium">{{ getCurrentDate() }}</span>
+          <span class="text-gray-400">{{ getCurrentTime() }}</span>
+        </div>
+
+
+        <!-- Notifications -->
+        <button class="p-1.5 text-gray-300 hover:text-white hover:bg-gray-700 rounded-full relative">
+          <img src="assets/icons/bell.svg" alt="Notifications" class="w-4 h-4 sm:w-5 sm:h-5 filter invert">
+          <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full h-3 w-3 sm:h-4 sm:w-4 flex items-center justify-center text-xs">3</span>
+        </button>
+
+        <!-- Profile Dropdown -->
+        <div class="relative">
+          <button
+            (click)="toggleProfileMenu()"
+            class="flex items-center space-x-1 sm:space-x-2 text-sm bg-gray-700 rounded-full focus:outline-none focus:ring-1 focus:ring-cyan-400 px-1 sm:px-2 py-1"
+          >
+            <div class="w-6 h-6 sm:w-7 sm:h-7 bg-gray-600 rounded-full flex items-center justify-center">
+              <img src="assets/icons/user.svg" alt="User" class="w-3 h-3 sm:w-4 sm:h-4 filter invert">
+            </div>
+            <span class="hidden sm:inline text-white font-medium text-sm">{{ getUserName() }}</span>
+            <img src="assets/icons/chevron-down.svg" alt="Dropdown" class="w-3 h-3 filter invert opacity-60">
+          </button>
+
+          <!-- Dropdown Menu -->
+          @if (showProfileMenu()) {
+            <div class="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+              <a href="#" class="block px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100">
+                Mi Perfil
+              </a>
+              <a href="#" class="block px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100">
+                Configuración
+              </a>
+              <hr class="my-0.5">
+              <button
+                (click)="logout()"
+                class="block w-full text-left px-3 py-1.5 text-sm text-red-600 hover:bg-gray-100"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

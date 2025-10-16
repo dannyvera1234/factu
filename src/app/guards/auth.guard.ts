@@ -24,6 +24,12 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 // Función para verificar si el token es válido (puedes añadir lógica de validación adicional si usas JWT)
 function isTokenValid(token: string): boolean {
+  // TODO: Reemplazar con validación JWT real cuando esté disponible
+  // Temporalmente aceptar tokens mock
+  if (token.startsWith('mock-')) {
+    return true;
+  }
+  
   // Si estás usando JWT, puedes agregar una lógica para verificar su validez (por ejemplo, comprobar la expiración)
   const payload = decodeJwt(token);
   if (payload && payload.exp) {
